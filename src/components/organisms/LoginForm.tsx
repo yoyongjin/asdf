@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { Button, Input, Text } from 'components/atoms';
 import { COLORS } from 'utils/color';
+import useInput from 'hooks/useInput';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -31,21 +33,13 @@ const StyledInputPassword = styled.div`
 
 const StyledLogin = styled.div``;
 
-function LoginForm() {
-  const [id, setId] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+function LoginForm({ history }: LoginFormProps) {
+  const { form, onChange, onClickLogin } = useInput({
+    id: 'ADMIN_USER',
+    password: 'ADMIN_PASS',
+  });
 
-  const onClickLogin = () => {
-    alert('로그인 구현 예정');
-  };
-
-  const onChangeId = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setId(e.target.value);
-  };
-
-  const onChangePassword = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setPassword(e.target.value);
-  };
+  const { id, password }: formType = form;
 
   return (
     <StyledWrapper>
@@ -57,27 +51,38 @@ function LoginForm() {
       <StyledInputId>
         <Input
           value={id}
+          name={'id'}
           phColor={COLORS.green}
           placeholder={'아이디를 입력하세요.'}
-          onChange={onChangeId}
-        ></Input>
+          onChange={onChange}
+        />
       </StyledInputId>
       <StyledInputPassword>
         <Input
           type={'password'}
           value={password}
+          name={'password'}
           phColor={COLORS.green}
           placeholder={'비밀번호를 입력하세요.'}
-          onChange={onChangePassword}
-        ></Input>
+          onChange={onChange}
+        />
       </StyledInputPassword>
       <StyledLogin>
-        <Button bgColor={COLORS.dark_green} onClick={onClickLogin}>
+        <Button
+          bgColor={COLORS.dark_green}
+          onClick={() => onClickLogin(id, password, history)}
+        >
           로그인
         </Button>
       </StyledLogin>
     </StyledWrapper>
   );
+}
+interface LoginFormProps extends RouteComponentProps {}
+
+interface formType {
+  id: string;
+  password: string;
 }
 
 // interface LoginFormProps {

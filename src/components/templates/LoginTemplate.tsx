@@ -48,6 +48,7 @@ const StyledMainLogo = styled.span`
   position: inherit;
   top: 30%;
   left: 15%;
+  padding-right: 2rem;
 `;
 
 const StyledFooter = styled.div`

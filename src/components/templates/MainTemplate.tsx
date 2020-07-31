@@ -7,18 +7,18 @@ import { COLORS } from 'utils/color';
 const StyledWrapper = styled.div`
   /* Display */
   width: 100vw;
-  height: 100vh;
   max-width: 140rem;
+  height: 100vh;
 `;
 
 const StyledGnb = styled.div`
   /* Display */
-  height: 6rem;
+  height: 10%;
 `;
 
 const StyledContent = styled.div<StyledProps>`
   /* Display */
-  height: calc(100vh - 6rem);
+  height: 90%;
   padding-left: 3rem;
   padding-right: 3rem;
 
@@ -30,7 +30,7 @@ function MainTemplate({ gnb, bgColor }: MainTemplateProps) {
   return (
     <StyledWrapper>
       <StyledGnb>{gnb}</StyledGnb>
-      <StyledContent bgColor={bgColor}>
+      <StyledContent  bgColor={bgColor}>
         <MainRouter />
       </StyledContent>
     </StyledWrapper>

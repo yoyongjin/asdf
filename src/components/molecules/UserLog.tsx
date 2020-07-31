@@ -41,11 +41,7 @@ const StyledTest = styled.span`
   transform: translate(-50%, -50%);
 `;
 
-function UserLog({ userInfo, loginTime }: UserLogProps) {
-  const handleLogout = () => {
-    alert('로그아웃 구현 예정');
-  };
-
+function UserLog({ userInfo, loginTime, onClickLogout }: UserLogProps) {
   return (
     <StyledWrapper>
       <StyledUser>
@@ -67,7 +63,7 @@ function UserLog({ userInfo, loginTime }: UserLogProps) {
           bgColor={'inherit'}
           width={5}
           fontSize={1.3}
-          onClick={handleLogout}
+          onClick={onClickLogout}
         >
           로그아웃
         </Button>
@@ -84,6 +80,7 @@ interface userInfo {
 interface UserLogProps {
   userInfo: userInfo;
   loginTime: string;
+  onClickLogout: () => void;
 }
 
 export default UserLog;

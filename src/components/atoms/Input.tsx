@@ -1,44 +1,52 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 import { COLORS } from 'utils/color';
 
-const StyledInput = styled.input.attrs<InputProps>((props) => ({
-  type: props.type,
-  value: props.value,
-  placeholder: props.placeholder,
-}))<InputProps>`
+const StyledInput = styled.input<InputProps>`
   width: ${(props) => props.width}rem;
   height: ${(props) => props.height}rem;
   border-width: ${(props) => props.borderWidth};
-  ${(props) => {
-    if (props.shape === 'ellipse') {
-      return css<InputProps>`
-        border-radius: ${(props) => props.borderRadius}rem;
-      `;
-    }
-  }};
+  border-radius: ${(props) => props.borderRadius}rem;
   text-align: center;
   ::-webkit-input-placeholder {
     color: ${(props) => props.phColor};
   }
 `;
 
-function Input({ ...props }: InputProps) {
-  return <StyledInput {...props}></StyledInput>;
+function Input({
+  innerRef,
+  type,
+  name,
+  value,
+  placeholder,
+  ...rest
+}: InputProps) {
+  return (
+    <StyledInput
+      ref={innerRef}
+      type={type}
+      name={name}
+      value={value}
+      placeholder={placeholder}
+      {...rest}
+    ></StyledInput>
+  );
 }
 
 interface InputProps {
+  readonly innerRef?: React.MutableRefObject<HTMLInputElement>;
   readonly type: string;
+  readonly name?: string;
   readonly value: string;
   readonly placeholder: string;
   readonly width: number;
   readonly height: number;
-  readonly shape: string;
   readonly borderWidth: number | string;
   readonly borderRadius: number;
   readonly phColor: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 Input.defaultProps = {
@@ -47,7 +55,6 @@ Input.defaultProps = {
   placeholder: 'Not Placeholder',
   width: 15,
   height: 1.7,
-  shape: 'ellipse',
   borderWidth: 0,
   borderRadius: 1,
   phColor: COLORS.black,

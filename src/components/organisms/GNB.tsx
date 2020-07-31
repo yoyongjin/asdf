@@ -39,7 +39,7 @@ const StyledUserLog = styled.div`
   padding-right: 2rem;
 `;
 
-function GNB({ logo, loginTime }: GNBProps) {
+function GNB({ logo, loginTime, onClickLogout }: GNBProps) {
   const userInfo = {
     user_name: 'Admin',
     login_at: new Date().getTime(),
@@ -56,7 +56,7 @@ function GNB({ logo, loginTime }: GNBProps) {
         <LinkSelector />
       </StyledLink>
       <StyledUserLog>
-        <UserLog userInfo={userInfo} loginTime={loginTime}></UserLog>
+        <UserLog userInfo={userInfo} loginTime={loginTime} onClickLogout={onClickLogout}></UserLog>
       </StyledUserLog>
     </StyledWrapper>
   );
@@ -65,6 +65,7 @@ function GNB({ logo, loginTime }: GNBProps) {
 interface GNBProps {
   logo: string;
   loginTime: string;
+  onClickLogout: () => void;
 }
 
 export default GNB;

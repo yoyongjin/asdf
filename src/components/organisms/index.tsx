@@ -1,8 +1,7 @@
 import GNB from './GNB';
 import LoginForm from './LoginForm';
-import Monitoring from './Monitoring';
-import Organization from './Organization';
-import Title from './Title';
-import User from './User';
+import MonitoringView from './MonitoringView';
+import OrganizationView from './OrganizationView';
+import UserView from './UserView';
 
-export { GNB, LoginForm, Monitoring, Organization, Title, User };
+export { GNB, LoginForm, MonitoringView, OrganizationView, UserView };

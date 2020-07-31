@@ -7,10 +7,14 @@ const StyledButton = styled.button<ButtonProps>`
   width: ${(props) => props.width}rem;
   height: ${(props) => props.height}rem;
   border-width: ${(props) => props.borderWidth};
+  border-radius: ${(props) => props.borderRadius}rem;
   ${(props) => {
-    if (props.shape === 'ellipse') {
+    if (props.bgImage) {
       return css<ButtonProps>`
-        border-radius: ${(props) => props.borderRadius}rem;
+        background-image: url(${(props) => props.bgImage});
+        background-repeat: no-repeat;
+        background-size: ${(props) => props.width}rem
+          ${(props) => props.height}rem;
       `;
     }
   }}
@@ -37,14 +41,14 @@ function Button({ onClick, children, ...props }: ButtonProps) {
 interface ButtonProps {
   readonly width: number;
   readonly height: number;
-  readonly shape?: string;
   readonly borderWidth: number | string;
   readonly borderRadius: number;
   readonly fontColor: string;
   readonly fontSize: number;
   readonly bgColor: string;
-  onClick?: () => void;
-  readonly children: string;
+  readonly bgImage?: string;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  readonly children?: string | React.ReactChild;
 }
 
 Button.defaultProps = {
@@ -55,7 +59,6 @@ Button.defaultProps = {
   fontColor: COLORS.white,
   fontSize: 1,
   bgColor: COLORS.black,
-  children: 'Not Children',
 };
 
 export default Button;

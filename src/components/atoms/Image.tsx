@@ -1,23 +1,26 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const StyledImage = styled.img.attrs<ImageProps>((props) => ({
-  src: props.src,
-  alt: props.alt || props.src,
-}))<ImageProps>`
-  width: ${(props) => props.width}rem;
-  height: ${(props) => props.height}rem;
+const StyledImage = styled.img<ImageProps>`
+  width: ${(props) => {
+    if (typeof props.width === 'number') return `${props.width}rem`;
+    else if (typeof props.width === 'string') return props.width;
+  }};
+  height: ${(props) => {
+    if (typeof props.height === 'number') return `${props.height}rem`;
+    else if (typeof props.height === 'string') return props.height;
+  }};
 `;
 
-function Image({ ...props }: ImageProps) {
-  return <StyledImage {...props}></StyledImage>;
+function Image({ src, alt, ...rest }: ImageProps) {
+  return <StyledImage src={src} alt={alt} {...rest}></StyledImage>;
 }
 
 interface ImageProps {
   src: string;
-  alt: string;
-  width: number;
-  height: number;
+  alt?: string;
+  width: number | string;
+  height: number | string;
 }
 
 Image.defaultProps = {
