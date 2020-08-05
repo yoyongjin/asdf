@@ -15,17 +15,22 @@ import {
   failureLogout,
 } from 'modules/actions/auth';
 import * as API from 'lib/api';
+import Socket from 'lib/socket';
+import { socketServer } from 'utils/constants';
 
 function* loginProcess(action: ReturnType<typeof requestLogin>) {
   const { id, password, history } = action.payload;
 
   try {
     const response = yield call(API.login, id, password);
+    console.log('Login Data => ', response);
     const { status, data } = response.data;
 
     if (status === 'success') {
-      const { user } = data;
+      Socket.getInstance().url(socketServer);
+      const { user, token } = data;
       console.log(user);
+
       yield put(successLogin(user));
       history.push('/main');
     }
@@ -36,39 +41,42 @@ function* loginProcess(action: ReturnType<typeof requestLogin>) {
 }
 
 function* checkLoginProcess(action: ReturnType<typeof requestCheckLogin>) {
-  const { history } = action.payload;
+  const { history, location } = action.payload;
 
   try {
     const response = yield call(API.checkLogin);
+    console.log('Login Check Data => ', response);
     const { status, data } = response.data;
 
     if (status === 'success') {
-      const { user } = data;
+      Socket.getInstance().url(socketServer);
+
+      const { user, token } = data;
       console.log(user);
       yield put(successCheckLogin(user));
-      history.push('/main');
+      history.push(location!.pathname);
     }
   } catch (error) {
     yield put(failureCheckLogin(error));
     history.push('/auth/login');
   }
 }
-// ReturnType<typeof requestLogout>
-function* logoutProcess(action: ReturnType<typeof requestLogout>){
+
+function* logoutProcess(action: ReturnType<typeof requestLogout>) {
   const { history } = action.payload;
 
-  try{
+  try {
     const response = yield call(API.logout);
+    console.log('Logout Data => ', response);
     const { status } = response.data;
 
     if (status === 'success') {
       yield put(successLogout());
       history.push('/auth/login');
     }
-  }catch(error){
+  } catch (error) {
     yield put(failureLogout(error));
   }
-  
 }
 
 function* watchLogin() {
@@ -80,7 +88,7 @@ function* watchCheckLogin() {
 }
 
 function* watchLogout() {
-  yield takeLatest(REQUEST_LOGOUT, logoutProcess)
+  yield takeLatest(REQUEST_LOGOUT, logoutProcess);
 }
 
 function* authSaga() {

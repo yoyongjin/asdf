@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { Button, Image, Text } from 'components/atoms';
-import { getTimeToSecond } from 'utils/utils';
+import { getHourMinSec } from 'utils/utils';
 import { COLORS } from 'utils/color';
 import callingIcon from 'images/icon-mnt-red@2x.png';
 import waitingIcon from 'images/icon-mnt-grey.png';
@@ -38,11 +38,12 @@ const StyledUserInfo = styled.div`
 
 const StyledInterception = styled.div``;
 
-function Consultant({ consultInfo, callInfo }: ConsultantProps) {
+function Consultant({ consultInfo }: ConsultantProps) {
+  console.log('Lendering Consultant');
   return (
     <StyledWrapper>
       <StyledCallStatusArea>
-        {callInfo.status === 0 ? (
+        {consultInfo.call_type !== 'call_offhook' ? (
           <>
             <Text fontColor={COLORS.dark_gray1} fontWeight={600}>
               대기중
@@ -54,13 +55,13 @@ function Consultant({ consultInfo, callInfo }: ConsultantProps) {
               통화중
             </Text>
             <Text fontColor={COLORS.red} fontWeight={600}>
-            {getTimeToSecond(callInfo.call_at)}
+              {consultInfo.diff ? getHourMinSec(consultInfo.diff) : '00:00:00'}
             </Text>
           </>
         )}
       </StyledCallStatusArea>
       <StyledCallImage>
-        {callInfo.status === 0 ? (
+        {consultInfo.call_type !== 'call_offhook' ? (
           <>
             <Image
               src={waitingIcon}
@@ -91,7 +92,7 @@ function Consultant({ consultInfo, callInfo }: ConsultantProps) {
         >{`${consultInfo.branch_name}점 ${consultInfo.team_name}`}</Text>
       </StyledUserInfo>
       <StyledInterception>
-        {callInfo.status === 0 ? (
+        {consultInfo.call_type !== 'call_offhook' ? (
           <></>
         ) : (
           <>
@@ -112,28 +113,23 @@ function Consultant({ consultInfo, callInfo }: ConsultantProps) {
 
 interface consultInfoType {
   id: number;
-  branch_name: string;
-  team_name: string;
+  branch_name: string | null;
+  team_name: string | null;
   admin_id: string;
   name: string;
   user_name: string;
   number: string;
   ziboxip: string;
   login_at: number;
-}
-
-interface callInfoType {
-  id: number;
-  number: string;
-  status: number;
-  call_at: number;
+  call_time?: number;
+  call_type?: string;
+  diff?: number;
 }
 
 interface ConsultantProps {
   consultInfo: consultInfoType;
-  callInfo: callInfoType;
 }
 
 Consultant.defaultProps = {};
 
-export default Consultant;
+export default React.memo(Consultant)

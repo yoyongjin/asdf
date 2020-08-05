@@ -41,21 +41,28 @@ const StyledTest = styled.span`
   transform: translate(-50%, -50%);
 `;
 
-function UserLog({ userInfo, loginTime, onClickLogout }: UserLogProps) {
+function UserLog({
+  userName,
+  loginTime,
+  loginTimeImage,
+  onClickLogout,
+}: UserLogProps) {
   return (
     <StyledWrapper>
       <StyledUser>
-        <Text
-          fontSize={1.3}
-          fontColor={COLORS.white}
-        >{`${userInfo.user_name} 님`}</Text>
+        <Text fontSize={1.3} fontColor={COLORS.white}>{`${userName} 님`}</Text>
       </StyledUser>
       <StyledLoginTime>
-        <Image src={loginTime} alt={loginTime} width={16} height={1.8} />
+        <Image
+          src={loginTimeImage}
+          alt={loginTimeImage}
+          width={16}
+          height={1.8}
+        />
         <StyledTest>
           <Text fontColor={COLORS.green}>{`${getYYYYMMDD(
-            userInfo.login_at,
-          )} ${getHourMinSec(userInfo.login_at)}`}</Text>
+            loginTime,
+          )} ${getHourMinSec(loginTime)}`}</Text>
         </StyledTest>
       </StyledLoginTime>
       <StyledLogout>
@@ -72,14 +79,10 @@ function UserLog({ userInfo, loginTime, onClickLogout }: UserLogProps) {
   );
 }
 
-interface userInfo {
-  user_name: string;
-  login_at: number;
-}
-
 interface UserLogProps {
-  userInfo: userInfo;
-  loginTime: string;
+  userName: string;
+  loginTime: number;
+  loginTimeImage: string;
   onClickLogout: () => void;
 }
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 const StyledImage = styled.img<ImageProps>`
   width: ${(props) => {
@@ -10,10 +10,39 @@ const StyledImage = styled.img<ImageProps>`
     if (typeof props.height === 'number') return `${props.height}rem`;
     else if (typeof props.height === 'string') return props.height;
   }};
+  background-image: url(${(props) => props.src}) no-repeat;
+  /* background-repeat: no-repeat; */
+  ${(props) => {
+    if (props.hoverImage) {
+      return css<ImageProps>`
+        &:hover {
+          cursor: pointer;
+          content: url(${(props) => props.hoverImage});
+        }
+        &:active {
+          opacity: 0.8;
+        }
+      `;
+    }
+  }}
+
+  ${(props) => {
+    if (props.onClick) {
+      return css<ImageProps>`
+        &:hover {
+          cursor: pointer;
+          opacity: 0.5;
+        }
+        &:active {
+          opacity: 0.8;
+        }
+      `;
+    }
+  }}
 `;
 
-function Image({ src, alt, ...rest }: ImageProps) {
-  return <StyledImage src={src} alt={alt} {...rest}></StyledImage>;
+function Image({ alt, onClick, ...rest }: ImageProps) {
+  return <StyledImage alt={alt} onClick={onClick} {...rest}></StyledImage>;
 }
 
 interface ImageProps {
@@ -21,6 +50,8 @@ interface ImageProps {
   alt?: string;
   width: number | string;
   height: number | string;
+  hoverImage?: string;
+  onClick?: () => void;
 }
 
 Image.defaultProps = {

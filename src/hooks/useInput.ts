@@ -12,7 +12,7 @@ function useInput<T>(initialForm: T) {
   const onChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target;
-      //   setForm((form: React.SetStateAction<T>) => ({...form, [name]: value}));
+      // setForm((form: React.SetStateAction<T>) => ({...form, [name]: value}));
       setForm({ ...form, [name]: value });
     },
     [form],

@@ -7,18 +7,18 @@ import * as actions from 'modules/actions/auth';
 // 상태
 const initialState: AuthType = {
   login: {
-    fetching: false,
+    fetch: false,
     error: false,
   },
   logout: {
-    fetching: false,
+    fetch: false,
     error: false,
   },
   checkLogin: {
-    fetching: false,
+    fetch: false,
     error: false,
   },
-  userInfo: {
+  loginInfo: {
     id: 0,
     admin_id: '',
     branch_id: 0,
@@ -35,58 +35,58 @@ const initialState: AuthType = {
 const authReducer = createReducer<AuthType, AuthAction>(initialState, {
   [actions.REQUEST_LOGIN]: (state, action) => {
     return produce(state, (draft) => {
-      draft.login.fetching = true;
+      draft.login.fetch = true;
       draft.login.error = false;
     });
   },
   [actions.SUCCESS_LOGIN]: (state, action) => {
     return produce(state, (draft) => {
-      draft.login.fetching = false;
+      draft.login.fetch = false;
       draft.login.error = false;
-      draft.userInfo = action.payload;
+      draft.loginInfo = action.payload;
     });
   },
   [actions.FAILURE_LOGIN]: (state, action) => {
     return produce(state, (draft) => {
-      draft.login.fetching = false;
+      draft.login.fetch = false;
       draft.login.error = action.payload;
     });
   },
   [actions.REQUEST_CHECK_LOGIN]: (state, action) => {
     return produce(state, (draft) => {
-      draft.checkLogin.fetching = true;
+      draft.checkLogin.fetch = true;
       draft.checkLogin.error = false;
     });
   },
   [actions.SUCCESS_CHECK_LOGIN]: (state, action) => {
     return produce(state, (draft) => {
-      draft.checkLogin.fetching = false;
+      draft.checkLogin.fetch = false;
       draft.checkLogin.error = false;
-      draft.userInfo = action.payload;
+      draft.loginInfo = action.payload;
     });
   },
   [actions.FAILURE_CHECK_LOGIN]: (state, action) => {
     return produce(state, (draft) => {
-      draft.checkLogin.fetching = false;
+      draft.checkLogin.fetch = false;
       draft.checkLogin.error = action.payload;
     });
   },
   [actions.REQUEST_LOGOUT]: (state, action) => {
     return produce(state, (draft) => {
-      draft.logout.fetching = true;
+      draft.logout.fetch = true;
       draft.logout.error = false;
     });
   },
   [actions.SUCCESS_LOGOUT]: (state, action) => {
     return produce(state, (draft) => {
-      draft.logout.fetching = false;
+      draft.logout.fetch = false;
       draft.logout.error = false;
-      draft.userInfo = initialState.userInfo;
+      draft.loginInfo = initialState.loginInfo;
     });
   },
   [actions.FAILURE_LOGOUT]: (state, action) => {
     return produce(state, (draft) => {
-      draft.logout.fetching = false;
+      draft.logout.fetch = false;
       draft.logout.error = action.payload;
     });
   },

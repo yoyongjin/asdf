@@ -35,6 +35,7 @@ function OrganizationView() {
     title: '※ 팀추가 : 팀명 입력 후 엔터',
   };
 
+  console.log('Lendering OrganizationView');
   return (
     <StyledWrapper>
       <StyledTitle>

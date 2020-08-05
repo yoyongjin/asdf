@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Image, Link } from 'components/atoms';
 import { LinkSelector, UserLog } from 'components/molecules';
 import { COLORS } from 'utils/color';
+import { loginInfoType } from 'modules/types/auth';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -39,12 +40,8 @@ const StyledUserLog = styled.div`
   padding-right: 2rem;
 `;
 
-function GNB({ logo, loginTime, onClickLogout }: GNBProps) {
-  const userInfo = {
-    user_name: 'Admin',
-    login_at: new Date().getTime(),
-  };
-
+function GNB({ logo, loginTimeImage, loginInfo, onClickLogout }: GNBProps) {
+  console.log('Lendering GNB');
   return (
     <StyledWrapper>
       <StyledLogo>
@@ -56,7 +53,12 @@ function GNB({ logo, loginTime, onClickLogout }: GNBProps) {
         <LinkSelector />
       </StyledLink>
       <StyledUserLog>
-        <UserLog userInfo={userInfo} loginTime={loginTime} onClickLogout={onClickLogout}></UserLog>
+        <UserLog
+          userName={loginInfo.name}
+          loginTime={loginInfo.login_at}
+          loginTimeImage={loginTimeImage}
+          onClickLogout={onClickLogout}
+        />
       </StyledUserLog>
     </StyledWrapper>
   );
@@ -64,7 +66,8 @@ function GNB({ logo, loginTime, onClickLogout }: GNBProps) {
 
 interface GNBProps {
   logo: string;
-  loginTime: string;
+  loginTimeImage: string;
+  loginInfo: loginInfoType;
   onClickLogout: () => void;
 }
 

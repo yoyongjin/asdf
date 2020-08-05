@@ -48,4 +48,6 @@ function LinkSelector() {
   );
 }
 
+interface LinkSelectorProps {}
+
 export default LinkSelector;

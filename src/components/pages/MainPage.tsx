@@ -9,25 +9,30 @@ import dblifeLogo from 'images/db-logo-login.png';
 import loggedTimeImage from 'images/bg-login-time@3x.png';
 import useAuth from 'hooks/useAuth';
 
-function MainPage({ history }: MainPageProps) {
-  const { userInfo,  onCheckLogin, onClickLogout } = useAuth();
-
+function MainPage({ history, location }: MainPageProps) {
+  const { loginInfo, onCheckLogin, onClickLogout } = useAuth();
+  let bgColor = '';
   useEffect(() => {
-    if (!userInfo.id) {
-      onCheckLogin(history);
+    if (!loginInfo.id) {
+      onCheckLogin(history, location);
     }
-  }, [userInfo.id, onCheckLogin, history]);
+  }, [onCheckLogin, history, location]);
+
+  if (location.pathname === '/main') {
+    bgColor = COLORS.light_gray;
+  }
 
   return (
     <MainTemplate
       gnb={
         <GNB
           logo={dblifeLogo}
-          loginTime={loggedTimeImage}
+          loginTimeImage={loggedTimeImage}
+          loginInfo={loginInfo}
           onClickLogout={() => onClickLogout(history)}
         />
       }
-      bgColor={COLORS.light_gray}
+      bgColor={bgColor}
     />
   );
 }

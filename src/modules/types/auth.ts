@@ -1,28 +1,23 @@
 import { ActionType } from 'typesafe-actions';
-import { History } from 'history';
 
 import * as actions from 'modules/actions/auth';
+import * as common from 'modules/types/common';
 
 export type AuthAction = ActionType<typeof actions>;
 
-export interface FetchingType {
-  fetching?: boolean;
-  error?: boolean | failureType;
-}
-
 export interface AuthType {
-  login: FetchingType;
-  logout: FetchingType;
-  checkLogin: FetchingType;
-  userInfo: successType;
+  login: common.checkFetchType;
+  logout: common.checkFetchType;
+  checkLogin: common.checkFetchType;
+  loginInfo: loginInfoType;
 }
 
-export interface requestType extends historyType{
+export interface requestType extends common.historyType {
   id: string;
   password: string;
 }
 
-export interface successType {
+export interface loginInfoType {
   id: number; // unique key
   admin_id: string; // 관리자 권한
   branch_id: number; // 해당 관리자의 지점 id
@@ -32,12 +27,4 @@ export interface successType {
   ziboxip: string; // zibox ip
   login_at: number; // 로그인 시간
   created_at: string; // 회원가입날짜
-}
-
-export interface failureType {
-  error: Error;
-}
-
-export interface historyType {
-  history: History;
 }

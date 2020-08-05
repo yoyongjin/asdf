@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
+import { RouteComponentProps } from 'react-router-dom';
 
 import { Consultant, Title } from 'components/molecules';
-import {COLORS} from 'utils/color';
+import { COLORS } from 'utils/color';
+import useUser from 'hooks/useUser';
+import useMonitoring from 'hooks/useMonitoring';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -34,66 +37,13 @@ const StyledConsultant = styled.span`
   padding-right: 0.5rem;
 `;
 
-function Monitoring() {
-  const consultantInfo = [
-    {
-      id: 9,
-      branch_name: '을지로입구지',
-      team_name: '1팀',
-      admin_id: '1',
-      name: 'name7',
-      user_name: 'test07',
-      number: '01044312797',
-      ziboxip: '192.168.1.116',
-      login_at: 1595984326361,
-    },
-    {
-      id: 8,
-      branch_name: '을지로입구지',
-      team_name: '1팀',
-      admin_id: '1',
-      name: 'name6',
-      user_name: 'test06',
-      number: '01044312797',
-      ziboxip: '192.168.1.116',
-      login_at: 1595903545028,
-    },
-    {
-      id: 7,
-      branch_name: '을지로입구지',
-      team_name: '1팀',
-      admin_id: '1',
-      name: 'name5',
-      user_name: 'test05',
-      number: '01044312797',
-      ziboxip: '192.168.1.116',
-      login_at: 1595903541751,
-    },
-  ];
-
-  const callInfo = [
-    {
-      id: 9,
-      number: '01044312797',
-      status: 0, // 대기
-      call_at: 0,
-    },
-    {
-      id: 8,
-      number: '01044312797',
-      status: 1, // 통화 중
-      call_at: 365,
-    },
-    {
-      id: 7,
-      number: '01044312797',
-      status: 1,
-      call_at: 593,
-    },
-  ];
+function Monitoring({ location }: MonitoringProps) {
+  const { consultantInfo, getConsultantsInfo } = useUser();
+  const { onRunTimer, onRemoveTimer } = useMonitoring();
 
   const selectInfo = {
     color: COLORS.green,
+    borderRadius: 0,
     data: [
       {
         id: 1,
@@ -103,6 +53,18 @@ function Monitoring() {
     ],
   };
 
+  useEffect(() => {
+    getConsultantsInfo(location);
+  }, [getConsultantsInfo]);
+
+  useEffect(() => {
+    onRunTimer();
+    return () => {
+      onRemoveTimer();
+    };
+  }, [onRunTimer, onRemoveTimer]);
+
+  console.log('Lendering MonitoringView');
   return (
     <StyledWrapper>
       <StyledTitle>
@@ -110,12 +72,15 @@ function Monitoring() {
       </StyledTitle>
       <StyledConsultantArea>
         {consultantInfo.map((consultant, i) => {
+          if (consultant.admin_id === '2') {
+            return null;
+          }
+
           return (
             <StyledConsultant key={`styled-consultant-${consultant.id}`}>
               <Consultant
                 key={`consultant-${consultant.id}`}
                 consultInfo={consultant}
-                callInfo={callInfo[i]}
               />
             </StyledConsultant>
           );
@@ -124,5 +89,7 @@ function Monitoring() {
     </StyledWrapper>
   );
 }
+
+interface MonitoringProps extends RouteComponentProps {}
 
 export default Monitoring;

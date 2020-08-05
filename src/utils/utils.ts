@@ -4,8 +4,8 @@ export const getYYYYMMDD = (timestamp: number, delim = '.'): string => {
   let month = date.getMonth() + 1 + '';
   let _date = date.getDate() + '';
 
-  let fullDate = `${year}${delim}${pad(month)}${delim}${pad(_date)}`
-  
+  let fullDate = `${year}${delim}${pad(month)}${delim}${pad(_date)}`;
+
   return fullDate;
 };
 
@@ -30,10 +30,23 @@ export const getTimeToSecond = (second: number, delim = ':'): string => {
   return fullTime;
 };
 
-const pad = (data: string, standard = 2): string => {
+export const pad = (data: string, standard = 2): string => {
   if (data.length < standard) {
     return '0' + data;
   }
 
   return data;
+};
+
+export const getDiffTime = (timestamp: number) => {
+  const current: number = new Date().getTime();
+  const diff = current - Number(timestamp + '000');
+
+  return diff;
+};
+
+export const getMaxPage = (count: number, divide = 5) => {
+  let maxPage = Math.floor(count / divide) + 1;
+
+  return maxPage;
 };

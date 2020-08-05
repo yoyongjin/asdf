@@ -9,6 +9,9 @@ const StyledWrapper = styled.div`
   width: 100vw;
   max-width: 140rem;
   height: 100vh;
+
+  /* Other */
+  /* overflow: hidden; */
 `;
 
 const StyledGnb = styled.div`
@@ -19,8 +22,8 @@ const StyledGnb = styled.div`
 const StyledContent = styled.div<StyledProps>`
   /* Display */
   height: 90%;
-  padding-left: 3rem;
-  padding-right: 3rem;
+  padding-left: 7rem;
+  padding-right: 7rem;
 
   /* Color */
   background-color: ${(props) => props.bgColor};
@@ -30,7 +33,7 @@ function MainTemplate({ gnb, bgColor }: MainTemplateProps) {
   return (
     <StyledWrapper>
       <StyledGnb>{gnb}</StyledGnb>
-      <StyledContent  bgColor={bgColor}>
+      <StyledContent bgColor={bgColor}>
         <MainRouter />
       </StyledContent>
     </StyledWrapper>
