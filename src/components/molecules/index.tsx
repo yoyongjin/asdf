@@ -7,7 +7,10 @@ import TableContent from './TableContent';
 import TableTitle from './TableTitle';
 import TablePagination from './TablePagination';
 import TableProperty from './TableProperty';
+import TextInput from './TextInput';
+import TextSelect from './TextSelect';
 import Title from './Title';
+import UserInfo from './UserInfo';
 import UserLog from './UserLog';
 
 export {
@@ -20,6 +23,9 @@ export {
   TableTitle,
   TablePagination,
   TableProperty,
+  TextInput,
+  TextSelect,
   Title,
+  UserInfo,
   UserLog,
 };

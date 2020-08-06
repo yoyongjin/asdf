@@ -6,9 +6,11 @@ import { COLORS } from 'utils/color';
 const StyledInput = styled.input<InputProps>`
   width: ${(props) => props.width}rem;
   height: ${(props) => props.height}rem;
-  border-width: ${(props) => props.borderWidth};
+  border-width: ${(props) => props.borderWidth}rem;
   border-radius: ${(props) => props.borderRadius}rem;
+  border-color: ${(props) => props.borderColor};
   text-align: center;
+  outline: none;
   ::-webkit-input-placeholder {
     color: ${(props) => props.phColor};
   }
@@ -44,8 +46,9 @@ interface InputProps {
   readonly height: number;
   readonly borderWidth: number | string;
   readonly borderRadius: number;
+  readonly borderColor: string;
   readonly phColor: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
@@ -57,6 +60,7 @@ Input.defaultProps = {
   height: 1.7,
   borderWidth: 0,
   borderRadius: 1,
+  borderColor: COLORS.light_gray3,
   phColor: COLORS.black,
 };
 

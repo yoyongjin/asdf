@@ -8,6 +8,7 @@ const StyledButton = styled.button<ButtonProps>`
   height: ${(props) => props.height}rem;
   border-width: ${(props) => props.borderWidth};
   border-radius: ${(props) => props.borderRadius}rem;
+  outline: none;
   ${(props) => {
     if (props.bgImage) {
       return css<ButtonProps>`
@@ -25,9 +26,16 @@ const StyledButton = styled.button<ButtonProps>`
   /* Color */
   color: ${(props) => props.fontColor};
   background-color: ${(props) => props.bgColor};
+
   &:hover {
-          cursor: pointer;
-        }
+    cursor: pointer;
+    opacity: 0.5;
+  }
+  &:active {
+    opacity: 0.9;
+  }
+
+  
 `;
 
 function Button({ onClick, children, ...props }: ButtonProps) {

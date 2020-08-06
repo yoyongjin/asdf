@@ -29,9 +29,9 @@ function Organization() {
   const branchInputRef = useRef<HTMLInputElement>(
     null,
   ) as React.MutableRefObject<HTMLInputElement>;
-  const teamInputRef = useRef<HTMLInputElement[]>(
-    [],
-  ) as React.MutableRefObject<HTMLInputElement[]>;
+  const teamInputRef = useRef<HTMLInputElement[]>([]) as React.MutableRefObject<
+    HTMLInputElement[]
+  >;
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     if (e.target.name === 'branch') {
@@ -50,10 +50,12 @@ function Organization() {
       <StyledBranch>
         <Input
           innerRef={branchInputRef}
+          type={'search'}
           value={branchInput}
           name={'branch'}
           placeholder={'지점명 입력'}
           height={3}
+          borderWidth={0.1}
           borderRadius={2}
           onChange={onChange}
           onKeyUp={(e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -68,10 +70,12 @@ function Organization() {
             <StyledTeam key={`styled-team-${i}`}>
               <Input
                 // innerRef={ref => teamInputRef.current[i] = ref}
+                type={'search'}
                 value={value}
                 name={`team${[i]}`}
                 placeholder={'팀명 입력'}
                 height={2.5}
+                borderWidth={0.1}
                 borderRadius={2}
                 onChange={(e) =>
                   setTeamInputs(

@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import { Text } from 'components/atoms';
 import { COLORS } from 'utils/color';
 
 const StyledWrapper = styled.ul`
@@ -37,7 +38,14 @@ function List({ menu }: ListProps) {
     <StyledWrapper>
       {menu.map((title, i) => {
         return (
-          <StyledContent key={`styled-content-${i}`}>{title}</StyledContent>
+          <StyledContent
+            key={`styled-content-${i}`}
+            onClick={() => alert('test')}
+          >
+            <Text fontWeight={600} fontColor={COLORS.dark_gray1}>
+              {title}
+            </Text>
+          </StyledContent>
         );
       })}
     </StyledWrapper>

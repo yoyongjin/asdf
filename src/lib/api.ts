@@ -22,6 +22,13 @@ export const getConsultantInfo = (payload: {
   limit: number;
   page: number;
 }) =>
-  instance.get('api/auth', {
+  instance.get('/api/auth', {
     params: payload,
   }); // 상담원 정보 가져오기
+export const resetPassword = () => {
+  instance.patch('api/auth/password');
+}; // 비밀번호 초기화
+
+export const getBranchInfo = () => {
+  instance.get('/api/branch');
+}; // 지점 + 팀 목록 가져오기

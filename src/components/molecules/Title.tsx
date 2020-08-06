@@ -63,7 +63,12 @@ function Title({
         </StyleTitle>
         {buttonType ? (
           <StyledButton>
-            <Button width={8.5} height={2} bgColor={COLORS.green}>
+            <Button
+              width={8.5}
+              height={2}
+              bgColor={COLORS.green}
+              onClick={buttonType.onClick}
+            >
               {buttonType.title}
             </Button>
           </StyledButton>
@@ -102,6 +107,7 @@ function Title({
 
 interface buttonType {
   title: string;
+  onClick?: () => void;
 }
 
 interface explanType {

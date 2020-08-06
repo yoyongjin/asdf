@@ -9,14 +9,19 @@ const StyledText = styled.span<TextProps>`
   font-weight: ${(props) => props.fontWeight};
 `;
 
-function Text({ children, ...props }: TextProps) {
-  return <StyledText {...props}>{children}</StyledText>;
+function Text({ onClick, children, ...props }: TextProps) {
+  return (
+    <StyledText onClick={onClick} {...props}>
+      {children}
+    </StyledText>
+  );
 }
 
 interface TextProps {
   fontSize: number;
   fontColor: string;
   fontWeight: number | string;
+  onClick?: () => void;
   children: number | string;
 }
 

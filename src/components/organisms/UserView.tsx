@@ -2,11 +2,14 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { RouteComponentProps } from 'react-router-dom';
 
-import { Title, TablePagination } from 'components/molecules';
+import { Modal } from 'components/atoms';
+import { Title, TablePagination, UserInfo } from 'components/molecules';
 import { Table } from 'components/organisms';
 import { COLORS } from 'utils/color';
 import useUser from 'hooks/useUser';
 import usePage from 'hooks/usePage';
+import useVisible from 'hooks/useVisible';
+
 import threeDotsIcon from 'images/bt-user-modi-nor@2x.png';
 import hoverThreeDotsIcon from 'images/bt-user-modi-over@2x.png';
 
@@ -41,10 +44,7 @@ const StyledUserPage = styled.div`
 function UserView({ location }: UserViewProps) {
   const { consultantInfo, getConsultantsInfo } = useUser();
   const { countUser, page, onClickNextPage, onClickPrevPage } = usePage();
-
-  const buttonInfo = {
-    title: '+ 사용자 등록',
-  };
+  const { visible, onClickVisible } = useVisible();
 
   const selectInfo = {
     color: COLORS.dark_gray4,
@@ -74,33 +74,44 @@ function UserView({ location }: UserViewProps) {
     getConsultantsInfo(location, -1, -1, 5, page);
   }, [getConsultantsInfo, location, page]);
 
+  const buttonInfo = {
+    title: '+ 사용자 등록',
+    onClick: onClickVisible,
+  };
+
   console.log('Lendering UserView');
   return (
-    <StyledWrapper>
-      <StyledTitle>
-        <Title buttonType={buttonInfo} selectType={selectInfo} isSearch>
-          사용자 관리
-        </Title>
-      </StyledTitle>
-      <StyledUserListArea>
-        <StyledUserList>
-          <Table
-            tableTitle={tableTitle}
-            consultantInfo={consultantInfo}
-            threeDotsIcon={threeDotsIcon}
-            hoverThreeDotsIcon={hoverThreeDotsIcon}
-          ></Table>
-        </StyledUserList>
-        <StyledUserPage>
-          <TablePagination
-            curPage={page}
-            count={countUser}
-            onClickNextPage={onClickNextPage}
-            onClickPrevPage={onClickPrevPage}
-          ></TablePagination>
-        </StyledUserPage>
-      </StyledUserListArea>
-    </StyledWrapper>
+    <>
+      <StyledWrapper>
+        <StyledTitle>
+          <Title buttonType={buttonInfo} selectType={selectInfo} isSearch>
+            사용자 관리
+          </Title>
+        </StyledTitle>
+        <StyledUserListArea>
+          <StyledUserList>
+            <Table
+              tableTitle={tableTitle}
+              consultantInfo={consultantInfo}
+              threeDotsIcon={threeDotsIcon}
+              hoverThreeDotsIcon={hoverThreeDotsIcon}
+            ></Table>
+          </StyledUserList>
+          <StyledUserPage>
+            <TablePagination
+              curPage={page}
+              count={countUser}
+              onClickNextPage={onClickNextPage}
+              onClickPrevPage={onClickPrevPage}
+            ></TablePagination>
+          </StyledUserPage>
+        </StyledUserListArea>
+      </StyledWrapper>
+      <Modal
+        isVisible={visible}
+        Component={<UserInfo onClickVisible={onClickVisible} />}
+      />
+    </>
   );
 }
 
