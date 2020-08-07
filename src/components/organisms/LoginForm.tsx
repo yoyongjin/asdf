@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { Button, Input, Text } from 'components/atoms';
 import { COLORS } from 'utils/color';
-import useInput from 'hooks/useInput';
+import useInputForm from 'hooks/useInputForm';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -34,7 +34,7 @@ const StyledInputPassword = styled.div`
 const StyledLogin = styled.div``;
 
 function LoginForm({ history }: LoginFormProps) {
-  const { form, onChange, onClickLogin } = useInput({
+  const { form, onChange, onClickLogin } = useInputForm({
     id: 'ADMIN_USER',
     password: 'ADMIN_PASS',
   });

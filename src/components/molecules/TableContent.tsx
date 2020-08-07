@@ -5,7 +5,7 @@ import { TableProperty } from 'components/molecules';
 import { COLORS } from 'utils/color';
 
 const StyledWrapper = styled.tr`
-  height: 4rem;
+  height: 3.12rem;
   color: ${COLORS.dark_gray1};
   font-weight: 600;
 `;

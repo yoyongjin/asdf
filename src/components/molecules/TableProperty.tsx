@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-import { Image, List } from 'components/atoms';
+import { Image, List, Text } from 'components/atoms';
 import { COLORS } from 'utils/color';
 
 const StyledWrapper = styled.td`
@@ -41,14 +41,30 @@ function TableProperty({
   };
   return (
     <>
-      <StyledWrapper>{info.id}</StyledWrapper>
-      <StyledWrapper>{info.branch_name}</StyledWrapper>
-      <StyledWrapper>{info.team_name}</StyledWrapper>
-      <StyledWrapper>{info.admin_id}</StyledWrapper>
-      <StyledWrapper>{info.user_name}</StyledWrapper>
-      <StyledWrapper>{info.name}</StyledWrapper>
-      <StyledWrapper>{info.number}</StyledWrapper>
-      <StyledWrapper>{info.ziboxip}</StyledWrapper>
+      <StyledWrapper>
+        <Text>{info.id}</Text>
+      </StyledWrapper>
+      <StyledWrapper>
+        <Text>{info.branch_name!}</Text>
+      </StyledWrapper>
+      <StyledWrapper>
+        <Text>{info.team_name!}</Text>
+      </StyledWrapper>
+      <StyledWrapper>
+        <Text>{info.admin_id}</Text>
+      </StyledWrapper>
+      <StyledWrapper>
+        <Text>{info.user_name}</Text>
+      </StyledWrapper>
+      <StyledWrapper>
+        <Text>{info.name}</Text>
+      </StyledWrapper>
+      <StyledWrapper>
+        <Text>{info.number}</Text>
+      </StyledWrapper>
+      <StyledWrapper>
+        <Text>{info.ziboxip}</Text>
+      </StyledWrapper>
       <StyledWrapper>
         <StyledProperty onMouseEnter={onMouseIn} onMouseLeave={onMouseOut}>
           {isHover && (

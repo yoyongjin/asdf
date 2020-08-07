@@ -12,8 +12,8 @@ import interceptionFinishIcon from 'images/bt-mnt-listen-fin-nor.png';
 
 const StyledWrapper = styled.div`
   /* Display */
-  width: 14rem;
-  height: 17rem;
+  width: 12.5rem;
+  height: 15rem;
   text-align: center;
 
   /* Color */
@@ -45,13 +45,13 @@ function Consultant({ consultInfo }: ConsultantProps) {
       <StyledCallStatusArea>
         {consultInfo.call_type !== 'call_offhook' ? (
           <>
-            <Text fontColor={COLORS.dark_gray1} fontWeight={600}>
+            <Text fontColor={COLORS.dark_gray1} fontWeight={600} fontSize={0.87}>
               대기중
             </Text>
           </>
         ) : (
           <>
-            <Text fontColor={COLORS.red} fontWeight={600}>
+            <Text fontColor={COLORS.red} fontWeight={600} fontSize={0.87}>
               통화중
             </Text>
             <Text fontColor={COLORS.red} fontWeight={600}>
@@ -66,8 +66,8 @@ function Consultant({ consultInfo }: ConsultantProps) {
             <Image
               src={waitingIcon}
               alt={waitingIcon}
-              width={4.5}
-              height={4.5}
+              width={4}
+              height={4}
             />
           </>
         ) : (
@@ -75,21 +75,22 @@ function Consultant({ consultInfo }: ConsultantProps) {
             <Image
               src={callingIcon}
               alt={callingIcon}
-              width={4.5}
-              height={4.5}
+              width={4}
+              height={4}
             />
           </>
         )}
       </StyledCallImage>
       <StyledUserInfo>
         <Text
-          fontSize={1.5}
+          fontSize={1.12}
           fontColor={COLORS.dark_gray1}
+          fontWeight={'bold'}
         >{`${consultInfo.user_name} 님`}</Text>
         <Text
-          fontSize={1.2}
+          fontSize={0.87}
           fontColor={COLORS.dark_gray2}
-        >{`${consultInfo.branch_name}점 ${consultInfo.team_name}`}</Text>
+        >{`${consultInfo.branch_name} ${consultInfo.team_name}`}</Text>
       </StyledUserInfo>
       <StyledInterception>
         {consultInfo.call_type !== 'call_offhook' ? (
@@ -97,10 +98,11 @@ function Consultant({ consultInfo }: ConsultantProps) {
         ) : (
           <>
             <Button
-              width={6}
-              height={2}
+              width={4.6}
+              height={1.6}
               bgColor={'inherit'}
               bgImage={interceptionStartIcon}
+              borderRadius={0.81}
             >
               감청
             </Button>

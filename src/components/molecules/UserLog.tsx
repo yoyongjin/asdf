@@ -33,10 +33,10 @@ const StyledLogout = styled.span`
   padding-left: 1rem;
 `;
 
-const StyledTest = styled.span`
+const StyledText = styled.span`
   /* Position */
   position: absolute;
-  top: 50%;
+  top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
 `;
@@ -50,26 +50,29 @@ function UserLog({
   return (
     <StyledWrapper>
       <StyledUser>
-        <Text fontSize={1.3} fontColor={COLORS.white}>{`${userName} 님`}</Text>
+        <Text
+          fontColor={COLORS.white}
+          fontWeight={600}
+        >{`${userName} 님`}</Text>
       </StyledUser>
       <StyledLoginTime>
         <Image
           src={loginTimeImage}
           alt={loginTimeImage}
-          width={16}
-          height={1.8}
+          width={11.8}
+          height={1.4}
         />
-        <StyledTest>
-          <Text fontColor={COLORS.green}>{`${getYYYYMMDD(
+        <StyledText>
+          <Text fontColor={COLORS.green} fontSize={0.69} fontWeight={600}>{`${getYYYYMMDD(
             loginTime,
           )} ${getHourMinSec(loginTime)}`}</Text>
-        </StyledTest>
+        </StyledText>
       </StyledLoginTime>
       <StyledLogout>
         <Button
           bgColor={'inherit'}
           width={5}
-          fontSize={1.3}
+          fontSize={0.81}
           onClick={onClickLogout}
         >
           로그아웃

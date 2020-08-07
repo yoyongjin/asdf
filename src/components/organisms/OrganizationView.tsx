@@ -14,16 +14,14 @@ const StyledWrapper = styled.div`
 
 const StyledTitle = styled.div`
   /* Display */
-  height: 10%;
+  height: 3.75rem;
 `;
 
 const StyledOrganizationArea = styled.div`
-  height: 90%;
+  /* Display */
+  height: calc(100% - 3.75rem);
   display: flex;
-  flex-wrap: wrap;
-
-  /* Other */
-  overflow-x: auto;
+  overflow-y: auto;
 `;
 
 const StyledOrganization = styled.div`
@@ -31,11 +29,15 @@ const StyledOrganization = styled.div`
 `;
 
 function OrganizationView() {
-  const { getBranchInfo } = useBranch();
+  const {
+    branchInfo,
+    getBranchInfo,
+    onClickAddTempBranch,
+    handleAddBranch,
+    handleAddTeam,
+    // onChange,
+  } = useBranch();
   const { visible } = useVisible();
-  const onClick = () => {
-    alert('지점 추가 기능');
-  };
 
   useEffect(() => {
     getBranchInfo();
@@ -43,11 +45,16 @@ function OrganizationView() {
 
   const buttonType = {
     title: '+ 지점 추가하기',
-    onClick: onClick,
+    onClick: onClickAddTempBranch,
   };
+
   const explanType = {
     title: '※ 팀추가 : 팀명 입력 후 엔터',
   };
+
+  const branchKeys = Object.getOwnPropertyNames(branchInfo).reverse();
+  const branchValues = Object.values(branchInfo).reverse();
+
   console.log('Lendering OrganizationView');
   return (
     <>
@@ -58,9 +65,20 @@ function OrganizationView() {
           </Title>
         </StyledTitle>
         <StyledOrganizationArea>
-          <StyledOrganization>
-            <Organization />
-          </StyledOrganization>
+          {branchKeys.map((value, i) => {
+            return (
+              <StyledOrganization key={`styled-organization-${value}`}>
+                <Organization
+                  key={`organization-${value}`}
+                  branch={branchValues[i]}
+                  branchId={Number(value)}
+                  handleAddBranch={handleAddBranch}
+                  handleAddTeam={handleAddTeam}
+                  // onChange={onChange}
+                />
+              </StyledOrganization>
+            );
+          })}
         </StyledOrganizationArea>
       </StyledWrapper>
       <Modal isVisible={visible} />

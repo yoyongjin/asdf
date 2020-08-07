@@ -25,10 +25,27 @@ export const getConsultantInfo = (payload: {
   instance.get('/api/auth', {
     params: payload,
   }); // 상담원 정보 가져오기
-export const resetPassword = () => {
-  instance.patch('api/auth/password');
-}; // 비밀번호 초기화
+export const resetPassword = () =>
+  instance.patch('api/auth/password', {
+    user_id: 1,
+  }); // 비밀번호 초기화
 
-export const getBranchInfo = () => {
-  instance.get('/api/branch');
-}; // 지점 + 팀 목록 가져오기
+export const getBranchInfo = () => instance.get('/api/branch'); // 지점 + 팀 목록 가져오기
+
+export const deleteUser = () =>
+  instance.delete('/api/auth', {
+    data: {
+      user_id: 2,
+    },
+  }); // 유저 삭제
+
+export const insertBranch = (branch_name: string) =>
+  instance.post('/api/branch', {
+    branch_name,
+  });
+
+export const insertTeam = (team_name: string, branch_id: number) =>
+  instance.post('/api/team', {
+    team_name,
+    branch_id,
+  });

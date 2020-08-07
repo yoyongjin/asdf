@@ -25,21 +25,21 @@ function LinkSelector() {
     <StyledWrapper>
       <StyledMonitoring>
         <Link path="/main">
-          <Text fontSize={1.3} fontColor={COLORS.white} fontWeight={600}>
+          <Text fontColor={COLORS.white} fontWeight={600}>
             모니터링
           </Text>
         </Link>
       </StyledMonitoring>
       <StyledGroup>
         <Link path="/main/manage/organization">
-          <Text fontSize={1.3} fontColor={COLORS.white} fontWeight={600}>
+          <Text fontColor={COLORS.white} fontWeight={600}>
             조직 관리
           </Text>
         </Link>
       </StyledGroup>
       <StyledUser>
         <Link path="/main/manage/user">
-          <Text fontSize={1.3} fontColor={COLORS.white} fontWeight={600}>
+          <Text fontColor={COLORS.white} fontWeight={600}>
             사용자 관리
           </Text>
         </Link>

@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import { Text } from 'components/atoms';
 import { COLORS } from 'utils/color';
 
 const StyledWrapper = styled.tr`
@@ -8,18 +9,17 @@ const StyledWrapper = styled.tr`
   height: 3rem;
 `;
 
-const StyledTitle = styled.th<StyledProps>`
-  /* Color */
-  color: ${(props) => props.fontColor};
-`;
+const StyledTitle = styled.th``;
 
 function TableTitle({ titleList, fontColor }: TableTitleProps) {
   return (
     <StyledWrapper>
       {titleList.map((title, i) => {
         return (
-          <StyledTitle key={`styled-title-${i}`} fontColor={fontColor}>
-            {title}
+          <StyledTitle key={`styled-title-${i}`}>
+            <Text fontSize={0.81} fontColor={fontColor} fontWeight={'bold'}>
+              {title}
+            </Text>
           </StyledTitle>
         );
       })}
@@ -27,12 +27,9 @@ function TableTitle({ titleList, fontColor }: TableTitleProps) {
   );
 }
 
-interface StyledProps {
-  fontColor?: string;
-}
-
-interface TableTitleProps extends StyledProps {
+interface TableTitleProps {
   titleList: Array<string>;
+  fontColor: string;
 }
 
 TableTitle.defaultProps = {
