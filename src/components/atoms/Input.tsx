@@ -5,12 +5,13 @@ import { COLORS } from 'utils/color';
 
 const StyledInput = styled.input<InputProps>`
   width: ${(props) => props.width}rem;
-  height: ${(props) => props.height}rem;
+  height: ${(props) => props.height}${(props) => props.height > 10 ? "px" : "rem"};
   border-width: ${(props) => props.borderWidth}rem;
   border-radius: ${(props) => props.borderRadius}rem;
   border-color: ${(props) => props.borderColor};
   text-align: center;
   outline: none;
+  float: right;
   ::-webkit-input-placeholder {
     color: ${(props) => props.phColor};
   }

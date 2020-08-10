@@ -12,20 +12,21 @@ const StyledWrapper = styled.div`
 
 const StyledTitle = styled.div`
   width: 100%;
-  height: 10%;
+  height: 40px;
 `;
 
 const StyledContent = styled.div`
   width: 100%;
-  min-height: 10rem;
+  height: 382px;
   /* height: 80%; */
   /* max-height: 30rem; */
   display: flex;
   flex-wrap: wrap;
+  align-items: stretch;
   justify-content: space-between;
+  align-content: flex-start;
   /* align-content: space-around; */
   border-bottom: 0.05rem solid ${COLORS.green};
-
   padding-top: 1rem;
   padding-bottom: 1rem;
 `;
@@ -40,29 +41,35 @@ function UserInfo({ onClickVisible }: UserInfoProps) {
   return (
     <StyledWrapper>
       <StyledTitle>
-        <Title>사용자 정보</Title>
+        <Title fontSize={18}>사용자 정보</Title>
       </StyledTitle>
       <StyledContent>
         <TextSelect textValue={'지점명'}></TextSelect>
         <TextSelect textValue={'팀명'}></TextSelect>
         <TextSelect textValue={'권한'}></TextSelect>
-        <TextInput textValue={'이름'}></TextInput>
-        <TextInput textValue={'아이디'}></TextInput>
-        <TextInput textValue={'비밀번호'}></TextInput>
-        <TextInput textValue={'전화번호'}></TextInput>
-        <TextInput textValue={'ZiBox IP 직접 입력하기'}></TextInput>
+        <TextInput height={22.5} textValue={'이름'}></TextInput>
+        <TextInput height={22.5} textValue={'아이디'}></TextInput>
+        <TextInput height={22.5} textValue={'비밀번호'}></TextInput>
+        <TextInput height={22.5} padRight={2} textValue={'전화번호'}></TextInput>
+        <TextInput height={22.5} textValue={'ZiBox IP 직접 입력하기'}></TextInput>
       </StyledContent>
       <StyledFooter>
+        <Button width={6} height={1.8} bgColor={COLORS.green} customStyle={`
+            float:right;
+          `}>
+          저장
+        </Button>
         <Button
           width={6}
           height={1.8}
           bgColor={COLORS.dark_gray1}
           onClick={onClickVisible}
+          customStyle={`
+            float:right;
+            margin-right: 10px;
+          `}
         >
           취소
-        </Button>
-        <Button width={6} height={1.8} bgColor={COLORS.green}>
-          저장
         </Button>
       </StyledFooter>
     </StyledWrapper>

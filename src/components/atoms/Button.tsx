@@ -34,8 +34,7 @@ const StyledButton = styled.button<ButtonProps>`
   &:active {
     opacity: 0.9;
   }
-
-  
+  ${(props) => props.customStyle}
 `;
 
 function Button({ onClick, children, ...props }: ButtonProps) {
@@ -57,6 +56,7 @@ interface ButtonProps {
   readonly bgImage?: string;
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   readonly children?: string | React.ReactChild;
+  readonly customStyle ?: string
 }
 
 Button.defaultProps = {

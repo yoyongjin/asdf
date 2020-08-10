@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { COLORS } from 'utils/color';
 
 const StyledText = styled.span<TextProps>`
-  font-size: ${(props) => props.fontSize}rem;
+  font-size: ${(props) => props.fontSize}${(props) => props.fontSize > 10 ? "px" : "rem"};
   color: ${(props) => props.fontColor};
   font-weight: ${(props) => props.fontWeight};
 `;

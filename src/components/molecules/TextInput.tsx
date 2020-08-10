@@ -4,10 +4,13 @@ import styled from 'styled-components';
 import { Text, Input } from 'components/atoms';
 import { COLORS } from 'utils/color';
 
-const StyledWrapper = styled.div``;
-const StyledBlank = styled.span`
+const StyledWrapper = styled.div`
+  padding-bottom : 20px;
+  min-width : 170px;
+`;
+const StyledBlank = styled.span<BlankProps>`
   padding-left: 0.5rem;
-  padding-right: 0.5rem;
+  padding-right: ${(props) => props.padRight ? `${props.padRight}px` : "0.5rem"};
 `;
 
 function TextInput({
@@ -16,14 +19,20 @@ function TextInput({
   inputWidth,
   inputRadius,
   inputPh,
+  padRight,
+  height
 }: TextInputProps) {
   return (
     <StyledWrapper>
-      <Text fontWeight={textWeight}>{textValue}</Text>
-      <StyledBlank />
-      <Input width={7} borderRadius={inputRadius} placeholder={inputPh}></Input>
+      <Text fontSize={13} fontWeight={textWeight}>{textValue}</Text>
+      <StyledBlank padRight={padRight}/>
+      <Input height={height} width={6.5} borderRadius={inputRadius} placeholder={inputPh}></Input>
     </StyledWrapper>
   );
+}
+
+interface BlankProps {
+  padRight ?: number;
 }
 
 interface TextInputProps {
@@ -33,6 +42,8 @@ interface TextInputProps {
   inputRadius: number;
   inputPh: string;
   textColor: string;
+  padRight ?: number;
+  height ?: number;
 }
 
 TextInput.defaultProps = {

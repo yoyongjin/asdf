@@ -4,7 +4,10 @@ import styled from 'styled-components';
 import { Text, Select } from 'components/atoms';
 import { COLORS } from 'utils/color';
 
-const StyledWrapper = styled.div``;
+const StyledWrapper = styled.div`
+  padding-bottom : 20px;
+  min-width : 170px;
+`;
 const StyledBlank = styled.span`
   padding-left: 0.5rem;
   padding-right: 0.5rem;
@@ -18,7 +21,7 @@ function TextSelect({
 }: TextSelectProps) {
   return (
     <StyledWrapper>
-      <Text fontWeight={textWeight}>{textValue}</Text>
+      <Text fontSize={13} fontWeight={textWeight}>{textValue}</Text>
       <StyledBlank />
       <Select width={selectWidth} borderRadius={selectRadius}></Select>
     </StyledWrapper>

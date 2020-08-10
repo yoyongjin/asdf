@@ -5,9 +5,9 @@ import { COLORS } from 'utils/color';
 
 const StyledSelect = styled.select<SelectProps>`
 /* Display */
-  width: ${props => props.width}rem;
+  width: ${(props) => props.width}${(props) => props.width > 10 ? "px" : "rem"};
   border-radius: ${props => props.borderRadius}rem;
-
+  float: right;
   /* Color */
   border-color: ${(props) => props.borderColor};
   color: ${(props) => props.fontColor};

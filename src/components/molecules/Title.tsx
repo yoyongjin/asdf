@@ -52,12 +52,13 @@ function Title({
   selectType,
   isSearch,
   children,
+  fontSize
 }: TitleProps) {
   return (
     <StyledWrapper>
       <StyledLeft>
         <StyleTitle>
-          <Text fontSize={1.3} fontWeight={600} fontColor={COLORS.green}>
+          <Text fontSize={fontSize ? fontSize : 1.3} fontWeight={600} fontColor={COLORS.green}>
             {children}
           </Text>
         </StyleTitle>
@@ -131,6 +132,7 @@ interface TitleProps {
   selectType?: selectType;
   isSearch?: boolean;
   children: string;
+  fontSize?: number;
 }
 
 Title.defaultProps = {};

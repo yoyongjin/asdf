@@ -28,11 +28,12 @@ const StyledInner = styled.div`
 
   /* Display */
   box-sizing: border-box;
-  min-width: 20rem;
-  width: 50%;
-  max-width: 45rem;
-  height: 32rem;
-  padding: 3rem 3rem;
+  width: 640px;
+  height: 570px;
+  padding-left: 51px;
+  padding-top : 42px;
+  padding-right : 51px;
+  padding-bottom : 30px;
   box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
   margin: 0 auto;
   transform: translateY(-50%);
