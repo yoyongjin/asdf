@@ -9,6 +9,7 @@ import {
   REQUEST_ADD_TEAM_INFO,
   requestAddTeamInfo,
   successAddBranchInfo,
+  successAddTeamInfo,
 } from 'modules/actions/branch';
 import * as API from 'lib/api';
 
@@ -30,7 +31,7 @@ function* insertBranch(action: ReturnType<typeof requestAddBranchInfo>) {
   try {
     const { name } = action.payload;
     const response = yield call(API.insertBranch, name);
-    console.log('insert Data =>', response);
+    console.log('insert branch Data =>', response);
     const { data, status } = response.data;
 
     if (status === 'success') {
@@ -47,12 +48,20 @@ function* insertBranch(action: ReturnType<typeof requestAddBranchInfo>) {
 
 function* insertTeam(action: ReturnType<typeof requestAddTeamInfo>) {
   try {
-    const response = yield call(
-      API.insertTeam,
-      action.payload.name,
-      action.payload.id,
-    );
-    console.log(response);
+    const { name, branch_id, team_id } = action.payload;
+    const response = yield call(API.insertTeam, name, branch_id);
+    console.log('insert team Data =>', response);
+    const { data, status } = response.data;
+
+    if (status === 'success') {
+      const payload = {
+        branch_id,
+        before_id: team_id,
+        next_id: data,
+        name,
+      };
+      yield put(successAddTeamInfo(payload));
+    }
   } catch (error) {
     console.log(error);
   }

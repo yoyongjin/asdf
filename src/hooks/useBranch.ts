@@ -34,11 +34,12 @@ function useBranch() {
     [dispatch],
   );
 
-  const handleAddTeam = useCallback((name: string, id) => {
+  const handleAddTeam = useCallback((name: string, branchId:number, teamId: number) => {
     // 팀 추가
     const payload = {
       name,
-      id,
+      branch_id: branchId,
+      team_id: teamId,
     };
     dispatch(requestAddTeamInfo(payload));
   }, [dispatch]);

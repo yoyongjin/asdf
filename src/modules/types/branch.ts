@@ -38,11 +38,19 @@ export interface RequestAddBranch {
 
 export interface RequestAddTeam {
   name: string;
-  id: number;
+  branch_id: number;
+  team_id: number;
 }
 
 export interface AddBranch {
   id: number;
+  name: string;
+}
+
+export interface AddTeam {
+  branch_id: number;
+  before_id: number;
+  next_id: number;
   name: string;
 }
 

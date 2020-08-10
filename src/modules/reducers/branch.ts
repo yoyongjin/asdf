@@ -51,10 +51,11 @@ const userReducer = createReducer<BranchType<string>, BranchAction>(
       let temp = {};
 
       keys.map((value, i) => {
-        console.log(value)
+        // 팀명 입력할 수 있는 란을 만들기 위해 추가
+        console.log(values[i]);
         values[i].push({
           branch_id: Number(value),
-          id: i + 1,
+          id: 0,
           team_name: '',
         });
         temp = {
@@ -83,6 +84,7 @@ const userReducer = createReducer<BranchType<string>, BranchAction>(
       const index = Number(keys[keys.length - 1]) + 1;
       return produce(state, (draft) => {
         draft.branchInfo = {
+          ...draft.branchInfo,
           [index]: [
             {
               id: index,
@@ -95,7 +97,6 @@ const userReducer = createReducer<BranchType<string>, BranchAction>(
             },
           ],
         };
-        
       });
     },
     [types.REQUEST_ADD_BRANCH_INFO]: (state, action) => {
@@ -105,24 +106,32 @@ const userReducer = createReducer<BranchType<string>, BranchAction>(
       });
     },
     [types.REQUEST_ADD_TEAM_INFO]: (state, action) => {
-      return produce(state, draft => {
+      return produce(state, (draft) => {
         draft.insertTeam.fetch = true;
         draft.insertTeam.error = false;
-      })
+      });
     },
     [types.SUCCESS_ADD_BRANCH_INFO]: (state, action) => {
-      console.log(action)
-      console.log(state)
-      return produce(state, draft => {
+      console.log(action);
+      console.log(state);
+      return produce(state, (draft) => {
         draft.insertBranch.fetch = false;
         draft.insertBranch.error = false;
-      })
+      });
     },
     [types.SUCCESS_ADD_TEAM_INFO]: (state, action) => {
-      return produce(state, draft => {
+      console.log(action);
+      console.log(state);
+      const { branch_id, before_id, next_id, name } = action.payload;
+      return produce(state, (draft) => {
         draft.insertTeam.fetch = false;
         draft.insertTeam.error = false;
-      })
+        draft.branchInfo = {
+          [branch_id]: {
+            // values,
+          },
+        };
+      });
     },
     // [types.CHANGE_INPUT]: (state, action) => {
     //   return produce(state, draft => {
@@ -131,7 +140,7 @@ const userReducer = createReducer<BranchType<string>, BranchAction>(
     //     for(let key in state.branchInfo) {
     //       console.log(key)
     //       console.log(state.branchInfo)
-    //     } 
+    //     }
 
     //     // draft.branchInfo =
     //     // draft.branchInfo

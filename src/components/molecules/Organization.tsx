@@ -47,6 +47,8 @@ OrganizationProps) {
     name: string,
   ) => {
     if (e.keyCode === 13) {
+      if (!value || value.trim() === '') return;
+
       if (index + 1 === tempList.length) {
         setTempList((list) =>
           list.concat({
@@ -60,7 +62,6 @@ OrganizationProps) {
       }
 
       if (value) {
-        console.log(index, value, name);
         if (name.indexOf('branch') > -1) {
           const branchIf = tempList[index] as BranchInfo;
           if (!branchIf.branch_name) {
@@ -72,14 +73,14 @@ OrganizationProps) {
           const teamIf = tempList[index] as TeamInfo;
           if (!teamIf.team_name) {
             // 팀 입력이 처음일 때
-            handleAddTeam!(value, teamIf.branch_id);
+            handleAddTeam!(value, teamIf.branch_id, teamIf.id);
             return;
           }
         }
       }
     }
   };
-  
+
   console.log('Lendering Organization');
   return (
     <StyledWrapper>
@@ -168,7 +169,7 @@ interface OrganizationProps {
   branch?: Array<BranchInfo | TeamInfo>;
   branchId?: number;
   handleAddBranch?: (name: string) => void;
-  handleAddTeam?: (name: string, id: number) => void;
+  handleAddTeam?: (name: string, branchId: number, teamId: number) => void;
   // onChange?: (e: React.ChangeEvent<HTMLInputElement>, id: number) => void;
 }
 
