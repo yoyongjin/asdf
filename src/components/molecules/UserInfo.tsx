@@ -37,6 +37,8 @@ const StyledFooter = styled.div`
   padding-top: 1rem;
 `;
 
+const ValueList = ['이름' , '아이디' , '비밀번호', '전화번호' , 'Zibox IP 직접 입력하기'];
+
 function UserInfo({ onClickVisible }: UserInfoProps) {
   return (
     <StyledWrapper>
@@ -47,11 +49,13 @@ function UserInfo({ onClickVisible }: UserInfoProps) {
         <TextSelect textValue={'지점명'}></TextSelect>
         <TextSelect textValue={'팀명'}></TextSelect>
         <TextSelect textValue={'권한'}></TextSelect>
-        <TextInput height={22.5} textValue={'이름'}></TextInput>
-        <TextInput height={22.5} textValue={'아이디'}></TextInput>
-        <TextInput height={22.5} textValue={'비밀번호'}></TextInput>
-        <TextInput height={22.5} padRight={2} textValue={'전화번호'}></TextInput>
-        <TextInput height={22.5} textValue={'ZiBox IP 직접 입력하기'}></TextInput>
+        {
+          ValueList.map((data , index) => {
+              return (
+                <TextInput customStyle={`float:right;`} padRight={index == 3 ? 2 : 0} height={22.5} textValue={data}></TextInput>
+              )
+          })
+        }
       </StyledContent>
       <StyledFooter>
         <Button width={6} height={1.8} bgColor={COLORS.green} customStyle={`

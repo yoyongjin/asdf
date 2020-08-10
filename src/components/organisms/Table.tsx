@@ -6,16 +6,22 @@ import { COLORS } from 'utils/color';
 
 const StyledWrapper = styled.table`
   width: 100%;
-  max-height: 20rem;
-  min-height: 4rem;
+  height: 100%;
+  /* max-height: 20rem; */
+  /* min-height: 4rem; */
   border-collapse: collapse;
 `;
 
 const StyledHead = styled.thead<StyledProps>`
+  /* Display */
+  height: 1.87rem;
+
+  /* Color */
   background-color: ${(props) => props.bgColor};
 `;
 
 const StyledBody = styled.tbody`
+  height: calc(100% - 1.87rem);
   text-align: center;
 `;
 

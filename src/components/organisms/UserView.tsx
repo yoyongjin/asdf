@@ -22,23 +22,22 @@ const StyledWrapper = styled.div`
 const StyledTitle = styled.div`
   /* Display */
   width: 100%;
-  height: 10%;
+  height: 3.75rem;
 `;
 
 const StyledUserListArea = styled.div`
   width: 100%;
-  height: 90%;
+  height: calc(100% - 3.75rem);
 `;
 
 const StyledUserList = styled.div`
-  padding-top: 1rem;
+  padding-top: 1.25rem;
 `;
 
 const StyledUserPage = styled.div`
   padding-top: 2.5rem;
   padding-left: 20rem;
   padding-right: 20rem;
-  text-align: center;
 `;
 
 function UserView({ location }: UserViewProps) {

@@ -6,6 +6,7 @@ import { COLORS } from 'utils/color';
 
 const StyledWrapper = styled.div`
   /* Display */
+  min-width: 80rem;
   width: 100vw;
   max-width: 140rem;
   height: 100vh;
@@ -16,12 +17,12 @@ const StyledWrapper = styled.div`
 
 const StyledGnb = styled.div`
   /* Display */
-  height: 10%;
+  height: 3.87rem;
 `;
 
 const StyledContent = styled.div<StyledProps>`
   /* Display */
-  height: 90%;
+  height: calc(100% - 3.87rem);
   padding-left: 7rem;
   padding-right: 7rem;
 

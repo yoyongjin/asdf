@@ -58,25 +58,30 @@ function Title({
     <StyledWrapper>
       <StyledLeft>
         <StyleTitle>
-          <Text fontSize={fontSize ? fontSize : 1.3} fontWeight={600} fontColor={COLORS.green}>
+          <Text fontSize={fontSize ? fontSize : 1.12} fontWeight={600} fontColor={COLORS.green}>
             {children}
           </Text>
         </StyleTitle>
         {buttonType ? (
           <StyledButton>
             <Button
-              width={8.5}
+              width={7.3}
               height={2}
               bgColor={COLORS.green}
               onClick={buttonType.onClick}
             >
-              {buttonType.title}
+              <Text fontSize={0.87} fontWeight={600} fontColor={COLORS.white}>
+                {buttonType.title}
+              </Text>
             </Button>
           </StyledButton>
         ) : null}
         {explanType ? (
           <StyledExplanation>
-            <Text fontWeight={600} fontColor={COLORS.dark_gray3}>
+            <Text
+              fontColor={COLORS.dark_gray3}
+              fontSize={0.87}
+            >
               {explanType.title}
             </Text>
           </StyledExplanation>

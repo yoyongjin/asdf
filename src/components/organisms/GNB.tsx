@@ -8,6 +8,7 @@ import { loginInfoType } from 'modules/types/auth';
 
 const StyledWrapper = styled.div`
   /* Display */
+  width: 100%;
   height: 100%;
   display: flex;
 
@@ -17,10 +18,12 @@ const StyledWrapper = styled.div`
 
 const StyledLogo = styled.div`
   /* Display */
-  height: 80%;
-  flex-grow: 1;
+  width: 8.6rem;
+  height: 3.05rem;
+  /* flex-grow: 1; */
   text-align: center;
   border-radius: 0 0 1rem 1rem;
+  padding-top: 0.3rem;
   margin-left: 2rem;
 
   /* Color */
@@ -29,14 +32,15 @@ const StyledLogo = styled.div`
 
 const StyledLink = styled.div`
   /* Display */
-  flex-grow: 5;
+  flex-grow: 1;
   align-self: center;
   padding-left: 3rem;
 `;
 
 const StyledUserLog = styled.div`
   /* Display */
-  flex-grow: 10;
+  flex-grow: 2;
+  float: right;
   padding-right: 2rem;
 `;
 
@@ -46,7 +50,7 @@ function GNB({ logo, loginTimeImage, loginInfo, onClickLogout }: GNBProps) {
     <StyledWrapper>
       <StyledLogo>
         <Link path="/main">
-          <Image src={logo} alt={logo} width={9} height={3} />
+          <Image src={logo} alt={logo} width={6} height={2.5} />
         </Link>
       </StyledLogo>
       <StyledLink>

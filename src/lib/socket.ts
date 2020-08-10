@@ -14,6 +14,9 @@ class Socket {
     if (!Socket.instance) {
       Socket.instance = new Socket();
     }
+
+    
+
     return Socket.instance;
   }
 
@@ -43,14 +46,12 @@ class Socket {
           };
         }
 
-        console.log(parseData);
         resolve(parseData);
       });
     });
   }
 
   url(address: string | undefined): Socket {
-    console.log(address);
     if (!address) return this;
 
     this.address = address;

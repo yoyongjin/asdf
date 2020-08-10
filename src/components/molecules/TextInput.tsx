@@ -20,13 +20,14 @@ function TextInput({
   inputRadius,
   inputPh,
   padRight,
-  height
+  height,
+  customStyle
 }: TextInputProps) {
   return (
     <StyledWrapper>
       <Text fontSize={13} fontWeight={textWeight}>{textValue}</Text>
       <StyledBlank padRight={padRight}/>
-      <Input height={height} width={6.5} borderRadius={inputRadius} placeholder={inputPh}></Input>
+      <Input customStyle={customStyle} height={height} width={6.5} borderRadius={inputRadius} placeholder={inputPh}></Input>
     </StyledWrapper>
   );
 }
@@ -44,6 +45,7 @@ interface TextInputProps {
   textColor: string;
   padRight ?: number;
   height ?: number;
+  customStyle ?: string;
 }
 
 TextInput.defaultProps = {

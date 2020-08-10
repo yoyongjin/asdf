@@ -15,18 +15,15 @@ const StyledWrapper = styled.div`
 
 const StyledTitle = styled.div`
   /* Display */
-  height: 10%;
+  height: 3.75rem;
 `;
 
 const StyledConsultantArea = styled.div`
   /* Display */
-  height: 90%;
+  height: calc(100%-3.75rem);
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-
-  /* Other */
-  overflow-x: auto;
 `;
 
 const StyledConsultant = styled.span`
