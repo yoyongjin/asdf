@@ -9,13 +9,22 @@ function useInputForm<T>(initialForm: T) {
 
   const dispatch = useDispatch();
 
-  const onChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setForm((form) => ({ ...form, [name]: value }));
+  }, []);
+
+  const onChangeSelect = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
       const { name, value } = e.target;
       setForm((form) => ({ ...form, [name]: value }));
     },
     [],
   );
+
+  const initTempValue = useCallback((name: string) => {
+    setForm((form) => ({ ...form, [name]: '' }));
+  }, []);
 
   const onClickLogin = useCallback(
     (id: string, password: string, history: History) => {
@@ -33,7 +42,20 @@ function useInputForm<T>(initialForm: T) {
     form,
     onChange,
     onClickLogin,
+    initTempValue,
+    onChangeSelect,
   };
+}
+
+interface DataType {
+  branch: string;
+  team: string;
+  admin: string;
+  name: string;
+  id: string;
+  password: string;
+  tel: string;
+  zibox: string;
 }
 
 export default useInputForm;

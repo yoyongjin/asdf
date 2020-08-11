@@ -49,3 +49,67 @@ export const insertTeam = (team_name: string, branch_id: number) =>
     team_name,
     branch_id,
   });
+
+export const updateTeam = (id: number, name: string) =>
+  instance.put(`/api/team/${id}`, {
+    team_name: name,
+  });
+
+export const updateBranch = (id: number, name: string) =>
+  instance.put(`/api/branch/${id}`, {
+    branch_name: name,
+  });
+
+export const getBranchList = () => instance.get('/api/branch/all');
+export const getTeamList = (branchId: number) =>
+  instance.get('/api/team/all', {
+    params: {
+      branch_id: branchId,
+    },
+  });
+
+export const insertUser = (
+  branch_id: string,
+  team_id: string,
+  admin_id: string,
+  name: string,
+  user_name: string,
+  user_pass: string,
+  number: string,
+  ziboxip: string,
+) => {
+  instance.post('/api/auth/signup', {
+    branch_id,
+    team_id,
+    admin_id,
+    name,
+    user_name,
+    user_pass,
+    number,
+    ziboxip,
+  });
+};
+
+export const updateUser = (
+  user_id: string,
+  branch_id: string,
+  team_id: string,
+  admin_id: string,
+  name: string,
+  user_name: string,
+  user_pass: string,
+  number: string,
+  ziboxip: string,
+) => {
+  instance.patch('/api/auth', {
+    user_id,
+    branch_id,
+    team_id,
+    admin_id,
+    name,
+    user_name,
+    user_pass,
+    number,
+    ziboxip,
+  });
+};

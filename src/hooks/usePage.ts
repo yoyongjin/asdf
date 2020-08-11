@@ -5,6 +5,7 @@ import { RootState } from 'modules/reducers';
 import { getMaxPage } from 'utils/utils';
 
 function usePage() {
+  const countBranch = useSelector((state: RootState) => state.branch.numberOfBranch)
   const countUser = useSelector((state: RootState) => state.user.numberOfUsers);
   const [page, setPage] = useState<number>(1);
 
@@ -38,6 +39,7 @@ function usePage() {
   return {
     page,
     countUser,
+    countBranch,
     onClickNextPage,
     onClickPrevPage,
   };

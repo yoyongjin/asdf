@@ -65,7 +65,7 @@ function Monitoring({ location }: MonitoringProps) {
   return (
     <StyledWrapper>
       <StyledTitle>
-        <Title selectType={selectInfo}>상담원 모니터링</Title>
+        <Title>상담원 모니터링</Title>
       </StyledTitle>
       <StyledConsultantArea>
         {consultantInfo.map((consultant, i) => {

@@ -62,7 +62,11 @@ function TablePagination({
         </StyledBlankSpace>
       </StyledPrev>
       <StyledPage>
-        <PageCount curPage={curPage} maxPage={getMaxPage(count)}></PageCount>
+        <PageCount
+          curPage={curPage}
+          maxPage={getMaxPage(count)}
+          padding={1}
+        ></PageCount>
       </StyledPage>
       <StyledNext>
         <StyledBlankSpace>

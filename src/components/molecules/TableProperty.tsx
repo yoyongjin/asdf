@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-import { Image, List, Text } from 'components/atoms';
+import { Image, List, Text, Modal } from 'components/atoms';
+import { UserInfo } from 'components/molecules';
 import { COLORS } from 'utils/color';
+import useVisible from 'hooks/useVisible';
 
 const StyledWrapper = styled.td`
   /* Display */
@@ -29,8 +31,13 @@ function TableProperty({
   info,
   threeDotsIcon,
   hoverThreeDotsIcon,
+  branchList,
+  teamList,
+  adminList,
+  onClickUpdateUser
 }: TableContentProps) {
   const menuList = ['정보 수정', '비밀번호 초기화', '삭제'];
+  const { visible, onClickVisible } = useVisible();
   const [isHover, setIsHover] = useState<boolean>(false);
   const onMouseIn = () => {
     setIsHover(true);
@@ -69,7 +76,7 @@ function TableProperty({
         <StyledProperty onMouseEnter={onMouseIn} onMouseLeave={onMouseOut}>
           {isHover && (
             <StyledList>
-              <List menu={menuList}></List>
+              <List menu={menuList} onClickVisible={onClickVisible}></List>
             </StyledList>
           )}
           <Image
@@ -80,13 +87,44 @@ function TableProperty({
           />
         </StyledProperty>
       </StyledWrapper>
+      <Modal
+        isVisible={visible}
+        Component={
+          <UserInfo
+            onClickVisible={onClickVisible}
+            branchList={branchList}
+            teamList={teamList}
+            adminList={adminList}
+            data={info}
+            onClickUpdateUser={onClickUpdateUser}
+          />
+        }
+      />
     </>
   );
+}
+interface SelectDataType {
+  id: number;
+  data: string;
+}
+
+interface BranchInfo {
+  branch_name: string;
+  created_at: string;
+  id: number;
+}
+
+interface TeamInfo {
+  branch_id: number;
+  id: number;
+  team_name: string;
 }
 
 interface consultInfoType {
   id: number;
+  branch_id: string;
   branch_name: string | null;
+  team_id: string;
   team_name: string | null;
   admin_id: string;
   name: string;
@@ -103,6 +141,20 @@ interface TableContentProps {
   info: consultInfoType;
   threeDotsIcon: string;
   hoverThreeDotsIcon: string;
+  branchList: Array<BranchInfo>;
+  teamList: Array<TeamInfo>;
+  adminList: Array<SelectDataType>;
+  onClickUpdateUser: (
+    id: string,
+    branchId: string,
+    teamId: string,
+    admin: string,
+    name: string,
+    userId: string,
+    password: string,
+    tel: string,
+    ip: string,
+  ) => void;
 }
 
 TableProperty.defaultProps = {};

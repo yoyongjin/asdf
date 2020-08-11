@@ -39,13 +39,16 @@ const StyledUserInfo = styled.div`
 const StyledInterception = styled.div``;
 
 function Consultant({ consultInfo }: ConsultantProps) {
-  console.log('Lendering Consultant');
   return (
     <StyledWrapper>
       <StyledCallStatusArea>
         {consultInfo.call_type !== 'call_offhook' ? (
           <>
-            <Text fontColor={COLORS.dark_gray1} fontWeight={600} fontSize={0.87}>
+            <Text
+              fontColor={COLORS.dark_gray1}
+              fontWeight={600}
+              fontSize={0.87}
+            >
               대기중
             </Text>
           </>
@@ -54,7 +57,7 @@ function Consultant({ consultInfo }: ConsultantProps) {
             <Text fontColor={COLORS.red} fontWeight={600} fontSize={0.87}>
               통화중
             </Text>
-            <Text fontColor={COLORS.red} fontWeight={600}>
+            <Text fontColor={COLORS.red} fontWeight={600} fontSize={0.87}>
               {consultInfo.diff ? getHourMinSec(consultInfo.diff) : '00:00:00'}
             </Text>
           </>
@@ -63,21 +66,11 @@ function Consultant({ consultInfo }: ConsultantProps) {
       <StyledCallImage>
         {consultInfo.call_type !== 'call_offhook' ? (
           <>
-            <Image
-              src={waitingIcon}
-              alt={waitingIcon}
-              width={4}
-              height={4}
-            />
+            <Image src={waitingIcon} alt={waitingIcon} width={4} height={4} />
           </>
         ) : (
           <>
-            <Image
-              src={callingIcon}
-              alt={callingIcon}
-              width={4}
-              height={4}
-            />
+            <Image src={callingIcon} alt={callingIcon} width={4} height={4} />
           </>
         )}
       </StyledCallImage>
@@ -134,4 +127,4 @@ interface ConsultantProps {
 
 Consultant.defaultProps = {};
 
-export default React.memo(Consultant)
+export default React.memo(Consultant);

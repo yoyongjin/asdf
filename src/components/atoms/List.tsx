@@ -33,14 +33,22 @@ const StyledContent = styled.li`
   }
 `;
 
-function List({ menu }: ListProps) {
+function List({ menu, onClickVisible }: ListProps) {
   return (
     <StyledWrapper>
       {menu.map((title, i) => {
         return (
           <StyledContent
             key={`styled-content-${i}`}
-            onClick={() => alert('test')}
+            onClick={() => {
+              if(i === 0){
+                onClickVisible!();
+              }else if(i === 1) {
+                alert("비밀번호 초기화 예정")
+              }else if(i === 2){
+                alert("삭제 예정")
+              }
+            }}
           >
             <Text fontWeight={600} fontColor={COLORS.dark_gray1}>
               {title}
@@ -54,6 +62,7 @@ function List({ menu }: ListProps) {
 
 interface ListProps {
   menu: Array<string>;
+  onClickVisible?: () => void;
 }
 
 List.defaultProps = {};

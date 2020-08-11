@@ -10,6 +10,18 @@ const initialState: UserType = {
     fetch: false,
     error: false,
   },
+  insertUser: {
+    fetch: false,
+    error: false,
+  },
+  updateUser: {
+    fetch: false,
+    error: false,
+  },
+  deleteUser: {
+    fetch: false,
+    error: false,
+  },
   consultantInfo: [],
   numberOfUsers: 0,
 };
@@ -43,6 +55,30 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
           draft.consultantInfo[i].diff = getDiffTime(consultant.call_time);
         }
       });
+    });
+  },
+  [types.REQUEST_ADD_USER]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.insertUser.fetch = true;
+      draft.insertUser.error = false;
+    });
+  },
+  [types.SUCCESS_ADD_USER]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.insertUser.fetch = false;
+      draft.insertUser.error = false;
+    });
+  },
+  [types.REQUEST_UPDATE_USER]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.updateUser.fetch = true;
+      draft.updateUser.error = false;
+    });
+  },
+  [types.SUCCESS_UPDATE_USER]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.updateUser.fetch = false;
+      draft.updateUser.error = false;
     });
   },
 });

@@ -15,14 +15,14 @@ const StyledCurrent = styled.div`
   padding-right: 1rem;
 `;
 
-const StyledDivide = styled.div`
-  padding-left: 1rem;
-  padding-right: 1rem;
+const StyledDivide = styled.div<StyledProps>`
+  padding-left: ${props => props.padding || 0.2}rem;
+  padding-right: ${props => props.padding || 0.2}rem;
 `;
 
 const StyledMax = styled.div``;
 
-function PageCount({ curPage, maxPage }: PageCountProps) {
+function PageCount({ curPage, maxPage, padding }: PageCountProps) {
   return (
     <StyledWrapper>
       <StyledCurrent>
@@ -30,7 +30,7 @@ function PageCount({ curPage, maxPage }: PageCountProps) {
           {curPage}
         </Text>
       </StyledCurrent>
-      <StyledDivide>
+      <StyledDivide padding={padding}>
         <Text fontSize={1.3} fontColor={COLORS.dark_gray1}>
           /
         </Text>
@@ -44,7 +44,11 @@ function PageCount({ curPage, maxPage }: PageCountProps) {
   );
 }
 
-interface PageCountProps {
+interface StyledProps {
+  padding?: number;
+}
+
+interface PageCountProps extends StyledProps {
   curPage: number;
   maxPage: number;
 }

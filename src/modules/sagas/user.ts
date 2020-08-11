@@ -5,6 +5,10 @@ import {
   REQUEST_GET_USER_INFO,
   successGetUserInfo,
   failureGetUserInfo,
+  requestAddUser,
+  REQUEST_ADD_USER,
+  requestUpdateUser,
+  REQUEST_UPDATE_USER,
 } from 'modules/actions/user';
 import { ConsultantInfoType } from 'modules/types/user';
 import * as API from 'lib/api';
@@ -39,6 +43,8 @@ function* getConsultantInfoProcess(
     page,
   };
 
+  console.log(payload)
+
   try {
     const response = yield call(API.getConsultantInfo, payload);
     console.log('consultant Data => ', response);
@@ -70,12 +76,85 @@ function* getConsultantInfoProcess(
   }
 }
 
+function* insertUserProcess(action: ReturnType<typeof requestAddUser>) {
+  const {
+    branch_id,
+    team_id,
+    admin_id,
+    name,
+    user_name,
+    password,
+    number,
+    ziboxip,
+  } = action.payload;
+  try {
+    const response = yield call(
+      API.insertUser,
+      branch_id,
+      team_id,
+      admin_id,
+      name,
+      user_name,
+      password,
+      number,
+      ziboxip,
+    );
+    console.log('insert user Data', response);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+function* updateUserProcess(action: ReturnType<typeof requestUpdateUser>) {
+  const {
+    user_id,
+    branch_id,
+    team_id,
+    admin_id,
+    name,
+    user_name,
+    password,
+    number,
+    ziboxip,
+  } = action.payload;
+  try {
+    const response = yield call(
+      API.updateUser,
+      user_id,
+      branch_id,
+      team_id,
+      admin_id,
+      name,
+      user_name,
+      password,
+      number,
+      ziboxip,
+    );
+
+    console.log(response);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 function* watchGetConsultantInfo() {
   yield takeLatest(REQUEST_GET_USER_INFO, getConsultantInfoProcess);
 }
 
+function* watchInsertUser() {
+  yield takeLatest(REQUEST_ADD_USER, insertUserProcess);
+}
+
+function* watchUpdateUser() {
+  yield takeLatest(REQUEST_UPDATE_USER, updateUserProcess);
+}
+
 function* userSaga() {
-  yield all([fork(watchGetConsultantInfo)]);
+  yield all([
+    fork(watchGetConsultantInfo),
+    fork(watchInsertUser),
+    fork(watchUpdateUser),
+  ]);
 }
 
 export default userSaga;

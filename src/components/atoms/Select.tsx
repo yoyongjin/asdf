@@ -4,27 +4,44 @@ import styled from 'styled-components';
 import { COLORS } from 'utils/color';
 
 const StyledSelect = styled.select<SelectProps>`
-/* Display */
-  width: ${(props) => props.width}${(props) => props.width > 10 ? "px" : "rem"};
-  border-radius: ${props => props.borderRadius}rem;
+  /* Display */
+  width: ${(props) => props.width}${(props) => (props.width > 10 ? 'px' : 'rem')};
+  height: ${(props) => props.height};
+  border-radius: ${(props) => props.borderRadius}rem;
+  border-color: ${(props) => props.borderColor};
   float: right;
+  padding-left: 1rem;
+
   /* Color */
   border-color: ${(props) => props.borderColor};
   color: ${(props) => props.fontColor};
+
+  /* Other */
+  outline: none;
 `;
 
 const StyledOption = styled.option<OptionProps>`
   /* Color */
-  color: ${(props) => props.fontColor};
+  color: ${(props) => props.optionFontColor};
 `;
 
-function Select({ options, ...rest }: SelectProps) {
+function Select({
+  options,
+  defaultValue,
+  defaultOption,
+  name,
+  onChange,
+  ...rest
+}: SelectProps) {
   return (
-    <StyledSelect {...rest}>
+    <StyledSelect name={name} onChange={onChange} defaultValue={defaultValue} {...rest}>
+      <StyledOption value={defaultValue} disabled hidden {...rest}>
+        {defaultOption}
+      </StyledOption>
       {options?.map((option, i) => {
         return (
-          <StyledOption key={`option-${i}`} {...rest}>
-            {option}
+          <StyledOption key={`option-${i}`} value={option.id} {...rest}>
+            {option.data}
           </StyledOption>
         );
       })}
@@ -33,19 +50,27 @@ function Select({ options, ...rest }: SelectProps) {
 }
 
 interface SelectProps extends OptionProps {
-  options?: string[];
+  options?: Array<any>;
+  fontColor: string;
   width: number;
+  height: number;
   borderColor: string;
   borderRadius: number;
+  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  name: string;
+  defaultOption?: string;
+  defaultValue?: string;
 }
 
 interface OptionProps {
-  fontColor: string;
+  optionFontColor: string;
 }
 
 Select.defaultProps = {
   width: 10,
+  height: 2,
   fontColor: COLORS.black,
+  optionFontColor: COLORS.black,
   borderColor: COLORS.black,
   borderRadius: 1,
 };

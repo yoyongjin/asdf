@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 
-import { Modal } from 'components/atoms';
 import { Organization, Title } from 'components/molecules';
-import useVisible from 'hooks/useVisible';
 import useBranch from 'hooks/useBranch';
+import usePage from 'hooks/usePage';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -35,9 +34,10 @@ function OrganizationView() {
     onClickAddTempBranch,
     handleAddBranch,
     handleAddTeam,
-    // onChange,
+    handleUpdateTeam,
+    handleUpdateBranch,
   } = useBranch();
-  const { visible } = useVisible();
+  const { page, countBranch } = usePage();
 
   useEffect(() => {
     getBranchInfo();
@@ -52,37 +52,47 @@ function OrganizationView() {
     title: '※ 팀추가 : 팀명 입력 후 엔터',
   };
 
+  const pageType = useCallback(() => {
+    const type = {
+      curPage: page,
+      count: countBranch,
+    };
+    return type;
+  }, [countBranch, page]);
+
   const branchKeys = Object.getOwnPropertyNames(branchInfo).reverse();
   const branchValues = Object.values(branchInfo).reverse();
 
   console.log('Lendering OrganizationView');
   return (
-    <>
-      <StyledWrapper>
-        <StyledTitle>
-          <Title buttonType={buttonType} explanType={explanType}>
-            조직 관리
-          </Title>
-        </StyledTitle>
-        <StyledOrganizationArea>
-          {branchKeys.map((value, i) => {
-            return (
-              <StyledOrganization key={`styled-organization-${value}`}>
-                <Organization
-                  key={`organization-${value}`}
-                  branch={branchValues[i]}
-                  branchId={Number(value)}
-                  handleAddBranch={handleAddBranch}
-                  handleAddTeam={handleAddTeam}
-                  // onChange={onChange}
-                />
-              </StyledOrganization>
-            );
-          })}
-        </StyledOrganizationArea>
-      </StyledWrapper>
-      <Modal isVisible={visible} />
-    </>
+    <StyledWrapper>
+      <StyledTitle>
+        <Title
+          buttonType={buttonType}
+          explanType={explanType}
+          pageType={pageType()}
+        >
+          조직 관리
+        </Title>
+      </StyledTitle>
+      <StyledOrganizationArea>
+        {branchKeys.map((value, i) => {
+          return (
+            <StyledOrganization key={`styled-organization-${value}`}>
+              <Organization
+                key={`organization-${value}`}
+                branch={branchValues[i]}
+                branchId={Number(value)}
+                handleAddBranch={handleAddBranch}
+                handleAddTeam={handleAddTeam}
+                handleUpdateTeam={handleUpdateTeam}
+                handleUpdateBranch={handleUpdateBranch}
+              />
+            </StyledOrganization>
+          );
+        })}
+      </StyledOrganizationArea>
+    </StyledWrapper>
   );
 }
 

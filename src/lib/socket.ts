@@ -15,9 +15,13 @@ class Socket {
       Socket.instance = new Socket();
     }
 
-    
-
     return Socket.instance;
+  }
+
+  onMessage() {
+    this.socket.on('state', (data: any) => {
+      console.log(data);
+    });
   }
 
   onEmit(type: string, data?: string) {

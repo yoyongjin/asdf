@@ -9,9 +9,11 @@ import { COLORS } from 'utils/color';
 import useUser from 'hooks/useUser';
 import usePage from 'hooks/usePage';
 import useVisible from 'hooks/useVisible';
+import useBranch from 'hooks/useBranch';
 
 import threeDotsIcon from 'images/bt-user-modi-nor@2x.png';
 import hoverThreeDotsIcon from 'images/bt-user-modi-over@2x.png';
+import { TeamInfo } from 'modules/types/branch';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -40,21 +42,23 @@ const StyledUserPage = styled.div`
   padding-right: 20rem;
 `;
 
+const adminList = [
+  { id: 0, data: '상담원' },
+  { id: 1, data: '관리자' },
+];
+
 function UserView({ location }: UserViewProps) {
-  const { consultantInfo, getConsultantsInfo } = useUser();
+  const { consultantInfo, getConsultantsInfo, onClickInsertUser, onClickUpdateUser } = useUser();
+  const { branchList, teamList, getBranchList, getTeamList } = useBranch();
   const { countUser, page, onClickNextPage, onClickPrevPage } = usePage();
   const { visible, onClickVisible } = useVisible();
 
   const selectInfo = {
-    color: COLORS.dark_gray4,
+    color: COLORS.dark_gray1,
     borderRadius: 1,
-    data: [
-      {
-        id: 1,
-        option: ['전체 지점', '대박', '쪽박'],
-      },
-      { id: 2, option: ['팀', '1팀', '2팀', '3팀'] },
-    ],
+    borderColor: COLORS.dark_gray4,
+    data1: branchList as Array<BranchInfo>,
+    data2: teamList as Array<TeamInfo>,
   };
 
   const tableTitle = [
@@ -71,7 +75,12 @@ function UserView({ location }: UserViewProps) {
 
   useEffect(() => {
     getConsultantsInfo(location, -1, -1, 5, page);
-  }, [getConsultantsInfo, location, page]);
+  }, [getConsultantsInfo, page]);
+
+  useEffect(() => {
+    getBranchList();
+    getTeamList(1);
+  }, [getBranchList, getTeamList]);
 
   const buttonInfo = {
     title: '+ 사용자 등록',
@@ -94,6 +103,10 @@ function UserView({ location }: UserViewProps) {
               consultantInfo={consultantInfo}
               threeDotsIcon={threeDotsIcon}
               hoverThreeDotsIcon={hoverThreeDotsIcon}
+              branchList={selectInfo.data1}
+              teamList={selectInfo.data2}
+              adminList={adminList}
+              onClickUpdateUser={onClickUpdateUser}
             ></Table>
           </StyledUserList>
           <StyledUserPage>
@@ -108,10 +121,24 @@ function UserView({ location }: UserViewProps) {
       </StyledWrapper>
       <Modal
         isVisible={visible}
-        Component={<UserInfo onClickVisible={onClickVisible} />}
+        Component={
+          <UserInfo
+            onClickVisible={onClickVisible}
+            branchList={selectInfo.data1}
+            teamList={selectInfo.data2}
+            adminList={adminList}
+            onClickInsertUser={onClickInsertUser}
+          />
+        }
       />
     </>
   );
+}
+
+interface BranchInfo {
+  branch_name: string;
+  created_at: string;
+  id: number;
 }
 
 interface UserViewProps extends RouteComponentProps {}

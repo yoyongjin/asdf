@@ -1,12 +1,12 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import { COLORS } from 'utils/color';
 
 const StyledInput = styled.input<InputProps>`
-/* Display */
+  /* Display */
   width: ${(props) => props.width}rem;
-  height: ${(props) => props.height}${(props) => props.height > 10 ? "px" : "rem"};
+  height: ${(props) => props.height}${(props) => (props.height > 10 ? 'px' : 'rem')};
   border-width: ${(props) => props.borderWidth}rem;
   border-radius: ${(props) => props.borderRadius}rem;
   font-weight: 600;
@@ -21,7 +21,7 @@ const StyledInput = styled.input<InputProps>`
   }};
   padding-left: ${(props) => {
     if (props.textAlign === 1) {
-      return '1.25rem';
+      return '1.5rem';
     } else {
       return '';
     }
@@ -33,10 +33,20 @@ const StyledInput = styled.input<InputProps>`
       return '';
     }
   }};
-  color: ${COLORS.dark_gray1};
+
   /* Color */
+  color: ${COLORS.dark_gray1};
   border-color: ${(props) => props.borderColor};
- 
+
+  ${(props) => {
+    if (props.image) {
+      return css`
+        background-image: url(${props.image});
+        background-position: 5%;
+        background-repeat: no-repeat;
+      `;
+    }
+  }}
 
   /* Other */
   outline: none;
@@ -45,25 +55,27 @@ const StyledInput = styled.input<InputProps>`
   }
   :focus {
     outline: none !important;
-    border:2px solid ${COLORS.green};
+    border: 2px solid ${COLORS.green};
     box-shadow: 0 0 3px ${COLORS.green};
   }
-  ::placeholder{
+  ::placeholder {
     /* Display */
     font-weight: 500;
     color: ${COLORS.dark_gray1};
     /* text-align: left; */
   }
   ::-ms-clear,
-::-ms-reveal{
-	display:none;width:0;height:0;
-}
-::-webkit-search-decoration,
-::-webkit-search-cancel-button,
-::-webkit-search-results-button,
-::-webkit-search-results-decoration{
-	display:none;
-}
+  ::-ms-reveal {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+  ::-webkit-search-decoration,
+  ::-webkit-search-cancel-button,
+  ::-webkit-search-results-button,
+  ::-webkit-search-results-decoration {
+    display: none;
+  }
 
   ${(props) => props.customStyle}
 `;
@@ -105,7 +117,8 @@ interface InputProps {
   readonly borderColor: string;
   readonly textAlign: number;
   readonly phColor: string;
-  readonly customStyle ?: string;
+  readonly customStyle?: string;
+  readonly image?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }

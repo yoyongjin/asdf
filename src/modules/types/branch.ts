@@ -13,7 +13,15 @@ export interface BranchType<T> {
   insertTeam: common.checkFetchType;
   updateTeam: common.checkFetchType;
   deleteTeam: common.checkFetchType;
+  branchName: common.checkFetchType;
   branchInfo: object | BranchInfoType<T>;
+  numberOfBranch: number;
+  namesList: NameListType
+}
+
+export interface NameListType {
+  branch: Array<BranchInfo> | null;
+  team: Array<TeamInfo> | null;
 }
 
 export interface BranchInfoType<T> {
@@ -57,4 +65,29 @@ export interface AddTeam {
 export interface ChangeInput {
   id: number;
   value: string;
+}
+
+export interface TemporaryTeam {
+  branch_id: number;
+}
+
+export interface RequestUpdateTeam {
+  id: number;
+  name: string;
+  branch_id: number;
+}
+
+export interface SuccessUpdateTeam {
+  id: number;
+  name: string;
+  branch_id: number;
+}
+
+export interface RequestUpdateBranch {
+  id: number;
+  name: string;
+}
+
+export interface BranchId {
+  branch_id: number;
 }

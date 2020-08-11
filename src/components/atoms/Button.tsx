@@ -54,9 +54,11 @@ interface ButtonProps {
   readonly fontSize: number;
   readonly bgColor: string;
   readonly bgImage?: string;
-  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  onClick?: (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ) => void;
   readonly children?: string | React.ReactChild;
-  readonly customStyle ?: string
+  readonly customStyle?: string;
 }
 
 Button.defaultProps = {

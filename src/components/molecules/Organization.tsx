@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { Input } from 'components/atoms';
@@ -30,52 +30,53 @@ function Organization({
   branchId,
   handleAddBranch,
   handleAddTeam,
-}: // onChange,
-OrganizationProps) {
-  const { form, onChange } = useInputForm<Dic>({});
-  const [tempList, setTempList] = useState<Array<BranchInfo | TeamInfo>>(
-    branch!,
-  ); // 리덕스에서 받아와서 렌더링하게되면 전체 뷰가 렌더링되기 때문에 이런 방식 사용
+  handleUpdateTeam,
+  handleUpdateBranch,
+}: OrganizationProps) {
+  const { form, onChange, initTempValue } = useInputForm<Dic>({});
   const inputRef = useRef<HTMLInputElement[]>([]) as React.MutableRefObject<
     HTMLInputElement[]
   >;
+
+  useEffect(() => {
+    console.log(branchId, inputRef)
+    if (!branchId) {
+      inputRef.current[0].focus();
+    } else{
+      inputRef.current[branch!.length - 1].focus();
+    }
+  }, [inputRef, branch, branchId]);
 
   const onKeyEvent = (
     e: React.KeyboardEvent<HTMLInputElement>,
     index: number,
     value: string,
     name: string,
+    branch: Array<BranchInfo | TeamInfo>,
+    branchId: number,
   ) => {
     if (e.keyCode === 13) {
       if (!value || value.trim() === '') return;
 
-      if (index + 1 === tempList.length) {
-        setTempList((list) =>
-          list.concat({
-            branch_id: branchId!,
-            id: index + 1,
-            team_name: '',
-          }),
-        );
-      } else {
-        inputRef.current[index + 1].focus();
-      }
-
-      if (value) {
-        if (name.indexOf('branch') > -1) {
-          const branchIf = tempList[index] as BranchInfo;
-          if (!branchIf.branch_name) {
-            // 지점 입력이 처음일 때
-            handleAddBranch!(value);
-            return;
-          }
-        } else if (name.indexOf('team') > -1) {
-          const teamIf = tempList[index] as TeamInfo;
-          if (!teamIf.team_name) {
-            // 팀 입력이 처음일 때
-            handleAddTeam!(value, teamIf.branch_id, teamIf.id);
-            return;
-          }
+      if (name.indexOf('branch') > -1) {
+        const branchIf = branch[index] as BranchInfo;
+        if (!branchIf.branch_name) {
+          // 지점 입력이 처음일 때
+          handleAddBranch!(value);
+          initTempValue(name);
+          return;
+        } else {
+          handleUpdateBranch!(branchIf.id, value);
+        }
+      } else if (name.indexOf('team') > -1) {
+        const teamIf = branch[index] as TeamInfo;
+        if (!teamIf.team_name) {
+          // 팀 입력이 처음일 때
+          handleAddTeam!(value, teamIf.branch_id, teamIf.id);
+          initTempValue(name);
+          return;
+        } else {
+          handleUpdateTeam!(teamIf.id, value, branchId);
         }
       }
     }
@@ -84,9 +85,9 @@ OrganizationProps) {
   console.log('Lendering Organization');
   return (
     <StyledWrapper>
-      {tempList.length < 1
+      {branch!.length < 1
         ? null
-        : tempList?.map((value, i) => {
+        : branch?.map((value, i) => {
             const branchIf = value as BranchInfo;
             const teamIf = value as TeamInfo;
             if (branchIf.branch_name !== undefined) {
@@ -110,7 +111,6 @@ OrganizationProps) {
                     borderRadius={1.25}
                     borderColor={COLORS.light_gray2}
                     textAlign={1}
-                    // onChange={(e) => onChange!(e, branchIf.id)}
                     onChange={onChange}
                     onKeyUp={(e) =>
                       onKeyEvent(
@@ -118,12 +118,16 @@ OrganizationProps) {
                         i,
                         form[`branch${branchIf.id}`],
                         `branch${branchIf.id}`,
+                        branch,
+                        branchId!,
                       )
                     }
                   />
                 </StyledBranch>
               );
             } else if (teamIf.team_name !== undefined) {
+              console.log(form);
+              console.log(`${teamIf.branch_id}-team${teamIf.id}`);
               return (
                 <StyledTeam
                   key={`styled-team-${teamIf.team_name}-${teamIf.id}`}
@@ -146,14 +150,15 @@ OrganizationProps) {
                     borderRadius={1}
                     borderColor={COLORS.light_gray2}
                     textAlign={1}
-                    // onChange={(e) => onChange!(e, teamIf.id)}
                     onChange={onChange}
                     onKeyUp={(e) =>
                       onKeyEvent(
                         e,
                         i,
                         form[`${teamIf.branch_id}-team${teamIf.id}`],
-                        `${teamIf.branch_id}-team-${teamIf.id}`,
+                        `${teamIf.branch_id}-team${teamIf.id}`,
+                        branch,
+                        branchId!,
                       )
                     }
                   />
@@ -170,7 +175,8 @@ interface OrganizationProps {
   branchId?: number;
   handleAddBranch?: (name: string) => void;
   handleAddTeam?: (name: string, branchId: number, teamId: number) => void;
-  // onChange?: (e: React.ChangeEvent<HTMLInputElement>, id: number) => void;
+  handleUpdateTeam?: (id: number, name: string, branchId: number) => void;
+  handleUpdateBranch?: (id: number, name: string) => void;
 }
 
 interface Dic {
