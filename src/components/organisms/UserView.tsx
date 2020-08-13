@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { RouteComponentProps } from 'react-router-dom';
 
@@ -10,6 +10,7 @@ import useUser from 'hooks/useUser';
 import usePage from 'hooks/usePage';
 import useVisible from 'hooks/useVisible';
 import useBranch from 'hooks/useBranch';
+import useInputForm from 'hooks/useInputForm';
 
 import threeDotsIcon from 'images/bt-user-modi-nor@2x.png';
 import hoverThreeDotsIcon from 'images/bt-user-modi-over@2x.png';
@@ -48,10 +49,62 @@ const adminList = [
 ];
 
 function UserView({ location }: UserViewProps) {
-  const { consultantInfo, getConsultantsInfo, onClickInsertUser, onClickUpdateUser } = useUser();
+  const {
+    userInfo,
+    getConsultantsInfo,
+    onClickInsertUser,
+    onClickUpdateUser,
+    onClickDeleteUser,
+  } = useUser();
   const { branchList, teamList, getBranchList, getTeamList } = useBranch();
   const { countUser, page, onClickNextPage, onClickPrevPage } = usePage();
   const { visible, onClickVisible } = useVisible();
+  const { form, onChangeSelect, onChange, initTempValue } = useInputForm({
+    branch: '-1',
+    team: '-1',
+    search: '',
+  });
+
+  const onClickSearch = useCallback(() => {
+    let branch_id = -1;
+    let team_id = -1;
+    if (form.branch) {
+      branch_id = Number(form.branch);
+    }
+    if (form.team) {
+      team_id = Number(form.team);
+    }
+    getConsultantsInfo(branch_id, team_id, 5, page, form.search, location);
+  }, [form.branch, form.team, form.search, getConsultantsInfo, page]);
+
+  useEffect(() => {
+    getBranchList();
+  }, [getBranchList]);
+
+  useEffect(() => {
+    if (form.branch === '-1') {
+      initTempValue('team', '-1');
+    }
+  }, [initTempValue, form.branch]);
+
+  useEffect(() => {
+    if (form.search === '') {
+      let branch_id = -1;
+      let team_id = -1;
+      if (form.branch) {
+        branch_id = Number(form.branch);
+      }
+      if (form.team) {
+        team_id = Number(form.team);
+      }
+
+      getConsultantsInfo(branch_id, team_id, 5, page, '', location);
+    }
+  }, [getConsultantsInfo, page, form.branch, form.team, form.search]);
+
+  useEffect(() => {
+    getTeamList(Number(form.branch));
+  }, [getTeamList, form.branch]);
 
   const selectInfo = {
     color: COLORS.dark_gray1,
@@ -73,15 +126,6 @@ function UserView({ location }: UserViewProps) {
     '',
   ];
 
-  useEffect(() => {
-    getConsultantsInfo(location, -1, -1, 5, page);
-  }, [getConsultantsInfo, page]);
-
-  useEffect(() => {
-    getBranchList();
-    getTeamList(1);
-  }, [getBranchList, getTeamList]);
-
   const buttonInfo = {
     title: '+ 사용자 등록',
     onClick: onClickVisible,
@@ -92,7 +136,17 @@ function UserView({ location }: UserViewProps) {
     <>
       <StyledWrapper>
         <StyledTitle>
-          <Title buttonType={buttonInfo} selectType={selectInfo} isSearch>
+          <Title
+            buttonType={buttonInfo}
+            selectType={selectInfo}
+            isSearch
+            branch={form.branch}
+            team={form.team}
+            search={form.search}
+            onChange={onChange}
+            onChangeSelect={onChangeSelect}
+            onClickSearch={onClickSearch}
+          >
             사용자 관리
           </Title>
         </StyledTitle>
@@ -100,13 +154,19 @@ function UserView({ location }: UserViewProps) {
           <StyledUserList>
             <Table
               tableTitle={tableTitle}
-              consultantInfo={consultantInfo}
+              userInfo={userInfo}
               threeDotsIcon={threeDotsIcon}
               hoverThreeDotsIcon={hoverThreeDotsIcon}
               branchList={selectInfo.data1}
               teamList={selectInfo.data2}
               adminList={adminList}
               onClickUpdateUser={onClickUpdateUser}
+              getBranchList={getBranchList}
+              getTeamList={getTeamList}
+              onClickDeleteUser={onClickDeleteUser}
+              page={page}
+              branchId={Number(form.branch)}
+              teamId={Number(form.team)}
             ></Table>
           </StyledUserList>
           <StyledUserPage>
@@ -124,10 +184,12 @@ function UserView({ location }: UserViewProps) {
         Component={
           <UserInfo
             onClickVisible={onClickVisible}
-            branchList={selectInfo.data1}
-            teamList={selectInfo.data2}
+            // branchList={branchList!}
+            // teamList={teamList!}
             adminList={adminList}
             onClickInsertUser={onClickInsertUser}
+            // getBranchList={getBranchList}
+            // getTeamList={getTeamList}
           />
         }
       />

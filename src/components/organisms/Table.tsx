@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import { TableTitle, TableContent } from 'components/molecules';
 import { COLORS } from 'utils/color';
+import { UserInfo } from 'modules/types/user';
 
 const StyledWrapper = styled.table`
   width: 100%;
@@ -28,13 +29,17 @@ const StyledBody = styled.tbody`
 function Table({
   tableTitle,
   bgColor,
-  consultantInfo,
+  userInfo,
   threeDotsIcon,
   hoverThreeDotsIcon,
   branchList,
   teamList,
   adminList,
-  onClickUpdateUser
+  onClickUpdateUser,
+  getBranchList,
+  getTeamList,
+  onClickDeleteUser,
+  page, branchId, teamId
 }: TableProps) {
   return (
     <StyledWrapper>
@@ -43,14 +48,21 @@ function Table({
       </StyledHead>
       <StyledBody>
         <TableContent
-          consultantInfo={consultantInfo}
+          userInfo={userInfo}
           threeDotsIcon={threeDotsIcon}
           hoverThreeDotsIcon={hoverThreeDotsIcon}
           branchList={branchList}
           teamList={teamList}
           adminList={adminList}
           onClickUpdateUser={onClickUpdateUser}
-        ></TableContent>
+          getBranchList={getBranchList!}
+          getTeamList={getTeamList!}
+          onClickDeleteUser={onClickDeleteUser!}
+          page={page!}
+          branchId={branchId}
+          teamId={teamId}
+          ></TableContent>
+            
       </StyledBody>
     </StyledWrapper>
   );
@@ -76,31 +88,17 @@ interface StyledProps {
   bgColor?: string;
 }
 
-interface consultInfoType {
-  id: number;
-  branch_id: string;
-  branch_name: string | null;
-  team_id: string;
-  team_name: string | null;
-  admin_id: string;
-  name: string;
-  user_name: string;
-  number: string;
-  ziboxip: string;
-  login_at: number;
-  call_time?: number;
-  call_type?: string;
-  diff?: number;
-}
-
 interface TableProps extends StyledProps {
   tableTitle: Array<string>;
-  consultantInfo: Array<consultInfoType>;
+  userInfo: Array<UserInfo>;
   threeDotsIcon: string;
   hoverThreeDotsIcon: string;
   branchList: Array<BranchInfo>;
   teamList: Array<TeamInfo>;
   adminList: Array<SelectDataType>;
+  page?: number;
+  branchId?: number;
+  teamId?: number;
   onClickUpdateUser: (
     id: string,
     branchId: string,
@@ -112,6 +110,9 @@ interface TableProps extends StyledProps {
     tel: string,
     ip: string,
   ) => void;
+  onClickDeleteUser?: (id: string,page: number, branchId: number, teamId: number) => void;
+  getBranchList?: () => void;
+  getTeamList?: (branch_id: number) => void;
 }
 
 Table.defaultProps = {

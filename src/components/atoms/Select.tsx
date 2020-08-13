@@ -30,17 +30,28 @@ function Select({
   defaultValue,
   defaultOption,
   name,
+  // selected,
   onChange,
   ...rest
 }: SelectProps) {
   return (
-    <StyledSelect name={name} onChange={onChange} defaultValue={defaultValue} {...rest}>
-      <StyledOption value={defaultValue} disabled hidden {...rest}>
+    <StyledSelect
+      name={name}
+      onChange={onChange}
+      value={defaultValue}
+      {...rest}
+    >
+      <StyledOption value={defaultValue} {...rest}>
         {defaultOption}
       </StyledOption>
       {options?.map((option, i) => {
         return (
-          <StyledOption key={`option-${i}`} value={option.id} {...rest}>
+          <StyledOption
+            key={`option-${i}`}
+            // selected={Number(selected) === option.id}
+            value={option.id}
+            {...rest}
+          >
             {option.data}
           </StyledOption>
         );
@@ -60,6 +71,7 @@ interface SelectProps extends OptionProps {
   name: string;
   defaultOption?: string;
   defaultValue?: string;
+  // selected?: string;
 }
 
 interface OptionProps {

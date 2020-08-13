@@ -23,8 +23,8 @@ const StyledGnb = styled.div`
 const StyledContent = styled.div<StyledProps>`
   /* Display */
   height: calc(100% - 3.87rem);
-  padding-left: 7rem;
-  padding-right: 7rem;
+  padding-left: 3rem;
+  padding-right: 3rem;
 
   /* Color */
   background-color: ${(props) => props.bgColor};

@@ -9,41 +9,26 @@ import {
   REQUEST_ADD_USER,
   requestUpdateUser,
   REQUEST_UPDATE_USER,
+  requestDeleteUser,
+  REQUEST_DELETE_USER,
+  successGetConsultantInfo,
 } from 'modules/actions/user';
-import { ConsultantInfoType } from 'modules/types/user';
 import * as API from 'lib/api';
 import Socket from 'lib/socket';
-
-const mergeConsultantInfo = (users: Array<ConsultantInfoType>, status: any) => {
-  // api로 가져온 상담원 정보와 소켓으로 응답받은 상담원 통화 상태 정보 merge
-  const newUserList = users.map((user) => {
-    if (status[user.number] && status[user.number].number === user.number) {
-      const { type, number, time } = status[user.number];
-      let newUser = Object.assign({}, user);
-      newUser.call_time = Number(time);
-      newUser.call_type = type;
-
-      return newUser;
-    } else {
-      return user;
-    }
-  });
-
-  return newUserList;
-};
 
 function* getConsultantInfoProcess(
   action: ReturnType<typeof requestGetUserInfo>,
 ) {
-  const { location, branchId, teamId, limit, page } = action.payload;
+  const { location, branchId, teamId, limit, page, search } = action.payload;
   const payload = {
     branch_id: branchId,
     team_id: teamId,
     limit,
     page,
+    search_name: search!,
   };
 
-  console.log(payload)
+  console.log(location, branchId, teamId, limit, page, search);
 
   try {
     const response = yield call(API.getConsultantInfo, payload);
@@ -53,17 +38,14 @@ function* getConsultantInfoProcess(
     if (status === 'success') {
       const { users, max_count } = data;
 
-      if (location.pathname === '/main') {
-        const status = yield Socket.getInstance().onConnectEvent();
-        const mergeUsers = mergeConsultantInfo(users, status);
-        console.log(mergeUsers);
+      if (location && location!.pathname === '/main') {
         const payload = {
-          users: mergeUsers,
+          users,
           count: max_count,
         };
-        yield put(successGetUserInfo(payload));
+        Socket.getInstance().onEmit('call-state');
+        yield put(successGetConsultantInfo(payload));
       } else {
-        console.log(users);
         const payload = {
           users,
           count: max_count,
@@ -72,6 +54,7 @@ function* getConsultantInfoProcess(
       }
     }
   } catch (error) {
+    console.log(error)
     yield put(failureGetUserInfo(error));
   }
 }
@@ -87,6 +70,16 @@ function* insertUserProcess(action: ReturnType<typeof requestAddUser>) {
     number,
     ziboxip,
   } = action.payload;
+  console.log(
+    branch_id,
+    team_id,
+    admin_id,
+    name,
+    user_name,
+    password,
+    number,
+    ziboxip,
+  );
   try {
     const response = yield call(
       API.insertUser,
@@ -117,6 +110,17 @@ function* updateUserProcess(action: ReturnType<typeof requestUpdateUser>) {
     number,
     ziboxip,
   } = action.payload;
+  console.log(
+    user_id,
+    branch_id,
+    team_id,
+    admin_id,
+    name,
+    user_name,
+    password,
+    number,
+    ziboxip,
+  );
   try {
     const response = yield call(
       API.updateUser,
@@ -137,6 +141,27 @@ function* updateUserProcess(action: ReturnType<typeof requestUpdateUser>) {
   }
 }
 
+function* deleteUserProcess(action: ReturnType<typeof requestDeleteUser>) {
+  try {
+    const { id, branchId, teamId, page } = action.payload;
+    console.log(id, branchId, teamId, page);
+
+    const response = yield call(API.deleteUser, id);
+    console.log(response);
+    if (response.data.data) {
+      const payload = {
+        branchId: Number(branchId),
+        teamId: Number(teamId),
+        limit: 5,
+        page,
+      };
+      yield put(requestGetUserInfo(payload));
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 function* watchGetConsultantInfo() {
   yield takeLatest(REQUEST_GET_USER_INFO, getConsultantInfoProcess);
 }
@@ -149,11 +174,16 @@ function* watchUpdateUser() {
   yield takeLatest(REQUEST_UPDATE_USER, updateUserProcess);
 }
 
+function* watchDeleteUser() {
+  yield takeLatest(REQUEST_DELETE_USER, deleteUserProcess);
+}
+
 function* userSaga() {
   yield all([
     fork(watchGetConsultantInfo),
     fork(watchInsertUser),
     fork(watchUpdateUser),
+    fork(watchDeleteUser),
   ]);
 }
 

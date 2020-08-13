@@ -9,6 +9,7 @@ const StyledInput = styled.input<InputProps>`
   height: ${(props) => props.height}${(props) => (props.height > 10 ? 'px' : 'rem')};
   border-width: ${(props) => props.borderWidth}rem;
   border-radius: ${(props) => props.borderRadius}rem;
+  font-size: ${props => props.fontSize}rem;
   font-weight: 600;
   text-align: ${(props) => {
     if (props.textAlign === 1) {
@@ -119,6 +120,7 @@ interface InputProps {
   readonly phColor: string;
   readonly customStyle?: string;
   readonly image?: string;
+  readonly fontSize?: number;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
@@ -134,6 +136,7 @@ Input.defaultProps = {
   borderColor: COLORS.light_gray3,
   textAlign: 2,
   phColor: COLORS.black,
+  fontSize: 1,
 };
 
 export default Input;

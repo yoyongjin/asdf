@@ -46,7 +46,12 @@ export const getDiffTime = (timestamp: number) => {
 };
 
 export const getMaxPage = (count: number, divide = 5) => {
-  let maxPage = Math.floor(count / divide) + 1;
+  let maxPage = count / divide;
+  if (Number.isInteger(maxPage)) {
+    maxPage += 1;
+  } else {
+    maxPage = Math.floor(maxPage) + 1;
+  }
 
   return maxPage;
 };

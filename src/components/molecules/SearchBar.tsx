@@ -26,16 +26,16 @@ function SearchBar({
   buttonColor,
   borderColor,
   borderWidth,
+  search,
+  onChange,
+  onClickSearch,
 }: SearchBarProps) {
-  const {form, onChange} = useInputForm({
-    search: ''
-  });
 
   return (
     <StyledWrapper>
       <StyledInput>
         <Input
-          value={form.search}
+          value={search!}
           name={'search'}
           placeholder={'이름 및 계정'}
           width={inputWidth}
@@ -43,12 +43,13 @@ function SearchBar({
           borderColor={borderColor}
           borderWidth={borderWidth}
           textAlign={1}
+          fontSize={0.87}
           image={searchIcon}
           onChange={onChange}
         ></Input>
       </StyledInput>
       <StyledButton>
-        <Button width={buttonWidth} height={buttonHeight} bgColor={buttonColor}>
+        <Button width={buttonWidth} height={buttonHeight} bgColor={buttonColor} onClick={onClickSearch}>
           검색
         </Button>
       </StyledButton>
@@ -64,6 +65,9 @@ interface SearchBarProps {
   buttonColor?: string;
   borderColor?: string;
   borderWidth?: number;
+  search: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onClickSearch?: () => void;
 }
 
 SearchBar.defaultProps = {

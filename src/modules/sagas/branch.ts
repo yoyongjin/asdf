@@ -22,6 +22,8 @@ import {
   requestGetTeamList,
   REQUEST_GET_TEAM_LIST,
   successGetTeamList,
+  successGetUserBranchList,
+  successGetUserTeamList,
 } from 'modules/actions/branch';
 import * as API from 'lib/api';
 
@@ -120,12 +122,16 @@ function* updateBranch(action: ReturnType<typeof requestUpdateBranchInfo>) {
 
 function* getBranchList(action: ReturnType<typeof requestGetBranchList>) {
   try {
+    const { type } = action.payload;
     const response = yield call(API.getBranchList);
     console.log('get branch list Data =>', response);
     const { status, data } = response.data;
     if (status === 'success') {
-      console.log(data.branchs);
-      yield put(successGetBranchList(data.branchs));
+      if (type) {
+        yield put(successGetBranchList(data.branchs));
+      } else {
+        yield put(successGetUserBranchList(data.branchs));
+      }
     }
   } catch (error) {
     console.log(error);
@@ -133,15 +139,18 @@ function* getBranchList(action: ReturnType<typeof requestGetBranchList>) {
 }
 
 function* getTeamList(action: ReturnType<typeof requestGetTeamList>) {
-  const { branch_id } = action.payload;
+  const { branch_id, type } = action.payload;
   try {
     const response = yield call(API.getTeamList, branch_id);
     console.log('get team list Data =>', response);
     const { status, data } = response.data;
 
     if (status === 'success') {
-      console.log(data.teams);
-      yield put(successGetTeamList(data.teams));
+      if (type) {
+        yield put(successGetTeamList(data.teams));
+      } else {
+        yield put(successGetUserTeamList(data.teams));
+      }
     }
   } catch (error) {
     console.log(error);

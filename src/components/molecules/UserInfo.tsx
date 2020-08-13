@@ -5,6 +5,8 @@ import { Button } from 'components/atoms';
 import { Title, TextInput, TextSelect } from 'components/molecules';
 import { COLORS } from 'utils/color';
 import useInputForm from 'hooks/useInputForm';
+import { UserInfo as UserInfoType } from 'modules/types/user';
+import useBranch from 'hooks/useBranch';
 
 const StyledWrapper = styled.div`
   width: 100%;
@@ -42,15 +44,17 @@ function UserInfo({
   onClickVisible,
   onClickInsertUser,
   onClickUpdateUser,
-  branchList,
-  teamList,
+  // getBranchList,
+  // getTeamList,
+  // branchList,
+  // teamList,
   adminList,
   data,
 }: UserInfoProps) {
-  const { form, onChange, onChangeSelect } = useInputForm({
-    branch: data! && data!.branch_id ? data!.branch_id : '',
-    team: data! && data!.team_id ? data!.team_id : '',
-    admin: data! && data!.admin_id ? data!.admin_id : '0',
+  const { form, onChange, onChangeSelect, initValue } = useInputForm({
+    branch: data! && data!.branch_id ? String(data!.branch_id) : '',
+    team: data! && data!.team_id ? String(data!.team_id) : '',
+    admin: data! && data!.admin_id ? String(data!.admin_id) : '',
     name: data! && data!.name ? data!.name : '',
     id: data! && data!.user_name ? data!.user_name : '',
     password: '',
@@ -58,15 +62,26 @@ function UserInfo({
     zibox: data! && data!.ziboxip ? data!.ziboxip : '',
   });
 
+  const { userBranchList, userTeamList, getUserBranchList, getUserTeamList } = useBranch()
+
+  useEffect(() => {
+    getUserBranchList!();
+  }, [getUserBranchList]);
+
+  useEffect(() => {
+    if (data && form.branch) {
+      getUserTeamList!(Number(form.branch));
+    }
+  }, [getUserTeamList, form.branch, data]);
+
   let branch: Array<SelectDataType> = [];
   let team: Array<SelectDataType> = [];
 
   let branch_name = '';
   let team_name = '';
-  let admin_name = '';
 
-  if (branchList.length > 0) {
-    let temp1 = branchList as Array<BranchInfo>;
+  if (userBranchList!.length > 0) {
+    let temp1 = userBranchList as Array<BranchInfo>;
     branch = temp1.map((value) => {
       let data = {
         id: value.id,
@@ -78,8 +93,8 @@ function UserInfo({
       return data;
     });
   }
-  if (teamList.length > 0) {
-    let temp2 = teamList as Array<TeamInfo>;
+  if (userTeamList!.length > 0) {
+    let temp2 = userTeamList as Array<TeamInfo>;
     team = temp2.map((value) => {
       let data = {
         id: value.id,
@@ -99,24 +114,35 @@ function UserInfo({
       </StyledTitle>
       <StyledContent>
         <TextSelect
-          defaultValue={form.branch || '0'}
-          defaultOption={form.branch ? branch_name : '지점명'}
+          defaultValue={'-1'}
+          defaultOption={'지점명'}
           textValue={'지점명'}
           name={'branch'}
           list={branch}
           onChange={onChangeSelect}
+          // selected={form.branch}
         ></TextSelect>
         <TextSelect
-          defaultValue={form.team || '0'}
-          defaultOption={form.team ? team_name : '팀명'}
+          defaultValue={'0'}
+          defaultOption={'팀명'}
           textValue={'팀명'}
           name={'team'}
           list={team}
-          onChange={onChangeSelect}
+          onChange={(e) => onChangeSelect(e, 'team', form.branch)}
+          // selected={form.team}
         ></TextSelect>
         <TextSelect
-          defaultValue={form.admin || '-1'}
-          defaultOption={form.admin === '0' ? '상담원' : form.admin === '1' ? '관리자' : form.admin === '2' ? 'ADMIN' : '권한'}
+          defaultValue={'-1'}
+          defaultOption={
+            form.admin === '0'
+              ? '상담원'
+              : form.admin === '1'
+              ? '관리자'
+              : form.admin === '2'
+              ? 'ADMIN'
+              : '권한'
+          }
+          // selected={form.admin}
           textValue={'권한'}
           name={'admin'}
           list={adminList}
@@ -175,29 +201,42 @@ function UserInfo({
           `}
           onClick={(e) => {
             if (data! && data!.id) {
-              alert('test');
               onClickUpdateUser!(
                 String(data!.id),
-                form.branch,
-                form.team,
-                form.admin,
+                String(form.branch),
+                String(form.team),
+                String(form.admin),
                 form.name,
                 form.id,
                 form.password,
                 form.tel,
                 form.zibox,
               );
+              onClickVisible();
             } else {
               onClickInsertUser!(
-                form.branch,
-                form.team,
-                form.admin,
+                String(form.branch),
+                String(form.team),
+                String(form.admin),
                 form.name,
                 form.id,
                 form.password,
                 form.tel,
                 form.zibox,
               );
+              const init = {
+                branch: '',
+                team: '',
+                admin: '',
+                name: '',
+                id: '',
+                password: '',
+                tel: '',
+                zibox: '',
+              };
+
+              initValue(init);
+              onClickVisible();
             }
           }}
         >
@@ -207,7 +246,36 @@ function UserInfo({
           width={4.3}
           height={1.6}
           bgColor={COLORS.dark_gray1}
-          onClick={onClickVisible}
+          onClick={(e) => {
+            onClickVisible();
+            if (data && !data!.id) {
+              const init = {
+                branch: '',
+                team: '',
+                admin: '',
+                name: '',
+                id: '',
+                password: '',
+                tel: '',
+                zibox: '',
+              };
+
+              initValue(init);
+            } else {
+              const init = {
+                branch: data! && data!.branch_id ? String(data!.branch_id) : '',
+                team: data! && data!.team_id ? String(data!.team_id) : '',
+                admin: data! && data!.admin_id ? String(data!.admin_id) : '',
+                name: data! && data!.name ? data!.name : '',
+                id: data! && data!.user_name ? data!.user_name : '',
+                password: '',
+                tel: data! && data!.number ? data!.number : '',
+                zibox: data! && data!.ziboxip ? data!.ziboxip : '',
+              };
+
+              initValue(init);
+            }
+          }}
           customStyle={`
             float:right;
             margin-right: 10px;
@@ -243,10 +311,12 @@ interface UserInfoProps {
     tel: string,
     ip: string,
   ) => void;
-  branchList: Array<BranchInfo>;
-  teamList: Array<TeamInfo>;
+  // getBranchList?: () => void;
+  // getTeamList?: (branch_id: number) => void;
+  // branchList: Array<BranchInfo>;
+  // teamList: Array<TeamInfo>;
   adminList: Array<SelectDataType>;
-  data?: consultInfoType;
+  data?: UserInfoType;
 }
 
 interface SelectDataType {
@@ -266,22 +336,6 @@ interface TeamInfo {
   team_name: string;
 }
 
-interface consultInfoType {
-  id: number;
-  branch_id: string;
-  branch_name: string | null;
-  team_id: string;
-  team_name: string | null;
-  admin_id: string;
-  name: string;
-  user_name: string;
-  number: string;
-  ziboxip: string;
-  login_at: number;
-  call_time?: number;
-  call_type?: string;
-  diff?: number;
-}
 UserInfo.defaultProps = {};
 
 export default UserInfo;

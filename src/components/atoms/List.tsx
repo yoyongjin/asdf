@@ -33,7 +33,7 @@ const StyledContent = styled.li`
   }
 `;
 
-function List({ menu, onClickVisible }: ListProps) {
+function List({ menu, onClickVisible, onClickDeleteUser, id, page, branchId, teamId }: ListProps) {
   return (
     <StyledWrapper>
       {menu.map((title, i) => {
@@ -41,12 +41,11 @@ function List({ menu, onClickVisible }: ListProps) {
           <StyledContent
             key={`styled-content-${i}`}
             onClick={() => {
-              if(i === 0){
+              if (i === 0) {
                 onClickVisible!();
-              }else if(i === 1) {
-                alert("비밀번호 초기화 예정")
-              }else if(i === 2){
-                alert("삭제 예정")
+              } else if (i === 1) {
+              } else if (i === 2) {
+                onClickDeleteUser!(String(id), page!, branchId!, teamId!);
               }
             }}
           >
@@ -62,7 +61,17 @@ function List({ menu, onClickVisible }: ListProps) {
 
 interface ListProps {
   menu: Array<string>;
+  id: number;
+  page?: number;
+  branchId?: number;
+  teamId?: number;
   onClickVisible?: () => void;
+  onClickDeleteUser?: (
+    id: string,
+    page: number,
+    branchId: number,
+    teamId: number,
+  ) => void;
 }
 
 List.defaultProps = {};

@@ -57,7 +57,7 @@ function TablePagination({
             src={prevIcon}
             width={2}
             height={2}
-            onClick={onClickPrevPage}
+            onClick={() => onClickPrevPage(false)}
           ></Image>
         </StyledBlankSpace>
       </StyledPrev>
@@ -74,7 +74,7 @@ function TablePagination({
             src={nextIcon}
             width={2}
             height={2}
-            onClick={onClickNextPage}
+            onClick={() => onClickNextPage(false)}
           ></Image>
         </StyledBlankSpace>
         <StyledBlankSpace>

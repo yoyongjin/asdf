@@ -9,14 +9,29 @@ export type UserAction = ActionType<typeof actions>;
 export interface UserType {
   consultant: common.checkFetchType;
   consultantInfo: Array<ConsultantInfoType>;
+  userInfo: Array<UserInfo>;
   insertUser: common.checkFetchType;
   updateUser: common.checkFetchType;
   deleteUser: common.checkFetchType;
   numberOfUsers: number;
 }
 
+export interface UserInfo {
+  id: number;
+  branch_id: number;
+  branch_name: string;
+  admin_id: number;
+  login_at: number;
+  name: string;
+  number: string;
+  team_id: number;
+  team_name: string;
+  user_name: string;
+  ziboxip: string;
+}
+
 export interface RequestType {
-  location: Location;
+  location?: Location;
   branchId: number;
   teamId: number;
   limit: number;
@@ -25,6 +40,11 @@ export interface RequestType {
 }
 
 export interface SuccessUserType {
+  users: Array<UserInfo>;
+  count: number;
+}
+
+export interface SuccessConsultantType {
   users: Array<ConsultantInfoType>;
   count: number;
 }
@@ -49,7 +69,7 @@ export interface ConsultantInfoType {
   branch_id: string;
   branch_name: null | string;
   id: number;
-  login_at: number;
+  login_at?: number;
   name: string;
   number: string;
   team_id: string;
@@ -59,4 +79,23 @@ export interface ConsultantInfoType {
   call_time?: number;
   call_type?: string;
   diff?: number;
+}
+
+export interface TestUser {
+  id: number;
+  branch_id: string;
+  team_id: string;
+  admin_id: string;
+  name: string;
+  user_name: string;
+  password: string;
+  number: string;
+  ziboxip: string;
+}
+
+export interface deleteUserType {
+  id: string;
+  page: number;
+  branchId: number;
+  teamId: number
 }

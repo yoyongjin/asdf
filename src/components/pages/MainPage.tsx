@@ -8,16 +8,27 @@ import { COLORS } from 'utils/color';
 import dblifeLogo from 'images/db-logo-login.png';
 import loggedTimeImage from 'images/bg-login-time@3x.png';
 import useAuth from 'hooks/useAuth';
+import useSocket from 'hooks/useSocket';
 
 function MainPage({ history, location }: MainPageProps) {
   const { loginInfo, onCheckLogin, onClickLogout } = useAuth();
-  let bgColor = '';
+  const { getInitInfo, getAllCallState, getUserInfo } = useSocket();
+
   useEffect(() => {
     if (!loginInfo.id) {
       onCheckLogin(history, location);
     }
   }, [onCheckLogin, history, location]);
 
+  useEffect(() => {
+    if (loginInfo && loginInfo.id) {
+      getInitInfo();
+      getAllCallState();
+      getUserInfo();
+    }
+  }, [loginInfo, getInitInfo, getAllCallState, getUserInfo]);
+
+  let bgColor = '';
   if (location.pathname === '/main') {
     bgColor = COLORS.light_gray;
   }

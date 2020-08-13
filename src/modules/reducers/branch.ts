@@ -42,6 +42,8 @@ const initialState: BranchType<string> = {
   namesList: {
     branch: [],
     team: [],
+    userBranch: [],
+    userTeam: [],
   },
 };
 
@@ -249,6 +251,26 @@ const userReducer = createReducer<BranchType<string>, BranchAction>(
         draft.namesList.team = action.payload.reverse();
       })
     },
+    [types.SUCCESS_GET_USER_BRANCH_LIST]: (state, action) => {
+      return produce(state, draft => {
+        draft.branchName.fetch = false;
+        draft.branchName.error = false;
+        draft.namesList = {
+          ...draft.namesList,
+          userBranch: action.payload.reverse(),
+        }
+      })
+    },
+    [types.SUCCESS_GET_USER_TEAM_LIST]: (state, action) => {
+      return produce(state, draft => {
+        draft.branchName.fetch = false;
+        draft.branchName.error = false;
+        draft.namesList = {
+          ...draft.namesList,
+          userTeam: action.payload.reverse(),
+        }
+      })
+    }
     // [types.CHANGE_INPUT]: (state, action) => {
     //   return produce(state, draft => {
     //     // console.log(action.payload);

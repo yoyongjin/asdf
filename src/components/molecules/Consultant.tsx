@@ -115,7 +115,7 @@ interface consultInfoType {
   user_name: string;
   number: string;
   ziboxip: string;
-  login_at: number;
+  login_at?: number;
   call_time?: number;
   call_type?: string;
   diff?: number;

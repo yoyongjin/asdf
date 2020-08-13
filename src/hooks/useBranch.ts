@@ -19,6 +19,8 @@ function useBranch() {
   const branchInfo = useSelector((state: RootState) => state.branch.branchInfo);
   const branchList = useSelector((state: RootState) => state.branch.namesList.branch);
   const teamList = useSelector((state: RootState) => state.branch.namesList.team);
+  const userBranchList=  useSelector((state: RootState) => state.branch.namesList.userBranch);
+  const userTeamList=  useSelector((state: RootState) => state.branch.namesList.userTeam);
   const dispatch = useDispatch();
 
   const getBranchInfo = useCallback(() => {
@@ -26,13 +28,33 @@ function useBranch() {
   }, [dispatch]);
 
   const getBranchList = useCallback(() => {
-    dispatch(requestGetBranchList());
+    const payload = {
+      type: true
+    }
+    dispatch(requestGetBranchList(payload));
   }, [dispatch])
 
   const getTeamList = useCallback((branchId: number) => {
     const payload = {
       branch_id: branchId,
+      type: true
     }
+    dispatch(requestGetTeamList(payload));
+  }, [dispatch])
+
+  const getUserBranchList = useCallback(() => {
+    const payload = {
+      type: false,
+    }
+    dispatch(requestGetBranchList(payload));
+  }, [dispatch])
+
+  
+  const getUserTeamList = useCallback((branchId: number) => {
+    const payload = {
+          branch_id: branchId,
+          type: false,
+        }
     dispatch(requestGetTeamList(payload));
   }, [dispatch])
 
@@ -98,9 +120,13 @@ function useBranch() {
     branchInfo,
     branchList,
     teamList,
+    userBranchList,
+    userTeamList,
     getBranchInfo,
     getBranchList,
     getTeamList,
+    getUserBranchList,
+    getUserTeamList,
     onClickAddTempBranch,
     handleAddBranch,
     handleAddTeam,

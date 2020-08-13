@@ -18,26 +18,51 @@ class Socket {
     return Socket.instance;
   }
 
-  onMessage() {
-    this.socket.on('state', (data: any) => {
-      console.log(data);
+  onMessageUser(callback: (parameters: any) => void) {
+    // 사용자 등록 / 수정 / 삭제 시
+    this.socket.on('user', (message: string) => {
+      const data = JSON.parse(message);
+      const { status } = data;
+      if (status === 'Y') {
+        callback(data);
+      } else {
+        callback('error');
+      }
+    });
+  }
+
+  onMessageAllCallStates(callback: (parameters: any) => void) {
+    // 상담원 콜 상태 전부 가져오기
+    this.socket.on('call-state', (message: string) => {
+      const data = JSON.parse(message);
+      callback(data);
+    });
+  }
+
+  onMeesageCallState(callback: (parameters: any) => void) {
+    // 상담원 콜  상태 변경 시 가져오기
+    this.socket.on('state', (message: string) => {
+      const data = JSON.parse(message);
+      const { status } = data;
+      if (status === 'Y') {
+        callback(data);
+      } else {
+        callback('error');
+      }
     });
   }
 
   onEmit(type: string, data?: string) {
     try {
-      console.log(this.socket);
-      this.socket.emit(type, data);
+      this.socket.emit(type, data!);
     } catch (error) {
       console.log(error);
     }
   }
 
-  onConnectEvent() {
+  onMessageInit() {
     return new Promise((resolve, reject) => {
-      const type = 'initialize';
-      this.onEmit(type);
-      this.socket.on(type, (message: string) => {
+      this.socket.on('initialize', (message: string) => {
         const data = JSON.parse(message);
 
         let parseData = {};
@@ -55,7 +80,11 @@ class Socket {
     });
   }
 
-  url(address: string | undefined): Socket {
+  onConnect() {
+    this.onEmit('initialize');
+  }
+
+  url(address: string): Socket {
     if (!address) return this;
 
     this.address = address;

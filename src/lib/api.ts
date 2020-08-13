@@ -21,6 +21,7 @@ export const getConsultantInfo = (payload: {
   team_id: number;
   limit: number;
   page: number;
+  search_name: string;
 }) =>
   instance.get('/api/auth', {
     params: payload,
@@ -31,13 +32,6 @@ export const resetPassword = () =>
   }); // 비밀번호 초기화
 
 export const getBranchInfo = () => instance.get('/api/branch'); // 지점 + 팀 목록 가져오기
-
-export const deleteUser = () =>
-  instance.delete('/api/auth', {
-    data: {
-      user_id: 2,
-    },
-  }); // 유저 삭제
 
 export const insertBranch = (branch_name: string) =>
   instance.post('/api/branch', {
@@ -77,7 +71,7 @@ export const insertUser = (
   user_pass: string,
   number: string,
   ziboxip: string,
-) => {
+) =>
   instance.post('/api/auth/signup', {
     branch_id,
     team_id,
@@ -88,7 +82,6 @@ export const insertUser = (
     number,
     ziboxip,
   });
-};
 
 export const updateUser = (
   user_id: string,
@@ -100,7 +93,7 @@ export const updateUser = (
   user_pass: string,
   number: string,
   ziboxip: string,
-) => {
+) =>
   instance.patch('/api/auth', {
     user_id,
     branch_id,
@@ -112,4 +105,10 @@ export const updateUser = (
     number,
     ziboxip,
   });
-};
+
+export const deleteUser = (id: string) =>
+  instance.delete('/api/auth', {
+    data: {
+      user_id: id,
+    },
+  });

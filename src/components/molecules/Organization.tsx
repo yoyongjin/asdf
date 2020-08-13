@@ -26,6 +26,7 @@ const StyledTeam = styled.div`
 `;
 
 function Organization({
+  index,
   branch,
   branchId,
   handleAddBranch,
@@ -39,13 +40,12 @@ function Organization({
   >;
 
   useEffect(() => {
-    console.log(branchId, inputRef)
     if (!branchId) {
       inputRef.current[0].focus();
-    } else{
+    } else if (index === 0) {
       inputRef.current[branch!.length - 1].focus();
     }
-  }, [inputRef, branch, branchId]);
+  }, [inputRef, index, branch, branchId]);
 
   const onKeyEvent = (
     e: React.KeyboardEvent<HTMLInputElement>,
@@ -63,7 +63,7 @@ function Organization({
         if (!branchIf.branch_name) {
           // 지점 입력이 처음일 때
           handleAddBranch!(value);
-          initTempValue(name);
+          initTempValue(name, '');
           return;
         } else {
           handleUpdateBranch!(branchIf.id, value);
@@ -73,7 +73,7 @@ function Organization({
         if (!teamIf.team_name) {
           // 팀 입력이 처음일 때
           handleAddTeam!(value, teamIf.branch_id, teamIf.id);
-          initTempValue(name);
+          initTempValue(name, '');
           return;
         } else {
           handleUpdateTeam!(teamIf.id, value, branchId);
@@ -81,8 +81,6 @@ function Organization({
       }
     }
   };
-
-  console.log('Lendering Organization');
   return (
     <StyledWrapper>
       {branch!.length < 1
@@ -126,8 +124,6 @@ function Organization({
                 </StyledBranch>
               );
             } else if (teamIf.team_name !== undefined) {
-              console.log(form);
-              console.log(`${teamIf.branch_id}-team${teamIf.id}`);
               return (
                 <StyledTeam
                   key={`styled-team-${teamIf.team_name}-${teamIf.id}`}
@@ -171,6 +167,7 @@ function Organization({
 }
 
 interface OrganizationProps {
+  index: number;
   branch?: Array<BranchInfo | TeamInfo>;
   branchId?: number;
   handleAddBranch?: (name: string) => void;

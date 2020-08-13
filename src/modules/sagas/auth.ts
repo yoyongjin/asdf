@@ -27,7 +27,8 @@ function* loginProcess(action: ReturnType<typeof requestLogin>) {
     const { status, data } = response.data;
 
     if (status === 'success') {
-      Socket.getInstance().url(socketServer);
+      Socket.getInstance().url(socketServer!);
+      Socket.getInstance().onConnect();
       const { user, token } = data;
       console.log(user);
 
@@ -49,7 +50,8 @@ function* checkLoginProcess(action: ReturnType<typeof requestCheckLogin>) {
     const { status, data } = response.data;
 
     if (status === 'success') {
-      Socket.getInstance().url(socketServer);
+      Socket.getInstance().url(socketServer!);
+      Socket.getInstance().onConnect();
 
       const { user, token } = data;
       console.log(user);

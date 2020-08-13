@@ -5,6 +5,7 @@ import { Image, List, Text, Modal } from 'components/atoms';
 import { UserInfo } from 'components/molecules';
 import { COLORS } from 'utils/color';
 import useVisible from 'hooks/useVisible';
+import { UserInfo as UserInfoType} from 'modules/types/user';
 
 const StyledWrapper = styled.td`
   /* Display */
@@ -34,7 +35,13 @@ function TableProperty({
   branchList,
   teamList,
   adminList,
-  onClickUpdateUser
+  onClickUpdateUser,
+  getBranchList,
+  getTeamList,
+  onClickDeleteUser,
+  page,
+  branchId,
+  teamId,
 }: TableContentProps) {
   const menuList = ['정보 수정', '비밀번호 초기화', '삭제'];
   const { visible, onClickVisible } = useVisible();
@@ -58,13 +65,14 @@ function TableProperty({
         <Text>{info.team_name!}</Text>
       </StyledWrapper>
       <StyledWrapper>
+        {/* <Text>{info.admin_id === '0' ? '상담원' : info.admin_id === '1'? '관리자' : info.admin_id === '2' ? 'ADMIN' : ''}</Text> */}
         <Text>{info.admin_id}</Text>
       </StyledWrapper>
       <StyledWrapper>
-        <Text>{info.user_name}</Text>
+        <Text>{info.name}</Text>
       </StyledWrapper>
       <StyledWrapper>
-        <Text>{info.name}</Text>
+        <Text>{info.user_name}</Text>
       </StyledWrapper>
       <StyledWrapper>
         <Text>{info.number}</Text>
@@ -76,7 +84,15 @@ function TableProperty({
         <StyledProperty onMouseEnter={onMouseIn} onMouseLeave={onMouseOut}>
           {isHover && (
             <StyledList>
-              <List menu={menuList} onClickVisible={onClickVisible}></List>
+              <List
+                menu={menuList}
+                onClickVisible={onClickVisible}
+                onClickDeleteUser={onClickDeleteUser}
+                id={info.id}
+                page={page!}
+                branchId={branchId!}
+                teamId={teamId!}
+              ></List>
             </StyledList>
           )}
           <Image
@@ -92,11 +108,13 @@ function TableProperty({
         Component={
           <UserInfo
             onClickVisible={onClickVisible}
-            branchList={branchList}
-            teamList={teamList}
+            // branchList={branchList}
+            // teamList={teamList}
             adminList={adminList}
             data={info}
             onClickUpdateUser={onClickUpdateUser}
+            // getBranchList={getBranchList}
+            // getTeamList={getTeamList}
           />
         }
       />
@@ -120,30 +138,16 @@ interface TeamInfo {
   team_name: string;
 }
 
-interface consultInfoType {
-  id: number;
-  branch_id: string;
-  branch_name: string | null;
-  team_id: string;
-  team_name: string | null;
-  admin_id: string;
-  name: string;
-  user_name: string;
-  number: string;
-  ziboxip: string;
-  login_at: number;
-  call_time?: number;
-  call_type?: string;
-  diff?: number;
-}
-
 interface TableContentProps {
-  info: consultInfoType;
+  info: UserInfoType;
   threeDotsIcon: string;
   hoverThreeDotsIcon: string;
   branchList: Array<BranchInfo>;
   teamList: Array<TeamInfo>;
   adminList: Array<SelectDataType>;
+  page?: number;
+  branchId?: number;
+  teamId?: number;
   onClickUpdateUser: (
     id: string,
     branchId: string,
@@ -155,6 +159,14 @@ interface TableContentProps {
     tel: string,
     ip: string,
   ) => void;
+  onClickDeleteUser: (
+    id: string,
+    page: number,
+    branchId: number,
+    teamId: number,
+  ) => void;
+  getBranchList: () => void;
+  getTeamList: (branch_id: number) => void;
 }
 
 TableProperty.defaultProps = {};

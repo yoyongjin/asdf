@@ -22,6 +22,8 @@ export interface BranchType<T> {
 export interface NameListType {
   branch: Array<BranchInfo> | null;
   team: Array<TeamInfo> | null;
+  userBranch:  Array<BranchInfo> | null;
+  userTeam: Array<TeamInfo> | null;
 }
 
 export interface BranchInfoType<T> {
@@ -90,4 +92,5 @@ export interface RequestUpdateBranch {
 
 export interface BranchId {
   branch_id: number;
+  type?: boolean;
 }

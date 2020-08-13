@@ -22,6 +22,7 @@ const initialState: UserType = {
     fetch: false,
     error: false,
   },
+  userInfo: [],
   consultantInfo: [],
   numberOfUsers: 0,
 };
@@ -35,7 +36,14 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
   },
   [types.SUCCESS_GET_USER_INFO]: (state, action) => {
     return produce(state, (draft) => {
-      console.log(action);
+      draft.consultant.fetch = false;
+      draft.consultant.error = false;
+      draft.userInfo = action.payload.users;
+      draft.numberOfUsers = action.payload.count;
+    });
+  },
+  [types.SUCCESS_GET_CONSULTANT_INFO]: (state, action) => {
+    return produce(state, (draft) => {
       draft.consultant.fetch = false;
       draft.consultant.error = false;
       draft.consultantInfo = action.payload.users;
@@ -79,6 +87,67 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
     return produce(state, (draft) => {
       draft.updateUser.fetch = false;
       draft.updateUser.error = false;
+    });
+  },
+  [types.GET_CALL_STATUS]: (state, action) => {
+    const newUserList = state.consultantInfo.map((user) => {
+      let map = action.payload[user.number];
+      if(typeof map === 'string'){
+        map = JSON.parse(map);
+      }
+      if (
+        map &&
+        map.number === user.number
+      ) {
+        const { type, number, time } = map;
+        let newUser = Object.assign({}, user);
+        newUser.call_time = Number(time);
+        newUser.call_type = type;
+
+        return newUser;
+      } else {
+        return user;
+      }
+    });
+
+    return produce(state, (draft) => {
+      draft.consultantInfo = newUserList;
+    });
+  },
+  [types.INSERT_USER]: (state, action) => {
+    return produce(state, (draft) => {
+      if(state.userInfo.length > 4){
+        draft.userInfo.unshift(action.payload);
+        draft.userInfo.pop();
+      }else {
+        draft.userInfo.unshift(action.payload);
+      }
+    });
+  },
+  [types.UPDATE_USER]: (state, action) => {
+    return produce(state, (draft) => {
+      let index = draft.userInfo.findIndex((values) => {
+        return values.id === action.payload.id;
+      });
+      draft.userInfo[index] = action.payload;
+    });
+  },
+  [types.REQUEST_DELETE_USER]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.deleteUser.fetch = true;
+      draft.deleteUser.error = false;
+    });
+  },
+  [types.SUCCESS_DELETE_USER]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.deleteUser.fetch = false;
+      draft.deleteUser.error = false;
+    });
+  },
+  [types.DELETE_USER]: (state, action) => {
+    console.log(action.payload);
+    return produce(state, (draft) => {
+
     });
   },
 });

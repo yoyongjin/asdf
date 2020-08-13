@@ -22,6 +22,7 @@ function TextSelect({
   defaultOption,
   list,
   name,
+  // selected,
   onChange,
 }: TextSelectProps) {
   return (
@@ -38,6 +39,7 @@ function TextSelect({
         defaultValue={defaultValue}
         defaultOption={defaultOption}
         onChange={onChange}
+        // selected={selected}
       ></Select>
     </StyledWrapper>
   );
@@ -53,6 +55,7 @@ interface TextSelectProps {
   defaultOption: string;
   list: Array<SelectDataType>;
   name: string;
+  // selected: string;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 

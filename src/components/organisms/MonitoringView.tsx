@@ -6,6 +6,8 @@ import { Consultant, Title } from 'components/molecules';
 import { COLORS } from 'utils/color';
 import useUser from 'hooks/useUser';
 import useMonitoring from 'hooks/useMonitoring';
+import useSocket from 'hooks/useSocket';
+import useAuth from 'hooks/useAuth';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -50,8 +52,15 @@ function Monitoring({ location }: MonitoringProps) {
     ],
   };
 
+  // useEffect(() => {
+  //   if (loginInfo && loginInfo.id) {
+  //     getInitInfo(consultantInfo);
+  //     getCallStates(consultantInfo);
+  //   }
+  // }, [getInitInfo, getCallStates, loginInfo, consultantInfo]);
+
   useEffect(() => {
-    getConsultantsInfo(location);
+    getConsultantsInfo(-1, -1, 2000, 1, '', location);
   }, [getConsultantsInfo]);
 
   useEffect(() => {
@@ -72,7 +81,6 @@ function Monitoring({ location }: MonitoringProps) {
           if (consultant.admin_id === '2') {
             return null;
           }
-
           return (
             <StyledConsultant key={`styled-consultant-${consultant.id}`}>
               <Consultant

@@ -80,6 +80,7 @@ function OrganizationView() {
           return (
             <StyledOrganization key={`styled-organization-${value}`}>
               <Organization
+                index={i}
                 key={`organization-${value}`}
                 branch={branchValues[i]}
                 branchId={Number(value)}

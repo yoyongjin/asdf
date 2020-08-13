@@ -7,6 +7,7 @@ import { COLORS } from 'utils/color';
 import { getMaxPage } from 'utils/utils';
 import prevPageIcon from 'images/bt-page-pre.png';
 import nextPageIcon from 'images/bt-page-next.png';
+import useInputForm from 'hooks/useInputForm';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -62,6 +63,12 @@ function Title({
   isSearch,
   children,
   fontSize,
+  branch,
+  team,
+  search,
+  onChange,
+  onChangeSelect,
+  onClickSearch,
 }: TitleProps) {
   let branchList: Array<SelectDataType> = [];
   let teamList: Array<SelectDataType> = [];
@@ -123,7 +130,7 @@ function Title({
         {selectType && selectType.data1!.length > 0 ? (
           <StyledSelect>
             <Select
-              defaultValue={'0'}
+              defaultValue={'-1'}
               defaultOption={'지점명'}
               name={'branch'}
               options={branchList}
@@ -132,13 +139,14 @@ function Title({
               borderColor={selectType.borderColor}
               borderRadius={selectType.borderRadius}
               fontColor={selectType.color}
+              onChange={(e) => onChangeSelect!(e)}
             />
           </StyledSelect>
         ) : null}
-        {selectType && selectType.data2!.length > 0 ? (
+        {selectType && selectType.data2! ? (
           <StyledSelect>
             <Select
-              defaultValue={'0'}
+              defaultValue={'-1'}
               defaultOption={'팀명'}
               name={'team'}
               options={teamList}
@@ -147,12 +155,13 @@ function Title({
               borderColor={selectType.borderColor}
               borderRadius={selectType.borderRadius}
               fontColor={selectType.color}
+              onChange={(e) => onChangeSelect!(e, 'team', branch)}
             />
           </StyledSelect>
         ) : null}
         {isSearch ? (
           <StyledSearch>
-            <SearchBar></SearchBar>
+            <SearchBar search={search!} onChange={onChange} onClickSearch={onClickSearch}></SearchBar>
           </StyledSearch>
         ) : null}
         {pageType ? (
@@ -231,8 +240,14 @@ interface TitleProps {
   isSearch?: boolean;
   children: string;
   fontSize?: number;
+  branch?: string;
+  team?: string;
+  search?: string;
+  onChangeSelect?: (e: React.ChangeEvent<HTMLSelectElement>, type?: string, data?: string) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onClickSearch?: () => void;
 }
 
 Title.defaultProps = {};
 
-export default Title;
+export default React.memo(Title);

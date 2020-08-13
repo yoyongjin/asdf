@@ -11,6 +11,7 @@ function usePage() {
 
   const onClickNextPage = useCallback(
     (isEnd = false) => {
+      console.log(isEnd)
       let maxPage = getMaxPage(countUser);
       if (page >= maxPage) return;
 
