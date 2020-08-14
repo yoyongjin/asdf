@@ -13,6 +13,7 @@ export interface UserType {
   insertUser: common.checkFetchType;
   updateUser: common.checkFetchType;
   deleteUser: common.checkFetchType;
+  resetPassword: common.checkFetchType;
   numberOfUsers: number;
 }
 
@@ -65,14 +66,14 @@ export interface UpdateUserInfoType extends UserInfoType {
 }
 
 export interface ConsultantInfoType {
-  admin_id: string;
-  branch_id: string;
+  admin_id: number;
+  branch_id: number;
   branch_name: null | string;
   id: number;
   login_at?: number;
   name: string;
   number: string;
-  team_id: string;
+  team_id: number;
   team_name: null | string;
   user_name: string;
   ziboxip: string;
@@ -98,4 +99,14 @@ export interface deleteUserType {
   page: number;
   branchId: number;
   teamId: number
+}
+
+export interface callStateType {
+  type: string;
+  number: string;
+  time: string;
+}
+
+export interface monitoringStateType extends callStateType {
+  monitoring_state: string;
 }

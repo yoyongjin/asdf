@@ -36,6 +36,8 @@ export const REQUEST_GET_TEAM_LIST = 'REQUEST_GET_TEAM_LIST';
 export const SUCCESS_GET_TEAM_LIST = 'SUCCESS_GET_TEAM_LIST';
 export const SUCCESS_GET_USER_BRANCH_LIST = 'SUCCESS_GET_USER_BRANCH_LIST'
 export const SUCCESS_GET_USER_TEAM_LIST = 'SUCCESS_GET_USER_TEAM_LIST'
+export const INIT_BRANCH_LIST = 'INIT_BRANCH_LIST'
+export const INIT_TEAM_LST = 'INIT_TEAM_LST'
 
 export const requestGetBranchInfo = createAction(REQUEST_GET_BRANCH_INFO)();
 export const successGetBranchInfo = createAction(SUCCESS_GET_BRANCH_INFO)<
@@ -78,4 +80,6 @@ export const successGetBranchList = createAction(SUCCESS_GET_BRANCH_LIST)<Array<
 export const requestGetTeamList = createAction(REQUEST_GET_TEAM_LIST)<BranchId>();
 export const successGetTeamList = createAction(SUCCESS_GET_TEAM_LIST)<Array<TeamInfo>>();
 export const successGetUserBranchList = createAction(SUCCESS_GET_USER_BRANCH_LIST)<Array<BranchInfo>>();
-export const successGetUserTeamList = createAction(SUCCESS_GET_USER_TEAM_LIST)<Array<TeamInfo>>()
+export const successGetUserTeamList = createAction(SUCCESS_GET_USER_TEAM_LIST)<Array<TeamInfo>>();
+export const initBranchList = createAction(INIT_BRANCH_LIST)();
+export const initTeamList = createAction(INIT_TEAM_LST)();

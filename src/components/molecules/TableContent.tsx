@@ -22,6 +22,7 @@ function TableContent({
   getBranchList,
   getTeamList,
   onClickDeleteUser,
+  onClickResetPassword,
   page, 
   branchId, 
   teamId,
@@ -43,6 +44,7 @@ function TableContent({
               getBranchList={getBranchList!}
               getTeamList={getTeamList!}
               onClickDeleteUser={onClickDeleteUser!}
+              onClickResetPassword={onClickResetPassword!}
               page={page!}
               branchId={branchId!}
               teamId={teamId!}
@@ -93,6 +95,7 @@ interface TableContentProps {
     ip: string,
   ) => void;
   onClickDeleteUser?: (id: string,page: number, branchId: number, teamId: number) => void;
+  onClickResetPassword?: (id: number) => void;
   getBranchList?: () => void;
   getTeamList?: (branch_id: number) => void;
 }

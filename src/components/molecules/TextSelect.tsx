@@ -19,7 +19,7 @@ function TextSelect({
   selectWidth,
   selectRadius,
   defaultValue,
-  defaultOption,
+  // defaultOption,
   list,
   name,
   // selected,
@@ -37,7 +37,7 @@ function TextSelect({
         options={list}
         name={name}
         defaultValue={defaultValue}
-        defaultOption={defaultOption}
+        // defaultOption={defaultOption}
         onChange={onChange}
         // selected={selected}
       ></Select>
@@ -51,8 +51,8 @@ interface TextSelectProps {
   selectRadius: number;
   textColor: string;
   textWeight: number | string;
-  defaultValue: string;
-  defaultOption: string;
+  defaultValue?: number;
+  // defaultOption?: string;
   list: Array<SelectDataType>;
   name: string;
   // selected: string;

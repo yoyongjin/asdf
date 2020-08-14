@@ -22,6 +22,10 @@ const initialState: UserType = {
     fetch: false,
     error: false,
   },
+  resetPassword: {
+    fetch: false,
+    error: false,
+  },
   userInfo: [],
   consultantInfo: [],
   numberOfUsers: 0,
@@ -150,6 +154,23 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
 
     });
   },
+  [types.CHANGE_CALL_STATE]: (state, action) => {
+    const { type, time, number } = action.payload;
+    return produce(state, (draft) => {
+      state.consultantInfo.map((values, i) => {
+        if(values.number === number){
+          draft.consultantInfo[i].call_time = Number(time);
+          draft.consultantInfo[i].call_type = type;
+        }
+      })
+    })
+  },
+  [types.REQUEST_RESET_PASSWORD]: (state, action) => {
+    return produce(state, draft => {
+      draft.resetPassword.fetch = false;
+      draft.resetPassword.error = true;
+    })
+  }
 });
 
 export default userReducer;

@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 
 import Socket from 'lib/socket';
-import { getCallStatus, insertUser, updateUser } from 'modules/actions/user';
+import { getCallStatus, insertUser, updateUser, changeCallState, changeMonitoringState } from 'modules/actions/user';
 import { UserInfo } from 'modules/types/user';
 
 function useSocket() {
@@ -15,26 +15,6 @@ function useSocket() {
   const getInitInfo = useCallback(async () => {
     const response: any = await Socket.getInstance().onMessageInit();
     console.log('getInitInfo => ', response);
-
-    // const newUserList = users.map((user) => {
-    //   console.log(response[user.number])
-    //   // console.log(response[user.number].number)
-    //   console.log(user.number)
-    //   if (
-    //     response[user.number] &&
-    //     response[user.number].number === user.number
-    //   ) {
-    //     const { type, number, time } = response[user.number];
-    //     let newUser = Object.assign({}, user);
-    //     newUser.call_time = Number(time);
-    //     newUser.call_type = type;
-
-    //     return newUser;
-    //   } else {
-    //     return user;
-    //   }
-    // });
-
     dispatch(getCallStatus(response));
   }, [dispatch]);
 
@@ -59,17 +39,30 @@ function useSocket() {
   }, [dispatch]);
 
   const getCallState = useCallback(() => {
-    Socket.getInstance().onMessageAllCallStates((parameters) => {
-      console.log(parameters);
-      // const { type, data } = parameters;
-    });
+    const response = "{\"type\":\"call_offhook\",\"number\":\"01012345679\",\"time\":\"1596066687\"}"
+     console.log(JSON.parse(response))
+     setTimeout(() => {
+       dispatch(changeCallState(JSON.parse(response)));
+     }, 5000);
+    // Socket.getInstance().onMeesageCallState((parameters) => {
+    //   console.log(parameters);
+    //   // const { type, data } = parameters;
+    // });
   }, []);
+
+  const getMonitoringState = useCallback(() => {
+    const response = "{\"type\":\"call_idle\",\"number\":\"01083181745\",\"time\":\"1595230650000\",\"monitoring_state\":\"y\"}"
+    console.log(JSON.parse(response))
+    setTimeout(() => {
+      dispatch(changeMonitoringState(JSON.parse(response)));
+    }, 10000);
+  }, [dispatch])
 
   const getAllCallState = useCallback(() => {
     Socket.getInstance().onMessageAllCallStates((response) => {
       dispatch(getCallStatus(response));
     });
-  }, []);
+  }, [dispatch]);
 
   return {
     requestCallState,
@@ -77,6 +70,7 @@ function useSocket() {
     getUserInfo,
     getCallState,
     getAllCallState,
+    getMonitoringState,
   };
 }
 

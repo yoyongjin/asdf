@@ -14,7 +14,8 @@ import useInputForm from 'hooks/useInputForm';
 
 import threeDotsIcon from 'images/bt-user-modi-nor@2x.png';
 import hoverThreeDotsIcon from 'images/bt-user-modi-over@2x.png';
-import { TeamInfo } from 'modules/types/branch';
+import { TeamInfo, BranchInfo } from 'modules/types/branch';
+import useAuth from 'hooks/useAuth';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -48,13 +49,27 @@ const adminList = [
   { id: 1, data: '관리자' },
 ];
 
+const tableTitle = [
+  'No.',
+  '지점명',
+  '팀명',
+  '권한',
+  '이름',
+  '아이디',
+  '전화번호',
+  'ZiBox IP',
+  '',
+];
+
 function UserView({ location }: UserViewProps) {
+  const { loginInfo } = useAuth();
   const {
     userInfo,
     getConsultantsInfo,
     onClickInsertUser,
     onClickUpdateUser,
     onClickDeleteUser,
+    onClickResetPassword,
   } = useUser();
   const { branchList, teamList, getBranchList, getTeamList } = useBranch();
   const { countUser, page, onClickNextPage, onClickPrevPage } = usePage();
@@ -65,46 +80,59 @@ function UserView({ location }: UserViewProps) {
     search: '',
   });
 
-  const onClickSearch = useCallback(() => {
-    let branch_id = -1;
-    let team_id = -1;
+  useEffect(() => {
+    if(loginInfo.admin_id === 2){
+      getBranchList();
+    }
+  }, [getBranchList, loginInfo]);
+
+  useEffect(() => {
     if (form.branch) {
-      branch_id = Number(form.branch);
-    }
-    if (form.team) {
-      team_id = Number(form.team);
-    }
-    getConsultantsInfo(branch_id, team_id, 5, page, form.search, location);
-  }, [form.branch, form.team, form.search, getConsultantsInfo, page]);
-
-  useEffect(() => {
-    getBranchList();
-  }, [getBranchList]);
-
-  useEffect(() => {
-    if (form.branch === '-1') {
       initTempValue('team', '-1');
     }
   }, [initTempValue, form.branch]);
 
   useEffect(() => {
-    if (form.search === '') {
-      let branch_id = -1;
-      let team_id = -1;
-      if (form.branch) {
-        branch_id = Number(form.branch);
-      }
-      if (form.team) {
-        team_id = Number(form.team);
-      }
-
-      getConsultantsInfo(branch_id, team_id, 5, page, '', location);
+    if(loginInfo.admin_id === 2){
+      getTeamList(Number(form.branch));
+    }else if(loginInfo.admin_id === 1){
+      getTeamList(loginInfo.branch_id);
     }
-  }, [getConsultantsInfo, page, form.branch, form.team, form.search]);
+  }, [getTeamList, form.branch, loginInfo]);
 
   useEffect(() => {
-    getTeamList(Number(form.branch));
-  }, [getTeamList, form.branch]);
+    if(loginInfo.admin_id === 2){
+        getConsultantsInfo(
+          Number(form.branch),
+          Number(form.team),
+          5,
+          page,
+          '',
+          location,
+        );
+    }else if(loginInfo.admin_id === 1){
+        getConsultantsInfo(
+          loginInfo.branch_id,
+          Number(form.team),
+          5,
+          page,
+          '',
+          location,
+        );
+    }
+    
+  }, [getConsultantsInfo, loginInfo, page, form.branch, form.team]);
+
+  const onClickSearch = useCallback(() => {
+    getConsultantsInfo(
+      Number(form.branch),
+      Number(form.team),
+      5,
+      page,
+      form.search,
+      location,
+    );
+  }, [form.branch, form.team, form.search, getConsultantsInfo, page]);
 
   const selectInfo = {
     color: COLORS.dark_gray1,
@@ -113,18 +141,6 @@ function UserView({ location }: UserViewProps) {
     data1: branchList as Array<BranchInfo>,
     data2: teamList as Array<TeamInfo>,
   };
-
-  const tableTitle = [
-    'No.',
-    '지점명',
-    '팀명',
-    '권한',
-    '이름',
-    '아이디',
-    '전화번호',
-    'ZiBox IP',
-    '',
-  ];
 
   const buttonInfo = {
     title: '+ 사용자 등록',
@@ -167,6 +183,7 @@ function UserView({ location }: UserViewProps) {
               page={page}
               branchId={Number(form.branch)}
               teamId={Number(form.team)}
+              onClickResetPassword={onClickResetPassword}
             ></Table>
           </StyledUserList>
           <StyledUserPage>
@@ -183,6 +200,7 @@ function UserView({ location }: UserViewProps) {
         isVisible={visible}
         Component={
           <UserInfo
+            isVisible={visible}
             onClickVisible={onClickVisible}
             // branchList={branchList!}
             // teamList={teamList!}
@@ -195,12 +213,6 @@ function UserView({ location }: UserViewProps) {
       />
     </>
   );
-}
-
-interface BranchInfo {
-  branch_name: string;
-  created_at: string;
-  id: number;
 }
 
 interface UserViewProps extends RouteComponentProps {}

@@ -73,6 +73,7 @@ const userReducer = createReducer<BranchType<string>, BranchAction>(
           [value]: values[i],
         };
       });
+
       return produce(state, (draft) => {
         draft.branch.fetch = false;
         draft.branch.error = false;
@@ -231,46 +232,77 @@ const userReducer = createReducer<BranchType<string>, BranchAction>(
         draft.branchName.error = false;
       });
     },
-    [types.SUCCESS_GET_BRANCH_LIST]: (state, action)=> {
-      return produce(state, draft => {
+    [types.SUCCESS_GET_BRANCH_LIST]: (state, action) => {
+      return produce(state, (draft) => {
         draft.branchName.fetch = false;
         draft.branchName.error = false;
+        action.payload.push({
+          id: -1,
+          branch_name: '지점명',
+          created_at: '',
+        });
+        console.log(action.payload);
         draft.namesList.branch = action.payload.reverse();
-      })
+      });
     },
-    [types.REQUEST_GET_TEAM_LIST]: (state, action)=> {
-      return produce(state, draft => {
+    [types.REQUEST_GET_TEAM_LIST]: (state, action) => {
+      return produce(state, (draft) => {
         draft.branchName.fetch = true;
         draft.branchName.error = false;
-      })
+      });
     },
-    [types.SUCCESS_GET_TEAM_LIST]: (state, action)=> {
-      return produce(state, draft => {
+    [types.SUCCESS_GET_TEAM_LIST]: (state, action) => {
+      return produce(state, (draft) => {
         draft.branchName.fetch = false;
         draft.branchName.error = false;
+        action.payload.push({
+          id: -1,
+          team_name: '팀명',
+          branch_id: -1,
+        });
         draft.namesList.team = action.payload.reverse();
-      })
+      });
     },
     [types.SUCCESS_GET_USER_BRANCH_LIST]: (state, action) => {
-      return produce(state, draft => {
+      return produce(state, (draft) => {
         draft.branchName.fetch = false;
         draft.branchName.error = false;
+        action.payload.push({
+          id: -1,
+          branch_name: '지점명',
+          created_at: '',
+        });
         draft.namesList = {
           ...draft.namesList,
           userBranch: action.payload.reverse(),
-        }
-      })
+        };
+      });
     },
     [types.SUCCESS_GET_USER_TEAM_LIST]: (state, action) => {
-      return produce(state, draft => {
+      return produce(state, (draft) => {
         draft.branchName.fetch = false;
         draft.branchName.error = false;
+        action.payload.push({
+          id: -1,
+          team_name: '팀명',
+          branch_id: -1,
+        });
         draft.namesList = {
           ...draft.namesList,
           userTeam: action.payload.reverse(),
-        }
+        };
+      });
+    },
+    [types.INIT_BRANCH_LIST]: (state, action) => {
+      return produce(state, draft => {
+        draft.namesList.userBranch = [];
       })
-    }
+    },
+    [types.INIT_TEAM_LST]: (state, action) => {
+      return produce(state, draft => {
+        draft.namesList.userTeam = [];
+      })
+    },
     // [types.CHANGE_INPUT]: (state, action) => {
     //   return produce(state, draft => {
     //     // console.log(action.payload);

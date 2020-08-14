@@ -26,9 +26,9 @@ export const getConsultantInfo = (payload: {
   instance.get('/api/auth', {
     params: payload,
   }); // 상담원 정보 가져오기
-export const resetPassword = () =>
+export const resetPassword = (id: number) =>
   instance.patch('api/auth/password', {
-    user_id: 1,
+    user_id: id,
   }); // 비밀번호 초기화
 
 export const getBranchInfo = () => instance.get('/api/branch'); // 지점 + 팀 목록 가져오기

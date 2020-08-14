@@ -9,6 +9,8 @@ import {
   deleteUserType,
   SuccessConsultantType,
   UserInfo,
+  callStateType,
+  monitoringStateType,
 } from 'modules/types/user';
 import { failureType } from 'modules/types/common';
 
@@ -28,6 +30,10 @@ export const INSERT_USER = 'INSERT_USER';
 export const UPDATE_USER = 'UPDATE_USER';
 export const DELETE_USER = 'DELETE_USER'
 export const SUCCESS_GET_CONSULTANT_INFO= 'SUCCESS_GET_CONSULTANT_INFO'
+export const CHANGE_CALL_STATE = 'CHANGE_CALL_STATE'
+export const CHANGE_MONITORING_STATE = 'CHANGE_MONITORING_STATE';
+export const REQUEST_RESET_PASSWORD = 'REQUEST_RESET_PASSWORD';
+export const SUCCESS_RESET_PASSWORD = 'SUCCESS_RESET_PASSWORD';
 
 export const requestGetUserInfo = createAction(REQUEST_GET_USER_INFO)<
   RequestType
@@ -54,3 +60,7 @@ export const deleteUser = createAction(DELETE_USER)<{id: string}>();
 export const requestDeleteUser = createAction(REQUEST_DELETE_USER)<deleteUserType>();
 export const successDeleteUser = createAction(SUCCESS_DELETE_USER)();
 export const successGetConsultantInfo = createAction(SUCCESS_GET_CONSULTANT_INFO)<SuccessConsultantType>();
+export const changeCallState = createAction(CHANGE_CALL_STATE)<callStateType>();
+export const changeMonitoringState = createAction(CHANGE_MONITORING_STATE)<monitoringStateType>();
+export const requestResetPassword = createAction(REQUEST_RESET_PASSWORD)<{id: number}>();
+export const successResetPassword = createAction(SUCCESS_RESET_PASSWORD)();

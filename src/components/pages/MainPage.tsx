@@ -12,7 +12,7 @@ import useSocket from 'hooks/useSocket';
 
 function MainPage({ history, location }: MainPageProps) {
   const { loginInfo, onCheckLogin, onClickLogout } = useAuth();
-  const { getInitInfo, getAllCallState, getUserInfo } = useSocket();
+  const { getInitInfo, getAllCallState, getUserInfo, getCallState } = useSocket();
 
   useEffect(() => {
     if (!loginInfo.id) {
@@ -25,8 +25,9 @@ function MainPage({ history, location }: MainPageProps) {
       getInitInfo();
       getAllCallState();
       getUserInfo();
+      getCallState();
     }
-  }, [loginInfo, getInitInfo, getAllCallState, getUserInfo]);
+  }, [loginInfo, getInitInfo, getAllCallState, getUserInfo, getCallState]);
 
   let bgColor = '';
   if (location.pathname === '/main') {

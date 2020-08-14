@@ -12,6 +12,8 @@ import {
   requestDeleteUser,
   REQUEST_DELETE_USER,
   successGetConsultantInfo,
+  requestResetPassword,
+  REQUEST_RESET_PASSWORD,
 } from 'modules/actions/user';
 import * as API from 'lib/api';
 import Socket from 'lib/socket';
@@ -54,7 +56,7 @@ function* getConsultantInfoProcess(
       }
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
     yield put(failureGetUserInfo(error));
   }
 }
@@ -162,6 +164,18 @@ function* deleteUserProcess(action: ReturnType<typeof requestDeleteUser>) {
   }
 }
 
+function* resetPasswordProcess(
+  action: ReturnType<typeof requestResetPassword>,
+) {
+  try {
+    const { id } = action.payload;
+    const response = yield call(API.resetPassword, id);
+    console.log(response);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 function* watchGetConsultantInfo() {
   yield takeLatest(REQUEST_GET_USER_INFO, getConsultantInfoProcess);
 }
@@ -178,12 +192,17 @@ function* watchDeleteUser() {
   yield takeLatest(REQUEST_DELETE_USER, deleteUserProcess);
 }
 
+function* watchResetPassword() {
+  yield takeLatest(REQUEST_RESET_PASSWORD, resetPasswordProcess);
+}
+
 function* userSaga() {
   yield all([
     fork(watchGetConsultantInfo),
     fork(watchInsertUser),
     fork(watchUpdateUser),
     fork(watchDeleteUser),
+    fork(watchResetPassword),
   ]);
 }
 

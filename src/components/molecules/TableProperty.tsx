@@ -39,6 +39,7 @@ function TableProperty({
   getBranchList,
   getTeamList,
   onClickDeleteUser,
+  onClickResetPassword,
   page,
   branchId,
   teamId,
@@ -65,8 +66,8 @@ function TableProperty({
         <Text>{info.team_name!}</Text>
       </StyledWrapper>
       <StyledWrapper>
-        {/* <Text>{info.admin_id === '0' ? '상담원' : info.admin_id === '1'? '관리자' : info.admin_id === '2' ? 'ADMIN' : ''}</Text> */}
-        <Text>{info.admin_id}</Text>
+        <Text>{info.admin_id === 0 ? '상담원' : info.admin_id === 1 ? '관리자' : info.admin_id === 2 ? 'ADMIN' : ''}</Text>
+        {/* <Text>{info.admin_id}</Text> */}
       </StyledWrapper>
       <StyledWrapper>
         <Text>{info.name}</Text>
@@ -88,6 +89,7 @@ function TableProperty({
                 menu={menuList}
                 onClickVisible={onClickVisible}
                 onClickDeleteUser={onClickDeleteUser}
+                onClickResetPassword={onClickResetPassword!}
                 id={info.id}
                 page={page!}
                 branchId={branchId!}
@@ -107,6 +109,7 @@ function TableProperty({
         isVisible={visible}
         Component={
           <UserInfo
+            isVisible={visible}
             onClickVisible={onClickVisible}
             // branchList={branchList}
             // teamList={teamList}
@@ -165,6 +168,7 @@ interface TableContentProps {
     branchId: number,
     teamId: number,
   ) => void;
+  onClickResetPassword?: (id: number) => void;
   getBranchList: () => void;
   getTeamList: (branch_id: number) => void;
 }

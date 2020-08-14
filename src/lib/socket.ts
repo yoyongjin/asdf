@@ -18,6 +18,19 @@ class Socket {
     return Socket.instance;
   }
 
+  onMessageMonitoring(callback: (parameters: any) => void){
+    this.socket.on('monitoring', (message: string) => {
+      console.log(message)
+      // const data = JSON.parse(message);
+      // const { status } = data;
+      // if (status === 'Y') {
+      //   callback(data);
+      // } else {
+      //   callback('error');
+      // }
+    });
+  }
+
   onMessageUser(callback: (parameters: any) => void) {
     // 사용자 등록 / 수정 / 삭제 시
     this.socket.on('user', (message: string) => {
@@ -42,13 +55,15 @@ class Socket {
   onMeesageCallState(callback: (parameters: any) => void) {
     // 상담원 콜  상태 변경 시 가져오기
     this.socket.on('state', (message: string) => {
-      const data = JSON.parse(message);
-      const { status } = data;
-      if (status === 'Y') {
-        callback(data);
-      } else {
-        callback('error');
-      }
+      console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+      console.log(message)
+      // const data = JSON.parse(message);
+      // const { status } = data;
+      // if (status === 'Y') {
+      //   callback(data);
+      // } else {
+      //   callback('error');
+      // }
     });
   }
 

@@ -28,7 +28,7 @@ const StyledOption = styled.option<OptionProps>`
 function Select({
   options,
   defaultValue,
-  defaultOption,
+  // defaultOption,
   name,
   // selected,
   onChange,
@@ -41,15 +41,16 @@ function Select({
       value={defaultValue}
       {...rest}
     >
-      <StyledOption value={defaultValue} {...rest}>
+      {/* <StyledOption value={defaultValue} {...rest}>
         {defaultOption}
-      </StyledOption>
+      </StyledOption> */}
       {options?.map((option, i) => {
         return (
           <StyledOption
             key={`option-${i}`}
             // selected={Number(selected) === option.id}
             value={option.id}
+            selected={option.id === defaultValue}
             {...rest}
           >
             {option.data}
@@ -70,7 +71,7 @@ interface SelectProps extends OptionProps {
   onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   name: string;
   defaultOption?: string;
-  defaultValue?: string;
+  defaultValue?: number;
   // selected?: string;
 }
 

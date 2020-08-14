@@ -19,7 +19,7 @@ export interface requestType extends common.historyType {
 
 export interface loginInfoType {
   id: number; // unique key
-  admin_id: string; // 관리자 권한
+  admin_id: number; // 관리자 권한
   branch_id: number; // 해당 관리자의 지점 id
   team_id: string; // 해당 관리자의 팀 id?
   name: string; // 유저 이름

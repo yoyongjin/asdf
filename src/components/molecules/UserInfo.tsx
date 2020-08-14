@@ -5,7 +5,7 @@ import { Button } from 'components/atoms';
 import { Title, TextInput, TextSelect } from 'components/molecules';
 import { COLORS } from 'utils/color';
 import useInputForm from 'hooks/useInputForm';
-import { UserInfo as UserInfoType } from 'modules/types/user';
+import { UserInfo as UserInfoType, ConsultantInfoType } from 'modules/types/user';
 import useBranch from 'hooks/useBranch';
 
 const StyledWrapper = styled.div`
@@ -50,10 +50,11 @@ function UserInfo({
   // teamList,
   adminList,
   data,
+  isVisible,
 }: UserInfoProps) {
   const { form, onChange, onChangeSelect, initValue } = useInputForm({
-    branch: data! && data!.branch_id ? String(data!.branch_id) : '',
-    team: data! && data!.team_id ? String(data!.team_id) : '',
+    branch: data! && data!.branch_id ? String(data!.branch_id) : '-1',
+    team: data! && data!.team_id ? String(data!.team_id) : '-1',
     admin: data! && data!.admin_id ? String(data!.admin_id) : '',
     name: data! && data!.name ? data!.name : '',
     id: data! && data!.user_name ? data!.user_name : '',
@@ -62,17 +63,30 @@ function UserInfo({
     zibox: data! && data!.ziboxip ? data!.ziboxip : '',
   });
 
-  const { userBranchList, userTeamList, getUserBranchList, getUserTeamList } = useBranch()
+  const {
+    userBranchList,
+    userTeamList,
+    getUserBranchList,
+    getUserTeamList,
+    initUserBranchList,
+    initUserTeamList,
+  } = useBranch();
 
   useEffect(() => {
-    getUserBranchList!();
-  }, [getUserBranchList]);
-
-  useEffect(() => {
-    if (data && form.branch) {
-      getUserTeamList!(Number(form.branch));
+    if (isVisible) {
+      getUserBranchList();
+    } else {
+      initUserBranchList();
     }
-  }, [getUserTeamList, form.branch, data]);
+  }, [isVisible, getUserBranchList, initUserBranchList]);
+
+  useEffect(() => {
+    if (isVisible) {
+      getUserTeamList(Number(form.branch));
+    } else {
+      initUserTeamList();
+    }
+  }, [isVisible, getUserTeamList, form.branch, initUserTeamList]);
 
   let branch: Array<SelectDataType> = [];
   let team: Array<SelectDataType> = [];
@@ -114,35 +128,23 @@ function UserInfo({
       </StyledTitle>
       <StyledContent>
         <TextSelect
-          defaultValue={'-1'}
-          defaultOption={'지점명'}
+          defaultValue={Number(form.branch)}
+          // defaultOption={'지점명'}
           textValue={'지점명'}
           name={'branch'}
           list={branch}
           onChange={onChangeSelect}
-          // selected={form.branch}
         ></TextSelect>
         <TextSelect
-          defaultValue={'0'}
-          defaultOption={'팀명'}
+          defaultValue={Number(form.team)}
+          // defaultOption={team_name || '팀명'}
           textValue={'팀명'}
           name={'team'}
           list={team}
           onChange={(e) => onChangeSelect(e, 'team', form.branch)}
-          // selected={form.team}
         ></TextSelect>
         <TextSelect
-          defaultValue={'-1'}
-          defaultOption={
-            form.admin === '0'
-              ? '상담원'
-              : form.admin === '1'
-              ? '관리자'
-              : form.admin === '2'
-              ? 'ADMIN'
-              : '권한'
-          }
-          // selected={form.admin}
+          defaultValue={Number(form.admin)}
           textValue={'권한'}
           name={'admin'}
           list={adminList}
@@ -225,8 +227,8 @@ function UserInfo({
                 form.zibox,
               );
               const init = {
-                branch: '',
-                team: '',
+                branch: '-1',
+                team: '-1',
                 admin: '',
                 name: '',
                 id: '',
@@ -315,8 +317,9 @@ interface UserInfoProps {
   // getTeamList?: (branch_id: number) => void;
   // branchList: Array<BranchInfo>;
   // teamList: Array<TeamInfo>;
+  isVisible?: boolean;
   adminList: Array<SelectDataType>;
-  data?: UserInfoType;
+  data?: UserInfoType | ConsultantInfoType;
 }
 
 interface SelectDataType {

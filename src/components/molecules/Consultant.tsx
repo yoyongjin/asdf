@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { Button, Image, Text } from 'components/atoms';
+import { Button, Image, Text, Modal } from 'components/atoms';
 import { getHourMinSec } from 'utils/utils';
 import { COLORS } from 'utils/color';
 import callingIcon from 'images/icon-mnt-red@2x.png';
@@ -9,6 +9,8 @@ import waitingIcon from 'images/icon-mnt-grey.png';
 import interceptionStartIcon from 'images/bt-mnt-listen-over.png';
 import interceptingIcon from 'images/bt-mnt-listen-ing.png';
 import interceptionFinishIcon from 'images/bt-mnt-listen-fin-nor.png';
+import { ConsultantInfoType } from 'modules/types/user';
+import UserInfo from './UserInfo';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -38,7 +40,7 @@ const StyledUserInfo = styled.div`
 
 const StyledInterception = styled.div``;
 
-function Consultant({ consultInfo }: ConsultantProps) {
+function Consultant({ consultInfo, onClickVisible }: ConsultantProps) {
   return (
     <StyledWrapper>
       <StyledCallStatusArea>
@@ -79,6 +81,7 @@ function Consultant({ consultInfo }: ConsultantProps) {
           fontSize={1.12}
           fontColor={COLORS.dark_gray1}
           fontWeight={'bold'}
+          onClick={onClickVisible}
         >{`${consultInfo.user_name} 님`}</Text>
         <Text
           fontSize={0.87}
@@ -106,23 +109,9 @@ function Consultant({ consultInfo }: ConsultantProps) {
   );
 }
 
-interface consultInfoType {
-  id: number;
-  branch_name: string | null;
-  team_name: string | null;
-  admin_id: string;
-  name: string;
-  user_name: string;
-  number: string;
-  ziboxip: string;
-  login_at?: number;
-  call_time?: number;
-  call_type?: string;
-  diff?: number;
-}
-
 interface ConsultantProps {
-  consultInfo: consultInfoType;
+  consultInfo: ConsultantInfoType;
+  onClickVisible: () => void;
 }
 
 Consultant.defaultProps = {};

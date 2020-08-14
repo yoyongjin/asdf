@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 
 import { COLORS } from 'utils/color';
 
@@ -7,6 +7,16 @@ const StyledText = styled.span<TextProps>`
   font-size: ${(props) => props.fontSize}${(props) => props.fontSize > 10 ? "px" : "rem"};
   color: ${(props) => props.fontColor};
   font-weight: ${(props) => props.fontWeight};
+
+  ${props => {
+    if(props.onClick){
+      return css`
+        &:hover {
+          cursor: pointer;
+        }
+      `
+    }
+  }};
 `;
 
 function Text({ onClick, children, ...props }: TextProps) {

@@ -6,6 +6,7 @@ import {
   requestAddUser,
   requestUpdateUser,
   requestDeleteUser,
+  requestResetPassword,
 } from 'modules/actions/user';
 import { RootState } from 'modules/reducers';
 import { LIMIT, PAGE } from 'utils/constants';
@@ -94,6 +95,16 @@ function useUser() {
     [dispatch],
   );
 
+  const onClickResetPassword = useCallback(
+    (id: number) => {
+      const payload = {
+        id,
+      };
+      dispatch(requestResetPassword(payload));
+    },
+    [dispatch],
+  );
+
   const onClickDeleteUser = useCallback(
     (id: string, page: number, branchId = -1, teamId = -1) => {
       const payload = {
@@ -114,6 +125,7 @@ function useUser() {
     onClickInsertUser,
     onClickUpdateUser,
     onClickDeleteUser,
+    onClickResetPassword,
   };
 }
 

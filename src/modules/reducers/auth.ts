@@ -20,7 +20,7 @@ const initialState: AuthType = {
   },
   loginInfo: {
     id: 0,
-    admin_id: '',
+    admin_id: 0,
     branch_id: 0,
     team_id: '',
     name: '',

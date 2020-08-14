@@ -12,6 +12,8 @@ import {
   requestUpdateBranchInfo,
   requestGetBranchList,
   requestGetTeamList,
+  initBranchList,
+  initTeamList,
 } from 'modules/actions/branch';
 import { RootState } from 'modules/reducers';
 
@@ -47,6 +49,14 @@ function useBranch() {
       type: false,
     }
     dispatch(requestGetBranchList(payload));
+  }, [dispatch])
+
+  const initUserBranchList = useCallback(() => {
+    dispatch(initBranchList());
+  }, [dispatch]);
+
+  const initUserTeamList = useCallback(() => {
+    dispatch(initTeamList());
   }, [dispatch])
 
   
@@ -132,6 +142,8 @@ function useBranch() {
     handleAddTeam,
     handleUpdateTeam,
     handleUpdateBranch,
+    initUserBranchList,
+    initUserTeamList,
   };
 }
 

@@ -2,12 +2,16 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { RouteComponentProps } from 'react-router-dom';
 
-import { Consultant, Title } from 'components/molecules';
+import { Consultant, Title, UserInfo } from 'components/molecules';
 import { COLORS } from 'utils/color';
 import useUser from 'hooks/useUser';
 import useMonitoring from 'hooks/useMonitoring';
-import useSocket from 'hooks/useSocket';
+import useBranch from 'hooks/useBranch';
+import { TeamInfo, BranchInfo } from 'modules/types/branch';
+import useInputForm from 'hooks/useInputForm';
 import useAuth from 'hooks/useAuth';
+import { Modal } from 'components/atoms';
+import useVisible from 'hooks/useVisible';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -36,32 +40,62 @@ const StyledConsultant = styled.span`
   padding-right: 0.5rem;
 `;
 
+const adminList = [
+  { id: 0, data: '상담원' },
+  { id: 1, data: '관리자' },
+];
+
 function Monitoring({ location }: MonitoringProps) {
-  const { consultantInfo, getConsultantsInfo } = useUser();
+  const { loginInfo } = useAuth();
+  const { visible, onClickVisible } = useVisible();
+  const { consultantInfo, getConsultantsInfo, onClickUpdateUser } = useUser();
   const { onRunTimer, onRemoveTimer } = useMonitoring();
+  const { branchList, teamList, getBranchList, getTeamList } = useBranch();
+  const { form, onChangeSelect, initTempValue } = useInputForm({
+    branch: '-1',
+    team: '-1',
+  });
 
   const selectInfo = {
     color: COLORS.green,
     borderRadius: 0,
-    data: [
-      {
-        id: 1,
-        option: ['전체 지점', '대박', '쪽박'],
-      },
-      { id: 2, option: ['팀', '1팀', '2팀', '3팀'] },
-    ],
+    borderColor: COLORS.green,
+    data1: branchList as Array<BranchInfo>,
+    data2: teamList as Array<TeamInfo>,
   };
 
-  // useEffect(() => {
-  //   if (loginInfo && loginInfo.id) {
-  //     getInitInfo(consultantInfo);
-  //     getCallStates(consultantInfo);
-  //   }
-  // }, [getInitInfo, getCallStates, loginInfo, consultantInfo]);
+  useEffect(() => {
+    if (loginInfo.admin_id === 2) {
+      // 슈퍼관리자일 경우에만 요청
+      getBranchList();
+    }
+  }, [getBranchList, loginInfo]);
 
   useEffect(() => {
-    getConsultantsInfo(-1, -1, 2000, 1, '', location);
-  }, [getConsultantsInfo]);
+    if (form.branch) {
+      initTempValue('team', '-1');
+    }
+  }, [initTempValue, form.branch]);
+
+  useEffect(() => {
+    if (loginInfo.admin_id === 2) {
+      getTeamList(Number(form.branch));
+    }
+    if (loginInfo.admin_id === 1) {
+      getTeamList(loginInfo.branch_id);
+    }
+  }, [getTeamList, form.branch, loginInfo]);
+
+  useEffect(() => {
+    getConsultantsInfo(
+      Number(form.branch),
+      Number(form.team),
+      2000,
+      1,
+      '',
+      location,
+    );
+  }, [getConsultantsInfo, form.branch, form.team]);
 
   useEffect(() => {
     onRunTimer();
@@ -72,26 +106,89 @@ function Monitoring({ location }: MonitoringProps) {
 
   console.log('Lendering MonitoringView');
   return (
-    <StyledWrapper>
-      <StyledTitle>
-        <Title>상담원 모니터링</Title>
-      </StyledTitle>
-      <StyledConsultantArea>
-        {consultantInfo.map((consultant, i) => {
-          if (consultant.admin_id === '2') {
-            return null;
-          }
-          return (
-            <StyledConsultant key={`styled-consultant-${consultant.id}`}>
-              <Consultant
-                key={`consultant-${consultant.id}`}
-                consultInfo={consultant}
-              />
-            </StyledConsultant>
-          );
-        })}
-      </StyledConsultantArea>
-    </StyledWrapper>
+      <StyledWrapper>
+        <StyledTitle>
+          <Title
+            selectType={selectInfo}
+            onChangeSelect={onChangeSelect}
+            branch={form.branch}
+            team={form.team}
+          >
+            상담원 모니터링
+          </Title>
+        </StyledTitle>
+        <StyledConsultantArea>
+          {consultantInfo.map((consultant, i) => {
+            if (loginInfo.admin_id === 0) {
+              // 상담원이 로그인 했을 경우
+              return null;
+            }
+
+            if (consultant.admin_id === 2 || consultant.admin_id === 1) {
+              // 가져온 데이터 중 관리자 제거
+              return null;
+            }
+
+            if (loginInfo.admin_id === 2) {
+              // 슈퍼관리자일 경우
+              return (
+                <>
+                  <StyledConsultant key={`styled-consultant-${consultant.id}`}>
+                    <Consultant
+                      key={`consultant-${consultant.id}`}
+                      consultInfo={consultant}
+                      onClickVisible={onClickVisible}
+                    />
+                  </StyledConsultant>
+                  <Modal
+                    isVisible={visible}
+                    Component={
+                      <UserInfo
+                        isVisible={visible}
+                        onClickVisible={onClickVisible}
+                        adminList={adminList}
+                        onClickUpdateUser={onClickUpdateUser}
+                        data={consultant}
+                      />
+                    }
+                  />
+                </>
+              );
+            } else {
+              if (loginInfo.branch_id === consultant.branch_id) {
+                // 슈퍼관리자가 아닐 경우, 해당 지점의 상담원들만 보여줄 수 있도록 구현
+                return (
+                  <>
+                    <StyledConsultant
+                      key={`styled-consultant-${consultant.id}`}
+                    >
+                      <Consultant
+                        key={`consultant-${consultant.id}`}
+                        consultInfo={consultant}
+                        onClickVisible={onClickVisible}
+                      />
+                    </StyledConsultant>
+                    <Modal
+                      isVisible={visible}
+                      Component={
+                        <UserInfo
+                          isVisible={visible}
+                          onClickVisible={onClickVisible}
+                          adminList={adminList}
+                          onClickUpdateUser={onClickUpdateUser}
+                          data={consultant}
+                        />
+                      }
+                    />
+                  </>
+                );
+              } else {
+                return null;
+              }
+            }
+          })}
+        </StyledConsultantArea>
+      </StyledWrapper>
   );
 }
 

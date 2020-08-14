@@ -4,7 +4,6 @@ import { History } from 'history';
 
 import { requestLogin } from 'modules/actions/auth';
 import { requestGetUserInfo } from 'modules/actions/user';
-import { stringify } from 'querystring';
 
 function useInputForm<T>(initialForm: T) {
   const [form, setForm] = useState<T>(initialForm);
@@ -33,7 +32,7 @@ function useInputForm<T>(initialForm: T) {
     [],
   );
 
-  const initTempValue = useCallback((name: string, value: string) => {
+  const initTempValue = useCallback((name: string, value: string | number) => {
     setForm((form) => ({ ...form, [name]: value }));
   }, []);
 

@@ -72,6 +72,9 @@ function Title({
 }: TitleProps) {
   let branchList: Array<SelectDataType> = [];
   let teamList: Array<SelectDataType> = [];
+  let branch_name = '';
+  let team_name = '';
+
   if (selectType) {
     let temp1 = selectType.data1 as Array<BranchInfo>;
     branchList = temp1.map((value) => {
@@ -79,6 +82,9 @@ function Title({
         id: value.id,
         data: value.branch_name,
       };
+      if (Number(branch) === value.id) {
+        branch_name = value.branch_name;
+      }
       return data;
     });
 
@@ -88,6 +94,9 @@ function Title({
         id: value.id,
         data: value.team_name,
       };
+      if (Number(team) === value.id) {
+        team_name = value.team_name;
+      }
       return data;
     });
   }
@@ -130,8 +139,8 @@ function Title({
         {selectType && selectType.data1!.length > 0 ? (
           <StyledSelect>
             <Select
-              defaultValue={'-1'}
-              defaultOption={'지점명'}
+              defaultValue={Number(branch)}
+              // defaultOption={'지점명'}
               name={'branch'}
               options={branchList}
               width={9.3}
@@ -146,8 +155,8 @@ function Title({
         {selectType && selectType.data2! ? (
           <StyledSelect>
             <Select
-              defaultValue={'-1'}
-              defaultOption={'팀명'}
+              defaultValue={Number(team)}
+              // defaultOption={team_name || '팀명'}
               name={'team'}
               options={teamList}
               width={9.3}
@@ -155,13 +164,17 @@ function Title({
               borderColor={selectType.borderColor}
               borderRadius={selectType.borderRadius}
               fontColor={selectType.color}
-              onChange={(e) => onChangeSelect!(e, 'team', branch)}
+              onChange={(e) => onChangeSelect!(e, 'team', String(branch))}
             />
           </StyledSelect>
         ) : null}
         {isSearch ? (
           <StyledSearch>
-            <SearchBar search={search!} onChange={onChange} onClickSearch={onClickSearch}></SearchBar>
+            <SearchBar
+              search={search!}
+              onChange={onChange}
+              onClickSearch={onClickSearch}
+            ></SearchBar>
           </StyledSearch>
         ) : null}
         {pageType ? (
@@ -243,7 +256,11 @@ interface TitleProps {
   branch?: string;
   team?: string;
   search?: string;
-  onChangeSelect?: (e: React.ChangeEvent<HTMLSelectElement>, type?: string, data?: string) => void;
+  onChangeSelect?: (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    type?: string,
+    data?: string,
+  ) => void;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onClickSearch?: () => void;
 }

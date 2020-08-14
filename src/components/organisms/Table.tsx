@@ -39,7 +39,10 @@ function Table({
   getBranchList,
   getTeamList,
   onClickDeleteUser,
-  page, branchId, teamId
+  onClickResetPassword,
+  page,
+  branchId,
+  teamId,
 }: TableProps) {
   return (
     <StyledWrapper>
@@ -61,8 +64,8 @@ function Table({
           page={page!}
           branchId={branchId}
           teamId={teamId}
-          ></TableContent>
-            
+          onClickResetPassword={onClickResetPassword!}
+        ></TableContent>
       </StyledBody>
     </StyledWrapper>
   );
@@ -110,7 +113,13 @@ interface TableProps extends StyledProps {
     tel: string,
     ip: string,
   ) => void;
-  onClickDeleteUser?: (id: string,page: number, branchId: number, teamId: number) => void;
+  onClickDeleteUser?: (
+    id: string,
+    page: number,
+    branchId: number,
+    teamId: number,
+  ) => void;
+  onClickResetPassword?: (id: number) => void;
   getBranchList?: () => void;
   getTeamList?: (branch_id: number) => void;
 }
