@@ -96,17 +96,25 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
   [types.GET_CALL_STATUS]: (state, action) => {
     const newUserList = state.consultantInfo.map((user) => {
       let map = action.payload[user.number];
-      if(typeof map === 'string'){
+      if (typeof map === 'string') {
         map = JSON.parse(map);
       }
-      if (
-        map &&
-        map.number === user.number
-      ) {
-        const { type, number, time } = map;
+      if (map && map.number === user.number) {
+        const { type, number, time, monitoring_state, user_id } = map;
         let newUser = Object.assign({}, user);
         newUser.call_time = Number(time);
         newUser.call_type = type;
+        if(monitoring_state){
+          if(monitoring_state === 'y'){
+            newUser.monitoring = true;
+          }else if(monitoring_state === 'n'){
+            newUser.monitoring = false;
+          }
+        }
+
+        if(user_id){
+          newUser.user_id = user_id;
+        }
 
         return newUser;
       } else {
@@ -120,10 +128,10 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
   },
   [types.INSERT_USER]: (state, action) => {
     return produce(state, (draft) => {
-      if(state.userInfo.length > 4){
+      if (state.userInfo.length > 4) {
         draft.userInfo.unshift(action.payload);
         draft.userInfo.pop();
-      }else {
+      } else {
         draft.userInfo.unshift(action.payload);
       }
     });
@@ -150,27 +158,41 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
   },
   [types.DELETE_USER]: (state, action) => {
     console.log(action.payload);
-    return produce(state, (draft) => {
-
-    });
+    return produce(state, (draft) => {});
   },
   [types.CHANGE_CALL_STATE]: (state, action) => {
     const { type, time, number } = action.payload;
     return produce(state, (draft) => {
       state.consultantInfo.map((values, i) => {
-        if(values.number === number){
+        if (values.number === number) {
           draft.consultantInfo[i].call_time = Number(time);
           draft.consultantInfo[i].call_type = type;
         }
-      })
-    })
+      });
+    });
   },
   [types.REQUEST_RESET_PASSWORD]: (state, action) => {
-    return produce(state, draft => {
+    return produce(state, (draft) => {
       draft.resetPassword.fetch = false;
       draft.resetPassword.error = true;
-    })
-  }
+    });
+  },
+  [types.CHANGE_MONITORING_STATE]: (state, action) => {
+    const { type, time, number, monitoring_state, user_id } = action.payload;
+    return produce(state, (draft) => {
+      state.consultantInfo.map((values, i) => {
+        if (values.number === number) {
+          draft.consultantInfo[i].call_time = Number(time);
+          draft.consultantInfo[i].call_type = type;
+          if (monitoring_state === 'y') {
+            draft.consultantInfo[i].monitoring = true;
+          } else if (monitoring_state === 'n') {
+            draft.consultantInfo[i].monitoring = false;
+          }
+        }
+      });
+    });
+  },
 });
 
 export default userReducer;

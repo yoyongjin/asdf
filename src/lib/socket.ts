@@ -18,16 +18,25 @@ class Socket {
     return Socket.instance;
   }
 
-  onMessageMonitoring(callback: (parameters: any) => void){
+  url(address: string): Socket {
+    if (!address) return this;
+
+    this.address = address;
+    this.socket = io.connect(this.address);
+
+    return this;
+  }
+
+  onMessageMonitoring(callback: (parameters: any) => void) {
     this.socket.on('monitoring', (message: string) => {
-      console.log(message)
-      // const data = JSON.parse(message);
-      // const { status } = data;
-      // if (status === 'Y') {
-      //   callback(data);
-      // } else {
-      //   callback('error');
-      // }
+      console.log(message);
+      const data = JSON.parse(message);
+      const { status } = data;
+      if (status === 'Y') {
+        callback(data);
+      } else {
+        callback('error');
+      }
     });
   }
 
@@ -55,19 +64,17 @@ class Socket {
   onMeesageCallState(callback: (parameters: any) => void) {
     // 상담원 콜  상태 변경 시 가져오기
     this.socket.on('state', (message: string) => {
-      console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-      console.log(message)
-      // const data = JSON.parse(message);
-      // const { status } = data;
-      // if (status === 'Y') {
-      //   callback(data);
-      // } else {
-      //   callback('error');
-      // }
+      const data = JSON.parse(message);
+      const { status } = data;
+      if (status === 'Y') {
+        callback(data);
+      } else {
+        callback('error');
+      }
     });
   }
 
-  onEmit(type: string, data?: string) {
+  onEmit(type: string, data?: MonitoringState) {
     try {
       this.socket.emit(type, data!);
     } catch (error) {
@@ -94,19 +101,12 @@ class Socket {
       });
     });
   }
+}
 
-  onConnect() {
-    this.onEmit('initialize');
-  }
-
-  url(address: string): Socket {
-    if (!address) return this;
-
-    this.address = address;
-    this.socket = io.connect(this.address);
-
-    return this;
-  }
+interface MonitoringState {
+  monitoring_state: string;
+  number: string;
+  user_id: number;
 }
 
 export default Socket;

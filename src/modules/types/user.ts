@@ -80,6 +80,8 @@ export interface ConsultantInfoType {
   call_time?: number;
   call_type?: string;
   diff?: number;
+  monitoring?: boolean;
+  user_id?: number;
 }
 
 export interface TestUser {
@@ -109,4 +111,5 @@ export interface callStateType {
 
 export interface monitoringStateType extends callStateType {
   monitoring_state: string;
+  user_id: number;
 }

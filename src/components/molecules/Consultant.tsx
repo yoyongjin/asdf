@@ -1,16 +1,19 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 
-import { Button, Image, Text, Modal } from 'components/atoms';
+import { Button, Image, Text } from 'components/atoms';
 import { getHourMinSec } from 'utils/utils';
 import { COLORS } from 'utils/color';
 import callingIcon from 'images/icon-mnt-red@2x.png';
 import waitingIcon from 'images/icon-mnt-grey.png';
-import interceptionStartIcon from 'images/bt-mnt-listen-over.png';
-import interceptingIcon from 'images/bt-mnt-listen-ing.png';
-import interceptionFinishIcon from 'images/bt-mnt-listen-fin-nor.png';
+import tappingStartIcon from 'images/bt-mnt-listen-nor.png';
+import tappingStartOverIcon from 'images/bt-mnt-listen-over.png';
+import OthertappingIcon from 'images/bt-mnt-listen-ing.png';
+import tappingStopIcon from 'images/bt-mnt-listen-fin-nor.png';
 import { ConsultantInfoType } from 'modules/types/user';
 import UserInfo from './UserInfo';
+import Socket from 'lib/socket';
+import { ExecSyncOptionsWithStringEncoding } from 'child_process';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -40,7 +43,22 @@ const StyledUserInfo = styled.div`
 
 const StyledInterception = styled.div``;
 
-function Consultant({ consultInfo, onClickVisible }: ConsultantProps) {
+function Consultant({
+  consultInfo,
+  onClickVisible,
+  initZibox,
+  startMonitoring,
+  stopMonitoring,
+  tappingState,
+  setTappingState,
+  emitMonitoring,
+  loginId,
+}: ConsultantProps) {
+  useEffect(() => {
+    if(loginId === consultInfo.user_id){
+      emitMonitoring(consultInfo.number, loginId)
+    }
+  }, [consultInfo.user_id, loginId, emitMonitoring])
   return (
     <StyledWrapper>
       <StyledCallStatusArea>
@@ -89,20 +107,51 @@ function Consultant({ consultInfo, onClickVisible }: ConsultantProps) {
         >{`${consultInfo.branch_name} ${consultInfo.team_name}`}</Text>
       </StyledUserInfo>
       <StyledInterception>
-        {consultInfo.call_type !== 'call_offhook' ? (
-          <></>
-        ) : (
-          <>
-            <Button
-              width={4.6}
-              height={1.6}
-              bgColor={'inherit'}
-              bgImage={interceptionStartIcon}
-              borderRadius={0.81}
-            >
-              감청
-            </Button>
-          </>
+        {consultInfo.call_type !== 'call_offhook' ? null : (
+          <Button
+            width={4.6}
+            height={1.6}
+            bgColor={'inherit'}
+            bgImage={
+              // tapping === 0
+              //   ? tappingStartIcon
+              //   : tapping === 1
+              //   ? tappingStopIcon
+              //   : tapping === 2
+              //   ? OthertappingIcon
+              //   : ''
+              consultInfo.monitoring
+                ? tappingState
+                  ? tappingStopIcon
+                  : OthertappingIcon
+                : tappingStartIcon
+            }
+            borderRadius={0.81}
+            fontSize={0.81}
+            onClick={(e) => {
+              if (consultInfo.monitoring) {
+                // 감청을 한번이라도 했을 경우
+                if (tappingState) {
+                  // 내가 감청 중
+                  stopMonitoring(consultInfo.number, loginId);
+                  setTappingState(false);
+                }
+                return;
+              }
+
+              initZibox();
+              setTimeout(() => {
+                startMonitoring(consultInfo.number, loginId);
+              }, 1000);
+              setTappingState(true);
+            }}
+          >
+            {consultInfo.monitoring
+              ? tappingState
+                ? '감청 종료'
+                : '감청중'
+              : '감청'}
+          </Button>
         )}
       </StyledInterception>
     </StyledWrapper>
@@ -112,6 +161,13 @@ function Consultant({ consultInfo, onClickVisible }: ConsultantProps) {
 interface ConsultantProps {
   consultInfo: ConsultantInfoType;
   onClickVisible: () => void;
+  initZibox: () => void;
+  startMonitoring: (number: string, id: number) => void;
+  stopMonitoring: (number: string, id: number) => void;
+  tappingState: boolean;
+  setTappingState: React.Dispatch<React.SetStateAction<boolean>>;
+  loginId: number;
+  emitMonitoring: (number: string, id: number) => void;
 }
 
 Consultant.defaultProps = {};

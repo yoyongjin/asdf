@@ -2,7 +2,13 @@ import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 
 import Socket from 'lib/socket';
-import { getCallStatus, insertUser, updateUser, changeCallState, changeMonitoringState } from 'modules/actions/user';
+import {
+  getCallStatus,
+  insertUser,
+  updateUser,
+  changeCallState,
+  changeMonitoringState,
+} from 'modules/actions/user';
 import { UserInfo } from 'modules/types/user';
 
 function useSocket() {
@@ -38,25 +44,20 @@ function useSocket() {
     });
   }, [dispatch]);
 
-  const getCallState = useCallback(() => {
-    const response = "{\"type\":\"call_offhook\",\"number\":\"01012345679\",\"time\":\"1596066687\"}"
-     console.log(JSON.parse(response))
-     setTimeout(() => {
-       dispatch(changeCallState(JSON.parse(response)));
-     }, 5000);
-    // Socket.getInstance().onMeesageCallState((parameters) => {
-    //   console.log(parameters);
-    //   // const { type, data } = parameters;
-    // });
-  }, []);
-
-  const getMonitoringState = useCallback(() => {
-    const response = "{\"type\":\"call_idle\",\"number\":\"01083181745\",\"time\":\"1595230650000\",\"monitoring_state\":\"y\"}"
-    console.log(JSON.parse(response))
-    setTimeout(() => {
-      dispatch(changeMonitoringState(JSON.parse(response)));
-    }, 10000);
-  }, [dispatch])
+  const getChangeState = useCallback(() => {
+    Socket.getInstance().onMeesageCallState((response) => {
+      const { data } = response;
+      const _response = JSON.parse(data);
+      console.log(_response.monitoring_state);
+      if (_response.monitoring_state) {
+        console.log('Change Monitoring State =>', _response);
+        dispatch(changeMonitoringState(_response));
+      } else {
+        console.log('Change Call State =>', _response);
+        dispatch(changeCallState(_response));
+      }
+    });
+  }, [dispatch]);
 
   const getAllCallState = useCallback(() => {
     Socket.getInstance().onMessageAllCallStates((response) => {
@@ -68,9 +69,8 @@ function useSocket() {
     requestCallState,
     getInitInfo,
     getUserInfo,
-    getCallState,
+    getChangeState,
     getAllCallState,
-    getMonitoringState,
   };
 }
 

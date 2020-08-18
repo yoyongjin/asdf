@@ -16,6 +16,7 @@ import {
 } from 'modules/actions/auth';
 import * as API from 'lib/api';
 import Socket from 'lib/socket';
+import Zibox from 'lib/zibox';
 import { socketServer } from 'utils/constants';
 
 function* loginProcess(action: ReturnType<typeof requestLogin>) {
@@ -28,7 +29,8 @@ function* loginProcess(action: ReturnType<typeof requestLogin>) {
 
     if (status === 'success') {
       Socket.getInstance().url(socketServer!);
-      Socket.getInstance().onConnect();
+      Socket.getInstance().onEmit('initialize');
+      Zibox.getInstance().createZibox();
       const { user, token } = data;
       console.log(user);
 
@@ -36,6 +38,7 @@ function* loginProcess(action: ReturnType<typeof requestLogin>) {
       history.push('/main');
     }
   } catch (error) {
+    console.log(error)
     yield put(failureLogin(error));
     alert('Wrong ID or password.');
   }
@@ -51,7 +54,8 @@ function* checkLoginProcess(action: ReturnType<typeof requestCheckLogin>) {
 
     if (status === 'success') {
       Socket.getInstance().url(socketServer!);
-      Socket.getInstance().onConnect();
+      Socket.getInstance().onEmit('initialize');
+      Zibox.getInstance().createZibox();
 
       const { user, token } = data;
       console.log(user);
@@ -59,6 +63,7 @@ function* checkLoginProcess(action: ReturnType<typeof requestCheckLogin>) {
       history.push(location!.pathname);
     }
   } catch (error) {
+    console.log(error)
     yield put(failureCheckLogin(error));
     history.push('/auth/login');
   }

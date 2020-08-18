@@ -16,6 +16,7 @@ function useUser() {
   const consultantInfo = useSelector(
     (state: RootState) => state.user.consultantInfo,
   );
+
   const dispatch = useDispatch();
 
   // 상담원 정보

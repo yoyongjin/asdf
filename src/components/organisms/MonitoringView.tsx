@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { RouteComponentProps } from 'react-router-dom';
 
@@ -12,6 +12,7 @@ import useInputForm from 'hooks/useInputForm';
 import useAuth from 'hooks/useAuth';
 import { Modal } from 'components/atoms';
 import useVisible from 'hooks/useVisible';
+import useZibox from 'hooks/useZibox';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -46,6 +47,7 @@ const adminList = [
 ];
 
 function Monitoring({ location }: MonitoringProps) {
+  const [tappingState, setTappingState] = useState<boolean>(false);
   const { loginInfo } = useAuth();
   const { visible, onClickVisible } = useVisible();
   const { consultantInfo, getConsultantsInfo, onClickUpdateUser } = useUser();
@@ -55,6 +57,7 @@ function Monitoring({ location }: MonitoringProps) {
     branch: '-1',
     team: '-1',
   });
+  const { initZibox, startMonitoring, stopMonitoring, emitMonitoring } = useZibox();
 
   const selectInfo = {
     color: COLORS.green,
@@ -104,91 +107,73 @@ function Monitoring({ location }: MonitoringProps) {
     };
   }, [onRunTimer, onRemoveTimer]);
 
-  console.log('Lendering MonitoringView');
+  // console.log('Lendering MonitoringView');
   return (
-      <StyledWrapper>
-        <StyledTitle>
-          <Title
-            selectType={selectInfo}
-            onChangeSelect={onChangeSelect}
-            branch={form.branch}
-            team={form.team}
-          >
-            상담원 모니터링
-          </Title>
-        </StyledTitle>
-        <StyledConsultantArea>
-          {consultantInfo.map((consultant, i) => {
-            if (loginInfo.admin_id === 0) {
-              // 상담원이 로그인 했을 경우
-              return null;
-            }
+    <StyledWrapper>
+      <StyledTitle>
+        <Title
+          selectType={selectInfo}
+          onChangeSelect={onChangeSelect}
+          branch={form.branch}
+          team={form.team}
+        >
+          상담원 모니터링
+        </Title>
+      </StyledTitle>
+      <StyledConsultantArea>
+        {consultantInfo.map((consultant, i) => {
+          if (loginInfo.admin_id === 0) {
+            // 상담원이 로그인 했을 경우
+            return null;
+          }
 
-            if (consultant.admin_id === 2 || consultant.admin_id === 1) {
-              // 가져온 데이터 중 관리자 제거
-              return null;
-            }
+          if (consultant.admin_id === 2 || consultant.admin_id === 1) {
+            // 가져온 데이터 중 관리자 제거
+            return null;
+          }
 
-            if (loginInfo.admin_id === 2) {
-              // 슈퍼관리자일 경우
-              return (
-                <>
-                  <StyledConsultant key={`styled-consultant-${consultant.id}`}>
-                    <Consultant
-                      key={`consultant-${consultant.id}`}
-                      consultInfo={consultant}
-                      onClickVisible={onClickVisible}
-                    />
-                  </StyledConsultant>
-                  <Modal
-                    isVisible={visible}
-                    Component={
-                      <UserInfo
-                        isVisible={visible}
-                        onClickVisible={onClickVisible}
-                        adminList={adminList}
-                        onClickUpdateUser={onClickUpdateUser}
-                        data={consultant}
-                      />
-                    }
+          if (
+            loginInfo.admin_id === 2 ||
+            loginInfo.branch_id === consultant.branch_id
+          ) {
+            // 슈퍼관리자일 경우
+            return (
+              <>
+                <StyledConsultant key={`styled-consultant-${consultant.id}`}>
+                  <Consultant
+                    key={`consultant-${consultant.id}`}
+                    consultInfo={consultant}
+                    onClickVisible={onClickVisible}
+                    initZibox={initZibox}
+                    startMonitoring={startMonitoring}
+                    stopMonitoring={stopMonitoring}
+                    tappingState={tappingState}
+                    setTappingState={setTappingState}
+                    loginId={loginInfo.id}
+                    emitMonitoring={emitMonitoring}
                   />
-                </>
-              );
-            } else {
-              if (loginInfo.branch_id === consultant.branch_id) {
-                // 슈퍼관리자가 아닐 경우, 해당 지점의 상담원들만 보여줄 수 있도록 구현
-                return (
-                  <>
-                    <StyledConsultant
-                      key={`styled-consultant-${consultant.id}`}
-                    >
-                      <Consultant
-                        key={`consultant-${consultant.id}`}
-                        consultInfo={consultant}
-                        onClickVisible={onClickVisible}
-                      />
-                    </StyledConsultant>
-                    <Modal
+                </StyledConsultant>
+                <Modal
+                  isVisible={visible}
+                  Component={
+                    <UserInfo
                       isVisible={visible}
-                      Component={
-                        <UserInfo
-                          isVisible={visible}
-                          onClickVisible={onClickVisible}
-                          adminList={adminList}
-                          onClickUpdateUser={onClickUpdateUser}
-                          data={consultant}
-                        />
-                      }
+                      onClickVisible={onClickVisible}
+                      adminList={adminList}
+                      onClickUpdateUser={onClickUpdateUser}
+                      data={consultant}
                     />
-                  </>
-                );
-              } else {
-                return null;
-              }
-            }
-          })}
-        </StyledConsultantArea>
-      </StyledWrapper>
+                  }
+                />
+              </>
+            );
+          } else {
+            return null;
+          }
+        })}
+      </StyledConsultantArea>
+    </StyledWrapper>
+    
   );
 }
 
