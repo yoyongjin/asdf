@@ -5,6 +5,8 @@ import { Organization, Title } from 'components/molecules';
 import useBranch from 'hooks/useBranch';
 import usePage from 'hooks/usePage';
 
+import { getMaxPage } from 'utils/utils';
+
 const StyledWrapper = styled.div`
   /* Display */
   width: 100%;
@@ -37,7 +39,7 @@ function OrganizationView() {
     handleUpdateTeam,
     handleUpdateBranch,
   } = useBranch();
-  const { page, countBranch } = usePage();
+  const { page, countBranch, onClickNextPage, onClickPrevPage } = usePage();
 
   useEffect(() => {
     getBranchInfo();
@@ -56,9 +58,11 @@ function OrganizationView() {
     const type = {
       curPage: page,
       count: countBranch,
+      onClickNextPage: onClickNextPage,
+      onClickPrevPage: onClickPrevPage,
     };
     return type;
-  }, [countBranch, page]);
+  }, [countBranch, page, onClickPrevPage, onClickNextPage]);
 
   const branchKeys = Object.getOwnPropertyNames(branchInfo).reverse();
   const branchValues = Object.values(branchInfo).reverse();
@@ -77,20 +81,22 @@ function OrganizationView() {
       </StyledTitle>
       <StyledOrganizationArea>
         {branchKeys.map((value, i) => {
-          return (
-            <StyledOrganization key={`styled-organization-${value}`}>
-              <Organization
-                index={i}
-                key={`organization-${value}`}
-                branch={branchValues[i]}
-                branchId={Number(value)}
-                handleAddBranch={handleAddBranch}
-                handleAddTeam={handleAddTeam}
-                handleUpdateTeam={handleUpdateTeam}
-                handleUpdateBranch={handleUpdateBranch}
-              />
-            </StyledOrganization>
-          );
+          if (Math.floor(i / 5) + 1 === page) {
+            return (
+              <StyledOrganization key={`styled-organization-${value}`}>
+                <Organization
+                  index={i}
+                  key={`organization-${value}`}
+                  branch={branchValues[i]}
+                  branchId={Number(value)}
+                  handleAddBranch={handleAddBranch}
+                  handleAddTeam={handleAddTeam}
+                  handleUpdateTeam={handleUpdateTeam}
+                  handleUpdateBranch={handleUpdateBranch}
+                />
+              </StyledOrganization>
+            );
+          }
         })}
       </StyledOrganizationArea>
     </StyledWrapper>

@@ -5,15 +5,16 @@ import { RootState } from 'modules/reducers';
 import { getMaxPage } from 'utils/utils';
 
 function usePage() {
-  const countBranch = useSelector((state: RootState) => state.branch.numberOfBranch)
+  const countBranch = useSelector(
+    (state: RootState) => state.branch.numberOfBranch,
+  );
   const countUser = useSelector((state: RootState) => state.user.numberOfUsers);
   const [page, setPage] = useState<number>(1);
 
   const onClickNextPage = useCallback(
-    (isEnd = false) => {
-      console.log(isEnd)
-      let maxPage = getMaxPage(countUser);
-      if (page >= maxPage) return;
+    (cur: number, total: number, isEnd = false) => {
+      let maxPage = getMaxPage(total);
+      if (cur >= maxPage) return;
 
       if (isEnd) {
         setPage(maxPage);
@@ -21,12 +22,12 @@ function usePage() {
         setPage((page) => page + 1);
       }
     },
-    [page, countUser],
+    [],
   );
 
   const onClickPrevPage = useCallback(
-    (isStart = false) => {
-      if (page <= 1) return;
+    (cur: number, total: number, isStart = false) => {
+      if (cur <= 1) return;
 
       if (isStart) {
         setPage(1);
@@ -34,7 +35,7 @@ function usePage() {
         setPage((page) => page - 1);
       }
     },
-    [page],
+    [],
   );
 
   return {

@@ -106,7 +106,7 @@ class Socket {
 interface MonitoringState {
   monitoring_state: string;
   number: string;
-  user_id: number;
+  user_id?: number;
 }
 
 export default Socket;

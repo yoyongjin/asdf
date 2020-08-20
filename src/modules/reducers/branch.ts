@@ -61,6 +61,9 @@ const userReducer = createReducer<BranchType<string>, BranchAction>(
       let values = Object.values(action.payload);
       let temp = {};
 
+      console.log(keys)
+      console.log(values)
+
       keys.map((value, i) => {
         // 팀명 입력할 수 있는 란을 만들기 위해 추가
         values[i].push({

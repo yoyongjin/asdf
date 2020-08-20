@@ -42,7 +42,7 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
     return produce(state, (draft) => {
       draft.consultant.fetch = false;
       draft.consultant.error = false;
-      draft.userInfo = action.payload.users;
+      draft.userInfo = action.payload.users.sort((r1, r2) => r2.id - r1.id);
       draft.numberOfUsers = action.payload.count;
     });
   },
@@ -186,8 +186,10 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
           draft.consultantInfo[i].call_type = type;
           if (monitoring_state === 'y') {
             draft.consultantInfo[i].monitoring = true;
+            draft.consultantInfo[i].user_id = user_id;
           } else if (monitoring_state === 'n') {
             draft.consultantInfo[i].monitoring = false;
+            draft.consultantInfo[i].user_id = user_id;
           }
         }
       });

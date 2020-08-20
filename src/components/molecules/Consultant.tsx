@@ -55,10 +55,10 @@ function Consultant({
   loginId,
 }: ConsultantProps) {
   useEffect(() => {
-    if(loginId === consultInfo.user_id){
-      emitMonitoring(consultInfo.number, loginId)
+    if (!tappingState && loginId === consultInfo.user_id) {
+      emitMonitoring(consultInfo.number, loginId);
     }
-  }, [consultInfo.user_id, loginId, emitMonitoring])
+  }, [consultInfo.user_id, loginId, emitMonitoring]);
   return (
     <StyledWrapper>
       <StyledCallStatusArea>
@@ -99,7 +99,7 @@ function Consultant({
           fontSize={1.12}
           fontColor={COLORS.dark_gray1}
           fontWeight={'bold'}
-          onClick={onClickVisible}
+          onClick={() => { onClickVisible(consultInfo) }}
         >{`${consultInfo.user_name} 님`}</Text>
         <Text
           fontSize={0.87}
@@ -107,52 +107,64 @@ function Consultant({
         >{`${consultInfo.branch_name} ${consultInfo.team_name}`}</Text>
       </StyledUserInfo>
       <StyledInterception>
-        {consultInfo.call_type !== 'call_offhook' ? null : (
-          <Button
-            width={4.6}
-            height={1.6}
-            bgColor={'inherit'}
-            bgImage={
-              // tapping === 0
-              //   ? tappingStartIcon
-              //   : tapping === 1
-              //   ? tappingStopIcon
-              //   : tapping === 2
-              //   ? OthertappingIcon
-              //   : ''
-              consultInfo.monitoring
-                ? tappingState
-                  ? tappingStopIcon
-                  : OthertappingIcon
-                : tappingStartIcon
-            }
-            borderRadius={0.81}
-            fontSize={0.81}
-            onClick={(e) => {
-              if (consultInfo.monitoring) {
-                // 감청을 한번이라도 했을 경우
-                if (tappingState) {
-                  // 내가 감청 중
-                  stopMonitoring(consultInfo.number, loginId);
-                  setTappingState(false);
-                }
-                return;
+        {consultInfo.call_type === 'call_offhook' ? (
+          tappingState &&
+          consultInfo.user_id !== loginId &&
+          !consultInfo.monitoring ? null : (
+            <Button
+              width={4.6}
+              height={1.6}
+              bgColor={'inherit'}
+              bgImage={
+                consultInfo.monitoring
+                  ? consultInfo.user_id === loginId
+                    ? tappingStopIcon
+                    : OthertappingIcon
+                  : tappingStartIcon
               }
+              borderRadius={0.81}
+              fontSize={0.81}
+              fontColor={
+                consultInfo.monitoring && consultInfo.user_id !== loginId
+                  ? COLORS.green
+                  : COLORS.white
+              }
+              onClick={(e) => {
+                if (consultInfo.monitoring) {
+                  // 감청을 한번이라도 했을 경우
+                  if (consultInfo.user_id === loginId) {
+                    // 내가 감청 중
+                    stopMonitoring(consultInfo.number, loginId);
+                    setTappingState(false);
+                  }
+                  return;
+                }
 
-              initZibox();
-              setTimeout(() => {
-                startMonitoring(consultInfo.number, loginId);
-              }, 1000);
-              setTappingState(true);
-            }}
-          >
-            {consultInfo.monitoring
-              ? tappingState
-                ? '감청 종료'
-                : '감청중'
-              : '감청'}
-          </Button>
-        )}
+                initZibox();
+                setTimeout(() => {
+                  startMonitoring(consultInfo.number, loginId);
+                }, 1000);
+                setTappingState(true);
+              }}
+            >
+              <Text
+                fontColor={
+                  consultInfo.monitoring && consultInfo.user_id !== loginId
+                    ? COLORS.green
+                    : COLORS.white
+                }
+                fontSize={0.81}
+                fontWeight={600}
+              >
+                {consultInfo.monitoring
+                  ? consultInfo.user_id === loginId
+                    ? '감청 종료'
+                    : '감청중'
+                  : '감청'}
+              </Text>
+            </Button>
+          )
+        ) : null}
       </StyledInterception>
     </StyledWrapper>
   );
@@ -160,7 +172,7 @@ function Consultant({
 
 interface ConsultantProps {
   consultInfo: ConsultantInfoType;
-  onClickVisible: () => void;
+  onClickVisible: any;
   initZibox: () => void;
   startMonitoring: (number: string, id: number) => void;
   stopMonitoring: (number: string, id: number) => void;

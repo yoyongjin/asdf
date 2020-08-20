@@ -49,7 +49,7 @@ function TablePagination({
             src={firstIcon}
             width={2}
             height={2}
-            onClick={() => onClickPrevPage(true)}
+            onClick={() => onClickPrevPage(curPage, count, true)}
           ></Image>
         </StyledBlankSpace>
         <StyledBlankSpace>
@@ -57,7 +57,7 @@ function TablePagination({
             src={prevIcon}
             width={2}
             height={2}
-            onClick={() => onClickPrevPage(false)}
+            onClick={() => onClickPrevPage(curPage, count, false)}
           ></Image>
         </StyledBlankSpace>
       </StyledPrev>
@@ -74,7 +74,7 @@ function TablePagination({
             src={nextIcon}
             width={2}
             height={2}
-            onClick={() => onClickNextPage(false)}
+            onClick={() => onClickNextPage(curPage, count, false)}
           ></Image>
         </StyledBlankSpace>
         <StyledBlankSpace>
@@ -82,7 +82,7 @@ function TablePagination({
             src={endIcon}
             width={2}
             height={2}
-            onClick={() => onClickNextPage(true)}
+            onClick={() => onClickNextPage(curPage, count, true)}
           ></Image>
         </StyledBlankSpace>
       </StyledNext>
@@ -93,8 +93,8 @@ function TablePagination({
 interface TablePaginationProps {
   curPage: number;
   count: number;
-  onClickNextPage: (isEnd?: boolean) => void;
-  onClickPrevPage: (isStart?: boolean) => void;
+  onClickNextPage: (cur:number, total:number, isEnd?: boolean) => void;
+  onClickPrevPage: (cur: number, total: number, isStart?: boolean) => void;
 }
 
 TablePagination.defaultProps = {};

@@ -7,7 +7,6 @@ import { requestGetUserInfo } from 'modules/actions/user';
 
 function useInputForm<T>(initialForm: T) {
   const [form, setForm] = useState<T>(initialForm);
-
   const dispatch = useDispatch();
 
   const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {

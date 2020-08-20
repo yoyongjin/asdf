@@ -181,7 +181,7 @@ function Title({
           <>
             <PageCount
               curPage={pageType.curPage}
-              maxPage={getMaxPage(pageType.count, 6)}
+              maxPage={getMaxPage(pageType.count)}
             />
             <StyledPageSpace />
             <Button
@@ -190,6 +190,9 @@ function Title({
               height={1.7}
               bgColor={'inherit'}
               borderRadius={0}
+              onClick={() =>
+                pageType.onClickPrevPage(pageType.curPage, pageType.count)
+              }
             ></Button>
             <StyledPageSpace />
             <Button
@@ -198,6 +201,9 @@ function Title({
               height={1.7}
               bgColor={'inherit'}
               borderRadius={0}
+              onClick={() =>
+                pageType.onClickNextPage(pageType.curPage, pageType.count)
+              }
             ></Button>
           </>
         ) : null}
@@ -238,6 +244,8 @@ interface selectType {
 interface pageType {
   curPage: number;
   count: number;
+  onClickPrevPage: (cur: number, total: number, isStart?: boolean) => void;
+  onClickNextPage: (cur: number, total: number, isEnd?: boolean) => void;
 }
 
 interface SelectDataType {

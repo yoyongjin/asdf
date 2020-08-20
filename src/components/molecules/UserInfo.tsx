@@ -62,7 +62,6 @@ function UserInfo({
     tel: data! && data!.number ? data!.number : '',
     zibox: data! && data!.ziboxip ? data!.ziboxip : '',
   });
-
   const {
     userBranchList,
     userTeamList,
@@ -75,7 +74,8 @@ function UserInfo({
   useEffect(() => {
     if (isVisible) {
       getUserBranchList();
-    } else {
+    } 
+    else {
       initUserBranchList();
     }
   }, [isVisible, getUserBranchList, initUserBranchList]);
@@ -87,6 +87,25 @@ function UserInfo({
       initUserTeamList();
     }
   }, [isVisible, getUserTeamList, form.branch, initUserTeamList]);
+
+  useEffect(() => {
+    const init = {
+      branch: data! && data!.branch_id ? String(data!.branch_id) : '',
+      team: data! && data!.team_id ? String(data!.team_id) : '',
+      admin: data! && data!.admin_id >= 0 ? String(data!.admin_id) : '0',
+      name: data! && data!.name ? data!.name : '',
+      id: data! && data!.user_name ? data!.user_name : '',
+      password: '',
+      tel: data! && data!.number ? data!.number : '',
+      zibox: data! && data!.ziboxip ? data!.ziboxip : '',
+    };
+
+    console.log(data)
+
+    console.log(init)
+
+    initValue(init);
+  }, [initValue, data])
 
   let branch: Array<SelectDataType> = [];
   let team: Array<SelectDataType> = [];
@@ -120,7 +139,6 @@ function UserInfo({
       return data;
     });
   }
-
   return (
     <StyledWrapper>
       <StyledTitle>
@@ -341,4 +359,4 @@ interface TeamInfo {
 
 UserInfo.defaultProps = {};
 
-export default UserInfo;
+export default React.memo(UserInfo);

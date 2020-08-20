@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import styled from 'styled-components';
 import { RouteComponentProps } from 'react-router-dom';
 
@@ -53,11 +53,18 @@ function Monitoring({ location }: MonitoringProps) {
   const { consultantInfo, getConsultantsInfo, onClickUpdateUser } = useUser();
   const { onRunTimer, onRemoveTimer } = useMonitoring();
   const { branchList, teamList, getBranchList, getTeamList } = useBranch();
+  const [tempConsultInfo, setTempConsultInfo] = useState();
+
   const { form, onChangeSelect, initTempValue } = useInputForm({
     branch: '-1',
     team: '-1',
   });
-  const { initZibox, startMonitoring, stopMonitoring, emitMonitoring } = useZibox();
+  const {
+    initZibox,
+    startMonitoring,
+    stopMonitoring,
+    emitMonitoring,
+  } = useZibox();
 
   const selectInfo = {
     color: COLORS.green,
@@ -66,6 +73,14 @@ function Monitoring({ location }: MonitoringProps) {
     data1: branchList as Array<BranchInfo>,
     data2: teamList as Array<TeamInfo>,
   };
+
+  const getConsultant = useCallback(
+    (data: any) => {
+      setTempConsultInfo(data);
+      onClickVisible();
+    },
+    [setTempConsultInfo, onClickVisible],
+  );
 
   useEffect(() => {
     if (loginInfo.admin_id === 2) {
@@ -81,12 +96,18 @@ function Monitoring({ location }: MonitoringProps) {
   }, [initTempValue, form.branch]);
 
   useEffect(() => {
+    let branchId = 0;
     if (loginInfo.admin_id === 2) {
-      getTeamList(Number(form.branch));
+      branchId = Number(form.branch);
+      // getTeamList(Number(form.branch));
+    } else if (loginInfo.admin_id === 1) {
+      branchId = loginInfo.branch_id;
+      // getTeamList(loginInfo.branch_id);
+    } else {
+      return;
     }
-    if (loginInfo.admin_id === 1) {
-      getTeamList(loginInfo.branch_id);
-    }
+
+    getTeamList(branchId);
   }, [getTeamList, form.branch, loginInfo]);
 
   useEffect(() => {
@@ -107,73 +128,73 @@ function Monitoring({ location }: MonitoringProps) {
     };
   }, [onRunTimer, onRemoveTimer]);
 
-  // console.log('Lendering MonitoringView');
   return (
-    <StyledWrapper>
-      <StyledTitle>
-        <Title
-          selectType={selectInfo}
-          onChangeSelect={onChangeSelect}
-          branch={form.branch}
-          team={form.team}
-        >
-          상담원 모니터링
-        </Title>
-      </StyledTitle>
-      <StyledConsultantArea>
-        {consultantInfo.map((consultant, i) => {
-          if (loginInfo.admin_id === 0) {
-            // 상담원이 로그인 했을 경우
-            return null;
-          }
+    <>
+      <StyledWrapper>
+        <StyledTitle>
+          <Title
+            selectType={selectInfo}
+            onChangeSelect={onChangeSelect}
+            branch={form.branch}
+            team={form.team}
+          >
+            상담원 모니터링
+          </Title>
+        </StyledTitle>
+        <StyledConsultantArea>
+          {consultantInfo.map((consultant, i) => {
+            if (loginInfo.admin_id === 0) {
+              // 상담원이 로그인 했을 경우
+              return null;
+            }
 
-          if (consultant.admin_id === 2 || consultant.admin_id === 1) {
-            // 가져온 데이터 중 관리자 제거
-            return null;
-          }
+            if (consultant.admin_id === 2 || consultant.admin_id === 1) {
+              // 가져온 데이터 중 관리자 제거
+              return null;
+            }
 
-          if (
-            loginInfo.admin_id === 2 ||
-            loginInfo.branch_id === consultant.branch_id
-          ) {
-            // 슈퍼관리자일 경우
-            return (
-              <>
-                <StyledConsultant key={`styled-consultant-${consultant.id}`}>
-                  <Consultant
-                    key={`consultant-${consultant.id}`}
-                    consultInfo={consultant}
-                    onClickVisible={onClickVisible}
-                    initZibox={initZibox}
-                    startMonitoring={startMonitoring}
-                    stopMonitoring={stopMonitoring}
-                    tappingState={tappingState}
-                    setTappingState={setTappingState}
-                    loginId={loginInfo.id}
-                    emitMonitoring={emitMonitoring}
-                  />
-                </StyledConsultant>
-                <Modal
-                  isVisible={visible}
-                  Component={
-                    <UserInfo
-                      isVisible={visible}
-                      onClickVisible={onClickVisible}
-                      adminList={adminList}
-                      onClickUpdateUser={onClickUpdateUser}
-                      data={consultant}
+            if (
+              loginInfo.admin_id === 2 ||
+              loginInfo.branch_id === consultant.branch_id
+            ) {
+              // 슈퍼관리자일 경우
+              return (
+                <>
+                  <StyledConsultant key={`styled-consultant-${consultant.id}`}>
+                    <Consultant
+                      key={`consultant-${consultant.id}`}
+                      consultInfo={consultant}
+                      onClickVisible={getConsultant}
+                      initZibox={initZibox}
+                      startMonitoring={startMonitoring}
+                      stopMonitoring={stopMonitoring}
+                      tappingState={tappingState}
+                      setTappingState={setTappingState}
+                      loginId={loginInfo.id}
+                      emitMonitoring={emitMonitoring}
                     />
-                  }
-                />
-              </>
-            );
-          } else {
-            return null;
-          }
-        })}
-      </StyledConsultantArea>
-    </StyledWrapper>
-    
+                  </StyledConsultant>
+                </>
+              );
+            } else {
+              return null;
+            }
+          })}
+        </StyledConsultantArea>
+      </StyledWrapper>
+      <Modal
+        isVisible={visible}
+        Component={
+          <UserInfo
+            isVisible={visible}
+            onClickVisible={onClickVisible}
+            adminList={adminList}
+            onClickUpdateUser={onClickUpdateUser}
+            data={tempConsultInfo}
+          />
+        }
+      />
+    </>
   );
 }
 
