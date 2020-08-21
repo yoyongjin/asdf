@@ -9,16 +9,27 @@ export const getYYYYMMDD = (timestamp: number, delim = '.'): string => {
   return fullDate;
 };
 
-export const getHourMinSec = (timestamp: number, delim = ':'): string => {
+export const getHourMinSecV1 = (timestamp: number, delim = ':'): string => {
+  let hours = Math.floor(timestamp / 3600);
+  let minutes = Math.floor((timestamp - hours * 3600) / 60);
+  let seconds = timestamp - hours * 3600 - minutes * 60;
+
+  let fullTime = `${pad(hours.toString())}${delim}${pad(
+    minutes.toString(),
+  )}${delim}${pad(seconds.toString())}`;
+
+  return fullTime;
+};
+
+export const getHourMinSecV2 = (timestamp:number, delim=":"): string => {
   let date = new Date(timestamp);
   let hour = date.getHours() + '';
   let min = date.getMinutes() + '';
   let sec = date.getSeconds() + '';
 
   let fullTime = `${pad(hour)}${delim}${pad(min)}${delim}${pad(sec)}`;
-
-  return fullTime;
-};
+  return fullTime
+}
 
 export const getTimeToSecond = (second: number, delim = ':'): string => {
   let min: number | string = Math.floor(second / 60);
@@ -40,9 +51,13 @@ export const pad = (data: string, standard = 2): string => {
 
 export const getDiffTime = (timestamp: number) => {
   const current: number = new Date().getTime();
-  const diff = current - Number(timestamp + '000');
+  const diff = Math.floor((current - timestamp) / 1000);
 
   return diff;
+};
+
+export const getTime = (timestamp: number) => {
+  return Math.floor(timestamp / 1000);
 };
 
 export const getMaxPage = (count: number, divide = 5) => {

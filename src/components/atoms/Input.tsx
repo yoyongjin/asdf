@@ -1,16 +1,28 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
+import { darken, lighten } from 'polished';
 
 import { COLORS } from 'utils/color';
 
 const StyledInput = styled.input<InputProps>`
+  /* Initialized */
+  border: none;
+  outline: none;
+
   /* Display */
   width: ${(props) => props.width}rem;
-  height: ${(props) => props.height}${(props) => (props.height > 10 ? 'px' : 'rem')};
-  border-width: ${(props) => props.borderWidth}rem;
+  height: ${(props) => {
+    if (props.height > 10) {
+      return `${props.height}px`;
+    }
+
+    return `${props.height}rem`;
+  }};
+  border-style: ${(props) => props.borderStyle};
+  border-width: ${(props) => props.borderWidth}px;
   border-radius: ${(props) => props.borderRadius}rem;
-  font-size: ${props => props.fontSize}rem;
-  font-weight: 600;
+  font-size: ${(props) => props.fontSize}rem;
+  font-weight: ${(props) => props.fontWeight}rem;
   text-align: ${(props) => {
     if (props.textAlign === 1) {
       return 'left';
@@ -50,27 +62,15 @@ const StyledInput = styled.input<InputProps>`
   }}
 
   /* Other */
-  outline: none;
-  ::-webkit-input-placeholder {
-    color: ${(props) => props.phColor};
-  }
   :focus {
     outline: none !important;
-    border: 2px solid ${COLORS.green};
-    box-shadow: 0 0 3px ${COLORS.green};
+    box-shadow: 0 0 10px ${(props) => darken(0.1, props.borderColor)};
   }
   ::placeholder {
     /* Display */
     font-weight: 500;
-    color: ${COLORS.dark_gray1};
-    /* text-align: left; */
+    color: ${(props) => props.phColor};
   }
-  ::-ms-clear,
-  ::-ms-reveal {
-    display: none;
-    width: 0;
-    height: 0;
-  };
   ::-webkit-search-decoration,
   ::-webkit-search-cancel-button,
   ::-webkit-search-results-button,
@@ -78,7 +78,7 @@ const StyledInput = styled.input<InputProps>`
     display: none;
   }
 
-  ${(props) => props.customStyle}
+  ${(props) => props.customStyle};
 `;
 
 function Input({
@@ -106,37 +106,39 @@ function Input({
 }
 
 interface InputProps {
-  readonly innerRef?: (instance: HTMLInputElement) => void;
   readonly type: string;
-  readonly name?: string;
   readonly value: string;
-  readonly placeholder: string;
+  readonly name?: string;
+  readonly placeholder?: string;
   readonly width: number;
   readonly height: number;
-  readonly borderWidth: number | string;
-  readonly borderRadius: number;
   readonly borderColor: string;
+  readonly borderRadius: number;
+  readonly borderWidth: number;
+  readonly fontSize: number;
+  readonly fontWeight: number | string;
+  readonly phColor?: string;
   readonly textAlign: number;
-  readonly phColor: string;
-  readonly customStyle?: string;
   readonly image?: string;
-  readonly fontSize?: number;
+  readonly borderStyle: string;
+  readonly customStyle?: string;
+  readonly innerRef?: ((instance: HTMLInputElement) => void) | React.MutableRefObject<HTMLInputElement>;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 Input.defaultProps = {
-  type: 'input',
+  type: 'text',
   value: '',
-  placeholder: 'Not Placeholder',
   width: 15,
-  height: 1.7,
-  borderWidth: 0,
-  borderRadius: 1,
+  height: 2,
   borderColor: COLORS.light_gray3,
-  textAlign: 2,
-  phColor: COLORS.black,
+  borderRadius: 1,
+  borderStyle: 'solid',
+  borderWidth: 1,
   fontSize: 1,
+  fontWeight: 'normal',
+  textAlign: 2,
 };
 
 export default Input;

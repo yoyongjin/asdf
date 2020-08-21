@@ -3,12 +3,15 @@ import styled, { css } from 'styled-components';
 import { COLORS } from 'utils/color';
 
 const StyledButton = styled.button<ButtonProps>`
+  /* Initialized */
+  border: none;
+  outline: none;
+
   /* Display */
   width: ${(props) => props.width}rem;
   height: ${(props) => props.height}rem;
-  border-width: ${(props) => props.borderWidth};
   border-radius: ${(props) => props.borderRadius}rem;
-  outline: none;
+  border-width: ${(props) => props.borderWidth}px;
   ${(props) => {
     if (props.bgImage) {
       return css<ButtonProps>`
@@ -54,9 +57,7 @@ interface ButtonProps {
   readonly fontSize: number;
   readonly bgColor: string;
   readonly bgImage?: string;
-  onClick?: (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  ) => void;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   readonly children?: string | React.ReactChild;
   readonly customStyle?: string;
 }

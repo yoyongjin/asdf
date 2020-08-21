@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 
 import { Button, Image, Text } from 'components/atoms';
-import { getHourMinSec } from 'utils/utils';
+import { getHourMinSecV1 } from 'utils/utils';
 import { COLORS } from 'utils/color';
 import callingIcon from 'images/icon-mnt-red@2x.png';
 import waitingIcon from 'images/icon-mnt-grey.png';
@@ -78,7 +78,7 @@ function Consultant({
               통화중
             </Text>
             <Text fontColor={COLORS.red} fontWeight={600} fontSize={0.87}>
-              {consultInfo.diff ? getHourMinSec(consultInfo.diff) : '00:00:00'}
+              {consultInfo.diff ? getHourMinSecV1(consultInfo.diff) : '00:00:00'}
             </Text>
           </>
         )}

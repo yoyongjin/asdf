@@ -19,11 +19,16 @@ class Zibox {
     this.zibox = new (window as any).Zibox();
   }
 
-  connect(ziboxip: string) {
-    this.zibox.connect(ziboxip);
+  async connect(ziboxip: string) {
+    await this.zibox.connect(ziboxip);
+    // this.zibox.ftpIP('118.131.74.196' + ',zibox,irlink');
+    // this.zibox.ftpOn();
+    this.zibox.ftpOff();
     this.zibox.initializeAudioContext();
     this.zibox.monIP('127.0.0.1');
-    this.zibox.monOn();
+    setTimeout(() => {
+      this.zibox.monOn();
+    }, 1000);
   }
 
   disconnect() {
@@ -31,10 +36,12 @@ class Zibox {
   }
 
   monStart() {
+    this.zibox.recStart();
     this.zibox.monStart();
   }
 
   monStop() {
+    this.zibox.recStop();
     return this.zibox.monStop();
   }
 }

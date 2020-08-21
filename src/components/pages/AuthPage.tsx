@@ -3,15 +3,17 @@ import React from 'react';
 import { Image } from 'components/atoms';
 import { LoginTemplate } from 'components/templates';
 
-import ziboxLogo from 'images/zibox-sn@2x.png';
+import ziboxLogo from 'images/zibox-sn@3x.png';
 import dblifeLogo from 'images/db-logo-login@3x.png';
 
 function AuthPage() {
   return (
     <LoginTemplate
-      mainLogo={<Image src={dblifeLogo} alt={ziboxLogo} width={'100%'} />}
+      mainLogo={
+        <Image src={dblifeLogo} alt={'지박스 로고'} width={16.75} height={6.4} />
+      }
       subLogo={
-        <Image src={ziboxLogo} alt={ziboxLogo} width={10} height={3.5} />
+        <Image src={ziboxLogo} alt={'DB생명 로고'} width={7.1} height={3.6} />
       }
     />
   );

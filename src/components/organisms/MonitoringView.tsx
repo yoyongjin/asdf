@@ -27,8 +27,10 @@ const StyledTitle = styled.div`
 
 const StyledConsultantArea = styled.div`
   /* Display */
-  height: calc(100%-3.75rem);
+  height: calc(100% - 3.75rem - 5px);
+  overflow: auto;
   display: flex;
+  margin-top: 5px;
   flex-wrap: wrap;
   justify-content: center;
 `;

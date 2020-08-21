@@ -13,18 +13,25 @@ const StyledWrapper = styled.div`
 
 const StyledBlankSpace = styled.div`
   /* Display */
-  height: 20%;
+  height: 11.6rem;
 
   /* Color */
   background-color: ${COLORS.white};
 `;
 
 const StyledContent = styled.div`
-  /* Position */
-  position: relative;
-
   /* Display */
-  height: 40%;
+  width: 100%;
+  height: 19.8rem;
+  display: flex;
+
+  /* Color */
+  background-color: ${COLORS.green};
+`;
+
+const StyledBlankLeftSpace = styled.div`
+  /* Display */
+  width: 9.2rem;
 
   /* Color */
   background-color: ${COLORS.green};
@@ -32,23 +39,27 @@ const StyledContent = styled.div`
 
 const StyledMainLogoSpace = styled.div`
   /* Position */
-  position: absolute;
-  left: 10%;
+  position: relative;
 
   /* Display */
-  width: 25%;
+  width: 28.2rem;
   height: 100%;
 
   /* Color */
   background-color: ${COLORS.white};
 `;
 
+const StyledLoginForm = styled.div`
+  width: calc(100% - 9.2rem - 28.2rem);
+
+  text-align: left;
+`;
+
 const StyledMainLogo = styled.span`
   /* Position */
-  position: inherit;
+  position: absolute;
   top: 30%;
-  left: 15%;
-  padding-right: 2rem;
+  left: 20%;
 `;
 
 const StyledFooter = styled.div`
@@ -56,7 +67,7 @@ const StyledFooter = styled.div`
   position: relative;
 
   /* Display */
-  height: 40%;
+  height: calc(100% - 11.6rem - 19.8rem);
 
   /* Color */
   background-color: ${COLORS.white};
@@ -66,7 +77,7 @@ const StyledSubLogo = styled.div`
   /* Position */
   position: absolute;
   top: 50%;
-  left: 18%;
+  left: 20%;
 `;
 
 function LoginTemplate({ mainLogo, subLogo }: LoginTemplateProps) {
@@ -74,10 +85,13 @@ function LoginTemplate({ mainLogo, subLogo }: LoginTemplateProps) {
     <StyledWrapper>
       <StyledBlankSpace />
       <StyledContent>
+        <StyledBlankLeftSpace />
         <StyledMainLogoSpace>
           <StyledMainLogo>{mainLogo}</StyledMainLogo>
         </StyledMainLogoSpace>
-        <MainRouter />
+        <StyledLoginForm>
+          <MainRouter />
+        </StyledLoginForm>
       </StyledContent>
       <StyledFooter>
         <StyledSubLogo>{subLogo}</StyledSubLogo>

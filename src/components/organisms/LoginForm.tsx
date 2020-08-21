@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -8,7 +8,7 @@ import useInputForm from 'hooks/useInputForm';
 
 const StyledWrapper = styled.div`
   /* Display */
-  width: 100%;
+  width: 25rem;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -18,7 +18,7 @@ const StyledWrapper = styled.div`
 
 const StyledTitle = styled.div`
   /* Display */
-  padding-bottom: 2rem;
+  padding-bottom: 1.8rem;
 `;
 
 const StyledInputId = styled.div`
@@ -28,51 +28,76 @@ const StyledInputId = styled.div`
 
 const StyledInputPassword = styled.div`
   /* Display */
-  padding-bottom: 1.5rem;
+  padding-bottom: 0.7rem;
 `;
 
 const StyledLogin = styled.div``;
 
 function LoginForm({ history }: LoginFormProps) {
   const { form, onChange, onClickLogin } = useInputForm({
-    id: 'ADMIN_USER',
-    password: 'ADMIN_PASS',
+    id: '',
+    password: '',
   });
-
+  const idRef = useRef<HTMLInputElement>(null) as React.MutableRefObject<
+    HTMLInputElement
+  >;
+  const pwRef = useRef<HTMLInputElement>(null) as React.MutableRefObject<
+    HTMLInputElement
+  >;
   const { id, password }: formType = form;
+
+  useEffect(() => {
+    if(idRef){
+      idRef.current.focus();
+    }
+  }, [idRef]);
 
   return (
     <StyledWrapper>
       <StyledTitle>
-        <Text fontSize={1.8} fontColor={COLORS.white}>
+        <Text fontSize={1.5} fontColor={COLORS.white}>
           로그인
         </Text>
       </StyledTitle>
       <StyledInputId>
         <Input
+          innerRef={idRef}
           value={id}
           name={'id'}
-          phColor={COLORS.green}
           placeholder={'아이디를 입력하세요.'}
+          width={13.3}
+          height={2}
+          fontSize={0.8}
+          borderColor={COLORS.dark_green}
+          phColor={COLORS.green}
           onChange={onChange}
         />
       </StyledInputId>
       <StyledInputPassword>
         <Input
+          innerRef={pwRef}
           type={'password'}
           value={password}
           name={'password'}
-          phColor={COLORS.green}
           placeholder={'비밀번호를 입력하세요.'}
+          width={13.3}
+          height={2}
+          fontSize={0.8}
+          borderColor={COLORS.dark_green}
+          phColor={COLORS.green}
           onChange={onChange}
         />
       </StyledInputPassword>
       <StyledLogin>
         <Button
           bgColor={COLORS.dark_green}
+          width={13.3}
+          height={2}
           onClick={() => onClickLogin(id, password, history)}
         >
-          로그인
+          <Text fontSize={0.8} fontColor={COLORS.white}>
+            로그인
+          </Text>
         </Button>
       </StyledLogin>
     </StyledWrapper>
@@ -85,8 +110,6 @@ interface formType {
   password: string;
 }
 
-// interface LoginFormProps {
-//   onClick: () => void;
-// }
+interface LoginFormProps {}
 
 export default LoginForm;

@@ -3,7 +3,12 @@ import styled from 'styled-components';
 
 import { Button, Image, Text } from 'components/atoms';
 import { COLORS } from 'utils/color';
-import { getYYYYMMDD, getHourMinSec } from 'utils/utils';
+import {
+  getYYYYMMDD,
+  getHourMinSecV2,
+  getDiffTime,
+  getTime,
+} from 'utils/utils';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -63,9 +68,11 @@ function UserLog({
           height={1.4}
         />
         <StyledText>
-          <Text fontColor={COLORS.green} fontSize={0.69} fontWeight={600}>{`${getYYYYMMDD(
-            loginTime,
-          )} ${getHourMinSec(loginTime)}`}</Text>
+          <Text
+            fontColor={COLORS.green}
+            fontSize={0.69}
+            fontWeight={600}
+          >{`${getYYYYMMDD(loginTime)} ${getHourMinSecV2(loginTime)}`}</Text>
         </StyledText>
       </StyledLoginTime>
       <StyledLogout>

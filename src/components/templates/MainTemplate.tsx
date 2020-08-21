@@ -9,7 +9,9 @@ const StyledWrapper = styled.div`
   min-width: 80rem;
   width: 100vw;
   max-width: 140rem;
+  min-height: 100vh;
   height: 100vh;
+  max-height: 1200rem;
 
   /* Other */
   /* overflow: hidden; */
@@ -28,6 +30,8 @@ const StyledContent = styled.div<StyledProps>`
 
   /* Color */
   background-color: ${(props) => props.bgColor};
+
+  overflow: hidden;
 `;
 
 function MainTemplate({ gnb, bgColor }: MainTemplateProps) {

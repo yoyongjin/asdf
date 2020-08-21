@@ -107,7 +107,7 @@ function Organization({
                     height={2.5}
                     borderWidth={0.1}
                     borderRadius={1.25}
-                    borderColor={COLORS.light_gray2}
+                    borderColor={COLORS.green}
                     textAlign={1}
                     onChange={onChange}
                     onKeyUp={(e) =>
