@@ -11,6 +11,7 @@ const StyledWrapper = styled.table`
   /* max-height: 20rem; */
   /* min-height: 4rem; */
   border-collapse: collapse;
+  table-layout: fixed;
 `;
 
 const StyledHead = styled.thead<StyledProps>`
@@ -35,14 +36,16 @@ function Table({
   branchList,
   teamList,
   adminList,
+  page,
+  branchId,
+  branchName,
+  adminType,
+  teamId,
   onClickUpdateUser,
   getBranchList,
   getTeamList,
   onClickDeleteUser,
   onClickResetPassword,
-  page,
-  branchId,
-  teamId,
 }: TableProps) {
   return (
     <StyledWrapper>
@@ -63,6 +66,8 @@ function Table({
           onClickDeleteUser={onClickDeleteUser!}
           page={page!}
           branchId={branchId}
+          branchName={branchName}
+          adminType={adminType}
           teamId={teamId}
           onClickResetPassword={onClickResetPassword!}
         ></TableContent>
@@ -91,8 +96,13 @@ interface StyledProps {
   bgColor?: string;
 }
 
+interface TitleProps extends StyledProps{
+  title: string;
+  width: number;
+}
+
 interface TableProps extends StyledProps {
-  tableTitle: Array<string>;
+  tableTitle: Array<TitleProps>;
   userInfo: Array<UserInfo>;
   threeDotsIcon: string;
   hoverThreeDotsIcon: string;
@@ -101,6 +111,8 @@ interface TableProps extends StyledProps {
   adminList: Array<SelectDataType>;
   page?: number;
   branchId?: number;
+  branchName?: string;
+  adminType?: number;
   teamId?: number;
   onClickUpdateUser: (
     id: string,

@@ -1,5 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
+import { darken, lighten } from 'polished';
+
 import { COLORS } from 'utils/color';
 
 const StyledButton = styled.button<ButtonProps>`
@@ -32,10 +34,38 @@ const StyledButton = styled.button<ButtonProps>`
 
   &:hover {
     cursor: pointer;
-    opacity: 0.5;
+    ${(props) => {
+      if (props.bgHoverImage) {
+        return css<ButtonProps>`
+          background-image: url(${(props) => props.bgHoverImage});
+          background-repeat: no-repeat;
+          background-size: ${(props) => props.width}rem
+            ${(props) => props.height}rem;
+        `;
+      } else if(props.bgImage) {
+        return css`
+          opacity: 0.6;
+        `;
+
+      } else {
+        return css<ButtonProps>`
+          color: ${darken(0.1, props.fontColor)};
+        `;
+      }
+    }}
   }
   &:active {
-    opacity: 0.9;
+    ${(props) => {
+      if (props.bgHoverImage || props.bgImage) {
+        return css`
+          opacity: 0.8;
+        `;
+      } else {
+        return css<ButtonProps>`
+          color: ${darken(0.2, props.fontColor)};
+        `;
+      }
+    }}
   }
   ${(props) => props.customStyle}
 `;
@@ -51,15 +81,16 @@ function Button({ onClick, children, ...props }: ButtonProps) {
 interface ButtonProps {
   readonly width: number;
   readonly height: number;
-  readonly borderWidth: number | string;
+  readonly borderWidth: number;
   readonly borderRadius: number;
   readonly fontColor: string;
   readonly fontSize: number;
   readonly bgColor: string;
   readonly bgImage?: string;
-  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  readonly bgHoverImage?: string;
   readonly children?: string | React.ReactChild;
   readonly customStyle?: string;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
 Button.defaultProps = {

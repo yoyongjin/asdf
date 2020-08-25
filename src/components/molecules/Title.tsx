@@ -7,7 +7,6 @@ import { COLORS } from 'utils/color';
 import { getMaxPage } from 'utils/utils';
 import prevPageIcon from 'images/bt-page-pre.png';
 import nextPageIcon from 'images/bt-page-next.png';
-import useInputForm from 'hooks/useInputForm';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -16,43 +15,51 @@ const StyledWrapper = styled.div`
 `;
 
 const StyledLeft = styled.span`
-  height: 100%;
+  height: calc(100% - 13px);
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   float: left;
+  padding-bottom: 13px;
 `;
 
 const StyledRight = styled.div`
-  height: 100%;
+  height: calc(100% - 4px);
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   float: right;
+  padding-bottom: 4px;
 `;
 
 const StyleTitle = styled.div`
-  padding-right: 0.5rem;
+  padding-right: 9.5px;
 `;
 
 const StyledButton = styled.div`
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
+  padding-left: 9.5px;
+  padding-right: 7px;
 `;
 
 const StyledExplanation = styled.div`
-  padding-left: 0.5rem;
+  padding-left: 7px;
 `;
 
 const StyledSelect = styled.div`
-  padding-left: 0.6rem;
+  padding-left: 5px;
+  padding-right: 5px;
 `;
 
 const StyledSearch = styled.div`
-  padding-left: 0.6rem;
+  padding-left: 5px;
 `;
 
 const StyledPageSpace = styled.span`
-  padding-left: 1px;
-  padding-right: 1px;
+  padding-left: 10px;
+  padding-right: 10px;
+`;
+
+const StyledButtonSpace = styled.span`
+  padding-left: 0.5px;
+  padding-right: 0.5px;
 `;
 
 function Title({
@@ -66,6 +73,7 @@ function Title({
   branch,
   team,
   search,
+  adminType,
   onChange,
   onChangeSelect,
   onClickSearch,
@@ -107,25 +115,33 @@ function Title({
         <StyleTitle>
           <Text
             fontSize={fontSize ? fontSize : 1.12}
-            fontWeight={600}
+            fontWeight={800}
             fontColor={COLORS.green}
+            fontFamily={'NanumGothic'}
           >
             {children}
           </Text>
         </StyleTitle>
         {buttonType ? (
-          <StyledButton>
-            <Button
-              width={7.3}
-              height={2}
-              bgColor={COLORS.green}
-              onClick={buttonType.onClick}
-            >
-              <Text fontSize={0.87} fontWeight={600} fontColor={COLORS.white}>
-                {buttonType.title}
-              </Text>
-            </Button>
-          </StyledButton>
+          buttonType!.type === 'organization' && adminType !== 2 ? null : (
+            <StyledButton>
+              <Button
+                width={7.3}
+                height={1.5}
+                bgColor={COLORS.green}
+                onClick={buttonType!.onClick}
+              >
+                <Text
+                  fontSize={0.85}
+                  fontWeight={800}
+                  fontColor={COLORS.white}
+                  fontFamily={'NanumGothic'}
+                >
+                  {buttonType!.title}
+                </Text>
+              </Button>
+            </StyledButton>
+          )
         ) : null}
         {explanType ? (
           <StyledExplanation>
@@ -143,11 +159,12 @@ function Title({
               // defaultOption={'지점명'}
               name={'branch'}
               options={branchList}
-              width={9.3}
-              height={1.5}
+              width={selectType.width || 7.5}
+              height={selectType.height || 1.7}
               borderColor={selectType.borderColor}
               borderRadius={selectType.borderRadius}
               fontColor={selectType.color}
+              paddingLeft={selectType.paddingLeft}
               onChange={(e) => onChangeSelect!(e)}
             />
           </StyledSelect>
@@ -159,11 +176,12 @@ function Title({
               // defaultOption={team_name || '팀명'}
               name={'team'}
               options={teamList}
-              width={9.3}
-              height={1.5}
+              width={selectType.width || 7.5}
+              height={selectType.height || 1.7}
               borderColor={selectType.borderColor}
               borderRadius={selectType.borderRadius}
               fontColor={selectType.color}
+              paddingLeft={selectType.paddingLeft}
               onChange={(e) => onChangeSelect!(e, 'team', String(branch))}
             />
           </StyledSelect>
@@ -174,7 +192,7 @@ function Title({
               search={search!}
               onChange={onChange}
               onClickSearch={onClickSearch}
-            ></SearchBar>
+            />
           </StyledSearch>
         ) : null}
         {pageType ? (
@@ -182,29 +200,30 @@ function Title({
             <PageCount
               curPage={pageType.curPage}
               maxPage={getMaxPage(pageType.count)}
+              textAlign={2}
             />
             <StyledPageSpace />
             <Button
               bgImage={prevPageIcon}
-              width={1.7}
-              height={1.7}
+              width={1.3}
+              height={1.3}
               bgColor={'inherit'}
               borderRadius={0}
               onClick={() =>
                 pageType.onClickPrevPage(pageType.curPage, pageType.count)
               }
-            ></Button>
-            <StyledPageSpace />
+            />
+            <StyledButtonSpace />
             <Button
               bgImage={nextPageIcon}
-              width={1.7}
-              height={1.7}
+              width={1.3}
+              height={1.3}
               bgColor={'inherit'}
               borderRadius={0}
               onClick={() =>
                 pageType.onClickNextPage(pageType.curPage, pageType.count)
               }
-            ></Button>
+            />
           </>
         ) : null}
       </StyledRight>
@@ -226,6 +245,9 @@ export interface TeamInfo {
 
 interface buttonType {
   title: string;
+  bgImage?: string;
+  bgHoverImage?: string;
+  type: string;
   onClick?: () => void;
 }
 
@@ -239,6 +261,9 @@ interface selectType {
   borderColor?: string;
   data1: Array<BranchInfo>;
   data2?: Array<TeamInfo>;
+  width: number;
+  height: number;
+  paddingLeft?: number;
 }
 
 interface pageType {
@@ -264,6 +289,7 @@ interface TitleProps {
   branch?: string;
   team?: string;
   search?: string;
+  adminType?: number;
   onChangeSelect?: (
     e: React.ChangeEvent<HTMLSelectElement>,
     type?: string,

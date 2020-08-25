@@ -19,12 +19,11 @@ const StyledWrapper = styled.div`
 const StyledLogo = styled.div`
   /* Display */
   width: 8.6rem;
-  height: 3.05rem;
-  /* flex-grow: 1; */
-  text-align: center;
+  height: 3rem;
   border-radius: 0 0 1rem 1rem;
-  padding-top: 0.3rem;
-  margin-left: 2rem;
+  text-align: center;
+  margin-left: 1.6rem;
+  padding-top: 0.2rem;
 
   /* Color */
   background-color: ${COLORS.white};

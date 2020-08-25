@@ -2,6 +2,7 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import { darken, lighten } from 'polished';
 
+import deleteImage from 'images/bt-del.png';
 import { COLORS } from 'utils/color';
 
 const StyledInput = styled.input<InputProps>`
@@ -22,7 +23,7 @@ const StyledInput = styled.input<InputProps>`
   border-width: ${(props) => props.borderWidth}px;
   border-radius: ${(props) => props.borderRadius}rem;
   font-size: ${(props) => props.fontSize}rem;
-  font-weight: ${(props) => props.fontWeight}rem;
+  font-weight: ${(props) => props.fontWeight};
   text-align: ${(props) => {
     if (props.textAlign === 1) {
       return 'left';
@@ -34,21 +35,25 @@ const StyledInput = styled.input<InputProps>`
   }};
   padding-left: ${(props) => {
     if (props.textAlign === 1) {
-      return '1.5rem';
+      if (props.image) {
+        return 30;
+      } else {
+        return 22;
+      }
     } else {
-      return '';
+      return 0;
     }
-  }};
+  }}px;
   padding-right: ${(props) => {
     if (props.textAlign === 3) {
-      return '1.25rem';
+      return 22;
     } else {
-      return '';
+      return 0;
     }
-  }};
+  }}px;
 
   /* Color */
-  color: ${COLORS.dark_gray1};
+  color: ${(props) => props.fontColor};
   border-color: ${(props) => props.borderColor};
 
   ${(props) => {
@@ -68,14 +73,34 @@ const StyledInput = styled.input<InputProps>`
   }
   ::placeholder {
     /* Display */
-    font-weight: 500;
-    color: ${(props) => props.phColor};
+    font-weight: 800;
+    color: ${(props) => props.phColor || props.fontColor};
+    font-size: 0.87rem;
   }
-  ::-webkit-search-decoration,
-  ::-webkit-search-cancel-button,
+  /* ::-webkit-search-decoration,
   ::-webkit-search-results-button,
   ::-webkit-search-results-decoration {
     display: none;
+  } */
+
+  /* ::-webkit-search-cancel-button {
+    background-image: url(${(props) => props.image});
+    background-position: 5%;
+  } */
+
+  ::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background-image: url(${deleteImage});
+    background-position: 5%;
+    background-repeat: no-repeat;
+    &:hover {
+      opacity: 0.7;
+    }
+    &:active {
+      opacity: 0.9;
+    }
   }
 
   ${(props) => props.customStyle};
@@ -88,6 +113,7 @@ function Input({
   value,
   placeholder,
   onChange,
+  onKeyDown,
   onKeyUp,
   ...rest
 }: InputProps) {
@@ -100,6 +126,7 @@ function Input({
       placeholder={placeholder}
       onChange={onChange}
       onKeyUp={onKeyUp}
+      onKeyDown={onKeyDown}
       {...rest}
     ></StyledInput>
   );
@@ -117,14 +144,18 @@ interface InputProps {
   readonly borderWidth: number;
   readonly fontSize: number;
   readonly fontWeight: number | string;
+  readonly fontColor: string;
   readonly phColor?: string;
   readonly textAlign: number;
   readonly image?: string;
   readonly borderStyle: string;
   readonly customStyle?: string;
-  readonly innerRef?: ((instance: HTMLInputElement) => void) | React.MutableRefObject<HTMLInputElement>;
+  readonly innerRef?:
+    | ((instance: HTMLInputElement) => void)
+    | React.MutableRefObject<HTMLInputElement>;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 Input.defaultProps = {
@@ -139,6 +170,7 @@ Input.defaultProps = {
   fontSize: 1,
   fontWeight: 'normal',
   textAlign: 2,
+  fontColor: COLORS.dark_gray1,
 };
 
 export default Input;

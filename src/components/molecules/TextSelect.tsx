@@ -33,6 +33,7 @@ function TextSelect({
       <StyledBlank />
       <Select
         width={selectWidth}
+        borderWidth={0}
         borderRadius={selectRadius}
         options={list}
         name={name}

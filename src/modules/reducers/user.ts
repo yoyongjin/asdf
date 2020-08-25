@@ -104,15 +104,15 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
         let newUser = Object.assign({}, user);
         newUser.call_time = Number(time);
         newUser.call_type = type;
-        if(monitoring_state){
-          if(monitoring_state === 'y'){
+        if (monitoring_state) {
+          if (monitoring_state === 'y') {
             newUser.monitoring = true;
-          }else if(monitoring_state === 'n'){
+          } else if (monitoring_state === 'n') {
             newUser.monitoring = false;
           }
         }
 
-        if(user_id){
+        if (user_id) {
           newUser.user_id = user_id;
         }
 
@@ -193,6 +193,19 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
           }
         }
       });
+    });
+  },
+  [types.INSERT_CONSULTANT]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.consultantInfo.push(action.payload);
+    });
+  },
+  [types.UPDATE_CONSULTANT]: (state, action) => {
+    return produce(state, (draft) => {
+      let index = draft.consultantInfo.findIndex((values) => {
+        return values.id === action.payload.id;
+      });
+      draft.consultantInfo[index] = action.payload;
     });
   },
 });

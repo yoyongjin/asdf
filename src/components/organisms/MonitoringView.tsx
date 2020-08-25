@@ -28,19 +28,22 @@ const StyledTitle = styled.div`
 const StyledConsultantArea = styled.div`
   /* Display */
   height: calc(100% - 3.75rem - 5px);
-  overflow: auto;
   display: flex;
-  margin-top: 5px;
   flex-wrap: wrap;
   justify-content: center;
+  align-content: flex-start;
+  margin-top: 5px;
+
+  /* Other */
+  overflow: auto;
 `;
 
 const StyledConsultant = styled.span`
   /* Display */
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
+  padding-top: 7px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
 `;
 
 const adminList = [
@@ -50,13 +53,12 @@ const adminList = [
 
 function Monitoring({ location }: MonitoringProps) {
   const [tappingState, setTappingState] = useState<boolean>(false);
+  const [tempConsultInfo, setTempConsultInfo] = useState();
   const { loginInfo } = useAuth();
   const { visible, onClickVisible } = useVisible();
   const { consultantInfo, getConsultantsInfo, onClickUpdateUser } = useUser();
   const { onRunTimer, onRemoveTimer } = useMonitoring();
   const { branchList, teamList, getBranchList, getTeamList } = useBranch();
-  const [tempConsultInfo, setTempConsultInfo] = useState();
-
   const { form, onChangeSelect, initTempValue } = useInputForm({
     branch: '-1',
     team: '-1',
@@ -74,6 +76,8 @@ function Monitoring({ location }: MonitoringProps) {
     borderColor: COLORS.green,
     data1: branchList as Array<BranchInfo>,
     data2: teamList as Array<TeamInfo>,
+    width: 7.5,
+    height: 1.75,
   };
 
   const getConsultant = useCallback(
@@ -161,22 +165,20 @@ function Monitoring({ location }: MonitoringProps) {
             ) {
               // 슈퍼관리자일 경우
               return (
-                <>
-                  <StyledConsultant key={`styled-consultant-${consultant.id}`}>
-                    <Consultant
-                      key={`consultant-${consultant.id}`}
-                      consultInfo={consultant}
-                      onClickVisible={getConsultant}
-                      initZibox={initZibox}
-                      startMonitoring={startMonitoring}
-                      stopMonitoring={stopMonitoring}
-                      tappingState={tappingState}
-                      setTappingState={setTappingState}
-                      loginId={loginInfo.id}
-                      emitMonitoring={emitMonitoring}
-                    />
-                  </StyledConsultant>
-                </>
+                <StyledConsultant key={`styled-consultant-${consultant.id}`}>
+                  <Consultant
+                    key={`consultant-${consultant.id}`}
+                    consultInfo={consultant}
+                    onClickVisible={getConsultant}
+                    initZibox={initZibox}
+                    startMonitoring={startMonitoring}
+                    stopMonitoring={stopMonitoring}
+                    tappingState={tappingState}
+                    setTappingState={setTappingState}
+                    loginId={loginInfo.id}
+                    emitMonitoring={emitMonitoring}
+                  />
+                </StyledConsultant>
               );
             } else {
               return null;
@@ -193,6 +195,9 @@ function Monitoring({ location }: MonitoringProps) {
             adminList={adminList}
             onClickUpdateUser={onClickUpdateUser}
             data={tempConsultInfo}
+            adminType={loginInfo.admin_id}
+            branchId={loginInfo.branch_id}
+            branchName={loginInfo.branch_name}
           />
         }
       />

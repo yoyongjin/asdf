@@ -17,13 +17,13 @@ const StyledWrapper = styled.div`
 
 const StyledPrev = styled.span`
   /* Display */
-  padding-right: 3rem;
+  padding-right: 33px;
 `;
 
 const StyledBlankSpace = styled.span`
   /* Display */
-  padding-left: 1rem;
-  padding-right: 1rem;
+  /* padding-left: 12.5px; */
+  padding-right: 12.5px;
 `;
 
 const StyledPage = styled.span`
@@ -32,7 +32,7 @@ const StyledPage = styled.span`
 
 const StyledNext = styled.span`
   /* Display */
-  padding-left: 3rem;
+  padding-left: 43px;
 `;
 
 function TablePagination({
@@ -47,18 +47,18 @@ function TablePagination({
         <StyledBlankSpace>
           <Image
             src={firstIcon}
-            width={2}
-            height={2}
+            width={1}
+            height={1}
             onClick={() => onClickPrevPage(curPage, count, true)}
-          ></Image>
+          />
         </StyledBlankSpace>
         <StyledBlankSpace>
           <Image
             src={prevIcon}
-            width={2}
-            height={2}
+            width={1}
+            height={1}
             onClick={() => onClickPrevPage(curPage, count, false)}
-          ></Image>
+          />
         </StyledBlankSpace>
       </StyledPrev>
       <StyledPage>
@@ -72,16 +72,16 @@ function TablePagination({
         <StyledBlankSpace>
           <Image
             src={nextIcon}
-            width={2}
-            height={2}
+            width={1}
+            height={1}
             onClick={() => onClickNextPage(curPage, count, false)}
           ></Image>
         </StyledBlankSpace>
         <StyledBlankSpace>
           <Image
             src={endIcon}
-            width={2}
-            height={2}
+            width={1}
+            height={1}
             onClick={() => onClickNextPage(curPage, count, true)}
           ></Image>
         </StyledBlankSpace>
@@ -93,7 +93,7 @@ function TablePagination({
 interface TablePaginationProps {
   curPage: number;
   count: number;
-  onClickNextPage: (cur:number, total:number, isEnd?: boolean) => void;
+  onClickNextPage: (cur: number, total: number, isEnd?: boolean) => void;
   onClickPrevPage: (cur: number, total: number, isStart?: boolean) => void;
 }
 

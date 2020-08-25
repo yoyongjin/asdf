@@ -34,6 +34,8 @@ export const CHANGE_CALL_STATE = 'CHANGE_CALL_STATE'
 export const CHANGE_MONITORING_STATE = 'CHANGE_MONITORING_STATE';
 export const REQUEST_RESET_PASSWORD = 'REQUEST_RESET_PASSWORD';
 export const SUCCESS_RESET_PASSWORD = 'SUCCESS_RESET_PASSWORD';
+export const INSERT_CONSULTANT = 'INSERT_CONSULTANT';
+export const UPDATE_CONSULTANT = 'UPDATE_CONSULTANT';
 
 export const requestGetUserInfo = createAction(REQUEST_GET_USER_INFO)<
   RequestType
@@ -64,3 +66,5 @@ export const changeCallState = createAction(CHANGE_CALL_STATE)<callStateType>();
 export const changeMonitoringState = createAction(CHANGE_MONITORING_STATE)<monitoringStateType>();
 export const requestResetPassword = createAction(REQUEST_RESET_PASSWORD)<{id: number}>();
 export const successResetPassword = createAction(SUCCESS_RESET_PASSWORD)();
+export const insertConsultant = createAction(INSERT_CONSULTANT)<ConsultantInfoType>();
+export const updateConsultant = createAction(UPDATE_CONSULTANT)<ConsultantInfoType>();

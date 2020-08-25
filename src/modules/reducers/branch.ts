@@ -298,7 +298,8 @@ const userReducer = createReducer<BranchType<string>, BranchAction>(
     },
     [types.INIT_BRANCH_LIST]: (state, action) => {
       return produce(state, draft => {
-        draft.namesList.userBranch = [];
+        console.log(action.payload)
+        draft.namesList.userBranch = [action.payload];
       })
     },
     [types.INIT_TEAM_LST]: (state, action) => {
@@ -306,19 +307,40 @@ const userReducer = createReducer<BranchType<string>, BranchAction>(
         draft.namesList.userTeam = [];
       })
     },
-    // [types.CHANGE_INPUT]: (state, action) => {
-    //   return produce(state, draft => {
-    //     // console.log(action.payload);
-    //     // console.log(state)
-    //     for(let key in state.branchInfo) {
-    //       console.log(key)
-    //       console.log(state.branchInfo)
-    //     }
+    [types.REQUEST_DELETE_BRANCH_INFO]: (state, action) => {
+      return produce(state, (draft) => {
+        draft.deleteBranch.fetch = true;
+        draft.deleteBranch.error = false;
+      });
+    },
+    [types.SUCCESS_DELETE_BRANCH_INFO]: (state, action) => {
+      const { branch_id } = action.payload;
+      return produce(state, (draft) => {
+        draft.deleteBranch.fetch = false;
+        draft.deleteBranch.error = false;
 
-    //     // draft.branchInfo =
-    //     // draft.branchInfo
-    //   })
-    // }
+        const _draft: any = draft.branchInfo;
+        delete _draft.branchInfo[branch_id]
+      });
+    },
+    [types.REQUEST_DELETE_TEAM_INFO]: (state, action) => {
+      return produce(state, (draft) => {
+        draft.deleteTeam.fetch = true;
+        draft.deleteTeam.error = false;
+      });
+    },
+    [types.SUCCESS_DELETE_TEAM_INFO]: (state, action) => {
+      const { branch_id, team_id } = action.payload;
+      return produce(state, (draft) => {
+        draft.deleteTeam.fetch = false;
+        draft.deleteTeam.error = false;
+        const _draft: any = draft.branchInfo;
+        const newTeamInfo = _draft[branch_id].filter((value: any) => {
+          return value.id !== team_id;
+        });
+        _draft[branch_id] = newTeamInfo;
+      });
+    },
   },
 );
 

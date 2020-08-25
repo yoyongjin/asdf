@@ -4,8 +4,11 @@ import styled from 'styled-components';
 import { Organization, Title } from 'components/molecules';
 import useBranch from 'hooks/useBranch';
 import usePage from 'hooks/usePage';
+import useAuth from 'hooks/useAuth';
 
-import { getMaxPage } from 'utils/utils';
+import insertBranchImage from 'images/bt-add-g-1-nor@3x.png';
+import insertBranchHoverImage from 'images/bt-add-g-1-over.png';
+
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -30,6 +33,7 @@ const StyledOrganization = styled.div`
 `;
 
 function OrganizationView() {
+  const {loginInfo} = useAuth();
   const {
     branchInfo,
     getBranchInfo,
@@ -38,6 +42,8 @@ function OrganizationView() {
     handleAddTeam,
     handleUpdateTeam,
     handleUpdateBranch,
+    handleDeleteTeam,
+    handleDeleteBranch
   } = useBranch();
   const { page, countBranch, onClickNextPage, onClickPrevPage } = usePage();
 
@@ -48,6 +54,9 @@ function OrganizationView() {
   const buttonType = {
     title: '+ 지점 추가하기',
     onClick: onClickAddTempBranch,
+    bgImage: insertBranchImage,
+    bgHoverImage: insertBranchHoverImage,
+    type: 'organization'
   };
 
   const explanType = {
@@ -75,6 +84,7 @@ function OrganizationView() {
           buttonType={buttonType}
           explanType={explanType}
           pageType={pageType()}
+          adminType={loginInfo.admin_id}
         >
           조직 관리
         </Title>
@@ -93,6 +103,8 @@ function OrganizationView() {
                   handleAddTeam={handleAddTeam}
                   handleUpdateTeam={handleUpdateTeam}
                   handleUpdateBranch={handleUpdateBranch}
+                  handleDeleteTeam={handleDeleteTeam}
+                  handleDeleteBranch={handleDeleteBranch}
                 />
               </StyledOrganization>
             );

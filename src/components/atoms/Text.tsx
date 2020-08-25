@@ -1,5 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
+import { darken, lighten } from 'polished';
 
 import { COLORS } from 'utils/color';
 
@@ -13,15 +14,20 @@ const StyledText = styled.span<TextProps>`
 
     return `${props.fontSize}rem`;
   }};
+  line-height: ${props => props.lineHeight};
 
   /* Color */
   color: ${(props) => props.fontColor};
 
   ${(props) => {
     if (props.onClick) {
-      return css`
+      return css<TextProps>`
+      cursor: pointer;
         &:hover {
-          cursor: pointer;
+          color: ${lighten(0.2, props.fontColor)};
+        }
+        &:active {
+          color: ${darken(0.2, props.fontColor)};
         }
       `;
     }
@@ -42,6 +48,7 @@ interface TextProps {
   readonly fontFamily: string;
   readonly fontSize: number;
   readonly fontWeight: number | string;
+  readonly lineHeight?: number;
   onClick?: () => void;
 }
 

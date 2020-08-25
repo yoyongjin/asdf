@@ -5,17 +5,19 @@ import { RouteComponentProps } from 'react-router-dom';
 import { Modal } from 'components/atoms';
 import { Title, TablePagination, UserInfo } from 'components/molecules';
 import { Table } from 'components/organisms';
+import { TeamInfo, BranchInfo } from 'modules/types/branch';
 import { COLORS } from 'utils/color';
 import useUser from 'hooks/useUser';
 import usePage from 'hooks/usePage';
 import useVisible from 'hooks/useVisible';
 import useBranch from 'hooks/useBranch';
 import useInputForm from 'hooks/useInputForm';
+import useAuth from 'hooks/useAuth';
 
 import threeDotsIcon from 'images/bt-user-modi-nor@2x.png';
 import hoverThreeDotsIcon from 'images/bt-user-modi-over@2x.png';
-import { TeamInfo, BranchInfo } from 'modules/types/branch';
-import useAuth from 'hooks/useAuth';
+import addUserImage from 'images/bt-add-u-1-nor@3x.png';
+import addUserHoverImage from 'images/bt-add-u-1-over@3x.png';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -35,13 +37,11 @@ const StyledUserListArea = styled.div`
 `;
 
 const StyledUserList = styled.div`
-  padding-top: 1.25rem;
+  padding-top: 20px;
 `;
 
 const StyledUserPage = styled.div`
-  padding-top: 2.5rem;
-  padding-left: 20rem;
-  padding-right: 20rem;
+  padding-top: 46px;
 `;
 
 const adminList = [
@@ -50,15 +50,15 @@ const adminList = [
 ];
 
 const tableTitle = [
-  'No.',
-  '지점명',
-  '팀명',
-  '권한',
-  '이름',
-  '아이디',
-  '전화번호',
-  'ZiBox IP',
-  '',
+  { title: 'No.', width: 7 },
+  { title: '지점명', width: 14 },
+  { title: '팀명', width: 7 },
+  { title: '권한', width: 7 },
+  { title: '이름.', width: 7 },
+  { title: '아이디.', width: 14 },
+  { title: '전화번호.', width: 14 },
+  { title: 'ZiBox IP.', width: 20 },
+  { title: '', width: 10 },
 ];
 
 function UserView({ location }: UserViewProps) {
@@ -80,49 +80,6 @@ function UserView({ location }: UserViewProps) {
     search: '',
   });
 
-  useEffect(() => {
-    if(loginInfo.admin_id === 2){
-      getBranchList();
-    }
-  }, [getBranchList, loginInfo]);
-
-  useEffect(() => {
-    if (form.branch) {
-      initTempValue('team', '-1');
-    }
-  }, [initTempValue, form.branch]);
-
-  useEffect(() => {
-    if(loginInfo.admin_id === 2){
-      getTeamList(Number(form.branch));
-    }else if(loginInfo.admin_id === 1){
-      getTeamList(loginInfo.branch_id);
-    }
-  }, [getTeamList, form.branch, loginInfo]);
-
-  useEffect(() => {
-    if(loginInfo.admin_id === 2){
-        getConsultantsInfo(
-          Number(form.branch),
-          Number(form.team),
-          5,
-          page,
-          '',
-          location,
-        );
-    }else if(loginInfo.admin_id === 1){
-        getConsultantsInfo(
-          loginInfo.branch_id,
-          Number(form.team),
-          5,
-          page,
-          '',
-          location,
-        );
-    }
-    
-  }, [getConsultantsInfo, loginInfo, page, form.branch, form.team]);
-
   const onClickSearch = useCallback(() => {
     getConsultantsInfo(
       Number(form.branch),
@@ -140,12 +97,66 @@ function UserView({ location }: UserViewProps) {
     borderColor: COLORS.dark_gray4,
     data1: branchList as Array<BranchInfo>,
     data2: teamList as Array<TeamInfo>,
+    width: 9.3,
+    height: 1.5,
+    paddingLeft: 16,
   };
 
   const buttonInfo = {
     title: '+ 사용자 등록',
+    bgImage: addUserImage,
+    bgHoverImage: addUserHoverImage,
+    type: 'user',
     onClick: onClickVisible,
   };
+
+  useEffect(() => {
+    if (loginInfo.admin_id === 2) {
+      getBranchList();
+    }
+  }, [getBranchList, loginInfo]);
+
+  useEffect(() => {
+    if (form.branch) {
+      initTempValue('team', '-1');
+    }
+  }, [initTempValue, form.branch]);
+
+  useEffect(() => {
+    if (loginInfo.admin_id === 2) {
+      getTeamList(Number(form.branch));
+    } else if (loginInfo.admin_id === 1) {
+      getTeamList(loginInfo.branch_id);
+    }
+  }, [getTeamList, form.branch, loginInfo]);
+
+  useEffect(() => {
+    if (loginInfo.admin_id === 2) {
+      getConsultantsInfo(
+        Number(form.branch),
+        Number(form.team),
+        5,
+        page,
+        '',
+        location,
+      );
+    } else if (loginInfo.admin_id === 1) {
+      getConsultantsInfo(
+        loginInfo.branch_id,
+        Number(form.team),
+        5,
+        page,
+        '',
+        location,
+      );
+    }
+  }, [
+    getConsultantsInfo,
+    loginInfo,
+    page,
+    form.branch,
+    form.team
+  ]);
 
   console.log('Lendering UserView');
   return (
@@ -181,8 +192,10 @@ function UserView({ location }: UserViewProps) {
               getTeamList={getTeamList}
               onClickDeleteUser={onClickDeleteUser}
               page={page}
-              branchId={Number(form.branch)}
+              branchId={loginInfo.branch_id}
               teamId={Number(form.team)}
+              adminType={loginInfo.admin_id}
+              branchName={loginInfo.branch_name}
               onClickResetPassword={onClickResetPassword}
             ></Table>
           </StyledUserList>
@@ -202,12 +215,11 @@ function UserView({ location }: UserViewProps) {
           <UserInfo
             isVisible={visible}
             onClickVisible={onClickVisible}
-            // branchList={branchList!}
-            // teamList={teamList!}
+            branchId={loginInfo.branch_id}
+            branchName={loginInfo.branch_name}
+            adminType={loginInfo.admin_id}
             adminList={adminList}
             onClickInsertUser={onClickInsertUser}
-            // getBranchList={getBranchList}
-            // getTeamList={getTeamList}
           />
         }
       />

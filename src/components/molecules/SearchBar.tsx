@@ -1,21 +1,19 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import styled from 'styled-components';
 
-import { Button, Input } from 'components/atoms';
-import useInputForm from 'hooks/useInputForm';
+import { Button, Input, Text } from 'components/atoms';
 import { COLORS } from 'utils/color';
 
 import searchIcon from 'images/icon-search.png';
 
-const StyledWrapper = styled.div`
-`;
+const StyledWrapper = styled.div``;
 
 const StyledInput = styled.span`
-    padding-right: 0.3rem;
+  padding-right: 0.3rem;
 `;
 
 const StyledButton = styled.span`
-    padding-left: 0.3rem;
+  padding-left: 0.3rem;
 `;
 
 function SearchBar({
@@ -30,6 +28,11 @@ function SearchBar({
   onChange,
   onClickSearch,
 }: SearchBarProps) {
+  const onKeyPress = useCallback((e) => {
+    if(e.keyCode === 13){
+      onClickSearch!()
+    }
+  }, [onClickSearch])
 
   return (
     <StyledWrapper>
@@ -46,11 +49,23 @@ function SearchBar({
           fontSize={0.87}
           image={searchIcon}
           onChange={onChange}
+          onKeyDown={onKeyPress}
         ></Input>
       </StyledInput>
       <StyledButton>
-        <Button width={buttonWidth} height={buttonHeight} bgColor={buttonColor} onClick={onClickSearch}>
-          검색
+        <Button
+          width={buttonWidth}
+          height={buttonHeight}
+          bgColor={buttonColor}
+          onClick={onClickSearch}
+        >
+          <Text
+            fontSize={0.87}
+            fontColor={COLORS.white}
+            fontWeight={800}
+          >
+            검색
+          </Text>
         </Button>
       </StyledButton>
     </StyledWrapper>
@@ -72,12 +87,12 @@ interface SearchBarProps {
 
 SearchBar.defaultProps = {
   inputWidth: 10.6,
-  inputHeight: 1.4,
+  inputHeight: 1.5,
   buttonWidth: 4.3,
   buttonHeight: 1.6,
   buttonColor: COLORS.dark_gray1,
   borderColor: COLORS.dark_gray4,
-  borderWidth: 0.06,
+  borderWidth: 1,
 };
 
 export default SearchBar;

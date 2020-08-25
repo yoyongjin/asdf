@@ -94,3 +94,8 @@ export interface BranchId {
   branch_id: number;
   type?: boolean;
 }
+
+export interface DelelteData {
+  branch_id: number;
+  team_id: number;
+}

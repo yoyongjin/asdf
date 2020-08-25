@@ -112,3 +112,12 @@ export const deleteUser = (id: string) =>
       user_id: id,
     },
   });
+
+export const deleteTeam = (branchId: number, teamId: number) =>
+  instance.delete(`/api/team/${teamId}`, {
+    data: {
+      branch_id: String(branchId),
+    },
+  });
+
+export const deleteBranch = (id: number) => instance.delete(`api/branch/${id}`);

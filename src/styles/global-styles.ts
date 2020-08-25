@@ -10,4 +10,20 @@ export const GlobalStyle = createGlobalStyle`
         font-family: NanumBarunGothic;
         font-size: 16px;
     }
+    ::-webkit-scrollbar {
+        width: 6px; /* 1px wider than Lion. */
+        background-color: rgba(0, 0, 0, 0);
+        -webkit-border-radius: 6.25rem;
+    }
+    ::-webkit-scrollbar:hover {
+        background-color: rgba(0, 0, 0, 0);
+    }
+    ::-webkit-scrollbar-thumb:vertical {
+        background: rgba(0, 0, 0, 0.2);
+        -webkit-border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:vertical:active {
+        background: rgba(0, 0, 0, 0.2);
+        -webkit-border-radius: 3px;
+    }
 `;

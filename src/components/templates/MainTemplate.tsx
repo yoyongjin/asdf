@@ -19,12 +19,12 @@ const StyledWrapper = styled.div`
 
 const StyledGnb = styled.div`
   /* Display */
-  height: 3.87rem;
+  height: 3.8rem;
 `;
 
 const StyledContent = styled.div<StyledProps>`
   /* Display */
-  height: calc(100% - 3.87rem);
+  height: calc(100% - 3.8rem);
   padding-left: 3rem;
   padding-right: 3rem;
 

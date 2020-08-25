@@ -1,14 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { TableProperty } from 'components/molecules';
 import { COLORS } from 'utils/color';
+import { TableProperty } from 'components/molecules';
 import { UserInfo } from 'modules/types/user';
 
 const StyledWrapper = styled.tr`
+  width: 100%;
   height: 3.12rem;
-  color: ${COLORS.dark_gray1};
-  font-weight: 600;
+  border-bottom: 1px solid ${COLORS.dark_gray4};
 `;
 
 function TableContent({
@@ -18,13 +18,15 @@ function TableContent({
   branchList,
   teamList,
   adminList,
+  branchName,
+  adminType,
   onClickUpdateUser,
   getBranchList,
   getTeamList,
   onClickDeleteUser,
   onClickResetPassword,
-  page, 
-  branchId, 
+  page,
+  branchId,
   teamId,
 }: TableContentProps) {
   return (
@@ -47,6 +49,8 @@ function TableContent({
               onClickResetPassword={onClickResetPassword!}
               page={page!}
               branchId={branchId!}
+              branchName={branchName}
+              adminType={adminType}
               teamId={teamId!}
             />
           </StyledWrapper>
@@ -82,6 +86,8 @@ interface TableContentProps {
   adminList: Array<SelectDataType>;
   page?: number;
   branchId?: number;
+  branchName?: string;
+  adminType?: number;
   teamId?: number;
   onClickUpdateUser: (
     id: string,
@@ -94,7 +100,12 @@ interface TableContentProps {
     tel: string,
     ip: string,
   ) => void;
-  onClickDeleteUser?: (id: string,page: number, branchId: number, teamId: number) => void;
+  onClickDeleteUser?: (
+    id: string,
+    page: number,
+    branchId: number,
+    teamId: number,
+  ) => void;
   onClickResetPassword?: (id: number) => void;
   getBranchList?: () => void;
   getTeamList?: (branch_id: number) => void;

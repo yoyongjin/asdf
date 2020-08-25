@@ -25,21 +25,33 @@ function LinkSelector() {
     <StyledWrapper>
       <StyledMonitoring>
         <Link path="/main">
-          <Text fontColor={COLORS.white} fontWeight={600}>
+          <Text
+            fontColor={COLORS.white}
+            fontWeight={700}
+            fontFamily={'NanumGothic'}
+          >
             모니터링
           </Text>
         </Link>
       </StyledMonitoring>
       <StyledGroup>
         <Link path="/main/manage/organization">
-          <Text fontColor={COLORS.white} fontWeight={600}>
+          <Text
+            fontColor={COLORS.white}
+            fontWeight={700}
+            fontFamily={'NanumGothic'}
+          >
             조직 관리
           </Text>
         </Link>
       </StyledGroup>
       <StyledUser>
         <Link path="/main/manage/user">
-          <Text fontColor={COLORS.white} fontWeight={600}>
+          <Text
+            fontColor={COLORS.white}
+            fontWeight={700}
+            fontFamily={'NanumGothic'}
+          >
             사용자 관리
           </Text>
         </Link>
@@ -47,6 +59,8 @@ function LinkSelector() {
     </StyledWrapper>
   );
 }
+
+interface StyledProps {}
 
 interface LinkSelectorProps {}
 

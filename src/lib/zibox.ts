@@ -20,15 +20,21 @@ class Zibox {
   }
 
   async connect(ziboxip: string) {
-    await this.zibox.connect(ziboxip);
-    // this.zibox.ftpIP('118.131.74.196' + ',zibox,irlink');
-    // this.zibox.ftpOn();
-    this.zibox.ftpOff();
-    this.zibox.initializeAudioContext();
-    this.zibox.monIP('127.0.0.1');
-    setTimeout(() => {
-      this.zibox.monOn();
-    }, 1000);
+    try {
+      await this.zibox.connect(ziboxip);
+      // this.zibox.ftpIP('118.131.74.196' + ',zibox,irlink');
+      // this.zibox.ftpOn();
+      this.zibox.ftpOff();
+      this.zibox.initializeAudioContext();
+      this.zibox.monIP('127.0.0.1');
+      setTimeout(() => {
+        this.zibox.monOn();
+      }, 1000);
+      return true;
+    } catch (error) {
+      this.zibox.disconnect();
+      return false;
+    }
   }
 
   disconnect() {

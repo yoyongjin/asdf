@@ -6,23 +6,31 @@ import {
   addTemperatureBranchInfo,
   requestAddBranchInfo,
   requestAddTeamInfo,
-  changeInput,
-  addTemperatureTeamInfo,
   requestUpdateTeamInfo,
   requestUpdateBranchInfo,
   requestGetBranchList,
   requestGetTeamList,
   initBranchList,
   initTeamList,
+  requestDeleteTeamInfo,
+  requestDeleteBranchInfo,
 } from 'modules/actions/branch';
 import { RootState } from 'modules/reducers';
 
 function useBranch() {
   const branchInfo = useSelector((state: RootState) => state.branch.branchInfo);
-  const branchList = useSelector((state: RootState) => state.branch.namesList.branch);
-  const teamList = useSelector((state: RootState) => state.branch.namesList.team);
-  const userBranchList=  useSelector((state: RootState) => state.branch.namesList.userBranch);
-  const userTeamList=  useSelector((state: RootState) => state.branch.namesList.userTeam);
+  const branchList = useSelector(
+    (state: RootState) => state.branch.namesList.branch,
+  );
+  const teamList = useSelector(
+    (state: RootState) => state.branch.namesList.team,
+  );
+  const userBranchList = useSelector(
+    (state: RootState) => state.branch.namesList.userBranch,
+  );
+  const userTeamList = useSelector(
+    (state: RootState) => state.branch.namesList.userTeam,
+  );
   const dispatch = useDispatch();
 
   const getBranchInfo = useCallback(() => {
@@ -31,42 +39,55 @@ function useBranch() {
 
   const getBranchList = useCallback(() => {
     const payload = {
-      type: true
-    }
+      type: true,
+    };
     dispatch(requestGetBranchList(payload));
-  }, [dispatch])
+  }, [dispatch]);
 
-  const getTeamList = useCallback((branchId: number) => {
-    const payload = {
-      branch_id: branchId,
-      type: true
-    }
-    dispatch(requestGetTeamList(payload));
-  }, [dispatch])
+  const getTeamList = useCallback(
+    (branchId: number) => {
+      const payload = {
+        branch_id: branchId,
+        type: true,
+      };
+      dispatch(requestGetTeamList(payload));
+    },
+    [dispatch],
+  );
 
   const getUserBranchList = useCallback(() => {
     const payload = {
       type: false,
-    }
+    };
     dispatch(requestGetBranchList(payload));
-  }, [dispatch])
-
-  const initUserBranchList = useCallback(() => {
-    dispatch(initBranchList());
   }, [dispatch]);
+
+  const initUserBranchList = useCallback(
+    (id, name) => {
+      const payload = {
+        id,
+        branch_name: name,
+        created_at: '',
+      };
+      dispatch(initBranchList(payload));
+    },
+    [dispatch],
+  );
 
   const initUserTeamList = useCallback(() => {
     dispatch(initTeamList());
-  }, [dispatch])
+  }, [dispatch]);
 
-  
-  const getUserTeamList = useCallback((branchId: number) => {
-    const payload = {
-          branch_id: branchId,
-          type: false,
-        }
-    dispatch(requestGetTeamList(payload));
-  }, [dispatch])
+  const getUserTeamList = useCallback(
+    (branchId: number) => {
+      const payload = {
+        branch_id: branchId,
+        type: false,
+      };
+      dispatch(requestGetTeamList(payload));
+    },
+    [dispatch],
+  );
 
   const onClickAddTempBranch = useCallback(() => {
     // 지점 추가 시, 리덕스에 임시값을 넣는 로직
@@ -123,8 +144,24 @@ function useBranch() {
       };
       dispatch(requestUpdateTeamInfo(payload));
     },
-    [],
+    [dispatch],
   );
+
+  const handleDeleteTeam = useCallback((branchId:number, teamId: number) => {
+    const payload = {
+        branch_id: branchId,
+        team_id: teamId,
+      };
+      dispatch(requestDeleteTeamInfo(payload));
+  }, [dispatch])
+
+  const handleDeleteBranch = useCallback((id) => {
+    const payload = {
+      branch_id: id,
+    }
+
+    dispatch(requestDeleteBranchInfo(payload))
+  }, [dispatch])
 
   return {
     branchInfo,
@@ -144,6 +181,8 @@ function useBranch() {
     handleUpdateBranch,
     initUserBranchList,
     initUserTeamList,
+    handleDeleteTeam,
+    handleDeleteBranch,
   };
 }
 

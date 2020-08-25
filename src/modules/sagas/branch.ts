@@ -24,6 +24,12 @@ import {
   successGetTeamList,
   successGetUserBranchList,
   successGetUserTeamList,
+  REQUEST_DELETE_TEAM_INFO,
+  requestDeleteTeamInfo,
+  successDeleteTeamInfo,
+  successDeleteBranchInfo,
+  REQUEST_DELETE_BRANCH_INFO,
+  requestDeleteBranchInfo,
 } from 'modules/actions/branch';
 import * as API from 'lib/api';
 
@@ -157,6 +163,45 @@ function* getTeamList(action: ReturnType<typeof requestGetTeamList>) {
   }
 }
 
+function* deleteBranchProcess(
+  action: ReturnType<typeof requestDeleteBranchInfo>,
+) {
+  try {
+    const { branch_id } = action.payload;
+    const response = yield call(API.deleteBranch, branch_id);
+    console.log('delete branch Data =>', response);
+    const { data, status } = response.data;
+
+    if (status === 'success') {
+      const payload = {
+        branch_id: Number(data.id),
+      };
+      yield put(successDeleteBranchInfo(payload));
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+function* deleteTeamProcess(action: ReturnType<typeof requestDeleteTeamInfo>) {
+  try {
+    const { branch_id, team_id } = action.payload;
+    const response = yield call(API.deleteTeam, branch_id, team_id);
+    console.log('delete team Data =>', response);
+    const { data, status } = response.data;
+
+    if (status === 'success') {
+      const payload = {
+        branch_id,
+        team_id: Number(data.id),
+      };
+      yield put(successDeleteTeamInfo(payload));
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 function* watchGetBranchInfo() {
   yield takeLatest(REQUEST_GET_BRANCH_INFO, getBranchInfoProcess);
 }
@@ -185,6 +230,14 @@ function* watchGetTeamList() {
   yield takeLatest(REQUEST_GET_TEAM_LIST, getTeamList);
 }
 
+function* watchDeleteTeam() {
+  yield takeLatest(REQUEST_DELETE_TEAM_INFO, deleteTeamProcess);
+}
+
+function* watchDeleteBranch() {
+  yield takeLatest(REQUEST_DELETE_BRANCH_INFO, deleteBranchProcess);
+}
+
 function* branchSaga() {
   yield all([
     fork(watchGetBranchInfo),
@@ -194,6 +247,8 @@ function* branchSaga() {
     fork(watchUpdateBranch),
     fork(watchGetBranchList),
     fork(watchGetTeamList),
+    fork(watchDeleteTeam),
+    fork(watchDeleteBranch),
   ]);
 }
 

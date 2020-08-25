@@ -51,45 +51,13 @@ function useInputForm<T>(initialForm: T) {
     [dispatch],
   );
 
-  // const onKeyEvent = (
-  //   e: React.KeyboardEvent<HTMLInputElement>,
-  //   value: string
-  // ) => {
-  //   if (e.keyCode === 13) {
-  //     if (!value || value.trim() === '') return;
-
-      
-
-  //       const branchIf = branch[index] as BranchInfo;
-  //       if (!branchIf.branch_name) {
-  //         // 지점 입력이 처음일 때
-  //         handleAddBranch!(value);
-  //         initTempValue(name, '');
-  //         return;
-  //       } else {
-  //         handleUpdateBranch!(branchIf.id, value);
-  //       }
-  //     } else if (name.indexOf('team') > -1) {
-  //       const teamIf = branch[index] as TeamInfo;
-  //       if (!teamIf.team_name) {
-  //         // 팀 입력이 처음일 때
-  //         handleAddTeam!(value, teamIf.branch_id, teamIf.id);
-  //         initTempValue(name, '');
-  //         return;
-  //       } else {
-  //         handleUpdateTeam!(teamIf.id, value, branchId);
-  //       }
-  //     }
-  //   }
-  // };
-
   return {
     form,
     onChange,
     onClickLogin,
     initTempValue,
     initValue,
-    onChangeSelect,
+    onChangeSelect
   };
 }
 

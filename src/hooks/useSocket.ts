@@ -8,8 +8,10 @@ import {
   updateUser,
   changeCallState,
   changeMonitoringState,
+  insertConsultant,
+  updateConsultant,
 } from 'modules/actions/user';
-import { UserInfo } from 'modules/types/user';
+import { UserInfo, ConsultantInfoType } from 'modules/types/user';
 
 function useSocket() {
   const dispatch = useDispatch();
@@ -31,12 +33,22 @@ function useSocket() {
 
       switch (type) {
         case 'signup':
-          let signup = data as UserInfo;
-          dispatch(insertUser(signup));
+          if (data.admin_id === 0) {
+            // 상담원
+            let signupUser = data as UserInfo;
+            dispatch(insertUser(signupUser));
+            let signupConsultant = data as ConsultantInfoType;
+            dispatch(insertConsultant(signupConsultant));
+          } else {
+            let signupUser = data as UserInfo;
+            dispatch(insertUser(signupUser));
+          }
           break;
         case 'update':
-          let update = data as UserInfo;
-          dispatch(updateUser(update));
+          let updateUserInfo = data as UserInfo;
+          dispatch(updateUser(updateUserInfo));
+          let updateConsultantInfo = data as ConsultantInfoType;
+          dispatch(updateConsultant(updateConsultantInfo));
           break;
         default:
           break;
@@ -74,21 +86,21 @@ function useSocket() {
   };
 }
 
-export interface ConsultantInfoType {
-  admin_id: string;
-  branch_id: string;
-  branch_name: null | string;
-  id: number;
-  login_at?: number;
-  name: string;
-  number: string;
-  team_id: string;
-  team_name: null | string;
-  user_name: string;
-  ziboxip: string;
-  call_time?: number;
-  call_type?: string;
-  diff?: number;
-}
+// export interface ConsultantInfoType {
+//   admin_id: string;
+//   branch_id: string;
+//   branch_name: null | string;
+//   id: number;
+//   login_at?: number;
+//   name: string;
+//   number: string;
+//   team_id: string;
+//   team_name: null | string;
+//   user_name: string;
+//   ziboxip: string;
+//   call_time?: number;
+//   call_type?: string;
+//   diff?: number;
+// }
 
 export default useSocket;

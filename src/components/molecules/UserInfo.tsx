@@ -5,8 +5,12 @@ import { Button } from 'components/atoms';
 import { Title, TextInput, TextSelect } from 'components/molecules';
 import { COLORS } from 'utils/color';
 import useInputForm from 'hooks/useInputForm';
-import { UserInfo as UserInfoType, ConsultantInfoType } from 'modules/types/user';
+import {
+  UserInfo as UserInfoType,
+  ConsultantInfoType,
+} from 'modules/types/user';
 import useBranch from 'hooks/useBranch';
+import deleteImage from 'images/bt-del@3x.png'
 
 const StyledWrapper = styled.div`
   width: 100%;
@@ -44,18 +48,17 @@ function UserInfo({
   onClickVisible,
   onClickInsertUser,
   onClickUpdateUser,
-  // getBranchList,
-  // getTeamList,
-  // branchList,
-  // teamList,
   adminList,
   data,
   isVisible,
+  branchId,
+  branchName,
+  adminType,
 }: UserInfoProps) {
   const { form, onChange, onChangeSelect, initValue } = useInputForm({
     branch: data! && data!.branch_id ? String(data!.branch_id) : '-1',
     team: data! && data!.team_id ? String(data!.team_id) : '-1',
-    admin: data! && data!.admin_id ? String(data!.admin_id) : '',
+    admin: data! && data!.admin_id >= 0 ? String(data!.admin_id) : '',
     name: data! && data!.name ? data!.name : '',
     id: data! && data!.user_name ? data!.user_name : '',
     password: '',
@@ -68,30 +71,36 @@ function UserInfo({
     getUserBranchList,
     getUserTeamList,
     initUserBranchList,
-    initUserTeamList,
   } = useBranch();
 
   useEffect(() => {
-    if (isVisible) {
+    if (isVisible && adminType === 2) {
       getUserBranchList();
-    } 
-    else {
-      initUserBranchList();
+    } else if (isVisible) {
+      initUserBranchList(branchId!, branchName);
     }
-  }, [isVisible, getUserBranchList, initUserBranchList]);
+  }, [
+    isVisible,
+    adminType,
+    branchId,
+    branchName,
+    initUserBranchList,
+    getUserBranchList,
+  ]);
 
   useEffect(() => {
-    if (isVisible) {
+    if (isVisible && adminType === 2) {
+      console.log(form.branch);
       getUserTeamList(Number(form.branch));
-    } else {
-      initUserTeamList();
+    } else if (isVisible) {
+      getUserTeamList(branchId!);
     }
-  }, [isVisible, getUserTeamList, form.branch, initUserTeamList]);
+  }, [isVisible, adminType, getUserTeamList, form.branch, branchId]);
 
   useEffect(() => {
     const init = {
-      branch: data! && data!.branch_id ? String(data!.branch_id) : '',
-      team: data! && data!.team_id ? String(data!.team_id) : '',
+      branch: data! && data!.branch_id ? String(data!.branch_id) : '-1',
+      team: data! && data!.team_id ? String(data!.team_id) : '-1',
       admin: data! && data!.admin_id >= 0 ? String(data!.admin_id) : '0',
       name: data! && data!.name ? data!.name : '',
       id: data! && data!.user_name ? data!.user_name : '',
@@ -100,18 +109,14 @@ function UserInfo({
       zibox: data! && data!.ziboxip ? data!.ziboxip : '',
     };
 
-    console.log(data)
-
-    console.log(init)
-
     initValue(init);
-  }, [initValue, data])
+  }, [initValue, data]);
 
   let branch: Array<SelectDataType> = [];
   let team: Array<SelectDataType> = [];
 
-  let branch_name = '';
-  let team_name = '';
+  // let branch_name = '';
+  // let team_name = '';
 
   if (userBranchList!.length > 0) {
     let temp1 = userBranchList as Array<BranchInfo>;
@@ -120,9 +125,9 @@ function UserInfo({
         id: value.id,
         data: value.branch_name,
       };
-      if (value.id === Number(form.branch)) {
-        branch_name = value.branch_name;
-      }
+      // if (value.id === Number(form.branch)) {
+      //   branch_name = value.branch_name;
+      // }
       return data;
     });
   }
@@ -133,9 +138,9 @@ function UserInfo({
         id: value.id,
         data: value.team_name,
       };
-      if (value.id === Number(form.team)) {
-        team_name = value.team_name;
-      }
+      // if (value.id === Number(form.team)) {
+      //   team_name = value.team_name;
+      // }
       return data;
     });
   }
@@ -175,6 +180,7 @@ function UserInfo({
           onChange={onChange}
           name={'name'}
           value={form.name}
+          image={deleteImage}
         ></TextInput>
         <TextInput
           customStyle={`float:right;`}
@@ -183,6 +189,7 @@ function UserInfo({
           onChange={onChange}
           name={'id'}
           value={form.id}
+          image={deleteImage}
         ></TextInput>
         <TextInput
           customStyle={`float:right;`}
@@ -192,6 +199,7 @@ function UserInfo({
           onChange={onChange}
           name={'password'}
           value={form.password}
+          image={deleteImage}
         ></TextInput>
         <TextInput
           customStyle={`float:right;`}
@@ -201,6 +209,7 @@ function UserInfo({
           onChange={onChange}
           name={'tel'}
           value={form.tel}
+          image={deleteImage}
         ></TextInput>
         <TextInput
           customStyle={`float:right;`}
@@ -209,6 +218,7 @@ function UserInfo({
           onChange={onChange}
           name={'zibox'}
           value={form.zibox}
+          image={deleteImage}
         ></TextInput>
       </StyledContent>
       <StyledFooter>
@@ -223,7 +233,7 @@ function UserInfo({
             if (data! && data!.id) {
               onClickUpdateUser!(
                 String(data!.id),
-                String(form.branch),
+                String(form.branch === '-1' ? String(branchId) : form.branch),
                 String(form.team),
                 String(form.admin),
                 form.name,
@@ -235,7 +245,7 @@ function UserInfo({
               onClickVisible();
             } else {
               onClickInsertUser!(
-                String(form.branch),
+                String(form.branch === '-1' ? String(branchId) : form.branch),
                 String(form.team),
                 String(form.admin),
                 form.name,
@@ -247,7 +257,7 @@ function UserInfo({
               const init = {
                 branch: '-1',
                 team: '-1',
-                admin: '',
+                admin: '0',
                 name: '',
                 id: '',
                 password: '',
@@ -331,10 +341,9 @@ interface UserInfoProps {
     tel: string,
     ip: string,
   ) => void;
-  // getBranchList?: () => void;
-  // getTeamList?: (branch_id: number) => void;
-  // branchList: Array<BranchInfo>;
-  // teamList: Array<TeamInfo>;
+  branchId?: number;
+  branchName?: string;
+  adminType?: number;
   isVisible?: boolean;
   adminList: Array<SelectDataType>;
   data?: UserInfoType | ConsultantInfoType;

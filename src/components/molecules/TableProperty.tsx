@@ -5,11 +5,10 @@ import { Image, List, Text, Modal } from 'components/atoms';
 import { UserInfo } from 'components/molecules';
 import { COLORS } from 'utils/color';
 import useVisible from 'hooks/useVisible';
-import { UserInfo as UserInfoType} from 'modules/types/user';
+import { UserInfo as UserInfoType } from 'modules/types/user';
 
 const StyledWrapper = styled.td`
   /* Display */
-  border-bottom: 1px solid ${COLORS.dark_gray4};
 `;
 
 const StyledProperty = styled.div`
@@ -42,6 +41,8 @@ function TableProperty({
   onClickResetPassword,
   page,
   branchId,
+  branchName,
+  adminType,
   teamId,
 }: TableContentProps) {
   const menuList = ['정보 수정', '비밀번호 초기화', '삭제'];
@@ -57,29 +58,50 @@ function TableProperty({
   return (
     <>
       <StyledWrapper>
-        <Text>{info.id}</Text>
+        <Text fontColor={COLORS.dark_gray1} fontWeight={700} fontSize={0.81}>
+          {info.id}
+        </Text>
       </StyledWrapper>
       <StyledWrapper>
-        <Text>{info.branch_name!}</Text>
+        <Text fontColor={COLORS.dark_gray1} fontWeight={700} fontSize={0.81}>
+          {info.branch_name!}
+        </Text>
       </StyledWrapper>
       <StyledWrapper>
-        <Text>{info.team_name!}</Text>
+        <Text fontColor={COLORS.dark_gray1} fontWeight={700} fontSize={0.81}>
+          {info.team_name!}
+        </Text>
       </StyledWrapper>
       <StyledWrapper>
-        <Text>{info.admin_id === 0 ? '상담원' : info.admin_id === 1 ? '관리자' : info.admin_id === 2 ? 'ADMIN' : ''}</Text>
-        {/* <Text>{info.admin_id}</Text> */}
+        <Text fontColor={COLORS.dark_gray1} fontWeight={700} fontSize={0.81}>
+          {info.admin_id === 0
+            ? '상담원'
+            : info.admin_id === 1
+            ? '관리자'
+            : info.admin_id === 2
+            ? 'ADMIN'
+            : ''}
+        </Text>
       </StyledWrapper>
       <StyledWrapper>
-        <Text>{info.name}</Text>
+        <Text fontColor={COLORS.dark_gray1} fontWeight={700} fontSize={0.81}>
+          {info.name}
+        </Text>
       </StyledWrapper>
       <StyledWrapper>
-        <Text>{info.user_name}</Text>
+        <Text fontColor={COLORS.dark_gray1} fontWeight={700} fontSize={0.81}>
+          {info.user_name}
+        </Text>
       </StyledWrapper>
       <StyledWrapper>
-        <Text>{info.number}</Text>
+        <Text fontColor={COLORS.dark_gray1} fontWeight={700} fontSize={0.81}>
+          {info.number}
+        </Text>
       </StyledWrapper>
       <StyledWrapper>
-        <Text>{info.ziboxip}</Text>
+        <Text fontColor={COLORS.dark_gray1} fontWeight={700} fontSize={0.81}>
+          {info.ziboxip}
+        </Text>
       </StyledWrapper>
       <StyledWrapper>
         <StyledProperty onMouseEnter={onMouseIn} onMouseLeave={onMouseOut}>
@@ -111,13 +133,12 @@ function TableProperty({
           <UserInfo
             isVisible={visible}
             onClickVisible={onClickVisible}
-            // branchList={branchList}
-            // teamList={teamList}
             adminList={adminList}
             data={info}
+            branchId={branchId}
+            branchName={branchName}
+            adminType={adminType}
             onClickUpdateUser={onClickUpdateUser}
-            // getBranchList={getBranchList}
-            // getTeamList={getTeamList}
           />
         }
       />
@@ -150,6 +171,8 @@ interface TableContentProps {
   adminList: Array<SelectDataType>;
   page?: number;
   branchId?: number;
+  branchName?: string;
+  adminType?: number;
   teamId?: number;
   onClickUpdateUser: (
     id: string,

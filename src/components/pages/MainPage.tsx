@@ -5,7 +5,7 @@ import { GNB } from 'components/organisms';
 import { MainTemplate } from 'components/templates';
 import { COLORS } from 'utils/color';
 
-import dblifeLogo from 'images/db-logo-login.png';
+import dblifeLogo from 'images/db-logo-login@3x.png';
 import loggedTimeImage from 'images/bg-login-time@3x.png';
 import useAuth from 'hooks/useAuth';
 import useSocket from 'hooks/useSocket';

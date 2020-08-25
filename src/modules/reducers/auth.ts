@@ -28,6 +28,7 @@ const initialState: AuthType = {
     ziboxip: '',
     login_at: 0,
     created_at: '',
+    branch_name: '',
   },
 };
 

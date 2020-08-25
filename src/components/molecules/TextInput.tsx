@@ -27,6 +27,7 @@ function TextInput({
   name,
   value,
   type,
+  image,
 }: TextInputProps) {
   return (
     <StyledWrapper>
@@ -44,6 +45,7 @@ function TextInput({
         placeholder={inputPh}
         onChange={onChange}
         value={value}
+        image={image}
       ></Input>
     </StyledWrapper>
   );
@@ -65,6 +67,7 @@ interface TextInputProps extends BlankProps {
   name: string;
   value: string;
   type?: string;
+  image?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 

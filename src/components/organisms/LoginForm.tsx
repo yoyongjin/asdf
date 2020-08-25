@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useCallback } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -34,20 +34,35 @@ const StyledInputPassword = styled.div`
 const StyledLogin = styled.div``;
 
 function LoginForm({ history }: LoginFormProps) {
-  const { form, onChange, onClickLogin } = useInputForm({
-    id: '',
-    password: '',
-  });
   const idRef = useRef<HTMLInputElement>(null) as React.MutableRefObject<
     HTMLInputElement
   >;
   const pwRef = useRef<HTMLInputElement>(null) as React.MutableRefObject<
     HTMLInputElement
   >;
+  const { form, onChange, onClickLogin } = useInputForm({
+    id: '',
+    password: '',
+  });
   const { id, password }: formType = form;
 
+  const onKeyEvent = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>, value: string, name: string) => {
+      if (e.keyCode === 13) {
+        if (!value || value.trim() === '') return;
+
+        if (name.indexOf('id') > -1) {
+          pwRef!.current.focus();
+        } else if (name.indexOf('password') > -1) {
+          onClickLogin(id, password, history);
+        }
+      }
+    },
+    [id, password, onClickLogin, pwRef],
+  );
+
   useEffect(() => {
-    if(idRef){
+    if (idRef) {
       idRef.current.focus();
     }
   }, [idRef]);
@@ -71,6 +86,7 @@ function LoginForm({ history }: LoginFormProps) {
           borderColor={COLORS.dark_green}
           phColor={COLORS.green}
           onChange={onChange}
+          onKeyDown={(e) => onKeyEvent(e, id, 'id')}
         />
       </StyledInputId>
       <StyledInputPassword>
@@ -86,6 +102,7 @@ function LoginForm({ history }: LoginFormProps) {
           borderColor={COLORS.dark_green}
           phColor={COLORS.green}
           onChange={onChange}
+          onKeyDown={(e) => onKeyEvent(e, password, 'password')}
         />
       </StyledInputPassword>
       <StyledLogin>

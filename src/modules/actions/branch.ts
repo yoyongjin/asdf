@@ -14,6 +14,7 @@ import {
   BranchInfo,
   TeamInfo,
   BranchId,
+  DelelteData,
 } from 'modules/types/branch';
 
 export const REQUEST_GET_BRANCH_INFO = 'REQUEST_GET_BRANCH_INFO';
@@ -34,10 +35,14 @@ export const REQUEST_GET_BRANCH_LIST = 'REQUEST_GET_BRANCH_LIST';
 export const SUCCESS_GET_BRANCH_LIST = 'SUCCESS_GET_BRANCH_LIST';
 export const REQUEST_GET_TEAM_LIST = 'REQUEST_GET_TEAM_LIST';
 export const SUCCESS_GET_TEAM_LIST = 'SUCCESS_GET_TEAM_LIST';
-export const SUCCESS_GET_USER_BRANCH_LIST = 'SUCCESS_GET_USER_BRANCH_LIST'
-export const SUCCESS_GET_USER_TEAM_LIST = 'SUCCESS_GET_USER_TEAM_LIST'
-export const INIT_BRANCH_LIST = 'INIT_BRANCH_LIST'
-export const INIT_TEAM_LST = 'INIT_TEAM_LST'
+export const SUCCESS_GET_USER_BRANCH_LIST = 'SUCCESS_GET_USER_BRANCH_LIST';
+export const SUCCESS_GET_USER_TEAM_LIST = 'SUCCESS_GET_USER_TEAM_LIST';
+export const INIT_BRANCH_LIST = 'INIT_BRANCH_LIST';
+export const INIT_TEAM_LST = 'INIT_TEAM_LST';
+export const REQUEST_DELETE_BRANCH_INFO = 'REQUEST_DELETE_BRANCH_INFO';
+export const REQUEST_DELETE_TEAM_INFO = 'REQUEST_DELETE_TEAM_INFO';
+export const SUCCESS_DELETE_BRANCH_INFO = 'SUCCESS_DELETE_BRANCH_INFO';
+export const SUCCESS_DELETE_TEAM_INFO = 'SUCCESS_DELETE_TEAM_INFO';
 
 export const requestGetBranchInfo = createAction(REQUEST_GET_BRANCH_INFO)();
 export const successGetBranchInfo = createAction(SUCCESS_GET_BRANCH_INFO)<
@@ -75,11 +80,27 @@ export const requestUpdateBranchInfo = createAction(REQUEST_UPDATE_BRANCH_INFO)<
 export const successUpdateBranchInfo = createAction(SUCCESS_UPDATE_BRANCH_INFO)<
   RequestUpdateBranch
 >();
-export const requestGetBranchList = createAction(REQUEST_GET_BRANCH_LIST)<{type?: boolean}>();
-export const successGetBranchList = createAction(SUCCESS_GET_BRANCH_LIST)<Array<BranchInfo>>();
-export const requestGetTeamList = createAction(REQUEST_GET_TEAM_LIST)<BranchId>();
-export const successGetTeamList = createAction(SUCCESS_GET_TEAM_LIST)<Array<TeamInfo>>();
-export const successGetUserBranchList = createAction(SUCCESS_GET_USER_BRANCH_LIST)<Array<BranchInfo>>();
-export const successGetUserTeamList = createAction(SUCCESS_GET_USER_TEAM_LIST)<Array<TeamInfo>>();
-export const initBranchList = createAction(INIT_BRANCH_LIST)();
+export const requestGetBranchList = createAction(REQUEST_GET_BRANCH_LIST)<{
+  type?: boolean;
+}>();
+export const successGetBranchList = createAction(SUCCESS_GET_BRANCH_LIST)<
+  Array<BranchInfo>
+>();
+export const requestGetTeamList = createAction(REQUEST_GET_TEAM_LIST)<
+  BranchId
+>();
+export const successGetTeamList = createAction(SUCCESS_GET_TEAM_LIST)<
+  Array<TeamInfo>
+>();
+export const successGetUserBranchList = createAction(
+  SUCCESS_GET_USER_BRANCH_LIST,
+)<Array<BranchInfo>>();
+export const successGetUserTeamList = createAction(SUCCESS_GET_USER_TEAM_LIST)<
+  Array<TeamInfo>
+>();
+export const initBranchList = createAction(INIT_BRANCH_LIST)<BranchInfo>();
 export const initTeamList = createAction(INIT_TEAM_LST)();
+export const requestDeleteBranchInfo = createAction(REQUEST_DELETE_BRANCH_INFO)<TemporaryTeam>();
+export const requestDeleteTeamInfo = createAction(REQUEST_DELETE_TEAM_INFO)<DelelteData>();
+export const successDeleteBranchInfo = createAction(SUCCESS_DELETE_BRANCH_INFO)<TemporaryTeam>();
+export const successDeleteTeamInfo = createAction(SUCCESS_DELETE_TEAM_INFO)<DelelteData>();

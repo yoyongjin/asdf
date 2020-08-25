@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 
 import { Button, Image, Text } from 'components/atoms';
@@ -11,9 +11,6 @@ import tappingStartOverIcon from 'images/bt-mnt-listen-over.png';
 import OthertappingIcon from 'images/bt-mnt-listen-ing.png';
 import tappingStopIcon from 'images/bt-mnt-listen-fin-nor.png';
 import { ConsultantInfoType } from 'modules/types/user';
-import UserInfo from './UserInfo';
-import Socket from 'lib/socket';
-import { ExecSyncOptionsWithStringEncoding } from 'child_process';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -37,73 +34,92 @@ const StyledCallImage = styled.div``;
 const StyledUserInfo = styled.div`
   display: flex;
   flex-direction: column;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+  padding-top: 20px;
 `;
 
 const StyledInterception = styled.div``;
 
 function Consultant({
   consultInfo,
+  tappingState,
+  loginId,
   onClickVisible,
   initZibox,
   startMonitoring,
   stopMonitoring,
-  tappingState,
   setTappingState,
   emitMonitoring,
-  loginId,
 }: ConsultantProps) {
   useEffect(() => {
     if (!tappingState && loginId === consultInfo.user_id) {
       emitMonitoring(consultInfo.number, loginId);
     }
-  }, [consultInfo.user_id, loginId, emitMonitoring]);
+  }, [
+    consultInfo.user_id,
+    loginId,
+    emitMonitoring,
+    consultInfo.number,
+    tappingState,
+  ]);
+
   return (
     <StyledWrapper>
       <StyledCallStatusArea>
         {consultInfo.call_type !== 'call_offhook' ? (
-          <>
-            <Text
-              fontColor={COLORS.dark_gray1}
-              fontWeight={600}
-              fontSize={0.87}
-            >
-              대기중
-            </Text>
-          </>
+          <Text
+            fontColor={COLORS.dark_gray1}
+            fontWeight={700}
+            fontSize={0.87}
+            fontFamily={'NanumGothic'}
+          >
+            대기중
+          </Text>
         ) : (
           <>
-            <Text fontColor={COLORS.red} fontWeight={600} fontSize={0.87}>
+            <Text
+              fontColor={COLORS.red}
+              fontWeight={700}
+              fontSize={0.87}
+              fontFamily={'NanumGothic'}
+            >
               통화중
             </Text>
-            <Text fontColor={COLORS.red} fontWeight={600} fontSize={0.87}>
-              {consultInfo.diff ? getHourMinSecV1(consultInfo.diff) : '00:00:00'}
+            <Text
+              fontColor={COLORS.red}
+              fontWeight={700}
+              fontSize={0.87}
+              fontFamily={'NanumGothic'}
+            >
+              {consultInfo.diff
+                ? getHourMinSecV1(consultInfo.diff)
+                : '00:00:00'}
             </Text>
           </>
         )}
       </StyledCallStatusArea>
       <StyledCallImage>
         {consultInfo.call_type !== 'call_offhook' ? (
-          <>
-            <Image src={waitingIcon} alt={waitingIcon} width={4} height={4} />
-          </>
+          <Image src={waitingIcon} width={4} height={4} />
         ) : (
-          <>
-            <Image src={callingIcon} alt={callingIcon} width={4} height={4} />
-          </>
+          <Image src={callingIcon} width={4} height={4} />
         )}
       </StyledCallImage>
       <StyledUserInfo>
         <Text
-          fontSize={1.12}
-          fontColor={COLORS.dark_gray1}
-          fontWeight={'bold'}
-          onClick={() => { onClickVisible(consultInfo) }}
-        >{`${consultInfo.user_name} 님`}</Text>
-        <Text
-          fontSize={0.87}
+          fontSize={1.1}
           fontColor={COLORS.dark_gray2}
+          fontWeight={700}
+          fontFamily={'NanumGothic'}
+          onClick={() => {
+            onClickVisible(consultInfo);
+          }}
+        >{`${consultInfo.name} 님`}</Text>
+        <Text
+          fontSize={0.75}
+          fontColor={COLORS.dark_gray1}
+          fontWeight={700}
+          fontFamily={'NanumGothic'}
+          lineHeight={2.75}
         >{`${consultInfo.branch_name} ${consultInfo.team_name}`}</Text>
       </StyledUserInfo>
       <StyledInterception>
@@ -122,14 +138,14 @@ function Consultant({
                     : OthertappingIcon
                   : tappingStartIcon
               }
+              bgHoverImage={consultInfo.monitoring ? '' : tappingStartOverIcon}
               borderRadius={0.81}
-              fontSize={0.81}
               fontColor={
                 consultInfo.monitoring && consultInfo.user_id !== loginId
                   ? COLORS.green
                   : COLORS.white
               }
-              onClick={(e) => {
+              onClick={async (e) => {
                 if (consultInfo.monitoring) {
                   // 감청을 한번이라도 했을 경우
                   if (consultInfo.user_id === loginId) {
@@ -140,11 +156,17 @@ function Consultant({
                   return;
                 }
 
-                initZibox();
-                setTimeout(() => {
-                  startMonitoring(consultInfo.number, loginId);
-                }, 1000);
-                setTappingState(true);
+                try {
+                  const isSuccess = await initZibox(consultInfo.ziboxip);
+                  if (isSuccess) {
+                    setTimeout(() => {
+                      startMonitoring(consultInfo.number, loginId);
+                    }, 1000);
+                    setTappingState(true);
+                  }
+                } catch (error) {
+                  console.log(error);
+                }
               }}
             >
               <Text
@@ -154,7 +176,8 @@ function Consultant({
                     : COLORS.white
                 }
                 fontSize={0.81}
-                fontWeight={600}
+                fontWeight={800}
+                fontFamily={'NanumGothic'}
               >
                 {consultInfo.monitoring
                   ? consultInfo.user_id === loginId
@@ -172,13 +195,13 @@ function Consultant({
 
 interface ConsultantProps {
   consultInfo: ConsultantInfoType;
-  onClickVisible: any;
-  initZibox: () => void;
+  tappingState: boolean;
+  loginId: number;
+  onClickVisible: (data: ConsultantInfoType) => void;
+  initZibox: (ziboxIp: string) => Promise<boolean>;
   startMonitoring: (number: string, id: number) => void;
   stopMonitoring: (number: string, id: number) => void;
-  tappingState: boolean;
   setTappingState: React.Dispatch<React.SetStateAction<boolean>>;
-  loginId: number;
   emitMonitoring: (number: string, id: number) => void;
 }
 

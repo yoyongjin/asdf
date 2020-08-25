@@ -6,19 +6,22 @@ import { COLORS } from 'utils/color';
 
 const StyledWrapper = styled.tr`
   /* Display */
-  height: 3rem;
+  width: 100%;
+  height: 1.87rem;
 `;
 
-const StyledTitle = styled.th``;
+const StyledTitle = styled.th<StyledProps>`
+  width: ${props => props.width}%;
+`;
 
 function TableTitle({ titleList, fontColor }: TableTitleProps) {
   return (
     <StyledWrapper>
-      {titleList.map((title, i) => {
+      {titleList.map((values, i) => {
         return (
-          <StyledTitle key={`styled-title-${i}`}>
-            <Text fontSize={0.81} fontColor={fontColor} fontWeight={'bold'}>
-              {title}
+          <StyledTitle key={`styled-title-${i}`} width={values.width}>
+            <Text fontSize={0.81} fontColor={fontColor} fontWeight={700}>
+              {values.title}
             </Text>
           </StyledTitle>
         );
@@ -27,8 +30,16 @@ function TableTitle({ titleList, fontColor }: TableTitleProps) {
   );
 }
 
+interface StyledProps {
+  width: number;
+}
+
+interface TitleProps extends StyledProps{
+  title: string;
+}
+
 interface TableTitleProps {
-  titleList: Array<string>;
+  titleList: Array<TitleProps>;
   fontColor: string;
 }
 

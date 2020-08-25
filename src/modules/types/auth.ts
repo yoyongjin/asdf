@@ -27,4 +27,5 @@ export interface loginInfoType {
   ziboxip: string; // zibox ip
   login_at: number; // 로그인 시간
   created_at: string; // 회원가입날짜
+  branch_name: string; // 지점명
 }

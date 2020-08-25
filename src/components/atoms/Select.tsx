@@ -4,13 +4,16 @@ import styled from 'styled-components';
 import { COLORS } from 'utils/color';
 
 const StyledSelect = styled.select<SelectProps>`
+  /* Position */
+  float: right;
+
   /* Display */
   width: ${(props) => props.width}${(props) => (props.width > 10 ? 'px' : 'rem')};
-  height: ${(props) => props.height};
+  height: ${(props) => props.height}rem;
+  border-width: ${(props) => props.borderWidth}px;
   border-radius: ${(props) => props.borderRadius}rem;
-  border-color: ${(props) => props.borderColor};
-  float: right;
-  padding-left: 1rem;
+  padding-left: ${props => props.paddingLeft}px;
+  font-size: 0.87rem;
 
   /* Color */
   border-color: ${(props) => props.borderColor};
@@ -66,8 +69,10 @@ interface SelectProps extends OptionProps {
   fontColor: string;
   width: number;
   height: number;
+  borderWidth: number;
   borderColor: string;
   borderRadius: number;
+  paddingLeft: number;
   onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   name: string;
   defaultOption?: string;
@@ -84,8 +89,10 @@ Select.defaultProps = {
   height: 2,
   fontColor: COLORS.black,
   optionFontColor: COLORS.black,
+  borderWidth: 1,
   borderColor: COLORS.black,
   borderRadius: 1,
+  paddingLeft: 6,
 };
 
 export default Select;

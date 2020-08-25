@@ -29,8 +29,8 @@ const StyledLoginTime = styled.span`
   position: relative;
 
   /* Display */
-  padding-left: 0.5rem;
-  padding-right: 1rem;
+  /* padding-left: 0.5rem; */
+  /* padding-right: 1rem; */
 `;
 
 const StyledLogout = styled.span`
@@ -39,10 +39,14 @@ const StyledLogout = styled.span`
 `;
 
 const StyledText = styled.span`
+  /* Display */
+  width: 100%;
+  height: 100%;
+
   /* Position */
   position: absolute;
-  top: 40%;
-  left: 50%;
+  top: 55%;
+  left: 70%;
   transform: translate(-50%, -50%);
 `;
 
@@ -57,7 +61,9 @@ function UserLog({
       <StyledUser>
         <Text
           fontColor={COLORS.white}
-          fontWeight={600}
+          fontWeight={700}
+          fontSize={0.81}
+          fontFamily={'NanumGothic'}
         >{`${userName} 님`}</Text>
       </StyledUser>
       <StyledLoginTime>
@@ -65,13 +71,14 @@ function UserLog({
           src={loginTimeImage}
           alt={loginTimeImage}
           width={11.8}
-          height={1.4}
+          height={1.43}
         />
         <StyledText>
           <Text
             fontColor={COLORS.green}
-            fontSize={0.69}
-            fontWeight={600}
+            fontSize={0.75}
+            fontWeight={700}
+            fontFamily={'NanumGothic'}
           >{`${getYYYYMMDD(loginTime)} ${getHourMinSecV2(loginTime)}`}</Text>
         </StyledText>
       </StyledLoginTime>
