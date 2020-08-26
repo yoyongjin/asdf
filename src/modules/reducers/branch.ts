@@ -314,10 +314,15 @@ const userReducer = createReducer<BranchType<string>, BranchAction>(
       });
     },
     [types.SUCCESS_DELETE_BRANCH_INFO]: (state, action) => {
-      const { branch_id } = action.payload;
+      const { branch_id, count } = action.payload;
       return produce(state, (draft) => {
         draft.deleteBranch.fetch = false;
         draft.deleteBranch.error = false;
+
+        if(count){
+          alert("해당 지점의 팀을 다 삭제 후 진행해주세요.")
+          return;
+        }
 
         const _draft: any = draft.branchInfo;
         delete _draft.branchInfo[branch_id]
@@ -330,10 +335,16 @@ const userReducer = createReducer<BranchType<string>, BranchAction>(
       });
     },
     [types.SUCCESS_DELETE_TEAM_INFO]: (state, action) => {
-      const { branch_id, team_id } = action.payload;
+      const { branch_id, team_id, count } = action.payload;
       return produce(state, (draft) => {
         draft.deleteTeam.fetch = false;
         draft.deleteTeam.error = false;
+
+        if(count){
+          alert("해당 팀의 유저를 다 삭제 후 진행해주세요.")
+          return;
+        }
+
         const _draft: any = draft.branchInfo;
         const newTeamInfo = _draft[branch_id].filter((value: any) => {
           return value.id !== team_id;

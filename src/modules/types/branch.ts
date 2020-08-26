@@ -98,4 +98,10 @@ export interface BranchId {
 export interface DelelteData {
   branch_id: number;
   team_id: number;
+  count?: number;
+}
+
+export interface SuccessDeleteBranch {
+  branch_id: number;
+  count?: number;
 }

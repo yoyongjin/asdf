@@ -163,6 +163,8 @@ function Consultant({
                       startMonitoring(consultInfo.number, loginId);
                     }, 1000);
                     setTappingState(true);
+                  }else {
+                    alert("ZiBox IP를 확인해주세요.")
                   }
                 } catch (error) {
                   console.log(error);

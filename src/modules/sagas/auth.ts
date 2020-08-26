@@ -80,6 +80,7 @@ function* logoutProcess(action: ReturnType<typeof requestLogout>) {
     if (status === 'success') {
       yield put(successLogout());
       history.push('/auth/login');
+      window.location.reload();
     }
   } catch (error) {
     yield put(failureLogout(error));

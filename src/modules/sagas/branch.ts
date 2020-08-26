@@ -175,6 +175,7 @@ function* deleteBranchProcess(
     if (status === 'success') {
       const payload = {
         branch_id: Number(data.id),
+        count: data.count ? data.count : 0,
       };
       yield put(successDeleteBranchInfo(payload));
     }
@@ -194,6 +195,7 @@ function* deleteTeamProcess(action: ReturnType<typeof requestDeleteTeamInfo>) {
       const payload = {
         branch_id,
         team_id: Number(data.id),
+        count: data.count || 0,
       };
       yield put(successDeleteTeamInfo(payload));
     }

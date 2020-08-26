@@ -6,7 +6,7 @@ import { COLORS } from 'utils/color';
 
 const StyledWrapper = styled.div`
   /* Display */
-  min-width: 80rem;
+  min-width: 70rem;
   width: 100vw;
   max-width: 140rem;
   min-height: 100vh;

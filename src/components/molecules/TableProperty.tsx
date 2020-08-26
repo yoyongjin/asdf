@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Image, List, Text, Modal } from 'components/atoms';
 import { UserInfo } from 'components/molecules';
 import { COLORS } from 'utils/color';
+import { formatPhoneNumber } from 'utils/utils';
 import useVisible from 'hooks/useVisible';
 import { UserInfo as UserInfoType } from 'modules/types/user';
 
@@ -95,7 +96,7 @@ function TableProperty({
       </StyledWrapper>
       <StyledWrapper>
         <Text fontColor={COLORS.dark_gray1} fontWeight={700} fontSize={0.81}>
-          {info.number}
+          {formatPhoneNumber(info.number)}
         </Text>
       </StyledWrapper>
       <StyledWrapper>
@@ -113,6 +114,7 @@ function TableProperty({
                 onClickDeleteUser={onClickDeleteUser}
                 onClickResetPassword={onClickResetPassword!}
                 id={info.id}
+                adminType={Number(info.admin_id)}
                 page={page!}
                 branchId={branchId!}
                 teamId={teamId!}

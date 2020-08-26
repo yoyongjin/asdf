@@ -11,6 +11,14 @@ function usePage() {
   const countUser = useSelector((state: RootState) => state.user.numberOfUsers);
   const [page, setPage] = useState<number>(1);
 
+  const onChnageCurrentPage = useCallback((cur: number, total: number) => {
+    let maxPage = getMaxPage(total);
+
+    if(cur > maxPage){
+      setPage(maxPage)
+    }
+  }, [])
+
   const onClickNextPage = useCallback(
     (cur: number, total: number, isEnd = false) => {
       let maxPage = getMaxPage(total);
@@ -44,6 +52,7 @@ function usePage() {
     countBranch,
     onClickNextPage,
     onClickPrevPage,
+    onChnageCurrentPage,
   };
 }
 

@@ -18,6 +18,7 @@ import threeDotsIcon from 'images/bt-user-modi-nor@2x.png';
 import hoverThreeDotsIcon from 'images/bt-user-modi-over@2x.png';
 import addUserImage from 'images/bt-add-u-1-nor@3x.png';
 import addUserHoverImage from 'images/bt-add-u-1-over@3x.png';
+import { current } from 'immer';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -72,24 +73,19 @@ function UserView({ location }: UserViewProps) {
     onClickResetPassword,
   } = useUser();
   const { branchList, teamList, getBranchList, getTeamList } = useBranch();
-  const { countUser, page, onClickNextPage, onClickPrevPage } = usePage();
+  const {
+    countUser,
+    page,
+    onClickNextPage,
+    onClickPrevPage,
+    onChnageCurrentPage,
+  } = usePage();
   const { visible, onClickVisible } = useVisible();
   const { form, onChangeSelect, onChange, initTempValue } = useInputForm({
     branch: '-1',
     team: '-1',
     search: '',
   });
-
-  const onClickSearch = useCallback(() => {
-    getConsultantsInfo(
-      Number(form.branch),
-      Number(form.team),
-      5,
-      page,
-      form.search,
-      location,
-    );
-  }, [form.branch, form.team, form.search, getConsultantsInfo, page]);
 
   const selectInfo = {
     color: COLORS.dark_gray1,
@@ -109,6 +105,17 @@ function UserView({ location }: UserViewProps) {
     type: 'user',
     onClick: onClickVisible,
   };
+
+  const onClickSearch = useCallback(() => {
+    getConsultantsInfo(
+      Number(form.branch),
+      Number(form.team),
+      5,
+      page,
+      form.search,
+      location,
+    );
+  }, [form.branch, form.team, form.search, getConsultantsInfo, page]);
 
   useEffect(() => {
     if (loginInfo.admin_id === 2) {
@@ -150,13 +157,11 @@ function UserView({ location }: UserViewProps) {
         location,
       );
     }
-  }, [
-    getConsultantsInfo,
-    loginInfo,
-    page,
-    form.branch,
-    form.team
-  ]);
+  }, [getConsultantsInfo, loginInfo, page, form.branch, form.team]);
+
+  useEffect(() => {
+    onChnageCurrentPage(page, countUser);
+  }, [countUser, page, onChnageCurrentPage]);
 
   console.log('Lendering UserView');
   return (

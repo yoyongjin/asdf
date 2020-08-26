@@ -1,16 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 
 import { Button } from 'components/atoms';
 import { Title, TextInput, TextSelect } from 'components/molecules';
 import { COLORS } from 'utils/color';
+import { formatPhoneNumber } from 'utils/utils';
 import useInputForm from 'hooks/useInputForm';
 import {
   UserInfo as UserInfoType,
   ConsultantInfoType,
 } from 'modules/types/user';
 import useBranch from 'hooks/useBranch';
-import deleteImage from 'images/bt-del@3x.png'
 
 const StyledWrapper = styled.div`
   width: 100%;
@@ -55,16 +55,22 @@ function UserInfo({
   branchName,
   adminType,
 }: UserInfoProps) {
-  const { form, onChange, onChangeSelect, initValue } = useInputForm({
-    branch: data! && data!.branch_id ? String(data!.branch_id) : '-1',
-    team: data! && data!.team_id ? String(data!.team_id) : '-1',
-    admin: data! && data!.admin_id >= 0 ? String(data!.admin_id) : '',
-    name: data! && data!.name ? data!.name : '',
-    id: data! && data!.user_name ? data!.user_name : '',
-    password: '',
-    tel: data! && data!.number ? data!.number : '',
-    zibox: data! && data!.ziboxip ? data!.ziboxip : '',
-  });
+  const initialized = useMemo(() => {
+    return {
+      branch: data! && data!.branch_id ? String(data!.branch_id) : '-1',
+      team: data! && data!.team_id ? String(data!.team_id) : '-1',
+      admin: data! && data!.admin_id >= 0 ? String(data!.admin_id) : '0',
+      name: data! && data!.name ? data!.name : '',
+      id: data! && data!.user_name ? data!.user_name : '',
+      password: '',
+      tel: data! && data!.number ? data!.number : '',
+      zibox: data! && data!.ziboxip ? data!.ziboxip : '',
+    };
+  }, [data]);
+
+  const { form, onChange, onChangeSelect, initValue } = useInputForm(
+    initialized,
+  );
   const {
     userBranchList,
     userTeamList,
@@ -98,19 +104,8 @@ function UserInfo({
   }, [isVisible, adminType, getUserTeamList, form.branch, branchId]);
 
   useEffect(() => {
-    const init = {
-      branch: data! && data!.branch_id ? String(data!.branch_id) : '-1',
-      team: data! && data!.team_id ? String(data!.team_id) : '-1',
-      admin: data! && data!.admin_id >= 0 ? String(data!.admin_id) : '0',
-      name: data! && data!.name ? data!.name : '',
-      id: data! && data!.user_name ? data!.user_name : '',
-      password: '',
-      tel: data! && data!.number ? data!.number : '',
-      zibox: data! && data!.ziboxip ? data!.ziboxip : '',
-    };
-
-    initValue(init);
-  }, [initValue, data]);
+    initValue(initialized);
+  }, [initValue, initialized]);
 
   let branch: Array<SelectDataType> = [];
   let team: Array<SelectDataType> = [];
@@ -180,7 +175,7 @@ function UserInfo({
           onChange={onChange}
           name={'name'}
           value={form.name}
-          image={deleteImage}
+          fontSize={0.81}
         ></TextInput>
         <TextInput
           customStyle={`float:right;`}
@@ -189,7 +184,8 @@ function UserInfo({
           onChange={onChange}
           name={'id'}
           value={form.id}
-          image={deleteImage}
+          fontSize={0.81}
+          disabled={form.admin === '0'}
         ></TextInput>
         <TextInput
           customStyle={`float:right;`}
@@ -199,7 +195,8 @@ function UserInfo({
           onChange={onChange}
           name={'password'}
           value={form.password}
-          image={deleteImage}
+          fontSize={0.81}
+          disabled={form.admin === '0'}
         ></TextInput>
         <TextInput
           customStyle={`float:right;`}
@@ -208,17 +205,18 @@ function UserInfo({
           textValue={'전화번호'}
           onChange={onChange}
           name={'tel'}
-          value={form.tel}
-          image={deleteImage}
+          value={formatPhoneNumber(form.tel)}
+          fontSize={0.81}
         ></TextInput>
         <TextInput
           customStyle={`float:right;`}
           height={22.5}
-          textValue={'Zibox IP 직접 입력하기'}
+          textValue={'ZiBox IP 직접 입력하기'}
           onChange={onChange}
           name={'zibox'}
           value={form.zibox}
-          image={deleteImage}
+          fontSize={0.81}
+          disabled={form.admin !== '0'}
         ></TextInput>
       </StyledContent>
       <StyledFooter>
@@ -231,6 +229,44 @@ function UserInfo({
           `}
           onClick={(e) => {
             if (data! && data!.id) {
+              if (form.admin === '1') {
+                // 관리자일 경우
+                if (
+                  form.team === '-1' ||
+                  !form.name ||
+                  !form.id ||
+                  !form.password ||
+                  !form.tel
+                ) {
+                  alert('빈란 없이 입력해주세요.');
+                  return;
+                }
+              } else if (form.admin === '0') {
+                // 상담원일 경우
+                if (
+                  form.team === '-1' ||
+                  !form.name ||
+                  !form.tel ||
+                  !form.zibox
+                ) {
+                  alert('빈란 없이 입력해주세요.');
+                  return;
+                }
+              } else if (form.admin === '2') {
+                // 슈퍼관리자일 경우
+                if (
+                  (form.branch === '-1',
+                  form.team === '-1' ||
+                    !form.name ||
+                    !form.id ||
+                    !form.password ||
+                    !form.tel)
+                ) {
+                  alert('빈란 없이 입력해주세요.');
+                  return;
+                }
+              }
+
               onClickUpdateUser!(
                 String(data!.id),
                 String(form.branch === '-1' ? String(branchId) : form.branch),
@@ -244,6 +280,44 @@ function UserInfo({
               );
               onClickVisible();
             } else {
+              if (form.admin === '1') {
+                // 관리자일 경우
+                if (
+                  form.team === '-1' ||
+                  !form.name ||
+                  !form.id ||
+                  !form.password ||
+                  !form.tel
+                ) {
+                  alert('빈란 없이 입력해주세요.');
+                  return;
+                }
+              } else if (form.admin === '0') {
+                // 상담원일 경우
+                if (
+                  form.team === '-1' ||
+                  !form.name ||
+                  !form.tel ||
+                  !form.zibox
+                ) {
+                  alert('빈란 없이 입력해주세요.');
+                  return;
+                }
+              } else if (form.admin === '2') {
+                // 슈퍼관리자일 경우
+                if (
+                  (form.branch === '-1',
+                  form.team === '-1' ||
+                    !form.name ||
+                    !form.id ||
+                    !form.password ||
+                    !form.tel)
+                ) {
+                  alert('빈란 없이 입력해주세요.');
+                  return;
+                }
+              }
+
               onClickInsertUser!(
                 String(form.branch === '-1' ? String(branchId) : form.branch),
                 String(form.team),
@@ -254,18 +328,7 @@ function UserInfo({
                 form.tel,
                 form.zibox,
               );
-              const init = {
-                branch: '-1',
-                team: '-1',
-                admin: '0',
-                name: '',
-                id: '',
-                password: '',
-                tel: '',
-                zibox: '',
-              };
-
-              initValue(init);
+              initValue(initialized);
               onClickVisible();
             }
           }}
@@ -279,31 +342,20 @@ function UserInfo({
           onClick={(e) => {
             onClickVisible();
             if (data && !data!.id) {
-              const init = {
-                branch: '',
-                team: '',
-                admin: '',
-                name: '',
-                id: '',
-                password: '',
-                tel: '',
-                zibox: '',
-              };
+              // const init = {
+              //   branch: '-1',
+              //   team: '-1',
+              //   admin: '0',
+              //   name: '',
+              //   id: '',
+              //   password: '',
+              //   tel: '',
+              //   zibox: '',
+              // };
 
-              initValue(init);
+              initValue(initialized);
             } else {
-              const init = {
-                branch: data! && data!.branch_id ? String(data!.branch_id) : '',
-                team: data! && data!.team_id ? String(data!.team_id) : '',
-                admin: data! && data!.admin_id ? String(data!.admin_id) : '',
-                name: data! && data!.name ? data!.name : '',
-                id: data! && data!.user_name ? data!.user_name : '',
-                password: '',
-                tel: data! && data!.number ? data!.number : '',
-                zibox: data! && data!.ziboxip ? data!.ziboxip : '',
-              };
-
-              initValue(init);
+              initValue(initialized);
             }
           }}
           customStyle={`

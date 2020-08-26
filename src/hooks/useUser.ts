@@ -53,6 +53,7 @@ function useUser() {
       tel: string,
       ip: string,
     ) => {
+      let number = tel.replace(/\-/g, '');
       const payload = {
         branch_id: branchId,
         team_id: teamId,
@@ -60,9 +61,10 @@ function useUser() {
         name,
         user_name: userId,
         password,
-        number: tel,
+        number: number,
         ziboxip: ip,
       };
+
       dispatch(requestAddUser(payload));
     },
     [dispatch],

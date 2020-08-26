@@ -28,6 +28,9 @@ function TextInput({
   value,
   type,
   image,
+  fontSize,
+  fontWeight,
+  disabled,
 }: TextInputProps) {
   return (
     <StyledWrapper>
@@ -46,6 +49,9 @@ function TextInput({
         onChange={onChange}
         value={value}
         image={image}
+        fontSize={fontSize}
+        fontWeight={fontWeight}
+        disabled={disabled}
       ></Input>
     </StyledWrapper>
   );
@@ -68,6 +74,9 @@ interface TextInputProps extends BlankProps {
   value: string;
   type?: string;
   image?: string;
+  fontSize: number;
+  fontWeight: number | string;
+  disabled: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -77,7 +86,10 @@ TextInput.defaultProps = {
   inputPh: '',
   textColor: COLORS.dark_gray6,
   textWeight: 600,
-  type: 'input'
+  type: 'input',
+  fontSize: 1,
+  fontWeight: 700,
+  disabled: false,
 };
 
 export default TextInput;

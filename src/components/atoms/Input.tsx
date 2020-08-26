@@ -112,6 +112,7 @@ function Input({
   name,
   value,
   placeholder,
+  disabled,
   onChange,
   onKeyDown,
   onKeyUp,
@@ -127,6 +128,7 @@ function Input({
       onChange={onChange}
       onKeyUp={onKeyUp}
       onKeyDown={onKeyDown}
+      disabled={disabled}
       {...rest}
     ></StyledInput>
   );
@@ -150,6 +152,7 @@ interface InputProps {
   readonly image?: string;
   readonly borderStyle: string;
   readonly customStyle?: string;
+  readonly disabled: boolean;
   readonly innerRef?:
     | ((instance: HTMLInputElement) => void)
     | React.MutableRefObject<HTMLInputElement>;
@@ -171,6 +174,7 @@ Input.defaultProps = {
   fontWeight: 'normal',
   textAlign: 2,
   fontColor: COLORS.dark_gray1,
+  disabled: false,
 };
 
 export default Input;

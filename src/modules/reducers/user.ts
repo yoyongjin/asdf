@@ -134,6 +134,8 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
       } else {
         draft.userInfo.unshift(action.payload);
       }
+      
+      draft.numberOfUsers += 1;
     });
   },
   [types.UPDATE_USER]: (state, action) => {
@@ -158,7 +160,9 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
   },
   [types.DELETE_USER]: (state, action) => {
     console.log(action.payload);
-    return produce(state, (draft) => {});
+    return produce(state, (draft) => {
+      draft.numberOfUsers -= 1;
+    });
   },
   [types.CHANGE_CALL_STATE]: (state, action) => {
     const { type, time, number } = action.payload;

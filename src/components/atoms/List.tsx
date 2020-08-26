@@ -33,10 +33,21 @@ const StyledContent = styled.li`
   }
 `;
 
-function List({ menu, onClickVisible, onClickDeleteUser, onClickResetPassword, id, page, branchId, teamId }: ListProps) {
+function List({
+  menu,
+  onClickVisible,
+  onClickDeleteUser,
+  onClickResetPassword,
+  id,
+  page,
+  branchId,
+  teamId,
+  adminType,
+}: ListProps) {
   return (
     <StyledWrapper>
       {menu.map((title, i) => {
+        if (adminType === 0 && i === 1) return null;
         return (
           <StyledContent
             key={`styled-content-${i}`}
@@ -66,6 +77,7 @@ interface ListProps {
   page?: number;
   branchId?: number;
   teamId?: number;
+  adminType: number;
   onClickVisible?: () => void;
   onClickDeleteUser?: (
     id: string,

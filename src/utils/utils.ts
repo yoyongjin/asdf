@@ -1,3 +1,16 @@
+import { AsYouType } from 'libphonenumber-js';
+
+const krPhone = new AsYouType('KR');
+
+export const formatPhoneNumber = (str = '', delim = '-') => {
+  const clean = str.replace(/[^\d]+/gi, '').substr(0, 13);
+  let r = krPhone.input(clean);
+  if (delim !== '-') r = r.replace(/-/g, delim);
+  krPhone.reset();
+
+  return r;
+};
+
 export const getYYYYMMDD = (timestamp: number, delim = '.'): string => {
   let date = new Date(timestamp);
   let year = date.getFullYear() + '';
@@ -21,15 +34,15 @@ export const getHourMinSecV1 = (timestamp: number, delim = ':'): string => {
   return fullTime;
 };
 
-export const getHourMinSecV2 = (timestamp:number, delim=":"): string => {
+export const getHourMinSecV2 = (timestamp: number, delim = ':'): string => {
   let date = new Date(timestamp);
   let hour = date.getHours() + '';
   let min = date.getMinutes() + '';
   let sec = date.getSeconds() + '';
 
   let fullTime = `${pad(hour)}${delim}${pad(min)}${delim}${pad(sec)}`;
-  return fullTime
-}
+  return fullTime;
+};
 
 export const getTimeToSecond = (second: number, delim = ':'): string => {
   let min: number | string = Math.floor(second / 60);

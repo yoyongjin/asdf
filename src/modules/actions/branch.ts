@@ -15,6 +15,7 @@ import {
   TeamInfo,
   BranchId,
   DelelteData,
+  SuccessDeleteBranch,
 } from 'modules/types/branch';
 
 export const REQUEST_GET_BRANCH_INFO = 'REQUEST_GET_BRANCH_INFO';
@@ -102,5 +103,5 @@ export const initBranchList = createAction(INIT_BRANCH_LIST)<BranchInfo>();
 export const initTeamList = createAction(INIT_TEAM_LST)();
 export const requestDeleteBranchInfo = createAction(REQUEST_DELETE_BRANCH_INFO)<TemporaryTeam>();
 export const requestDeleteTeamInfo = createAction(REQUEST_DELETE_TEAM_INFO)<DelelteData>();
-export const successDeleteBranchInfo = createAction(SUCCESS_DELETE_BRANCH_INFO)<TemporaryTeam>();
+export const successDeleteBranchInfo = createAction(SUCCESS_DELETE_BRANCH_INFO)<SuccessDeleteBranch>();
 export const successDeleteTeamInfo = createAction(SUCCESS_DELETE_TEAM_INFO)<DelelteData>();
