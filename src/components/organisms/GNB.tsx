@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import { History, Location } from 'history';
+
 
 import { Image, Link } from 'components/atoms';
 import { LinkSelector, UserLog } from 'components/molecules';
@@ -32,8 +34,9 @@ const StyledLogo = styled.div`
 const StyledLink = styled.div`
   /* Display */
   flex-grow: 1;
-  align-self: center;
-  padding-left: 3rem;
+  align-self: stretch;
+  padding-top: 22px;
+  padding-left: 47px;
 `;
 
 const StyledUserLog = styled.div`
@@ -43,7 +46,7 @@ const StyledUserLog = styled.div`
   padding-right: 2rem;
 `;
 
-function GNB({ logo, loginTimeImage, loginInfo, onClickLogout }: GNBProps) {
+function GNB({ logo, loginTimeImage, loginInfo, onClickLogout, history, location }: GNBProps) {
   console.log('Lendering GNB');
   return (
     <StyledWrapper>
@@ -53,7 +56,7 @@ function GNB({ logo, loginTimeImage, loginInfo, onClickLogout }: GNBProps) {
         </Link>
       </StyledLogo>
       <StyledLink>
-        <LinkSelector />
+        <LinkSelector history={history} location={location}/>
       </StyledLink>
       <StyledUserLog>
         <UserLog
@@ -72,6 +75,8 @@ interface GNBProps {
   loginTimeImage: string;
   loginInfo: loginInfoType;
   onClickLogout: () => void;
+  history: History;
+  location: Location;
 }
 
 export default GNB;

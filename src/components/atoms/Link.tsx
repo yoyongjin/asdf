@@ -6,13 +6,14 @@ const StyledLink = styled(RouterLink)({
   textDecoration: 'none',
 }) as RouterLink;
 
-function Link({ path, children }: LinkProps) {
-  return <StyledLink to={path}>{children}</StyledLink>;
+function Link({ path, onClick, children }: LinkProps) {
+  return <StyledLink to={path} onClick={onClick}>{children}</StyledLink>;
 }
 
 interface LinkProps {
   path: string;
   children: React.ReactChild;
+  onClick?: () => void;
 }
 
 export default Link;

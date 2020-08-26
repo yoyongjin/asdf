@@ -6,9 +6,10 @@ import { COLORS } from 'utils/color';
 
 const StyledWrapper = styled.div`
   /* Display */
+  max-width: 140rem;
+  min-width: 70rem;
   width: 100vw;
   height: 100vh;
-  max-width: 140rem;
 `;
 
 const StyledBlankSpace = styled.div`

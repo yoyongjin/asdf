@@ -42,6 +42,8 @@ function MainPage({ history, location }: MainPageProps) {
           loginTimeImage={loggedTimeImage}
           loginInfo={loginInfo}
           onClickLogout={() => onClickLogout(history)}
+          history={history}
+          location={location}
         />
       }
       bgColor={bgColor}
