@@ -2,10 +2,10 @@ import axios from 'axios';
 
 import { apiServer } from 'utils/constants';
 
-const instance = axios.create({
+export const instance = axios.create({
   baseURL: apiServer,
   timeout: 1000,
-  withCredentials: true,
+  withCredentials: true
 });
 
 // auth

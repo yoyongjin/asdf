@@ -117,22 +117,26 @@ function Monitoring({ location }: MonitoringProps) {
   }, [getTeamList, form.branch, loginInfo]);
 
   useEffect(() => {
-    getConsultantsInfo(
-      Number(form.branch),
-      Number(form.team),
-      2000,
-      1,
-      '',
-      location,
-    );
-  }, [getConsultantsInfo, form.branch, form.team]);
+    if (loginInfo.id) {
+      getConsultantsInfo(
+        Number(form.branch),
+        Number(form.team),
+        2000,
+        1,
+        '',
+        location,
+      );
+    }
+  }, [loginInfo, getConsultantsInfo, form.branch, form.team]);
 
   useEffect(() => {
-    onRunTimer();
+    if (loginInfo.id) {
+      onRunTimer();
+    }
     return () => {
       onRemoveTimer();
     };
-  }, [onRunTimer, onRemoveTimer]);
+  }, [loginInfo, onRunTimer, onRemoveTimer]);
 
   return (
     <>

@@ -9,7 +9,6 @@ import useAuth from 'hooks/useAuth';
 import insertBranchImage from 'images/bt-add-g-1-nor@3x.png';
 import insertBranchHoverImage from 'images/bt-add-g-1-over.png';
 
-
 const StyledWrapper = styled.div`
   /* Display */
   width: 100%;
@@ -33,7 +32,7 @@ const StyledOrganization = styled.div`
 `;
 
 function OrganizationView() {
-  const {loginInfo} = useAuth();
+  const { loginInfo } = useAuth();
   const {
     branchInfo,
     getBranchInfo,
@@ -43,20 +42,22 @@ function OrganizationView() {
     handleUpdateTeam,
     handleUpdateBranch,
     handleDeleteTeam,
-    handleDeleteBranch
+    handleDeleteBranch,
   } = useBranch();
   const { page, countBranch, onClickNextPage, onClickPrevPage } = usePage();
 
   useEffect(() => {
-    getBranchInfo();
-  }, [getBranchInfo]);
+    if (loginInfo.id) {
+      getBranchInfo();
+    }
+  }, [loginInfo, getBranchInfo]);
 
   const buttonType = {
     title: '+ 지점 추가하기',
     onClick: onClickAddTempBranch,
     bgImage: insertBranchImage,
     bgHoverImage: insertBranchHoverImage,
-    type: 'organization'
+    type: 'organization',
   };
 
   const explanType = {

@@ -28,9 +28,9 @@ function useSocket() {
 
   const getUserInfo = useCallback(() => {
     Socket.getInstance().onMessageUser((response) => {
-      console.log(response);
       const { type, data } = response;
-
+      console.log("getUserInfo", data);
+      
       switch (type) {
         case 'signup':
           if (data.admin_id === 0) {
@@ -60,7 +60,7 @@ function useSocket() {
     Socket.getInstance().onMeesageCallState((response) => {
       const { data } = response;
       const _response = JSON.parse(data);
-      console.log(_response.monitoring_state);
+
       if (_response.monitoring_state) {
         console.log('Change Monitoring State =>', _response);
         dispatch(changeMonitoringState(_response));
@@ -85,22 +85,5 @@ function useSocket() {
     getAllCallState,
   };
 }
-
-// export interface ConsultantInfoType {
-//   admin_id: string;
-//   branch_id: string;
-//   branch_name: null | string;
-//   id: number;
-//   login_at?: number;
-//   name: string;
-//   number: string;
-//   team_id: string;
-//   team_name: null | string;
-//   user_name: string;
-//   ziboxip: string;
-//   call_time?: number;
-//   call_type?: string;
-//   diff?: number;
-// }
 
 export default useSocket;

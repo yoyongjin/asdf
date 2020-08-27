@@ -35,13 +35,6 @@ function useZibox() {
       });
     } catch (error) {
       console.log(error);
-      alert('연결 실패하였습니다. Zibox ip 확인을 해주세요.');
-      Zibox.getInstance().disconnect();
-      Socket.getInstance().onEmit('monitoring', {
-        monitoring_state: 'n',
-        number,
-        user_id: -1,
-      });
     }
   }, []);
 
@@ -49,7 +42,7 @@ function useZibox() {
     console.log('emitMonitoring');
     Socket.getInstance().onEmit('monitoring', {
       monitoring_state: 'n',
-      number: number,
+      number,
       user_id: -1,
     });
   }, []);

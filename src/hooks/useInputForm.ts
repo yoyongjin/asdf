@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux';
 import { History } from 'history';
 
 import { requestLogin } from 'modules/actions/auth';
-import { requestGetUserInfo } from 'modules/actions/user';
 
 function useInputForm<T>(initialForm: T) {
   const [form, setForm] = useState<T>(initialForm);
@@ -15,11 +14,7 @@ function useInputForm<T>(initialForm: T) {
   }, []);
 
   const onChangeSelect = useCallback(
-    (
-      e: React.ChangeEvent<HTMLSelectElement>,
-      type = '',
-      data = '',
-    ) => {
+    (e: React.ChangeEvent<HTMLSelectElement>, type = '', data = '') => {
       console.log(type, data);
       if (type === 'team' && data === '') {
         alert('지점명을 선택한 후 진행해주세요.');
@@ -57,7 +52,7 @@ function useInputForm<T>(initialForm: T) {
     onClickLogin,
     initTempValue,
     initValue,
-    onChangeSelect
+    onChangeSelect,
   };
 }
 

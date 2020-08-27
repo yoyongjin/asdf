@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 import { Button, Image, Text } from 'components/atoms';
@@ -50,17 +50,17 @@ function Consultant({
   setTappingState,
   emitMonitoring,
 }: ConsultantProps) {
-  useEffect(() => {
-    if (!tappingState && loginId === consultInfo.user_id) {
-      emitMonitoring(consultInfo.number, loginId);
-    }
-  }, [
-    consultInfo.user_id,
-    loginId,
-    emitMonitoring,
-    consultInfo.number,
-    tappingState,
-  ]);
+  // useEffect(() => {
+  //   if (!tappingState && loginId === consultInfo.user_id) {
+  //     emitMonitoring(consultInfo.number, loginId);
+  //   }
+  // }, [
+  //   consultInfo.user_id,
+  //   loginId,
+  //   emitMonitoring,
+  //   consultInfo.number,
+  //   tappingState,
+  // ]);
 
   return (
     <StyledWrapper>
@@ -163,8 +163,8 @@ function Consultant({
                       startMonitoring(consultInfo.number, loginId);
                     }, 1000);
                     setTappingState(true);
-                  }else {
-                    alert("ZiBox IP를 확인해주세요.")
+                  } else {
+                    alert('ZiBox IP를 확인해주세요.');
                   }
                 } catch (error) {
                   console.log(error);
