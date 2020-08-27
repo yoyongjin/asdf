@@ -6,14 +6,14 @@ import * as common from 'modules/types/common';
 export type BranchAction = ActionType<typeof actions>;
 
 export interface BranchType<T> {
-  branch: common.checkFetchType;
-  insertBranch: common.checkFetchType;
-  updateBranch: common.checkFetchType;
-  deleteBranch: common.checkFetchType;
-  insertTeam: common.checkFetchType;
-  updateTeam: common.checkFetchType;
-  deleteTeam: common.checkFetchType;
-  branchName: common.checkFetchType;
+  branch: common.FetchType;
+  insertBranch: common.FetchType;
+  updateBranch: common.FetchType;
+  deleteBranch: common.FetchType;
+  insertTeam: common.FetchType;
+  updateTeam: common.FetchType;
+  deleteTeam: common.FetchType;
+  branchName: common.FetchType;
   branchInfo: object | BranchInfoType<T>;
   numberOfBranch: number;
   namesList: NameListType

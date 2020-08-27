@@ -125,7 +125,7 @@ function TableProperty({
             src={threeDotsIcon}
             width={2}
             height={2}
-            hoverImage={hoverThreeDotsIcon}
+            bgHoverImage={hoverThreeDotsIcon}
           />
         </StyledProperty>
       </StyledWrapper>

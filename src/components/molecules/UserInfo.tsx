@@ -68,7 +68,7 @@ function UserInfo({
     };
   }, [data]);
 
-  const { form, onChange, onChangeSelect, initValue } = useInputForm(
+  const { form, onChangeInput, onChangeSelect, initValue } = useInputForm(
     initialized,
   );
   const {
@@ -172,7 +172,7 @@ function UserInfo({
           customStyle={`float:right;`}
           height={22.5}
           textValue={'이름'}
-          onChange={onChange}
+          onChange={onChangeInput}
           name={'name'}
           value={form.name}
           fontSize={0.81}
@@ -181,7 +181,7 @@ function UserInfo({
           customStyle={`float:right;`}
           height={22.5}
           textValue={'아이디'}
-          onChange={onChange}
+          onChange={onChangeInput}
           name={'id'}
           value={form.id}
           fontSize={0.81}
@@ -192,7 +192,7 @@ function UserInfo({
           height={22.5}
           type={'password'}
           textValue={'비밀번호'}
-          onChange={onChange}
+          onChange={onChangeInput}
           name={'password'}
           value={form.password}
           fontSize={0.81}
@@ -203,7 +203,7 @@ function UserInfo({
           padRight={2}
           height={22.5}
           textValue={'전화번호'}
-          onChange={onChange}
+          onChange={onChangeInput}
           name={'tel'}
           value={formatPhoneNumber(form.tel)}
           fontSize={0.81}
@@ -212,7 +212,7 @@ function UserInfo({
           customStyle={`float:right;`}
           height={22.5}
           textValue={'ZiBox IP 직접 입력하기'}
-          onChange={onChange}
+          onChange={onChangeInput}
           name={'zibox'}
           value={form.zibox}
           fontSize={0.81}
@@ -235,7 +235,6 @@ function UserInfo({
                   form.team === '-1' ||
                   !form.name ||
                   !form.id ||
-                  !form.password ||
                   !form.tel
                 ) {
                   alert('빈란 없이 입력해주세요.');

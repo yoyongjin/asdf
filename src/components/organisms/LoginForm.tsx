@@ -18,99 +18,122 @@ const StyledWrapper = styled.div`
 
 const StyledTitle = styled.div`
   /* Display */
-  padding-bottom: 1.8rem;
+  padding-bottom: 21px;
 `;
 
-const StyledInputId = styled.div`
-  /* Display */
-  padding-bottom: 0.5rem;
+const StyledInput = styled.div`
+  margin-top: 8px;
 `;
 
-const StyledInputPassword = styled.div`
-  /* Display */
-  padding-bottom: 0.7rem;
+const StyledLogin = styled.div`
+  padding-top: 12px;
 `;
 
-const StyledLogin = styled.div``;
+const formList: Array<FormListType> = [
+  {
+    id: 0,
+    name: 'id',
+    type: 'text',
+  },
+  {
+    id: 1,
+    name: 'password',
+    type: 'password',
+  },
+];
 
 function LoginForm({ history }: LoginFormProps) {
-  const idRef = useRef<HTMLInputElement>(null) as React.MutableRefObject<
+  const refId = useRef<HTMLInputElement>(null) as React.MutableRefObject<
     HTMLInputElement
   >;
-  const pwRef = useRef<HTMLInputElement>(null) as React.MutableRefObject<
+  const refPassword = useRef<HTMLInputElement>(null) as React.MutableRefObject<
     HTMLInputElement
   >;
-  const { form, onChange, onClickLogin } = useInputForm({
+  const { form, onChangeInput, onClickLogin } = useInputForm({
     id: '',
     password: '',
   });
-  const { id, password }: formType = form;
 
   const onKeyEvent = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>, value: string, name: string) => {
+    (e: React.KeyboardEvent<HTMLInputElement>, name: string, value: string) => {
       if (e.keyCode === 13) {
         if (!value || value.trim() === '') return;
 
         if (name.indexOf('id') > -1) {
-          pwRef!.current.focus();
+          refPassword!.current.focus();
         } else if (name.indexOf('password') > -1) {
-          onClickLogin(id, password, history);
+          onClickLogin(form.id, form.password, history);
         }
       }
     },
-    [id, password, onClickLogin, pwRef],
+    [refPassword, form.id, form.password, history, onClickLogin],
   );
 
   useEffect(() => {
-    if (idRef) {
-      idRef.current.focus();
+    if (refId) {
+      refId.current.focus();
     }
-  }, [idRef]);
+  }, [refId]);
 
   return (
     <StyledWrapper>
       <StyledTitle>
-        <Text fontSize={1.5} fontColor={COLORS.white}>
+        <Text
+          fontSize={1.5}
+          fontColor={COLORS.white}
+          fontFamily={'NanumBarunGothic'}
+          fontWeight={600}
+          lineHeight={0.23}
+        >
           로그인
         </Text>
       </StyledTitle>
-      <StyledInputId>
-        <Input
-          innerRef={idRef}
-          value={id}
-          name={'id'}
-          placeholder={'아이디를 입력하세요.'}
-          width={13.3}
-          height={2}
-          fontSize={0.8}
-          borderColor={COLORS.dark_green}
-          phColor={COLORS.green}
-          onChange={onChange}
-          onKeyDown={(e) => onKeyEvent(e, id, 'id')}
-        />
-      </StyledInputId>
-      <StyledInputPassword>
-        <Input
-          innerRef={pwRef}
-          type={'password'}
-          value={password}
-          name={'password'}
-          placeholder={'비밀번호를 입력하세요.'}
-          width={13.3}
-          height={2}
-          fontSize={0.8}
-          borderColor={COLORS.dark_green}
-          phColor={COLORS.green}
-          onChange={onChange}
-          onKeyDown={(e) => onKeyEvent(e, password, 'password')}
-        />
-      </StyledInputPassword>
+      {formList.map((values, i) => {
+        return (
+          <StyledInput key={`styled-loginform-${i}`}>
+            <Input
+              key={`loginform-${i}`}
+              innerRef={
+                values.id === 0 ? refId : values.id === 1 ? refPassword : null
+              }
+              type={values.type}
+              name={values.name}
+              value={
+                values.id === 0 ? form.id : values.id === 1 ? form.password : ''
+              }
+              placeholder={
+                values.id === 0
+                  ? '아이디를 입력하세요.'
+                  : values.id === 1
+                  ? '비밀번호를 입력하세요.'
+                  : ''
+              }
+              width={13.31}
+              height={2}
+              fontFamily={'NanumBarunGothic'}
+              fontSize={0.88}
+              borderColor={COLORS.dark_green}
+              phColor={COLORS.green}
+              onChange={onChangeInput}
+              onKeyDown={(e) => {
+                let value = '';
+                if (values.id === 0) {
+                  value = form.id;
+                } else if (values.id === 1) {
+                  value = form.password;
+                }
+                onKeyEvent(e, values.name, value);
+              }}
+            />
+          </StyledInput>
+        );
+      })}
       <StyledLogin>
         <Button
           bgColor={COLORS.dark_green}
           width={13.3}
           height={2}
-          onClick={() => onClickLogin(id, password, history)}
+          onClick={() => onClickLogin(form.id, form.password, history)}
         >
           <Text fontSize={0.8} fontColor={COLORS.white}>
             로그인
@@ -120,13 +143,13 @@ function LoginForm({ history }: LoginFormProps) {
     </StyledWrapper>
   );
 }
-interface LoginFormProps extends RouteComponentProps {}
 
-interface formType {
-  id: string;
-  password: string;
+interface FormListType {
+  id: number;
+  name: string;
+  type: string;
 }
 
-interface LoginFormProps {}
+interface LoginFormProps extends RouteComponentProps {}
 
 export default LoginForm;

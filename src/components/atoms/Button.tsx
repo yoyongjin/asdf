@@ -42,11 +42,10 @@ const StyledButton = styled.button<ButtonProps>`
           background-size: ${(props) => props.width}rem
             ${(props) => props.height}rem;
         `;
-      } else if(props.bgImage) {
+      } else if (props.bgImage) {
         return css`
           opacity: 0.6;
         `;
-
       } else {
         return css<ButtonProps>`
           color: ${darken(0.1, props.fontColor)};
@@ -81,8 +80,8 @@ function Button({ onClick, children, ...props }: ButtonProps) {
 interface ButtonProps {
   readonly width: number;
   readonly height: number;
-  readonly borderWidth: number;
   readonly borderRadius: number;
+  readonly borderWidth: number;
   readonly fontColor: string;
   readonly fontSize: number;
   readonly bgColor: string;

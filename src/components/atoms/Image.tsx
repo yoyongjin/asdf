@@ -2,22 +2,18 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 
 const StyledImage = styled.img<ImageProps>`
-  width: ${(props) => {
-    if (typeof props.width === 'number') return `${props.width}rem`;
-    else if (typeof props.width === 'string') return props.width;
-  }};
-  height: ${(props) => {
-    if (typeof props.height === 'number') return `${props.height}rem`;
-    else if (typeof props.height === 'string') return props.height;
-  }};
-  background-image: url(${(props) => props.src}) no-repeat;
+  width: ${(props) => props.width}rem;
+  height: ${(props) => props.height}rem;
+  /* background-image: url(${(props) => props.src}) no-repeat; */
   /* background-repeat: no-repeat; */
+
   ${(props) => {
-    if (props.hoverImage) {
+    if (props.bgHoverImage) {
+      // hover 이미지가 있을 때
       return css<ImageProps>`
         &:hover {
           cursor: pointer;
-          content: url(${(props) => props.hoverImage});
+          content: url(${(props) => props.bgHoverImage});
         }
         &:active {
           opacity: 0.8;
@@ -28,6 +24,7 @@ const StyledImage = styled.img<ImageProps>`
 
   ${(props) => {
     if (props.onClick) {
+      // 이미지 클릭이 가능할 때
       return css<ImageProps>`
         &:hover {
           cursor: pointer;
@@ -41,21 +38,21 @@ const StyledImage = styled.img<ImageProps>`
   }}
 `;
 
-function Image({ alt, onClick, ...rest }: ImageProps) {
-  return <StyledImage alt={alt} onClick={onClick} {...rest}></StyledImage>;
+function Image({ src, alt, onClick, ...rest }: ImageProps) {
+  return <StyledImage src={src} alt={alt} onClick={onClick} {...rest}></StyledImage>;
 }
 
 interface ImageProps {
-  src: string;
-  alt?: string;
-  width: number | string;
-  height: number | string;
-  hoverImage?: string;
-  onClick?: () => void;
+  readonly src: string;
+  readonly alt?: string;
+  readonly width: number;
+  readonly height: number;
+  readonly bgHoverImage?: string;
+  readonly onClick?: () => void;
 }
 
 Image.defaultProps = {
-  width: 20,
+  width: 15,
   height: 7,
 };
 

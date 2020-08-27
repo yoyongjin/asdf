@@ -5,16 +5,11 @@ import { darken, lighten } from 'polished';
 import { COLORS } from 'utils/color';
 
 const StyledText = styled.span<TextProps>`
+  /* Display */
   font-family: ${(props) => props.fontFamily};
   font-weight: ${(props) => props.fontWeight};
-  font-size: ${(props) => {
-    if (props.fontSize > 10) {
-      return `${props.fontSize}px`;
-    }
-
-    return `${props.fontSize}rem`;
-  }};
-  line-height: ${props => props.lineHeight};
+  font-size: ${(props) => props.fontSize}rem;
+  line-height: ${(props) => props.lineHeight};
 
   /* Color */
   color: ${(props) => props.fontColor};
@@ -22,7 +17,7 @@ const StyledText = styled.span<TextProps>`
   ${(props) => {
     if (props.onClick) {
       return css<TextProps>`
-      cursor: pointer;
+        cursor: pointer;
         &:hover {
           color: ${lighten(0.2, props.fontColor)};
         }

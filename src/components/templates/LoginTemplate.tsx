@@ -12,27 +12,16 @@ const StyledWrapper = styled.div`
   height: 100vh;
 `;
 
-const StyledBlankSpace = styled.div`
+const StyledTitle = styled.div`
   /* Display */
-  height: 11.6rem;
-
-  /* Color */
-  background-color: ${COLORS.white};
+  height: 11.69rem;
 `;
 
 const StyledContent = styled.div`
   /* Display */
   width: 100%;
-  height: 19.8rem;
+  height: 19.81rem;
   display: flex;
-
-  /* Color */
-  background-color: ${COLORS.green};
-`;
-
-const StyledBlankLeftSpace = styled.div`
-  /* Display */
-  width: 9.2rem;
 
   /* Color */
   background-color: ${COLORS.green};
@@ -41,19 +30,14 @@ const StyledBlankLeftSpace = styled.div`
 const StyledMainLogoSpace = styled.div`
   /* Position */
   position: relative;
+  margin-left: 9.25rem;
 
   /* Display */
-  width: 28.2rem;
+  width: 28.25rem;
   height: 100%;
 
   /* Color */
   background-color: ${COLORS.white};
-`;
-
-const StyledLoginForm = styled.div`
-  width: calc(100% - 9.2rem - 28.2rem);
-
-  text-align: left;
 `;
 
 const StyledMainLogo = styled.span`
@@ -63,30 +47,30 @@ const StyledMainLogo = styled.span`
   left: 20%;
 `;
 
+const StyledLoginForm = styled.div`
+  width: calc(100% - 9.25rem - 28.25rem);
+`;
+
 const StyledFooter = styled.div`
   /* Position */
   position: relative;
+  margin-left: 18.88rem;
 
   /* Display */
-  height: calc(100% - 11.6rem - 19.8rem);
-
-  /* Color */
-  background-color: ${COLORS.white};
+  height: calc(100% - 11.69rem - 19.81rem);
 `;
 
 const StyledSubLogo = styled.div`
   /* Position */
   position: absolute;
   top: 50%;
-  left: 20%;
 `;
 
 function LoginTemplate({ mainLogo, subLogo }: LoginTemplateProps) {
   return (
     <StyledWrapper>
-      <StyledBlankSpace />
+      <StyledTitle />
       <StyledContent>
-        <StyledBlankLeftSpace />
         <StyledMainLogoSpace>
           <StyledMainLogo>{mainLogo}</StyledMainLogo>
         </StyledMainLogoSpace>

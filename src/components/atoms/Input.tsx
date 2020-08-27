@@ -10,29 +10,7 @@ const StyledInput = styled.input<InputProps>`
   border: none;
   outline: none;
 
-  /* Display */
-  width: ${(props) => props.width}rem;
-  height: ${(props) => {
-    if (props.height > 10) {
-      return `${props.height}px`;
-    }
-
-    return `${props.height}rem`;
-  }};
-  border-style: ${(props) => props.borderStyle};
-  border-width: ${(props) => props.borderWidth}px;
-  border-radius: ${(props) => props.borderRadius}rem;
-  font-size: ${(props) => props.fontSize}rem;
-  font-weight: ${(props) => props.fontWeight};
-  text-align: ${(props) => {
-    if (props.textAlign === 1) {
-      return 'left';
-    } else if (props.textAlign === 2) {
-      return 'center';
-    } else if (props.textAlign === 3) {
-      return 'right';
-    }
-  }};
+  /* Position */
   padding-left: ${(props) => {
     if (props.textAlign === 1) {
       if (props.image) {
@@ -52,10 +30,23 @@ const StyledInput = styled.input<InputProps>`
     }
   }}px;
 
-  /* Color */
-  color: ${(props) => props.fontColor};
-  border-color: ${(props) => props.borderColor};
-
+  /* Display */
+  width: ${(props) => props.width}rem;
+  height: ${(props) => props.height}rem;
+  border-radius: ${(props) => props.borderRadius}px;
+  border-style: ${(props) => props.borderStyle};
+  border-width: ${(props) => props.borderWidth}px;
+  font-size: ${(props) => props.fontSize}rem;
+  font-weight: ${(props) => props.fontWeight};
+  text-align: ${(props) => {
+    if (props.textAlign === 1) {
+      return 'left';
+    } else if (props.textAlign === 2) {
+      return 'center';
+    } else if (props.textAlign === 3) {
+      return 'right';
+    }
+  }};
   ${(props) => {
     if (props.image) {
       return css`
@@ -66,6 +57,10 @@ const StyledInput = styled.input<InputProps>`
     }
   }}
 
+  /* Color */
+  color: ${(props) => props.fontColor};
+  border-color: ${(props) => props.borderColor};
+
   /* Other */
   :focus {
     outline: none !important;
@@ -74,19 +69,9 @@ const StyledInput = styled.input<InputProps>`
   ::placeholder {
     /* Display */
     font-weight: 800;
-    color: ${(props) => props.phColor || props.fontColor};
+    color: ${(props) => props.fontColor};
     font-size: 0.87rem;
   }
-  /* ::-webkit-search-decoration,
-  ::-webkit-search-results-button,
-  ::-webkit-search-results-decoration {
-    display: none;
-  } */
-
-  /* ::-webkit-search-cancel-button {
-    background-image: url(${(props) => props.image});
-    background-position: 5%;
-  } */
 
   ::-webkit-search-cancel-button {
     -webkit-appearance: none;
@@ -144,9 +129,10 @@ interface InputProps {
   readonly borderColor: string;
   readonly borderRadius: number;
   readonly borderWidth: number;
+  readonly fontColor: string;
+  readonly fontFamily: string;
   readonly fontSize: number;
   readonly fontWeight: number | string;
-  readonly fontColor: string;
   readonly phColor?: string;
   readonly textAlign: number;
   readonly image?: string;
@@ -155,7 +141,8 @@ interface InputProps {
   readonly disabled: boolean;
   readonly innerRef?:
     | ((instance: HTMLInputElement) => void)
-    | React.MutableRefObject<HTMLInputElement>;
+    | React.MutableRefObject<HTMLInputElement>
+    | null;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
@@ -167,11 +154,12 @@ Input.defaultProps = {
   width: 15,
   height: 2,
   borderColor: COLORS.light_gray3,
-  borderRadius: 1,
+  borderRadius: 16,
   borderStyle: 'solid',
   borderWidth: 1,
   fontSize: 1,
   fontWeight: 'normal',
+  fontFamily: 'inherit',
   textAlign: 2,
   fontColor: COLORS.dark_gray1,
   disabled: false,
