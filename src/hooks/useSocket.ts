@@ -29,10 +29,10 @@ function useSocket() {
   const getUserInfo = useCallback(() => {
     Socket.getInstance().onMessageUser((response) => {
       const { type, data } = response;
-      console.log("getUserInfo", data);
-      
+
       switch (type) {
         case 'signup':
+          console.log('Sign up user info', data);
           if (data.admin_id === 0) {
             // 상담원
             let signupUser = data as UserInfo;
@@ -45,6 +45,7 @@ function useSocket() {
           }
           break;
         case 'update':
+          console.log('Update user info', data);
           let updateUserInfo = data as UserInfo;
           dispatch(updateUser(updateUserInfo));
           let updateConsultantInfo = data as ConsultantInfoType;

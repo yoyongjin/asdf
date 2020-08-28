@@ -209,7 +209,16 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
       let index = draft.consultantInfo.findIndex((values) => {
         return values.id === action.payload.id;
       });
-      draft.consultantInfo[index] = action.payload;
+      draft.consultantInfo[index].branch_id = action.payload.branch_id;
+      draft.consultantInfo[index].branch_name = action.payload.branch_name;
+      draft.consultantInfo[index].name = action.payload.name;
+      draft.consultantInfo[index].number = action.payload.number;
+      draft.consultantInfo[index].team_id = action.payload.team_id;
+      draft.consultantInfo[index].team_name = action.payload.team_name;
+      draft.consultantInfo[index].admin_id = action.payload.admin_id;
+      draft.consultantInfo[index].user_name = action.payload.user_name;
+      draft.consultantInfo[index].ziboxip = action.payload.ziboxip;
+
     });
   },
 });
