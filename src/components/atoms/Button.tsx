@@ -19,9 +19,9 @@ const StyledButton = styled.button<ButtonProps>`
       return css<StyledButtonProps>`
         background-image: url(${(props) => props.bgImg});
         background-repeat: no-repeat;
+        background-size: ${(props) => props.width}rem
+          ${(props) => props.height}rem;
       `;
-      // background-size: ${(props) => props.width}rem
-      //     ${(props) => props.height}rem;
     }
   }}
 
@@ -39,9 +39,9 @@ const StyledButton = styled.button<ButtonProps>`
         return css<StyledButtonProps>`
           background-image: url(${(props) => props.bgHoverImg});
           background-repeat: no-repeat;
+          background-size: ${(props) => props.width}rem
+              ${(props) => props.height}rem;
         `;
-        // background-size: ${(props) => props.width}rem
-        //     ${(props) => props.height}rem;
       } else if (props.bgImg) {
         return css`
           opacity: 0.6;
