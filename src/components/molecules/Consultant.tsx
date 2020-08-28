@@ -47,8 +47,7 @@ function Consultant({
   initZibox,
   startMonitoring,
   stopMonitoring,
-  setTappingState,
-  emitMonitoring,
+  setTappingState
 }: ConsultantProps) {
   useEffect(() => {
     if (
@@ -210,7 +209,6 @@ interface ConsultantProps {
   startMonitoring: (number: string, id: number) => void;
   stopMonitoring: (number: string, id: number) => void;
   setTappingState: React.Dispatch<React.SetStateAction<boolean>>;
-  emitMonitoring: (number: string, id: number) => void;
 }
 
 Consultant.defaultProps = {};

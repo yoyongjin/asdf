@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { History, Location } from 'history';
-
+import { Location } from 'history';
 
 import { Image, Link } from 'components/atoms';
 import { LinkSelector, UserLog } from 'components/molecules';
@@ -10,59 +9,73 @@ import { LoginInfoType } from 'modules/types/auth';
 
 const StyledWrapper = styled.div`
   /* Display */
-  width: 100%;
-  height: 100%;
   display: flex;
+  height: 100%;
+  width: 100%;
 
   /* Color */
   background-color: ${COLORS.green};
 `;
 
 const StyledLogo = styled.div`
+  /* Position */
+  margin-left: 26px;
+  padding-top: 3px;
+
   /* Display */
-  width: 8.6rem;
-  height: 3rem;
   border-radius: 0 0 1rem 1rem;
+  height: calc(3rem - 3px);
+  width: 8.6rem;
+
+  /* Text */
   text-align: center;
-  margin-left: 1.6rem;
-  padding-top: 0.2rem;
 
   /* Color */
   background-color: ${COLORS.white};
 `;
 
 const StyledLink = styled.div`
-  /* Display */
-  flex-grow: 1;
-  align-self: stretch;
+  /* Position */
   padding-top: 22px;
   padding-left: 47px;
+
+  /* Display */
+  align-self: stretch;
+  flex-grow: 1;
 `;
 
 const StyledUserLog = styled.div`
+  /* Position */
+  margin-right: 25px;
+
   /* Display */
   flex-grow: 2;
   float: right;
-  padding-right: 2rem;
 `;
 
-function GNB({ logo, loginTimeImage, loginInfo, onClickLogout, history, location }: GNBProps) {
+function GNB({
+  loginInfo,
+  loginTimeImage,
+  logo,
+  location,
+  onClickLogout,
+}: GNBProps) {
   console.log('Lendering GNB');
   return (
     <StyledWrapper>
       <StyledLogo>
         <Link path="/main">
-          <Image src={logo} alt={logo} width={6} height={2.5} />
+          <Image src={logo} alt={'DB life logo'} width={6} height={2.5} />
         </Link>
       </StyledLogo>
       <StyledLink>
-        <LinkSelector history={history} location={location}/>
+        <LinkSelector location={location} />
       </StyledLink>
       <StyledUserLog>
         <UserLog
-          userName={loginInfo.name}
           loginTime={loginInfo.login_at}
           loginTimeImage={loginTimeImage}
+          userName={loginInfo.name}
           onClickLogout={onClickLogout}
         />
       </StyledUserLog>
@@ -71,12 +84,11 @@ function GNB({ logo, loginTimeImage, loginInfo, onClickLogout, history, location
 }
 
 interface GNBProps {
-  logo: string;
-  loginTimeImage: string;
   loginInfo: LoginInfoType;
-  onClickLogout: () => void;
-  history: History;
+  loginTimeImage: string;
+  logo: string;
   location: Location;
+  onClickLogout: () => void;
 }
 
-export default GNB;
+export default React.memo(GNB);

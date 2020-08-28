@@ -1,23 +1,23 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 import { RouteComponentProps } from 'react-router-dom';
 
 import { Consultant, Title, UserInfo } from 'components/molecules';
 import { COLORS } from 'utils/color';
+import { TeamInfo, BranchInfo } from 'modules/types/branch';
+import { Modal } from 'components/atoms';
 import useUser from 'hooks/useUser';
 import useMonitoring from 'hooks/useMonitoring';
 import useBranch from 'hooks/useBranch';
-import { TeamInfo, BranchInfo } from 'modules/types/branch';
 import useInputForm from 'hooks/useInputForm';
 import useAuth from 'hooks/useAuth';
-import { Modal } from 'components/atoms';
 import useVisible from 'hooks/useVisible';
 import useZibox from 'hooks/useZibox';
 
 const StyledWrapper = styled.div`
   /* Display */
-  width: 100%;
   height: 100%;
+  width: 100%;
 `;
 
 const StyledTitle = styled.div`
@@ -67,18 +67,19 @@ function Monitoring({ location }: MonitoringProps) {
     initZibox,
     startMonitoring,
     stopMonitoring,
-    emitMonitoring,
   } = useZibox();
 
-  const selectInfo = {
-    color: COLORS.green,
-    borderRadius: 0,
-    borderColor: COLORS.green,
-    data1: branchList as Array<BranchInfo>,
-    data2: teamList as Array<TeamInfo>,
-    width: 7.5,
-    height: 1.75,
-  };
+  const selectInfo = useMemo(() => {
+    return {
+      color: COLORS.green,
+      borderRadius: 0,
+      borderColor: COLORS.green,
+      data1: branchList as Array<BranchInfo>,
+      data2: teamList as Array<TeamInfo>,
+      width: 7.5,
+      height: 1.75,
+    };
+  }, [branchList, teamList])
 
   const getConsultant = useCallback(
     (data: any) => {
@@ -93,7 +94,7 @@ function Monitoring({ location }: MonitoringProps) {
       // 슈퍼관리자일 경우에만 요청
       getBranchList();
     }
-  }, [getBranchList, loginInfo]);
+  }, [getBranchList, loginInfo.admin_id]);
 
   useEffect(() => {
     if (form.branch) {
@@ -114,7 +115,7 @@ function Monitoring({ location }: MonitoringProps) {
     }
 
     getTeamList(branchId);
-  }, [getTeamList, form.branch, loginInfo]);
+  }, [form.branch, loginInfo.admin_id, loginInfo.branch_id, getTeamList]);
 
   useEffect(() => {
     if (loginInfo.id) {
@@ -127,7 +128,7 @@ function Monitoring({ location }: MonitoringProps) {
         location,
       );
     }
-  }, [loginInfo, getConsultantsInfo, form.branch, form.team]);
+  }, [loginInfo, form.branch, form.team, location, getConsultantsInfo]);
 
   useEffect(() => {
     if (loginInfo.id) {
@@ -180,7 +181,6 @@ function Monitoring({ location }: MonitoringProps) {
                     tappingState={tappingState}
                     setTappingState={setTappingState}
                     loginId={loginInfo.id}
-                    emitMonitoring={emitMonitoring}
                   />
                 </StyledConsultant>
               );
@@ -211,4 +211,4 @@ function Monitoring({ location }: MonitoringProps) {
 
 interface MonitoringProps extends RouteComponentProps {}
 
-export default Monitoring;
+export default Monitoring

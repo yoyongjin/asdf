@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import { Button, Input, Text } from 'components/atoms';
 import { COLORS } from 'utils/color';
+import useAuth from 'hooks/useAuth';
 import useInputForm from 'hooks/useInputForm';
 
 const StyledWrapper = styled.div`
@@ -49,7 +50,8 @@ function LoginForm({ history }: LoginFormProps) {
   const refPassword = useRef<HTMLInputElement>(null) as React.MutableRefObject<
     HTMLInputElement
   >;
-  const { form, onChangeInput, onClickLogin } = useInputForm({
+  const { onClickLogin } = useAuth();
+  const { form, onChangeInput } = useInputForm({
     id: '',
     password: '',
   });

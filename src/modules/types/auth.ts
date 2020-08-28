@@ -21,15 +21,27 @@ export interface LoginType extends common.HistoryType {
   password: string;
 }
 
+/**
+ * id: unique id
+ * admin_id: 관리자 권한 (0 - 상담원, 1 - 일반 관리자, 2 - 슈퍼 관리자)
+ * branch_id: 해당 관리자의 지점 id
+ * team_id: 해당 관리자의 팀 id
+ * branch_name: 지점명
+ * name: 이름
+ * number: 전화번호
+ * zibox_ip: zibox ip
+ * login_at: 마지막 로그인한 시간
+ * created_at: 회원가입 날짜
+ */
 export interface LoginInfoType {
-  id: number; // unique key
-  admin_id: number; // 관리자 권한
-  branch_id: number; // 해당 관리자의 지점 id
-  team_id: string; // 해당 관리자의 팀 id?
-  name: string; // 유저 이름
-  number: string; // 전화번호
-  ziboxip: string; // zibox ip
-  login_at: number; // 로그인 시간
-  created_at: string; // 회원가입날짜
-  branch_name: string; // 지점명
+  id: number; 
+  admin_id: number;
+  branch_id: number; 
+  team_id: string; 
+  branch_name?: string; 
+  name: string; 
+  number: string; 
+  ziboxip: string; 
+  login_at: number; 
+  created_at: string;
 }

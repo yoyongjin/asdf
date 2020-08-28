@@ -3,12 +3,7 @@ import styled from 'styled-components';
 
 import { Button, Image, Text } from 'components/atoms';
 import { COLORS } from 'utils/color';
-import {
-  getYYYYMMDD,
-  getHourMinSecV2,
-  getDiffTime,
-  getTime,
-} from 'utils/utils';
+import { getYYYYMMDD, getHourMinSecV2 } from 'utils/utils';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -21,21 +16,17 @@ const StyledWrapper = styled.div`
 
 const StyledUser = styled.span`
   /* Display */
-  padding-right: 0.5rem;
+  padding-right: 14px;
 `;
 
 const StyledLoginTime = styled.span`
   /* Position */
   position: relative;
-
-  /* Display */
-  /* padding-left: 0.5rem; */
-  /* padding-right: 1rem; */
 `;
 
 const StyledLogout = styled.span`
   /* Display */
-  padding-left: 1rem;
+  padding-left: 16px;
 `;
 
 const StyledText = styled.span`
@@ -51,9 +42,9 @@ const StyledText = styled.span`
 `;
 
 function UserLog({
-  userName,
   loginTime,
   loginTimeImage,
+  userName,
   onClickLogout,
 }: UserLogProps) {
   return (
@@ -63,14 +54,13 @@ function UserLog({
           fontColor={COLORS.white}
           fontWeight={700}
           fontSize={0.81}
-          fontFamily={'NanumGothic'}
         >{`${userName} 님`}</Text>
       </StyledUser>
       <StyledLoginTime>
         <Image
           src={loginTimeImage}
-          alt={loginTimeImage}
-          width={11.8}
+          alt={'Login time background image'}
+          width={11.88}
           height={1.43}
         />
         <StyledText>
@@ -78,18 +68,14 @@ function UserLog({
             fontColor={COLORS.green}
             fontSize={0.75}
             fontWeight={700}
-            fontFamily={'NanumGothic'}
           >{`${getYYYYMMDD(loginTime)} ${getHourMinSecV2(loginTime)}`}</Text>
         </StyledText>
       </StyledLoginTime>
       <StyledLogout>
-        <Button
-          bgColor={'inherit'}
-          width={5}
-          fontSize={0.81}
-          onClick={onClickLogout}
-        >
-          로그아웃
+        <Button bgColor={'inherit'} width={5} onClick={onClickLogout}>
+          <Text fontSize={0.81} fontColor={COLORS.white} fontWeight={700}>
+            로그아웃
+          </Text>
         </Button>
       </StyledLogout>
     </StyledWrapper>
@@ -97,10 +83,10 @@ function UserLog({
 }
 
 interface UserLogProps {
-  userName: string;
   loginTime: number;
   loginTimeImage: string;
+  userName: string;
   onClickLogout: () => void;
 }
 
-export default UserLog;
+export default React.memo(UserLog);

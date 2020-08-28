@@ -27,9 +27,26 @@ class Socket {
     return this;
   }
 
+  onMessageInit(callback: (parameters: any) => void) {
+    this.socket.on('initialize', (message: string) => {
+      const data = JSON.parse(message);
+
+      let parseData = {};
+
+      for (let key in data) {
+        let parseValue = JSON.parse(data[key]);
+        parseData = {
+          ...parseData,
+          [key]: parseValue,
+        };
+      }
+
+      callback(parseData);
+    });
+  }
+
   onMessageMonitoring(callback: (parameters: any) => void) {
     this.socket.on('monitoring', (message: string) => {
-      console.log(message);
       const data = JSON.parse(message);
       const { status } = data;
       if (status === 'Y') {
@@ -80,26 +97,6 @@ class Socket {
     } catch (error) {
       console.log(error);
     }
-  }
-
-  onMessageInit() {
-    return new Promise((resolve, reject) => {
-      this.socket.on('initialize', (message: string) => {
-        const data = JSON.parse(message);
-
-        let parseData = {};
-
-        for (let key in data) {
-          let parseValue = JSON.parse(data[key]);
-          parseData = {
-            ...parseData,
-            [key]: parseValue,
-          };
-        }
-
-        resolve(parseData);
-      });
-    });
   }
 }
 

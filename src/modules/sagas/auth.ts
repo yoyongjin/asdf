@@ -25,62 +25,60 @@ function* loginProcess(action: ReturnType<typeof requestLogin>) {
 
   try {
     const response = yield call(API.login, id, password);
-    console.log('Login Data => ', response);
     const { status, data } = response.data;
 
     if (status === 'success') {
-      Socket.getInstance().url(socketServer!);
-      Socket.getInstance().onEmit('initialize');
+      Socket.getInstance().url(socketServer!).onEmit('initialize');
       Zibox.getInstance().createZibox();
+
       const { user, token } = data;
-      console.log(user);
+      console.log('Login Data => ', user);
+
       Cookies.set(TOKEN_NAME, token, {
         expires: 1000 * 24 * 60 * 60,
         domain: DOMAIN,
       });
+      API.instance.defaults.headers.common['token'] = token;
+
       yield put(successLogin(user));
 
-      API.instance.defaults.headers.common['token'] = token;
       history!.push('/main');
     }
   } catch (error) {
     console.log(error);
-    yield put(failureLogin(error));
+    yield put(failureLogin(error.message));
     alert('Wrong ID or password.');
   }
 }
 
 function* checkLoginProcess(action: ReturnType<typeof requestCheckLogin>) {
-  const { history, location } = action.payload;
-
   API.instance.defaults.headers.common['token'] = Cookies.get(TOKEN_NAME);
+  const { history } = action.payload;
 
   try {
     const response = yield call(API.checkLogin);
-    console.log('Login Check Data => ', response);
     const { status, data } = response.data;
 
     if (status === 'success') {
-      Socket.getInstance().url(socketServer!);
-      Socket.getInstance().onEmit('initialize');
+      Socket.getInstance().url(socketServer!).onEmit('initialize');
       Zibox.getInstance().createZibox();
 
       const { user, token } = data;
-      console.log(user);
+      console.log('Login Check Data => ', user);
 
       Cookies.set(TOKEN_NAME, token, {
         expires: 1000 * 24 * 60 * 60,
         domain: DOMAIN,
       });
+      API.instance.defaults.headers.common['token'] = token;
 
       yield put(successCheckLogin(user));
 
-      API.instance.defaults.headers.common['token'] = token;
-      history!.push(location!.pathname);
+      history!.push(history!.location.pathname);
     }
   } catch (error) {
     console.log(error);
-    yield put(failureCheckLogin(error));
+    yield put(failureCheckLogin(error.message));
     history!.push('/auth/login');
   }
 }
@@ -90,17 +88,21 @@ function* logoutProcess(action: ReturnType<typeof requestLogout>) {
 
   try {
     const response = yield call(API.logout);
-    console.log('Logout Data => ', response);
-    const { status } = response.data;
+    const { status, data } = response.data;
 
     if (status === 'success') {
+      const { data: isSuccess } = data;
+      console.log('Logout Data => ', isSuccess);
+
       Cookies.remove(TOKEN_NAME, { domain: DOMAIN });
       yield put(successLogout());
+
       history!.push('/auth/login');
       window.location.reload();
     }
   } catch (error) {
-    yield put(failureLogout(error));
+    console.log(error);
+    yield put(failureLogout(error.message));
   }
 }
 

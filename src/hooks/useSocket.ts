@@ -16,14 +16,11 @@ import { UserInfo, ConsultantInfoType } from 'modules/types/user';
 function useSocket() {
   const dispatch = useDispatch();
 
-  const requestCallState = useCallback(() => {
-    Socket.getInstance().onEmit('call-state');
-  }, []);
-
-  const getInitInfo = useCallback(async () => {
-    const response: any = await Socket.getInstance().onMessageInit();
-    console.log('getInitInfo => ', response);
-    dispatch(getCallStatus(response));
+  const getInitInfo = useCallback(() => {
+    Socket.getInstance().onMessageInit((response) => {
+      console.log('Get init Data => ', response);
+      dispatch(getCallStatus(response));
+    });
   }, [dispatch]);
 
   const getUserInfo = useCallback(() => {
@@ -79,7 +76,6 @@ function useSocket() {
   }, [dispatch]);
 
   return {
-    requestCallState,
     getInitInfo,
     getUserInfo,
     getChangeState,

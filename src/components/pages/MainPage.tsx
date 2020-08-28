@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 
 import { GNB } from 'components/organisms';
@@ -6,43 +6,51 @@ import { MainTemplate } from 'components/templates';
 import { COLORS } from 'utils/color';
 
 import dblifeLogo from 'images/logo/db-logo-login@3x.png';
-import loggedTimeImage from 'images/bg-login-time@3x.png';
+import loginTimeImage from 'images/bg-login-time@3x.png';
 import useAuth from 'hooks/useAuth';
 import useSocket from 'hooks/useSocket';
 
 function MainPage({ history, location }: MainPageProps) {
   const { loginInfo, onCheckLogin, onClickLogout } = useAuth();
-  const { getInitInfo, getAllCallState, getUserInfo, getChangeState } = useSocket();
+  const {
+    getInitInfo,
+    getAllCallState,
+    getUserInfo,
+    getChangeState,
+  } = useSocket();
+
+  const bgColor = useMemo(() => {
+    if (location.pathname === '/main') {
+      return COLORS.light_gray;
+    }
+  }, [location]);
 
   useEffect(() => {
     if (!loginInfo.id) {
-      onCheckLogin(history, location);
+      // 로그인이 되있지 않을 경우
+      onCheckLogin(history);
     }
-  }, [onCheckLogin, history, location]);
+  }, [loginInfo.id, onCheckLogin, history]);
 
   useEffect(() => {
-    if (loginInfo && loginInfo.id) {
+    if (loginInfo.id) {
+      // 로그인이 된 후 리스너 등록
       getInitInfo();
       getAllCallState();
       getUserInfo();
       getChangeState();
     }
-  }, [loginInfo, getInitInfo, getAllCallState, getUserInfo, getChangeState]);
+  }, [loginInfo.id, getInitInfo, getAllCallState, getUserInfo, getChangeState]);
 
-  let bgColor = '';
-  if (location.pathname === '/main') {
-    bgColor = COLORS.light_gray;
-  }
-
+  console.log("Lendering MainPage")
   return (
     <MainTemplate
       gnb={
         <GNB
           logo={dblifeLogo}
-          loginTimeImage={loggedTimeImage}
+          loginTimeImage={loginTimeImage}
           loginInfo={loginInfo}
           onClickLogout={() => onClickLogout(history)}
-          history={history}
           location={location}
         />
       }

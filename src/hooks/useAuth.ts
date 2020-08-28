@@ -1,14 +1,36 @@
 import { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { History, Location } from 'history';
+import { History } from 'history';
 
-import { requestCheckLogin, requestLogout } from 'modules/actions/auth';
+import { requestLogin, requestCheckLogin, requestLogout } from 'modules/actions/auth';
 import { RootState } from 'modules/reducers';
 
 function useAuth() {
   const loginInfo = useSelector((state: RootState) => state.auth.loginInfo);
 
   const dispatch = useDispatch();
+
+  const onClickLogin = useCallback(
+    (id: string, password: string, history: History) => {
+      const payload = {
+        id,
+        password,
+        history,
+      };
+      dispatch(requestLogin(payload));
+    },
+    [dispatch],
+  );
+
+  const onCheckLogin = useCallback(
+    (history: History) => {
+      const payload = {
+        history,
+      };
+      dispatch(requestCheckLogin(payload));
+    },
+    [dispatch],
+  );
 
   const onClickLogout = useCallback(
     (history: History) => {
@@ -20,19 +42,9 @@ function useAuth() {
     [dispatch],
   );
 
-  const onCheckLogin = useCallback(
-    (history: History, location: Location) => {
-      const payload = {
-        history,
-        location,
-      };
-      dispatch(requestCheckLogin(payload));
-    },
-    [dispatch],
-  );
-
   return {
     loginInfo,
+    onClickLogin,
     onCheckLogin,
     onClickLogout,
   };

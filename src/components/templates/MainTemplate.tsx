@@ -6,35 +6,33 @@ import { COLORS } from 'utils/color';
 
 const StyledWrapper = styled.div`
   /* Display */
-  min-width: 70rem;
-  width: 100vw;
-  max-width: 140rem;
-  min-height: 100vh;
   height: 100vh;
   max-height: 1200rem;
-
-  /* Other */
-  /* overflow: hidden; */
+  min-height: 100vh;
+  max-width: 140rem;
+  min-width: 70rem;
+  width: 100vw;
 `;
 
 const StyledGnb = styled.div`
   /* Display */
-  height: 3.8rem;
+  height: 3.88rem;
 `;
 
 const StyledContent = styled.div<StyledProps>`
+  /* Position */
+  padding-left: 27px;
+  padding-right: 27px;
+
   /* Display */
-  height: calc(100% - 3.8rem);
-  padding-left: 3rem;
-  padding-right: 3rem;
+  height: calc(100% - 3.88rem);
 
   /* Color */
   background-color: ${(props) => props.bgColor};
-
-  overflow: hidden;
 `;
 
 function MainTemplate({ gnb, bgColor }: MainTemplateProps) {
+  console.log('Lendering MainTemplate');
   return (
     <StyledWrapper>
       <StyledGnb>{gnb}</StyledGnb>
