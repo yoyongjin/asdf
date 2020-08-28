@@ -6,7 +6,7 @@ import { History, Location } from 'history';
 import { Image, Link } from 'components/atoms';
 import { LinkSelector, UserLog } from 'components/molecules';
 import { COLORS } from 'utils/color';
-import { loginInfoType } from 'modules/types/auth';
+import { LoginInfoType } from 'modules/types/auth';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -73,7 +73,7 @@ function GNB({ logo, loginTimeImage, loginInfo, onClickLogout, history, location
 interface GNBProps {
   logo: string;
   loginTimeImage: string;
-  loginInfo: loginInfoType;
+  loginInfo: LoginInfoType;
   onClickLogout: () => void;
   history: History;
   location: Location;

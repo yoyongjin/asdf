@@ -41,7 +41,7 @@ function* loginProcess(action: ReturnType<typeof requestLogin>) {
       yield put(successLogin(user));
 
       API.instance.defaults.headers.common['token'] = token;
-      history.push('/main');
+      history!.push('/main');
     }
   } catch (error) {
     console.log(error);
@@ -76,12 +76,12 @@ function* checkLoginProcess(action: ReturnType<typeof requestCheckLogin>) {
       yield put(successCheckLogin(user));
 
       API.instance.defaults.headers.common['token'] = token;
-      history.push(location!.pathname);
+      history!.push(location!.pathname);
     }
   } catch (error) {
     console.log(error);
     yield put(failureCheckLogin(error));
-    history.push('/auth/login');
+    history!.push('/auth/login');
   }
 }
 
@@ -96,7 +96,7 @@ function* logoutProcess(action: ReturnType<typeof requestLogout>) {
     if (status === 'success') {
       Cookies.remove(TOKEN_NAME, { domain: DOMAIN });
       yield put(successLogout());
-      history.push('/auth/login');
+      history!.push('/auth/login');
       window.location.reload();
     }
   } catch (error) {

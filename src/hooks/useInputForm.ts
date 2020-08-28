@@ -8,7 +8,7 @@ function useInputForm<T>(initialForm: T) {
   const [form, setForm] = useState<T>(initialForm);
   const dispatch = useDispatch();
 
-  const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangeInput = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm((form) => ({ ...form, [name]: value }));
   }, []);
@@ -48,7 +48,7 @@ function useInputForm<T>(initialForm: T) {
 
   return {
     form,
-    onChange,
+    onChangeInput,
     onClickLogin,
     initTempValue,
     initValue,

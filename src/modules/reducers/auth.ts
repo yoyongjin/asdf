@@ -6,17 +6,19 @@ import * as actions from 'modules/actions/auth';
 
 // 상태
 const initialState: AuthType = {
-  login: {
-    fetch: false,
-    error: false,
-  },
-  logout: {
-    fetch: false,
-    error: false,
-  },
-  checkLogin: {
-    fetch: false,
-    error: false,
+  request: {
+    login: {
+      fetch: false,
+      error: false,
+    },
+    logout: {
+      fetch: false,
+      error: false,
+    },
+    checkLogin: {
+      fetch: false,
+      error: false,
+    },
   },
   loginInfo: {
     id: 0,
@@ -36,59 +38,59 @@ const initialState: AuthType = {
 const authReducer = createReducer<AuthType, AuthAction>(initialState, {
   [actions.REQUEST_LOGIN]: (state, action) => {
     return produce(state, (draft) => {
-      draft.login.fetch = true;
-      draft.login.error = false;
+      draft.request.login.fetch = true;
+      draft.request.login.error = false;
     });
   },
   [actions.SUCCESS_LOGIN]: (state, action) => {
     return produce(state, (draft) => {
-      draft.login.fetch = false;
-      draft.login.error = false;
+      draft.request.login.fetch = false;
+      draft.request.login.error = false;
       draft.loginInfo = action.payload;
     });
   },
   [actions.FAILURE_LOGIN]: (state, action) => {
     return produce(state, (draft) => {
-      draft.login.fetch = false;
-      draft.login.error = action.payload;
+      draft.request.login.fetch = false;
+      draft.request.login.error = action.payload;
     });
   },
   [actions.REQUEST_CHECK_LOGIN]: (state, action) => {
     return produce(state, (draft) => {
-      draft.checkLogin.fetch = true;
-      draft.checkLogin.error = false;
+      draft.request.checkLogin.fetch = true;
+      draft.request.checkLogin.error = false;
     });
   },
   [actions.SUCCESS_CHECK_LOGIN]: (state, action) => {
     return produce(state, (draft) => {
-      draft.checkLogin.fetch = false;
-      draft.checkLogin.error = false;
+      draft.request.checkLogin.fetch = false;
+      draft.request.checkLogin.error = false;
       draft.loginInfo = action.payload;
     });
   },
   [actions.FAILURE_CHECK_LOGIN]: (state, action) => {
     return produce(state, (draft) => {
-      draft.checkLogin.fetch = false;
-      draft.checkLogin.error = action.payload;
+      draft.request.checkLogin.fetch = false;
+      draft.request.checkLogin.error = action.payload;
     });
   },
   [actions.REQUEST_LOGOUT]: (state, action) => {
     return produce(state, (draft) => {
-      draft.logout.fetch = true;
-      draft.logout.error = false;
+      draft.request.logout.fetch = true;
+      draft.request.logout.error = false;
     });
   },
   [actions.SUCCESS_LOGOUT]: (state, action) => {
     return produce(state, (draft) => {
-      draft.logout.fetch = false;
-      draft.logout.error = false;
+      draft.request.logout.fetch = false;
+      draft.request.logout.error = false;
       draft.loginInfo = initialState.loginInfo;
     });
   },
   [actions.FAILURE_LOGOUT]: (state, action) => {
     return produce(state, (draft) => {
-      draft.logout.fetch = false;
-      draft.logout.error = action.payload;
+      draft.request.logout.fetch = false;
+      draft.request.logout.error = action.payload;
     });
   },
 });

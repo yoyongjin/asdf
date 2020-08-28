@@ -34,7 +34,7 @@ function TextInput({
 }: TextInputProps) {
   return (
     <StyledWrapper>
-      <Text fontSize={13} fontWeight={textWeight}>
+      <Text fontSize={fontSize} fontWeight={textWeight}>
         {textValue}
       </Text>
       <StyledBlank padRight={padRight} />
@@ -48,7 +48,7 @@ function TextInput({
         placeholder={inputPh}
         onChange={onChange}
         value={value}
-        image={image}
+        logoImg={image}
         fontSize={fontSize}
         fontWeight={fontWeight}
         disabled={disabled}

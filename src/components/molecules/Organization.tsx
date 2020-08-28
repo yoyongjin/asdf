@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useRef, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { Input } from 'components/atoms';
@@ -28,7 +28,6 @@ const StyledTeam = styled.div`
 `;
 
 let isCtrl = false;
-let isFirst = false;
 
 function Organization({
   index,
@@ -41,7 +40,7 @@ function Organization({
   handleDeleteTeam,
   handleDeleteBranch,
 }: OrganizationProps) {
-  const { form, onChange, initTempValue } = useInputForm<Dic>({});
+  const { form, onChangeInput, initTempValue } = useInputForm<Dic>({});
   const inputRef = useRef<HTMLInputElement[]>([]) as React.MutableRefObject<
     HTMLInputElement[]
   >;
@@ -152,7 +151,6 @@ function Organization({
   const onKeyUp = useCallback((e) => {
     if (e.keyCode === 17) {
       isCtrl = true;
-      isFirst = true;
     }
   }, []);
   return (
@@ -185,7 +183,7 @@ function Organization({
                     textAlign={1}
                     fontSize={0.87}
                     fontWeight={800}
-                    onChange={onChange}
+                    onChange={onChangeInput}
                     onKeyDown={(e) =>
                       onKeyEvent(
                         e,
@@ -223,7 +221,7 @@ function Organization({
                     textAlign={1}
                     fontSize={0.87}
                     fontWeight={800}
-                    onChange={onChange}
+                    onChange={onChangeInput}
                     onKeyUp={onKeyUp}
                     onKeyDown={(e) =>
                       onKeyEvent(

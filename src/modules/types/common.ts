@@ -1,15 +1,15 @@
 import { History, Location } from 'history';
 
-export interface checkFetchType {
+export interface FetchType {
   fetch?: boolean;
-  error?: boolean | failureType;
+  error?: boolean | FailureType;
 }
 
-export interface historyType {
-  history: History;
+export interface HistoryType {
+  history?: History;
   location?: Location;
 }
 
-export interface failureType {
+export interface FailureType {
   error: Error;
 }

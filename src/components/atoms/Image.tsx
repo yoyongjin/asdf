@@ -2,22 +2,19 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 
 const StyledImage = styled.img<ImageProps>`
-  width: ${(props) => {
-    if (typeof props.width === 'number') return `${props.width}rem`;
-    else if (typeof props.width === 'string') return props.width;
-  }};
-  height: ${(props) => {
-    if (typeof props.height === 'number') return `${props.height}rem`;
-    else if (typeof props.height === 'string') return props.height;
-  }};
-  background-image: url(${(props) => props.src}) no-repeat;
+  /* Display */
+  height: ${(props) => props.height}rem;
+  width: ${(props) => props.width}rem;
+  /* background-image: url(${(props) => props.src}) no-repeat; */
   /* background-repeat: no-repeat; */
+
   ${(props) => {
-    if (props.hoverImage) {
-      return css<ImageProps>`
+    if (props.bgHoverImg) {
+      // hover 이미지가 있을 때
+      return css<StyledImageProps>`
         &:hover {
+          content: url(${(props) => props.bgHoverImg});
           cursor: pointer;
-          content: url(${(props) => props.hoverImage});
         }
         &:active {
           opacity: 0.8;
@@ -28,7 +25,8 @@ const StyledImage = styled.img<ImageProps>`
 
   ${(props) => {
     if (props.onClick) {
-      return css<ImageProps>`
+      // 이미지 클릭이 가능할 때
+      return css<StyledImageProps>`
         &:hover {
           cursor: pointer;
           opacity: 0.5;
@@ -41,22 +39,25 @@ const StyledImage = styled.img<ImageProps>`
   }}
 `;
 
-function Image({ alt, onClick, ...rest }: ImageProps) {
-  return <StyledImage alt={alt} onClick={onClick} {...rest}></StyledImage>;
+function Image({ alt, src, onClick, ...rest }: ImageProps) {
+  return <StyledImage src={src} alt={alt} onClick={onClick} {...rest} />;
 }
 
-interface ImageProps {
-  src: string;
-  alt?: string;
-  width: number | string;
-  height: number | string;
-  hoverImage?: string;
-  onClick?: () => void;
+interface StyledImageProps {
+  readonly bgHoverImg?: string;
+  readonly width: number;
+  readonly height: number;
+}
+
+interface ImageProps extends StyledImageProps {
+  readonly alt?: string;
+  readonly src: string;
+  readonly onClick?: () => void;
 }
 
 Image.defaultProps = {
-  width: 20,
-  height: 7,
+  height: 3,
+  width: 10,
 };
 
 export default Image;

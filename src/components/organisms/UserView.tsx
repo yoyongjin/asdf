@@ -18,7 +18,6 @@ import threeDotsIcon from 'images/bt-user-modi-nor@2x.png';
 import hoverThreeDotsIcon from 'images/bt-user-modi-over@2x.png';
 import addUserImage from 'images/bt-add-u-1-nor@3x.png';
 import addUserHoverImage from 'images/bt-add-u-1-over@3x.png';
-import { current } from 'immer';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -81,7 +80,7 @@ function UserView({ location }: UserViewProps) {
     onChnageCurrentPage,
   } = usePage();
   const { visible, onClickVisible } = useVisible();
-  const { form, onChangeSelect, onChange, initTempValue } = useInputForm({
+  const { form, onChangeSelect, onChangeInput, initTempValue } = useInputForm({
     branch: '-1',
     team: '-1',
     search: '',
@@ -175,7 +174,7 @@ function UserView({ location }: UserViewProps) {
             branch={form.branch}
             team={form.team}
             search={form.search}
-            onChange={onChange}
+            onChange={onChangeInput}
             onChangeSelect={onChangeSelect}
             onClickSearch={onClickSearch}
           >

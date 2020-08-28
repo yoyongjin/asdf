@@ -7,8 +7,7 @@ export const GlobalStyle = createGlobalStyle`
     body {
         margin: 0;
         padding: 0;
-        font-family: NanumBarunGothic;
-        font-size: 16px;
+        font-family: NanumGothic;
     }
     ::-webkit-scrollbar {
         width: 6px; /* 1px wider than Lion. */

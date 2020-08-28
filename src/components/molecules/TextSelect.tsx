@@ -27,7 +27,7 @@ function TextSelect({
 }: TextSelectProps) {
   return (
     <StyledWrapper>
-      <Text fontSize={13} fontWeight={textWeight}>
+      <Text fontSize={0.81} fontWeight={textWeight}>
         {textValue}
       </Text>
       <StyledBlank />

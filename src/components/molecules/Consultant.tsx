@@ -131,14 +131,14 @@ function Consultant({
               width={4.6}
               height={1.6}
               bgColor={'inherit'}
-              bgImage={
+              bgImg={
                 consultInfo.monitoring
                   ? consultInfo.user_id === loginId
                     ? tappingStopIcon
                     : OthertappingIcon
                   : tappingStartIcon
               }
-              bgHoverImage={consultInfo.monitoring ? '' : tappingStartOverIcon}
+              bgHoverImg={consultInfo.monitoring ? '' : tappingStartOverIcon}
               borderRadius={0.81}
               fontColor={
                 consultInfo.monitoring && consultInfo.user_id !== loginId

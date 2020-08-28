@@ -5,37 +5,15 @@ import { darken, lighten } from 'polished';
 import deleteImage from 'images/bt-del.png';
 import { COLORS } from 'utils/color';
 
-const StyledInput = styled.input<InputProps>`
+const StyledInput = styled.input<StyledInputProps>`
   /* Initialized */
   border: none;
   outline: none;
 
-  /* Display */
-  width: ${(props) => props.width}rem;
-  height: ${(props) => {
-    if (props.height > 10) {
-      return `${props.height}px`;
-    }
-
-    return `${props.height}rem`;
-  }};
-  border-style: ${(props) => props.borderStyle};
-  border-width: ${(props) => props.borderWidth}px;
-  border-radius: ${(props) => props.borderRadius}rem;
-  font-size: ${(props) => props.fontSize}rem;
-  font-weight: ${(props) => props.fontWeight};
-  text-align: ${(props) => {
-    if (props.textAlign === 1) {
-      return 'left';
-    } else if (props.textAlign === 2) {
-      return 'center';
-    } else if (props.textAlign === 3) {
-      return 'right';
-    }
-  }};
+  /* Position */
   padding-left: ${(props) => {
     if (props.textAlign === 1) {
-      if (props.image) {
+      if (props.logoImg) {
         return 30;
       } else {
         return 22;
@@ -52,42 +30,50 @@ const StyledInput = styled.input<InputProps>`
     }
   }}px;
 
-  /* Color */
-  color: ${(props) => props.fontColor};
-  border-color: ${(props) => props.borderColor};
-
+  /* Display */
+  border-radius: ${(props) => props.borderRadius}px;
+  border-style: ${(props) => props.borderStyle};
+  border-width: ${(props) => props.borderWidth}px;
+  height: ${(props) => props.height}rem;
+  width: ${(props) => props.width}rem;
   ${(props) => {
-    if (props.image) {
+    if (props.logoImg) {
       return css`
-        background-image: url(${props.image});
+        background-image: url(${props.logoImg});
         background-position: 5%;
         background-repeat: no-repeat;
       `;
     }
   }}
 
+  /* Text */
+  font-size: ${(props) => props.fontSize}rem;
+  font-weight: ${(props) => props.fontWeight};
+  text-align: ${(props) => {
+    if (props.textAlign === 1) {
+      return 'left';
+    } else if (props.textAlign === 2) {
+      return 'center';
+    } else if (props.textAlign === 3) {
+      return 'right';
+    }
+  }};
+
+  /* Color */
+  border-color: ${(props) => props.borderColor};
+  color: ${(props) => props.fontColor};
+
   /* Other */
   :focus {
-    outline: none !important;
     box-shadow: 0 0 10px ${(props) => darken(0.1, props.borderColor)};
+    outline: none !important;
   }
   ::placeholder {
     /* Display */
     font-weight: 800;
-    color: ${(props) => props.phColor || props.fontColor};
+    color: ${(props) => props.fontColor};
     font-size: 0.87rem;
   }
-  /* ::-webkit-search-decoration,
-  ::-webkit-search-results-button,
-  ::-webkit-search-results-decoration {
-    display: none;
-  } */
-
-  /* ::-webkit-search-cancel-button {
-    background-image: url(${(props) => props.image});
-    background-position: 5%;
-  } */
-
   ::-webkit-search-cancel-button {
     -webkit-appearance: none;
     width: 20px;
@@ -107,12 +93,12 @@ const StyledInput = styled.input<InputProps>`
 `;
 
 function Input({
-  innerRef,
-  type,
-  name,
-  value,
-  placeholder,
   disabled,
+  innerRef,
+  name,
+  placeholder,
+  type,
+  value,
   onChange,
   onKeyDown,
   onKeyUp,
@@ -125,40 +111,45 @@ function Input({
       name={name}
       value={value}
       placeholder={placeholder}
-      onChange={onChange}
-      onKeyUp={onKeyUp}
-      onKeyDown={onKeyDown}
       disabled={disabled}
+      onChange={onChange}
+      onKeyDown={onKeyDown}
+      onKeyUp={onKeyUp}
       {...rest}
     ></StyledInput>
   );
 }
 
-interface InputProps {
-  readonly type: string;
-  readonly value: string;
-  readonly name?: string;
-  readonly placeholder?: string;
-  readonly width: number;
-  readonly height: number;
+interface StyledInputProps {
   readonly borderColor: string;
   readonly borderRadius: number;
+  readonly borderStyle: string;
   readonly borderWidth: number;
+  readonly customStyle?: string;
+  readonly fontColor: string;
+  readonly fontFamily: string;
   readonly fontSize: number;
   readonly fontWeight: number | string;
-  readonly fontColor: string;
+  readonly height: number;
+  readonly logoImg?: string;
   readonly phColor?: string;
   readonly textAlign: number;
-  readonly image?: string;
-  readonly borderStyle: string;
-  readonly customStyle?: string;
+  readonly width: number;
+}
+
+interface InputProps extends StyledInputProps {
   readonly disabled: boolean;
   readonly innerRef?:
     | ((instance: HTMLInputElement) => void)
-    | React.MutableRefObject<HTMLInputElement>;
+    | React.MutableRefObject<HTMLInputElement>
+    | null;
+  readonly name?: string;
+  readonly placeholder?: string;
+  readonly type: string;
+  readonly value: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  onKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 Input.defaultProps = {
@@ -167,11 +158,12 @@ Input.defaultProps = {
   width: 15,
   height: 2,
   borderColor: COLORS.light_gray3,
-  borderRadius: 1,
+  borderRadius: 16,
   borderStyle: 'solid',
   borderWidth: 1,
   fontSize: 1,
   fontWeight: 'normal',
+  fontFamily: 'inherit',
   textAlign: 2,
   fontColor: COLORS.dark_gray1,
   disabled: false,

@@ -7,13 +7,13 @@ import * as common from 'modules/types/common';
 export type UserAction = ActionType<typeof actions>;
 
 export interface UserType {
-  consultant: common.checkFetchType;
+  consultant: common.FetchType;
   consultantInfo: Array<ConsultantInfoType>;
   userInfo: Array<UserInfo>;
-  insertUser: common.checkFetchType;
-  updateUser: common.checkFetchType;
-  deleteUser: common.checkFetchType;
-  resetPassword: common.checkFetchType;
+  insertUser: common.FetchType;
+  updateUser: common.FetchType;
+  deleteUser: common.FetchType;
+  resetPassword: common.FetchType;
   numberOfUsers: number;
 }
 

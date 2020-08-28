@@ -1,5 +1,6 @@
 import Consultant from './Consultant';
 import LinkSelector from './LinkSelector';
+import List from './List';
 import Organization from './Organization';
 import PageCount from './PageCount';
 import SearchBar from './SearchBar';
@@ -16,6 +17,7 @@ import UserLog from './UserLog';
 export {
   Consultant,
   LinkSelector,
+  List,
   Organization,
   PageCount,
   SearchBar,
