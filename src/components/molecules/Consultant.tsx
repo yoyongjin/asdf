@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 
 import { Button, Image, Text } from 'components/atoms';
@@ -51,7 +51,12 @@ function Consultant({
   emitMonitoring,
 }: ConsultantProps) {
   useEffect(() => {
-    if (tappingState && loginId === consultInfo.user_id && consultInfo.call_type !== 'call_offhook') {
+    if (
+      tappingState &&
+      loginId === consultInfo.user_id &&
+      consultInfo.call_type !== 'call_offhook'
+    ) {
+      // 감청 중 상담원이 통화 종료 했을 때 감청 종료 명령 날려주는 부분
       stopMonitoring(consultInfo.number, loginId);
     }
   }, [
