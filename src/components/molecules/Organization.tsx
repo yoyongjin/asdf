@@ -177,7 +177,7 @@ function Organization({
                     placeholder={'지점명 입력'}
                     width={11.25}
                     height={2.5}
-                    borderWidth={3}
+                    borderWidth={2.5}
                     borderRadius={20}
                     borderColor={COLORS.green}
                     textAlign={1}
@@ -216,7 +216,7 @@ function Organization({
                     placeholder={'팀명 입력'}
                     width={11.25}
                     height={2}
-                    borderWidth={3}
+                    borderWidth={2.5}
                     borderColor={COLORS.light_gray2}
                     textAlign={1}
                     fontSize={0.87}
