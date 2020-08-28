@@ -142,7 +142,7 @@ function UserInfo({
   return (
     <StyledWrapper>
       <StyledTitle>
-        <Title fontSize={18}>사용자 정보</Title>
+        <Title fontSize={1.13}>사용자 정보</Title>
       </StyledTitle>
       <StyledContent>
         <TextSelect
@@ -170,7 +170,7 @@ function UserInfo({
         ></TextSelect>
         <TextInput
           customStyle={`float:right;`}
-          height={22.5}
+          height={1.63}
           textValue={'이름'}
           onChange={onChangeInput}
           name={'name'}
@@ -179,7 +179,7 @@ function UserInfo({
         ></TextInput>
         <TextInput
           customStyle={`float:right;`}
-          height={22.5}
+          height={1.63}
           textValue={'아이디'}
           onChange={onChangeInput}
           name={'id'}
@@ -189,7 +189,7 @@ function UserInfo({
         ></TextInput>
         <TextInput
           customStyle={`float:right;`}
-          height={22.5}
+          height={1.63}
           type={'password'}
           textValue={'비밀번호'}
           onChange={onChangeInput}
@@ -201,7 +201,7 @@ function UserInfo({
         <TextInput
           customStyle={`float:right;`}
           padRight={2}
-          height={22.5}
+          height={1.63}
           textValue={'전화번호'}
           onChange={onChangeInput}
           name={'tel'}
@@ -210,7 +210,7 @@ function UserInfo({
         ></TextInput>
         <TextInput
           customStyle={`float:right;`}
-          height={22.5}
+          height={1.63}
           textValue={'ZiBox IP 직접 입력하기'}
           onChange={onChangeInput}
           name={'zibox'}
@@ -222,7 +222,7 @@ function UserInfo({
       <StyledFooter>
         <Button
           width={4.3}
-          height={1.6}
+          height={1.63}
           bgColor={COLORS.green}
           customStyle={`
             float:right;

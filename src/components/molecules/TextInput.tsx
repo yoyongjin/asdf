@@ -34,7 +34,7 @@ function TextInput({
 }: TextInputProps) {
   return (
     <StyledWrapper>
-      <Text fontSize={13} fontWeight={textWeight}>
+      <Text fontSize={fontSize} fontWeight={textWeight}>
         {textValue}
       </Text>
       <StyledBlank padRight={padRight} />
