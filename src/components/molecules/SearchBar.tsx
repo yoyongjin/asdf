@@ -47,7 +47,7 @@ function SearchBar({
           borderWidth={borderWidth}
           textAlign={1}
           fontSize={0.87}
-          image={searchIcon}
+          logoImg={searchIcon}
           onChange={onChange}
           onKeyDown={onKeyPress}
         ></Input>

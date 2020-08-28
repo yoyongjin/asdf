@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-import { Image, List, Text, Modal } from 'components/atoms';
-import { UserInfo } from 'components/molecules';
+import { Image, Text, Modal } from 'components/atoms';
+import { List, UserInfo } from 'components/molecules';
 import { COLORS } from 'utils/color';
 import { formatPhoneNumber } from 'utils/utils';
 import useVisible from 'hooks/useVisible';
@@ -125,7 +125,7 @@ function TableProperty({
             src={threeDotsIcon}
             width={2}
             height={2}
-            bgHoverImage={hoverThreeDotsIcon}
+            bgHoverImg={hoverThreeDotsIcon}
           />
         </StyledProperty>
       </StyledWrapper>

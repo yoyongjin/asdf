@@ -2,18 +2,19 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 
 const StyledImage = styled.img<ImageProps>`
-  width: ${(props) => props.width}rem;
+  /* Display */
   height: ${(props) => props.height}rem;
+  width: ${(props) => props.width}rem;
   /* background-image: url(${(props) => props.src}) no-repeat; */
   /* background-repeat: no-repeat; */
 
   ${(props) => {
-    if (props.bgHoverImage) {
+    if (props.bgHoverImg) {
       // hover 이미지가 있을 때
-      return css<ImageProps>`
+      return css<StyledImageProps>`
         &:hover {
+          content: url(${(props) => props.bgHoverImg});
           cursor: pointer;
-          content: url(${(props) => props.bgHoverImage});
         }
         &:active {
           opacity: 0.8;
@@ -25,7 +26,7 @@ const StyledImage = styled.img<ImageProps>`
   ${(props) => {
     if (props.onClick) {
       // 이미지 클릭이 가능할 때
-      return css<ImageProps>`
+      return css<StyledImageProps>`
         &:hover {
           cursor: pointer;
           opacity: 0.5;
@@ -38,22 +39,25 @@ const StyledImage = styled.img<ImageProps>`
   }}
 `;
 
-function Image({ src, alt, onClick, ...rest }: ImageProps) {
-  return <StyledImage src={src} alt={alt} onClick={onClick} {...rest}></StyledImage>;
+function Image({ alt, src, onClick, ...rest }: ImageProps) {
+  return <StyledImage src={src} alt={alt} onClick={onClick} {...rest} />;
 }
 
-interface ImageProps {
-  readonly src: string;
-  readonly alt?: string;
+interface StyledImageProps {
+  readonly bgHoverImg?: string;
   readonly width: number;
   readonly height: number;
-  readonly bgHoverImage?: string;
+}
+
+interface ImageProps extends StyledImageProps {
+  readonly alt?: string;
+  readonly src: string;
   readonly onClick?: () => void;
 }
 
 Image.defaultProps = {
-  width: 15,
-  height: 7,
+  height: 3,
+  width: 10,
 };
 
 export default Image;

@@ -6,13 +6,15 @@ import { COLORS } from 'utils/color';
 const StyledSelect = styled.select<SelectProps>`
   /* Position */
   float: right;
+  padding-left: ${(props) => props.paddingLeft}px;
 
   /* Display */
-  width: ${(props) => props.width}${(props) => (props.width > 10 ? 'px' : 'rem')};
-  height: ${(props) => props.height}rem;
   border-width: ${(props) => props.borderWidth}px;
   border-radius: ${(props) => props.borderRadius}rem;
-  padding-left: ${props => props.paddingLeft}px;
+  height: ${(props) => props.height}rem;
+  width: ${(props) => props.width}rem;
+
+  /* Text */
   font-size: 0.87rem;
 
   /* Color */
@@ -23,35 +25,29 @@ const StyledSelect = styled.select<SelectProps>`
   outline: none;
 `;
 
-const StyledOption = styled.option<OptionProps>`
+const StyledOption = styled.option<StyledOptionProps>`
   /* Color */
   color: ${(props) => props.optionFontColor};
 `;
 
 function Select({
-  options,
   defaultValue,
-  // defaultOption,
   name,
-  // selected,
+  options,
   onChange,
   ...rest
 }: SelectProps) {
   return (
     <StyledSelect
       name={name}
-      onChange={onChange}
       value={defaultValue}
+      onChange={onChange}
       {...rest}
     >
-      {/* <StyledOption value={defaultValue} {...rest}>
-        {defaultOption}
-      </StyledOption> */}
       {options?.map((option, i) => {
         return (
           <StyledOption
             key={`option-${i}`}
-            // selected={Number(selected) === option.id}
             value={option.id}
             selected={option.id === defaultValue}
             {...rest}
@@ -64,35 +60,37 @@ function Select({
   );
 }
 
-interface SelectProps extends OptionProps {
-  options?: Array<any>;
-  fontColor: string;
-  width: number;
-  height: number;
-  borderWidth: number;
+interface StyledSelectProps extends StyledOptionProps {
   borderColor: string;
   borderRadius: number;
+  borderWidth: number;
+  fontColor: string;
+  height: number;
   paddingLeft: number;
-  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  name: string;
-  defaultOption?: string;
-  defaultValue?: number;
-  // selected?: string;
+  width: number;
 }
 
-interface OptionProps {
+interface StyledOptionProps {
   optionFontColor: string;
 }
 
+interface SelectProps extends StyledSelectProps {
+  defaultOption?: string;
+  defaultValue?: number;
+  name: string;
+  options?: Array<any>;
+  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+}
+
 Select.defaultProps = {
-  width: 10,
-  height: 2,
-  fontColor: COLORS.black,
-  optionFontColor: COLORS.black,
-  borderWidth: 1,
   borderColor: COLORS.black,
   borderRadius: 1,
+  borderWidth: 1,
+  fontColor: COLORS.black,
+  height: 2,
+  optionFontColor: COLORS.black,
   paddingLeft: 6,
+  width: 10,
 };
 
 export default Select;

@@ -5,7 +5,7 @@ import { darken, lighten } from 'polished';
 import deleteImage from 'images/bt-del.png';
 import { COLORS } from 'utils/color';
 
-const StyledInput = styled.input<InputProps>`
+const StyledInput = styled.input<StyledInputProps>`
   /* Initialized */
   border: none;
   outline: none;
@@ -13,7 +13,7 @@ const StyledInput = styled.input<InputProps>`
   /* Position */
   padding-left: ${(props) => {
     if (props.textAlign === 1) {
-      if (props.image) {
+      if (props.logoImg) {
         return 30;
       } else {
         return 22;
@@ -31,11 +31,22 @@ const StyledInput = styled.input<InputProps>`
   }}px;
 
   /* Display */
-  width: ${(props) => props.width}rem;
-  height: ${(props) => props.height}rem;
   border-radius: ${(props) => props.borderRadius}px;
   border-style: ${(props) => props.borderStyle};
   border-width: ${(props) => props.borderWidth}px;
+  height: ${(props) => props.height}rem;
+  width: ${(props) => props.width}rem;
+  ${(props) => {
+    if (props.logoImg) {
+      return css`
+        background-image: url(${props.logoImg});
+        background-position: 5%;
+        background-repeat: no-repeat;
+      `;
+    }
+  }}
+
+  /* Text */
   font-size: ${(props) => props.fontSize}rem;
   font-weight: ${(props) => props.fontWeight};
   text-align: ${(props) => {
@@ -47,24 +58,15 @@ const StyledInput = styled.input<InputProps>`
       return 'right';
     }
   }};
-  ${(props) => {
-    if (props.image) {
-      return css`
-        background-image: url(${props.image});
-        background-position: 5%;
-        background-repeat: no-repeat;
-      `;
-    }
-  }}
 
   /* Color */
-  color: ${(props) => props.fontColor};
   border-color: ${(props) => props.borderColor};
+  color: ${(props) => props.fontColor};
 
   /* Other */
   :focus {
-    outline: none !important;
     box-shadow: 0 0 10px ${(props) => darken(0.1, props.borderColor)};
+    outline: none !important;
   }
   ::placeholder {
     /* Display */
@@ -72,7 +74,6 @@ const StyledInput = styled.input<InputProps>`
     color: ${(props) => props.fontColor};
     font-size: 0.87rem;
   }
-
   ::-webkit-search-cancel-button {
     -webkit-appearance: none;
     width: 20px;
@@ -92,12 +93,12 @@ const StyledInput = styled.input<InputProps>`
 `;
 
 function Input({
-  innerRef,
-  type,
-  name,
-  value,
-  placeholder,
   disabled,
+  innerRef,
+  name,
+  placeholder,
+  type,
+  value,
   onChange,
   onKeyDown,
   onKeyUp,
@@ -110,42 +111,45 @@ function Input({
       name={name}
       value={value}
       placeholder={placeholder}
-      onChange={onChange}
-      onKeyUp={onKeyUp}
-      onKeyDown={onKeyDown}
       disabled={disabled}
+      onChange={onChange}
+      onKeyDown={onKeyDown}
+      onKeyUp={onKeyUp}
       {...rest}
     ></StyledInput>
   );
 }
 
-interface InputProps {
-  readonly type: string;
-  readonly value: string;
-  readonly name?: string;
-  readonly placeholder?: string;
-  readonly width: number;
-  readonly height: number;
+interface StyledInputProps {
   readonly borderColor: string;
   readonly borderRadius: number;
+  readonly borderStyle: string;
   readonly borderWidth: number;
+  readonly customStyle?: string;
   readonly fontColor: string;
   readonly fontFamily: string;
   readonly fontSize: number;
   readonly fontWeight: number | string;
+  readonly height: number;
+  readonly logoImg?: string;
   readonly phColor?: string;
   readonly textAlign: number;
-  readonly image?: string;
-  readonly borderStyle: string;
-  readonly customStyle?: string;
+  readonly width: number;
+}
+
+interface InputProps extends StyledInputProps {
   readonly disabled: boolean;
   readonly innerRef?:
     | ((instance: HTMLInputElement) => void)
     | React.MutableRefObject<HTMLInputElement>
     | null;
+  readonly name?: string;
+  readonly placeholder?: string;
+  readonly type: string;
+  readonly value: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  onKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 Input.defaultProps = {

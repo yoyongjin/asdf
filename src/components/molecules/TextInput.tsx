@@ -48,7 +48,7 @@ function TextInput({
         placeholder={inputPh}
         onChange={onChange}
         value={value}
-        image={image}
+        logoImg={image}
         fontSize={fontSize}
         fontWeight={fontWeight}
         disabled={disabled}

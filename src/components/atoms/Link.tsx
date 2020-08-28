@@ -7,12 +7,16 @@ const StyledLink = styled(RouterLink)({
 }) as RouterLink;
 
 function Link({ path, onClick, children }: LinkProps) {
-  return <StyledLink to={path} onClick={onClick}>{children}</StyledLink>;
+  return (
+    <StyledLink to={path} onClick={onClick}>
+      {children}
+    </StyledLink>
+  );
 }
 
 interface LinkProps {
-  path: string;
   children: React.ReactChild;
+  path: string;
   onClick?: () => void;
 }
 

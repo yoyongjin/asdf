@@ -6,10 +6,10 @@ import { COLORS } from 'utils/color';
 
 const StyledWrapper = styled.div`
   /* Display */
+  height: 100vh;
   max-width: 140rem;
   min-width: 70rem;
   width: 100vw;
-  height: 100vh;
 `;
 
 const StyledTitle = styled.div`
@@ -19,9 +19,9 @@ const StyledTitle = styled.div`
 
 const StyledContent = styled.div`
   /* Display */
-  width: 100%;
-  height: 19.81rem;
   display: flex;
+  height: 19.81rem;
+  width: 100%;
 
   /* Color */
   background-color: ${COLORS.green};
@@ -29,12 +29,12 @@ const StyledContent = styled.div`
 
 const StyledMainLogoSpace = styled.div`
   /* Position */
-  position: relative;
   margin-left: 9.25rem;
+  position: relative;
 
   /* Display */
-  width: 28.25rem;
   height: 100%;
+  width: 28.25rem;
 
   /* Color */
   background-color: ${COLORS.white};
@@ -42,9 +42,9 @@ const StyledMainLogoSpace = styled.div`
 
 const StyledMainLogo = styled.span`
   /* Position */
+  left: 20%;
   position: absolute;
   top: 30%;
-  left: 20%;
 `;
 
 const StyledLoginForm = styled.div`
@@ -53,8 +53,8 @@ const StyledLoginForm = styled.div`
 
 const StyledFooter = styled.div`
   /* Position */
-  position: relative;
   margin-left: 18.88rem;
+  position: relative;
 
   /* Display */
   height: calc(100% - 11.69rem - 19.81rem);
