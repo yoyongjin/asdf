@@ -134,7 +134,7 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
       } else {
         draft.userInfo.unshift(action.payload);
       }
-      
+
       draft.numberOfUsers += 1;
     });
   },
@@ -218,7 +218,6 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
       draft.consultantInfo[index].admin_id = action.payload.admin_id;
       draft.consultantInfo[index].user_name = action.payload.user_name;
       draft.consultantInfo[index].ziboxip = action.payload.ziboxip;
-
     });
   },
 });
