@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import styled from 'styled-components';
 
 import { Button, Image, Text } from 'components/atoms';
@@ -50,17 +50,18 @@ function Consultant({
   setTappingState,
   emitMonitoring,
 }: ConsultantProps) {
-  // useEffect(() => {
-  //   if (!tappingState && loginId === consultInfo.user_id) {
-  //     emitMonitoring(consultInfo.number, loginId);
-  //   }
-  // }, [
-  //   consultInfo.user_id,
-  //   loginId,
-  //   emitMonitoring,
-  //   consultInfo.number,
-  //   tappingState,
-  // ]);
+  useEffect(() => {
+    if (tappingState && loginId === consultInfo.user_id && consultInfo.call_type !== 'call_offhook') {
+      stopMonitoring(consultInfo.number, loginId);
+    }
+  }, [
+    consultInfo.user_id,
+    loginId,
+    stopMonitoring,
+    consultInfo.number,
+    consultInfo.call_type,
+    tappingState,
+  ]);
 
   return (
     <StyledWrapper>
