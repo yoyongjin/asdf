@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 
-import { Image, Text, Modal } from 'components/atoms';
-import { List, UserInfo } from 'components/molecules';
+import { Image, Text } from 'components/atoms';
+import { List } from 'components/molecules';
 import { COLORS } from 'utils/color';
 import { formatPhoneNumber } from 'utils/utils';
-import useVisible from 'hooks/useVisible';
-import { UserInfo as UserInfoType } from 'modules/types/user';
+import { UserInfo } from 'modules/types/user';
+import { BranchInfo, TeamInfo } from 'modules/types/branch';
 
-const StyledWrapper = styled.td`
-  /* Display */
-`;
+const StyledWrapper = styled.td``;
 
-const StyledProperty = styled.div`
+const StyledProperty = styled.td`
   /* Position */
   float: right;
+  padding-top: 10px;
 
   /* Display */
+  height: calc(100% - 10px);
   width: 2rem;
 `;
 
@@ -28,108 +28,97 @@ const StyledList = styled.div`
   width: 10rem;
 `;
 
+const menuList = ['정보 수정', '비밀번호 초기화', '삭제'];
+
 function TableProperty({
   info,
-  threeDotsIcon,
-  hoverThreeDotsIcon,
+  optionIcon,
+  optionHoverIcon,
   branchList,
   teamList,
   adminList,
-  onClickUpdateUser,
-  getBranchList,
-  getTeamList,
-  onClickDeleteUser,
-  onClickResetPassword,
   page,
   branchId,
   branchName,
-  adminType,
+  adminId,
   teamId,
+  getBranchList,
+  getTeamList,
+  getUserInfo,
+  onClickDeleteUser,
+  onClickResetPassword,
+  onClickUpdateUser,
 }: TableContentProps) {
-  const menuList = ['정보 수정', '비밀번호 초기화', '삭제'];
-  const { visible, onClickVisible } = useVisible();
   const [isHover, setIsHover] = useState<boolean>(false);
-  const onMouseIn = () => {
-    setIsHover(true);
-  };
+  // const { visible, onClickVisible } = useVisible();
 
-  const onMouseOut = () => {
+  const onMouseIn = useCallback(() => {
+    setIsHover(true);
+  }, []);
+
+  const onMouseOut = useCallback(() => {
     setIsHover(false);
-  };
+  }, []);
+
+  const infoValueList = useMemo(() => {
+    return Object.values(info);
+  }, [info]);
+
+  const infoKeyList = useMemo(() => {
+    return Object.keys(info);
+  }, [info]);
+
   return (
     <>
-      <StyledWrapper>
-        <Text fontColor={COLORS.dark_gray1} fontWeight={700} fontSize={0.81}>
-          {info.id}
-        </Text>
-      </StyledWrapper>
-      <StyledWrapper>
-        <Text fontColor={COLORS.dark_gray1} fontWeight={700} fontSize={0.81}>
-          {info.branch_name!}
-        </Text>
-      </StyledWrapper>
-      <StyledWrapper>
-        <Text fontColor={COLORS.dark_gray1} fontWeight={700} fontSize={0.81}>
-          {info.team_name!}
-        </Text>
-      </StyledWrapper>
-      <StyledWrapper>
-        <Text fontColor={COLORS.dark_gray1} fontWeight={700} fontSize={0.81}>
-          {info.admin_id === 0
-            ? '상담원'
-            : info.admin_id === 1
-            ? '관리자'
-            : info.admin_id === 2
-            ? 'ADMIN'
-            : ''}
-        </Text>
-      </StyledWrapper>
-      <StyledWrapper>
-        <Text fontColor={COLORS.dark_gray1} fontWeight={700} fontSize={0.81}>
-          {info.name}
-        </Text>
-      </StyledWrapper>
-      <StyledWrapper>
-        <Text fontColor={COLORS.dark_gray1} fontWeight={700} fontSize={0.81}>
-          {info.user_name}
-        </Text>
-      </StyledWrapper>
-      <StyledWrapper>
-        <Text fontColor={COLORS.dark_gray1} fontWeight={700} fontSize={0.81}>
-          {formatPhoneNumber(info.number)}
-        </Text>
-      </StyledWrapper>
-      <StyledWrapper>
-        <Text fontColor={COLORS.dark_gray1} fontWeight={700} fontSize={0.81}>
-          {info.ziboxip}
-        </Text>
-      </StyledWrapper>
-      <StyledWrapper>
-        <StyledProperty onMouseEnter={onMouseIn} onMouseLeave={onMouseOut}>
-          {isHover && (
-            <StyledList>
-              <List
-                menu={menuList}
-                onClickVisible={onClickVisible}
-                onClickDeleteUser={onClickDeleteUser}
-                onClickResetPassword={onClickResetPassword!}
-                id={info.id}
-                adminType={Number(info.admin_id)}
-                page={page!}
-                branchId={branchId!}
-                teamId={teamId!}
-              ></List>
-            </StyledList>
-          )}
-          <Image
-            src={threeDotsIcon}
-            width={2}
-            height={2}
-            bgHoverImg={hoverThreeDotsIcon}
-          />
-        </StyledProperty>
-      </StyledWrapper>
-      <Modal
+      {infoKeyList.map((key, i) => {
+        if (key === 'branch_id' || key === 'team_id' || key === 'login_at')
+          return null;
+
+        return (
+          <StyledWrapper key={`styled-list-wrapper-${i}`}>
+            <Text
+              fontColor={COLORS.dark_gray1}
+              fontSize={0.81}
+              fontWeight={700}
+            >
+              {key === 'admin_id'
+                ? infoValueList[i] === 0
+                  ? '상담원'
+                  : infoValueList[i] === 1
+                  ? '관리자'
+                  : ''
+                : key === 'number'
+                ? formatPhoneNumber(infoValueList[i])
+                : infoValueList[i]}
+            </Text>
+          </StyledWrapper>
+        );
+      })}
+      <StyledProperty onMouseEnter={onMouseIn} onMouseLeave={onMouseOut}>
+        {isHover && (
+          <StyledList>
+            <List
+              adminId={info.admin_id}
+              branchId={branchId!}
+              menu={menuList}
+              id={info.id}
+              page={page!}
+              teamId={teamId!}
+              info={info}
+              onClickGetUserInfo={getUserInfo}
+              onClickDeleteUser={onClickDeleteUser}
+              onClickResetPassword={onClickResetPassword!}
+            ></List>
+          </StyledList>
+        )}
+        <Image
+          src={optionIcon}
+          width={2}
+          height={2}
+          bgHoverImg={optionHoverIcon}
+        />
+      </StyledProperty>
+      {/* <Modal
         isVisible={visible}
         Component={
           <UserInfo
@@ -139,11 +128,11 @@ function TableProperty({
             data={info}
             branchId={branchId}
             branchName={branchName}
-            adminType={adminType}
+            adminType={adminId}
             onClickUpdateUser={onClickUpdateUser}
           />
         }
-      />
+      /> */}
     </>
   );
 }
@@ -152,35 +141,24 @@ interface SelectDataType {
   data: string;
 }
 
-interface BranchInfo {
-  branch_name: string;
-  created_at: string;
-  id: number;
-}
-
-interface TeamInfo {
-  branch_id: number;
-  id: number;
-  team_name: string;
-}
-
 interface TableContentProps {
-  info: UserInfoType;
-  threeDotsIcon: string;
-  hoverThreeDotsIcon: string;
+  info: UserInfo;
+  optionIcon: string;
+  optionHoverIcon: string;
   branchList: Array<BranchInfo>;
   teamList: Array<TeamInfo>;
   adminList: Array<SelectDataType>;
   page?: number;
   branchId?: number;
   branchName?: string;
-  adminType?: number;
+  adminId?: number;
   teamId?: number;
+  getUserInfo?: (info: UserInfo) => void;
   onClickUpdateUser: (
-    id: string,
-    branchId: string,
-    teamId: string,
-    admin: string,
+    id: number,
+    branchId: number,
+    teamId: number,
+    admin: number,
     name: string,
     userId: string,
     password: string,

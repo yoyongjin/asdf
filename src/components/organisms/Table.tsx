@@ -4,14 +4,14 @@ import styled from 'styled-components';
 import { TableTitle, TableContent } from 'components/molecules';
 import { COLORS } from 'utils/color';
 import { UserInfo } from 'modules/types/user';
+import { BranchInfo, TeamInfo } from 'modules/types/branch';
 
 const StyledWrapper = styled.table`
-  width: 100%;
-  height: 100%;
-  /* max-height: 20rem; */
-  /* min-height: 4rem; */
+  /* Display */
   border-collapse: collapse;
+  height: 100%;
   table-layout: fixed;
+  width: 100%;
 `;
 
 const StyledHead = styled.thead<StyledProps>`
@@ -23,29 +23,33 @@ const StyledHead = styled.thead<StyledProps>`
 `;
 
 const StyledBody = styled.tbody`
+  /* Display */
   height: calc(100% - 1.87rem);
+
+  /* Text */
   text-align: center;
 `;
 
 function Table({
-  tableTitle,
-  bgColor,
-  userInfo,
-  threeDotsIcon,
-  hoverThreeDotsIcon,
-  branchList,
-  teamList,
   adminList,
-  page,
+  adminId,
   branchId,
+  branchList,
   branchName,
-  adminType,
+  page,
+  tableTitle,
   teamId,
-  onClickUpdateUser,
+  teamList,
+  userInfo,
+  bgColor,
+  optionIcon,
+  optionHoverIcon,
   getBranchList,
   getTeamList,
+  getUserInfo,
   onClickDeleteUser,
   onClickResetPassword,
+  onClickUpdateUser,
 }: TableProps) {
   return (
     <StyledWrapper>
@@ -54,77 +58,58 @@ function Table({
       </StyledHead>
       <StyledBody>
         <TableContent
-          userInfo={userInfo}
-          threeDotsIcon={threeDotsIcon}
-          hoverThreeDotsIcon={hoverThreeDotsIcon}
-          branchList={branchList}
-          teamList={teamList}
+          adminId={adminId}
           adminList={adminList}
-          onClickUpdateUser={onClickUpdateUser}
+          branchId={branchId}
+          branchList={branchList}
+          branchName={branchName}
+          page={page!}
+          teamId={teamId}
+          teamList={teamList}
+          userInfo={userInfo}
+          optionIcon={optionIcon}
+          optionHoverIcon={optionHoverIcon}
           getBranchList={getBranchList!}
           getTeamList={getTeamList!}
+          getUserInfo={getUserInfo!}
           onClickDeleteUser={onClickDeleteUser!}
-          page={page!}
-          branchId={branchId}
-          branchName={branchName}
-          adminType={adminType}
-          teamId={teamId}
           onClickResetPassword={onClickResetPassword!}
+          onClickUpdateUser={onClickUpdateUser}
         ></TableContent>
       </StyledBody>
     </StyledWrapper>
   );
+}
+
+interface StyledProps {
+  bgColor?: string;
 }
 interface SelectDataType {
   id: number;
   data: string;
 }
 
-interface BranchInfo {
-  branch_name: string;
-  created_at: string;
-  id: number;
-}
-
-interface TeamInfo {
-  branch_id: number;
-  id: number;
-  team_name: string;
-}
-
-interface StyledProps {
-  bgColor?: string;
-}
-
-interface TitleProps extends StyledProps{
+interface TitleProps {
   title: string;
   width: number;
 }
 
 interface TableProps extends StyledProps {
-  tableTitle: Array<TitleProps>;
-  userInfo: Array<UserInfo>;
-  threeDotsIcon: string;
-  hoverThreeDotsIcon: string;
-  branchList: Array<BranchInfo>;
-  teamList: Array<TeamInfo>;
+  adminId?: number;
   adminList: Array<SelectDataType>;
-  page?: number;
   branchId?: number;
+  branchList: Array<BranchInfo>;
   branchName?: string;
-  adminType?: number;
+  page?: number;
+  tableTitle: Array<TitleProps>;
   teamId?: number;
-  onClickUpdateUser: (
-    id: string,
-    branchId: string,
-    teamId: string,
-    admin: string,
-    name: string,
-    userId: string,
-    password: string,
-    tel: string,
-    ip: string,
-  ) => void;
+  teamList: Array<TeamInfo>;
+  userInfo: Array<UserInfo>;
+  optionIcon: string;
+  optionHoverIcon: string;
+  getBranchList?: () => void;
+  getTeamList?: (branch_id: number) => void;
+  getUserInfo?: (info: UserInfo) => void;
   onClickDeleteUser?: (
     id: string,
     page: number,
@@ -132,8 +117,17 @@ interface TableProps extends StyledProps {
     teamId: number,
   ) => void;
   onClickResetPassword?: (id: number) => void;
-  getBranchList?: () => void;
-  getTeamList?: (branch_id: number) => void;
+  onClickUpdateUser: (
+    id: number,
+    branchId: number,
+    teamId: number,
+    admin: number,
+    name: string,
+    userId: string,
+    password: string,
+    tel: string,
+    ip: string,
+  ) => void;
 }
 
 Table.defaultProps = {

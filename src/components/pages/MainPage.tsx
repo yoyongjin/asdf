@@ -4,11 +4,11 @@ import { RouteComponentProps } from 'react-router-dom';
 import { GNB } from 'components/organisms';
 import { MainTemplate } from 'components/templates';
 import { COLORS } from 'utils/color';
-
-import dblifeLogo from 'images/logo/db-logo-login@3x.png';
-import loginTimeImage from 'images/bg-login-time@3x.png';
 import useAuth from 'hooks/useAuth';
 import useSocket from 'hooks/useSocket';
+
+import dblifeLogo from 'images/db-logo-cont@3x.png';
+import loginTimeImage from 'images/bg-login-time@3x.png';
 
 function MainPage({ history, location }: MainPageProps) {
   const { loginInfo, onCheckLogin, onClickLogout } = useAuth();
@@ -23,7 +23,7 @@ function MainPage({ history, location }: MainPageProps) {
     if (location.pathname === '/main') {
       return COLORS.light_gray;
     }
-  }, [location]);
+  }, [location.pathname]);
 
   useEffect(() => {
     if (!loginInfo.id) {
@@ -50,8 +50,8 @@ function MainPage({ history, location }: MainPageProps) {
           logo={dblifeLogo}
           loginTimeImage={loginTimeImage}
           loginInfo={loginInfo}
-          onClickLogout={() => onClickLogout(history)}
           location={location}
+          onClickLogout={() => onClickLogout(history)}
         />
       }
       bgColor={bgColor}

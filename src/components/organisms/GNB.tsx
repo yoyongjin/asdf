@@ -20,18 +20,6 @@ const StyledWrapper = styled.div`
 const StyledLogo = styled.div`
   /* Position */
   margin-left: 26px;
-  padding-top: 3px;
-
-  /* Display */
-  border-radius: 0 0 1rem 1rem;
-  height: calc(3rem - 3px);
-  width: 8.6rem;
-
-  /* Text */
-  text-align: center;
-
-  /* Color */
-  background-color: ${COLORS.white};
 `;
 
 const StyledLink = styled.div`
@@ -65,7 +53,7 @@ function GNB({
     <StyledWrapper>
       <StyledLogo>
         <Link path="/main">
-          <Image src={logo} alt={'DB life logo'} width={6} height={2.5} />
+          <Image src={logo} alt={'DB life logo'} width={8.69} height={3.25} />
         </Link>
       </StyledLogo>
       <StyledLink>

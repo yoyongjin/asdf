@@ -39,7 +39,7 @@ function TextSelect({
         name={name}
         defaultValue={defaultValue}
         // defaultOption={defaultOption}
-        onChange={onChange}
+        onChange={(e) => onChange(e)}
         // selected={selected}
       ></Select>
     </StyledWrapper>

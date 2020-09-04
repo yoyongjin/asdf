@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import { Text } from 'components/atoms';
 import { COLORS } from 'utils/color';
+import { UserInfo } from 'modules/types/user';
 
 const StyledWrapper = styled.ul`
   /* Position */
@@ -34,26 +35,29 @@ const StyledContent = styled.li`
 `;
 
 function List({
-  menu,
-  onClickVisible,
-  onClickDeleteUser,
-  onClickResetPassword,
-  id,
-  page,
+  adminId,
   branchId,
+  menu,
+  id,
+  info,
+  page,
   teamId,
-  adminType,
+  onClickDeleteUser,
+  onClickGetUserInfo,
+  onClickResetPassword,
 }: ListProps) {
   return (
     <StyledWrapper>
       {menu.map((title, i) => {
-        if (adminType === 0 && i === 1) return null;
+        // 상담원일 경우 비밀번호 초기화 부분 삭제
+        if (adminId === 0 && i === 1) return null;
+
         return (
           <StyledContent
             key={`styled-content-${i}`}
             onClick={() => {
               if (i === 0) {
-                onClickVisible!();
+                onClickGetUserInfo!(info);
               } else if (i === 1) {
                 onClickResetPassword!(id);
               } else if (i === 2) {
@@ -61,7 +65,7 @@ function List({
               }
             }}
           >
-            <Text fontWeight={600} fontColor={COLORS.dark_gray1}>
+            <Text fontColor={COLORS.dark_gray1} fontWeight={600}>
               {title}
             </Text>
           </StyledContent>
@@ -72,13 +76,14 @@ function List({
 }
 
 interface ListProps {
+  adminId: number;
+  branchId?: number;
   menu: Array<string>;
   id: number;
+  info: UserInfo;
   page?: number;
-  branchId?: number;
   teamId?: number;
-  adminType: number;
-  onClickVisible?: () => void;
+  onClickGetUserInfo?: (info: UserInfo) => void;
   onClickDeleteUser?: (
     id: string,
     page: number,
@@ -86,6 +91,7 @@ interface ListProps {
     teamId: number,
   ) => void;
   onClickResetPassword?: (id: number) => void;
+  onClickVisible?: () => void;
 }
 
 List.defaultProps = {};

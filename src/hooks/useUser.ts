@@ -7,57 +7,69 @@ import {
   requestUpdateUser,
   requestDeleteUser,
   requestResetPassword,
+  resetFilteredUser,
 } from 'modules/actions/user';
 import { RootState } from 'modules/reducers';
 import { LIMIT, PAGE } from 'utils/constants';
 
 function useUser() {
-  const userInfo = useSelector((state: RootState) => state.user.userInfo);
+  const userInfo = useSelector(
+    (state: RootState) => state.user.userList.users,
+  ); // 전체 유저 정보
   const consultantInfo = useSelector(
-    (state: RootState) => state.user.consultantInfo,
-  );
+    (state: RootState) => state.user.userList.consultants,
+  ); // 상담원 정보
+  const filterUserInfo = useSelector(
+    (state: RootState) => state.user.filterUserList.users,
+  ); // 필터링된 전체 유저 정보
+  const filterConsultantInfo = useSelector(
+    (state: RootState) => state.user.filterUserList.consultants,
+  ); // 필터링된 상담원 정보
 
   const dispatch = useDispatch();
 
-  // 상담원 정보
-  const getConsultantsInfo = useCallback(
+  const getUsersInfo = useCallback(
     (
       branchId = -1,
       teamId = -1,
       limit = 0,
       page = 0,
       search = '',
-      location?,
+      url?: string,
     ) => {
       const payload = {
-        location: location!,
         branchId,
         teamId,
-        search,
         limit: limit || LIMIT,
         page: page || PAGE,
+        search,
+        url: url!,
       };
       dispatch(requestGetUserInfo(payload));
     },
     [dispatch],
   );
 
+  const resetFilteredUsers = useCallback(() => {
+    dispatch(resetFilteredUser());
+  }, [dispatch])
+
   const onClickInsertUser = useCallback(
     (
-      branchId: string,
-      teamId: string,
-      admin: string,
+      branchId: number,
+      teamId: number,
+      admin: number,
       name: string,
       userId: string,
       password: string,
       tel: string,
       ip: string,
     ) => {
-      let number = tel.replace(/\-/g, '');
+      let number = tel.replace(/-/g, '');
       const payload = {
-        branch_id: branchId,
-        team_id: teamId,
-        admin_id: admin,
+        branch_id: String(branchId),
+        team_id: String(teamId),
+        admin_id: String(admin),
         name,
         user_name: userId,
         password,
@@ -72,25 +84,26 @@ function useUser() {
 
   const onClickUpdateUser = useCallback(
     (
-      id: string,
-      branchId: string,
-      teamId: string,
-      admin: string,
+      id: number,
+      branchId: number,
+      teamId: number,
+      admin: number,
       name: string,
       userId: string,
       password: string,
       tel: string,
       ip: string,
     ) => {
+      let number = tel.replace(/-/g, '');
       const payload = {
-        user_id: id,
-        branch_id: branchId,
-        team_id: teamId,
-        admin_id: admin,
+        user_id: String(id),
+        branch_id: String(branchId),
+        team_id: String(teamId),
+        admin_id: String(admin),
         name,
         user_name: userId,
         password,
-        number: tel,
+        number,
         ziboxip: ip,
       };
       dispatch(requestUpdateUser(payload));
@@ -124,7 +137,10 @@ function useUser() {
   return {
     userInfo,
     consultantInfo,
-    getConsultantsInfo,
+    filterUserInfo,
+    filterConsultantInfo,
+    getUsersInfo,
+    resetFilteredUsers,
     onClickInsertUser,
     onClickUpdateUser,
     onClickDeleteUser,

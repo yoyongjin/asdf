@@ -11,17 +11,23 @@ import {
   REQUEST_UPDATE_USER,
   requestDeleteUser,
   REQUEST_DELETE_USER,
-  successGetConsultantInfo,
+  successGetFilterUserInfo,
   requestResetPassword,
   REQUEST_RESET_PASSWORD,
+  successAddUser,
+  failureAddUser,
+  successUpdateUser,
+  failureUpdateUser,
+  successDeleteUser,
+  failureDeleteUser,
+  successResetPassword,
+  failureResetPassword,
 } from 'modules/actions/user';
 import * as API from 'lib/api';
 import Socket from 'lib/socket';
 
-function* getConsultantInfoProcess(
-  action: ReturnType<typeof requestGetUserInfo>,
-) {
-  const { location, branchId, teamId, limit, page, search } = action.payload;
+function* getUserInfoProcess(action: ReturnType<typeof requestGetUserInfo>) {
+  const { branchId, teamId, limit, page, search, url } = action.payload;
   const payload = {
     branch_id: branchId,
     team_id: teamId,
@@ -29,35 +35,34 @@ function* getConsultantInfoProcess(
     page,
     search_name: search!,
   };
-
-  console.log(location, branchId, teamId, limit, page, search);
+  console.log(payload);
 
   try {
     const response = yield call(API.getConsultantInfo, payload);
-    console.log('consultant Data => ', response);
     const { status, data } = response.data;
 
     if (status === 'success') {
+      console.log('Get consultant data => ', data);
       const { users, max_count } = data;
 
-      if (location && location!.pathname === '/main') {
-        const payload = {
-          users,
-          count: max_count,
-        };
-        Socket.getInstance().onEmit('call-state');
-        yield put(successGetConsultantInfo(payload));
-      } else {
-        const payload = {
-          users,
-          count: max_count,
-        };
+      const payload = {
+        users,
+        count: max_count,
+        url,
+      };
+
+      if (branchId === -1 && teamId === -1 && search === '') {
+        // 전체 지점
         yield put(successGetUserInfo(payload));
+        Socket.getInstance().onEmit('call-state');
+      } else {
+        // 필터링된 유저
+        yield put(successGetFilterUserInfo(payload));
       }
     }
   } catch (error) {
     console.log(error);
-    yield put(failureGetUserInfo(error));
+    yield put(failureGetUserInfo(error.message));
   }
 }
 
@@ -72,16 +77,7 @@ function* insertUserProcess(action: ReturnType<typeof requestAddUser>) {
     number,
     ziboxip,
   } = action.payload;
-  console.log(
-    branch_id,
-    team_id,
-    admin_id,
-    name,
-    user_name,
-    password,
-    number,
-    ziboxip,
-  );
+  console.log(action.payload);
   try {
     const response = yield call(
       API.insertUser,
@@ -95,8 +91,11 @@ function* insertUserProcess(action: ReturnType<typeof requestAddUser>) {
       ziboxip,
     );
     console.log('insert user Data', response);
+    yield put(successAddUser());
   } catch (error) {
     console.log(error);
+    yield put(failureAddUser(error.message));
+    alert('동일한 전화번호나 아이디가 존재합니다.');
   }
 }
 
@@ -112,17 +111,7 @@ function* updateUserProcess(action: ReturnType<typeof requestUpdateUser>) {
     number,
     ziboxip,
   } = action.payload;
-  console.log(
-    user_id,
-    branch_id,
-    team_id,
-    admin_id,
-    name,
-    user_name,
-    password,
-    number,
-    ziboxip,
-  );
+  console.log(action.payload);
   try {
     const response = yield call(
       API.updateUser,
@@ -136,10 +125,10 @@ function* updateUserProcess(action: ReturnType<typeof requestUpdateUser>) {
       number,
       ziboxip,
     );
-
-    console.log(response);
+    yield put(successUpdateUser());
   } catch (error) {
     console.log(error);
+    yield put(failureUpdateUser(error));
   }
 }
 
@@ -152,15 +141,19 @@ function* deleteUserProcess(action: ReturnType<typeof requestDeleteUser>) {
     console.log(response);
     if (response.data.data) {
       const payload = {
-        branchId: Number(branchId),
-        teamId: Number(teamId),
+        adminId: 1,
+        branchId,
+        teamId,
         limit: 5,
         page,
+        url: '',
       };
+      yield put(successDeleteUser());
       yield put(requestGetUserInfo(payload));
     }
   } catch (error) {
     console.log(error);
+    yield put(failureDeleteUser(error));
   }
 }
 
@@ -171,13 +164,15 @@ function* resetPasswordProcess(
     const { id } = action.payload;
     const response = yield call(API.resetPassword, id);
     console.log(response);
+    yield put(successResetPassword());
   } catch (error) {
     console.log(error);
+    yield put(failureResetPassword(error));
   }
 }
 
-function* watchGetConsultantInfo() {
-  yield takeLatest(REQUEST_GET_USER_INFO, getConsultantInfoProcess);
+function* watchGetUserInfo() {
+  yield takeLatest(REQUEST_GET_USER_INFO, getUserInfoProcess);
 }
 
 function* watchInsertUser() {
@@ -198,7 +193,7 @@ function* watchResetPassword() {
 
 function* userSaga() {
   yield all([
-    fork(watchGetConsultantInfo),
+    fork(watchGetUserInfo),
     fork(watchInsertUser),
     fork(watchUpdateUser),
     fork(watchDeleteUser),

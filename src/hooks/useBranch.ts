@@ -18,19 +18,20 @@ import {
 import { RootState } from 'modules/reducers';
 
 function useBranch() {
-  const branchInfo = useSelector((state: RootState) => state.branch.branchInfo);
+  const branchInfo = useSelector((state: RootState) => state.branch.branchInfo); // 지점 정보
   const branchList = useSelector(
     (state: RootState) => state.branch.namesList.branch,
-  );
+  ); // 지점명 리스트
   const teamList = useSelector(
     (state: RootState) => state.branch.namesList.team,
-  );
+  ); // 팀명 리스트
   const userBranchList = useSelector(
     (state: RootState) => state.branch.namesList.userBranch,
-  );
+  ); // 지점명 리스트
   const userTeamList = useSelector(
     (state: RootState) => state.branch.namesList.userTeam,
-  );
+  ); // 지점명 리스트
+
   const dispatch = useDispatch();
 
   const getBranchInfo = useCallback(() => {
@@ -147,21 +148,27 @@ function useBranch() {
     [dispatch],
   );
 
-  const handleDeleteTeam = useCallback((branchId:number, teamId: number) => {
-    const payload = {
+  const handleDeleteTeam = useCallback(
+    (branchId: number, teamId: number) => {
+      const payload = {
         branch_id: branchId,
         team_id: teamId,
       };
       dispatch(requestDeleteTeamInfo(payload));
-  }, [dispatch])
+    },
+    [dispatch],
+  );
 
-  const handleDeleteBranch = useCallback((id) => {
-    const payload = {
-      branch_id: id,
-    }
+  const handleDeleteBranch = useCallback(
+    (id) => {
+      const payload = {
+        branch_id: id,
+      };
 
-    dispatch(requestDeleteBranchInfo(payload))
-  }, [dispatch])
+      dispatch(requestDeleteBranchInfo(payload));
+    },
+    [dispatch],
+  );
 
   return {
     branchInfo,

@@ -7,13 +7,23 @@ import * as common from 'modules/types/common';
 export type UserAction = ActionType<typeof actions>;
 
 export interface UserType {
-  consultant: common.FetchType;
-  consultantInfo: Array<ConsultantInfoType>;
-  userInfo: Array<UserInfo>;
+  request: RequestType;
+  userList: UserListType;
+  filterUserList: UserListType;
+}
+
+export interface RequestType {
+  getUser: common.FetchType;
+  getConsultant: common.FetchType;
   insertUser: common.FetchType;
   updateUser: common.FetchType;
   deleteUser: common.FetchType;
   resetPassword: common.FetchType;
+}
+
+export interface UserListType{
+  users: Array<UserInfo>;
+  consultants: Array<ConsultantInfoType>;
   numberOfUsers: number;
 }
 
@@ -29,40 +39,6 @@ export interface UserInfo {
   team_name: string;
   user_name: string;
   ziboxip: string;
-}
-
-export interface RequestType {
-  location?: Location;
-  branchId: number;
-  teamId: number;
-  limit: number;
-  page: number;
-  search?: string;
-}
-
-export interface SuccessUserType {
-  users: Array<UserInfo>;
-  count: number;
-}
-
-export interface SuccessConsultantType {
-  users: Array<ConsultantInfoType>;
-  count: number;
-}
-
-export interface UserInfoType {
-  branch_id: string;
-  team_id: string;
-  admin_id: string;
-  name: string;
-  user_name: string;
-  password: string;
-  number: string;
-  ziboxip: string;
-}
-
-export interface UpdateUserInfoType extends UserInfoType {
-  user_id: string;
 }
 
 export interface ConsultantInfoType {
@@ -83,6 +59,44 @@ export interface ConsultantInfoType {
   monitoring?: boolean;
   user_id?: number;
 }
+
+
+export interface UserInfoType {
+  branch_id: string;
+  team_id: string;
+  admin_id: string;
+  name: string;
+  user_name: string;
+  password: string;
+  number: string;
+  ziboxip: string;
+}
+
+
+export interface getRequestType {
+  branchId: number;
+  teamId: number;
+  limit: number;
+  page: number;
+  search?: string;
+  url: string;
+}
+
+export interface SuccessUserType {
+  users: Array<UserInfo>;
+  count: number;
+  url: string;
+}
+
+export interface SuccessConsultantType {
+  users: Array<ConsultantInfoType>;
+  count: number;
+}
+
+export interface UpdateUserInfoType extends UserInfoType {
+  user_id: string;
+}
+
 
 export interface TestUser {
   id: number;

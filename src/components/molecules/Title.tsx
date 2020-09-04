@@ -155,7 +155,7 @@ function Title({
         {selectType && selectType.data1!.length > 0 ? (
           <StyledSelect>
             <Select
-              defaultValue={Number(branch)}
+              defaultValue={branch}
               // defaultOption={'지점명'}
               name={'branch'}
               options={branchList}
@@ -172,7 +172,7 @@ function Title({
         {selectType && selectType.data2! ? (
           <StyledSelect>
             <Select
-              defaultValue={Number(team)}
+              defaultValue={team}
               // defaultOption={team_name || '팀명'}
               name={'team'}
               options={teamList}
@@ -182,7 +182,7 @@ function Title({
               borderRadius={selectType.borderRadius}
               fontColor={selectType.color}
               paddingLeft={selectType.paddingLeft}
-              onChange={(e) => onChangeSelect!(e, 'team', String(branch))}
+              onChange={(e) => onChangeSelect!(e, branch)}
             />
           </StyledSelect>
         ) : null}
@@ -286,14 +286,13 @@ interface TitleProps {
   isSearch?: boolean;
   children: string;
   fontSize?: number;
-  branch?: string;
-  team?: string;
+  branch?: number;
+  team?: number;
   search?: string;
   adminType?: number;
   onChangeSelect?: (
     e: React.ChangeEvent<HTMLSelectElement>,
-    type?: string,
-    data?: string,
+    data?: number,
   ) => void;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onClickSearch?: () => void;

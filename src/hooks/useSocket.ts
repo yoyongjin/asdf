@@ -29,24 +29,14 @@ function useSocket() {
 
       switch (type) {
         case 'signup':
-          console.log('Sign up user info', data);
-          if (data.admin_id === 0) {
-            // 상담원
-            let signupUser = data as UserInfo;
-            dispatch(insertUser(signupUser));
-            let signupConsultant = data as ConsultantInfoType;
-            dispatch(insertConsultant(signupConsultant));
-          } else {
-            let signupUser = data as UserInfo;
-            dispatch(insertUser(signupUser));
-          }
+          console.log('Sign up user data', data);
+          let signupUser = data;
+          dispatch(insertUser(signupUser));
           break;
         case 'update':
-          console.log('Update user info', data);
-          let updateUserInfo = data as UserInfo;
+          console.log('Update user data', data);
+          let updateUserInfo = data;
           dispatch(updateUser(updateUserInfo));
-          let updateConsultantInfo = data as ConsultantInfoType;
-          dispatch(updateConsultant(updateConsultantInfo));
           break;
         default:
           break;

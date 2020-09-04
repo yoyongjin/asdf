@@ -4,13 +4,14 @@ import styled from 'styled-components';
 import { Button, Image, Text } from 'components/atoms';
 import { getHourMinSecV1 } from 'utils/utils';
 import { COLORS } from 'utils/color';
+import { ConsultantInfoType } from 'modules/types/user';
+
 import callingIcon from 'images/icon-mnt-red@2x.png';
 import waitingIcon from 'images/icon-mnt-grey.png';
 import tappingStartIcon from 'images/bt-mnt-listen-nor.png';
 import tappingStartOverIcon from 'images/bt-mnt-listen-over.png';
 import OthertappingIcon from 'images/bt-mnt-listen-ing.png';
 import tappingStopIcon from 'images/bt-mnt-listen-fin-nor.png';
-import { ConsultantInfoType } from 'modules/types/user';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -37,21 +38,21 @@ const StyledUserInfo = styled.div`
   padding-top: 20px;
 `;
 
-const StyledInterception = styled.div``;
+const StyledTapping = styled.div``;
 
 function Consultant({
   consultInfo,
-  tappingState,
   loginId,
-  onClickVisible,
+  tapping,
+  getConsultantInfo,
   initZibox,
+  setTapping,
   startMonitoring,
   stopMonitoring,
-  setTappingState
 }: ConsultantProps) {
   useEffect(() => {
     if (
-      tappingState &&
+      tapping &&
       loginId === consultInfo.user_id &&
       consultInfo.call_type !== 'call_offhook'
     ) {
@@ -64,37 +65,22 @@ function Consultant({
     stopMonitoring,
     consultInfo.number,
     consultInfo.call_type,
-    tappingState,
+    tapping,
   ]);
 
   return (
     <StyledWrapper>
       <StyledCallStatusArea>
         {consultInfo.call_type !== 'call_offhook' ? (
-          <Text
-            fontColor={COLORS.dark_gray1}
-            fontWeight={700}
-            fontSize={0.87}
-            fontFamily={'NanumGothic'}
-          >
+          <Text fontColor={COLORS.dark_gray1} fontWeight={700} fontSize={0.87}>
             대기중
           </Text>
         ) : (
           <>
-            <Text
-              fontColor={COLORS.red}
-              fontWeight={700}
-              fontSize={0.87}
-              fontFamily={'NanumGothic'}
-            >
+            <Text fontColor={COLORS.red} fontWeight={700} fontSize={0.87}>
               통화중
             </Text>
-            <Text
-              fontColor={COLORS.red}
-              fontWeight={700}
-              fontSize={0.87}
-              fontFamily={'NanumGothic'}
-            >
+            <Text fontColor={COLORS.red} fontWeight={700} fontSize={0.87}>
               {consultInfo.diff
                 ? getHourMinSecV1(consultInfo.diff)
                 : '00:00:00'}
@@ -104,9 +90,19 @@ function Consultant({
       </StyledCallStatusArea>
       <StyledCallImage>
         {consultInfo.call_type !== 'call_offhook' ? (
-          <Image src={waitingIcon} width={4} height={4} />
+          <Image
+            src={waitingIcon}
+            alt={'Waiting consultant'}
+            width={4}
+            height={4}
+          />
         ) : (
-          <Image src={callingIcon} width={4} height={4} />
+          <Image
+            src={callingIcon}
+            alt={'Calling consultant'}
+            width={4}
+            height={4}
+          />
         )}
       </StyledCallImage>
       <StyledUserInfo>
@@ -114,22 +110,20 @@ function Consultant({
           fontSize={1.1}
           fontColor={COLORS.dark_gray2}
           fontWeight={700}
-          fontFamily={'NanumGothic'}
           onClick={() => {
-            onClickVisible(consultInfo);
+            getConsultantInfo(consultInfo);
           }}
         >{`${consultInfo.name} 님`}</Text>
         <Text
           fontSize={0.75}
           fontColor={COLORS.dark_gray1}
           fontWeight={700}
-          fontFamily={'NanumGothic'}
           lineHeight={2.75}
         >{`${consultInfo.branch_name} ${consultInfo.team_name}`}</Text>
       </StyledUserInfo>
-      <StyledInterception>
+      <StyledTapping>
         {consultInfo.call_type === 'call_offhook' ? (
-          tappingState &&
+          tapping &&
           consultInfo.user_id !== loginId &&
           !consultInfo.monitoring ? null : (
             <Button
@@ -146,17 +140,17 @@ function Consultant({
               bgHoverImg={consultInfo.monitoring ? '' : tappingStartOverIcon}
               borderRadius={0.81}
               fontColor={
-                consultInfo.monitoring && consultInfo.user_id !== loginId
-                  ? COLORS.green
-                  : COLORS.white
+                consultInfo.monitoring && consultInfo.user_id === loginId
+                  ? COLORS.white
+                  : COLORS.green
               }
               onClick={async (e) => {
                 if (consultInfo.monitoring) {
-                  // 감청을 한번이라도 했을 경우
+                  // 감청 중인 경우
                   if (consultInfo.user_id === loginId) {
-                    // 내가 감청 중
+                    // 내가 해당 상담원을 감청하고 있는 경우
                     stopMonitoring(consultInfo.number, loginId);
-                    setTappingState(false);
+                    setTapping(false);
                   }
                   return;
                 }
@@ -167,7 +161,7 @@ function Consultant({
                     setTimeout(() => {
                       startMonitoring(consultInfo.number, loginId);
                     }, 1000);
-                    setTappingState(true);
+                    setTapping(true);
                   } else {
                     alert('ZiBox IP를 확인해주세요.');
                   }
@@ -184,7 +178,6 @@ function Consultant({
                 }
                 fontSize={0.81}
                 fontWeight={800}
-                fontFamily={'NanumGothic'}
               >
                 {consultInfo.monitoring
                   ? consultInfo.user_id === loginId
@@ -195,20 +188,20 @@ function Consultant({
             </Button>
           )
         ) : null}
-      </StyledInterception>
+      </StyledTapping>
     </StyledWrapper>
   );
 }
 
 interface ConsultantProps {
   consultInfo: ConsultantInfoType;
-  tappingState: boolean;
   loginId: number;
-  onClickVisible: (data: ConsultantInfoType) => void;
+  tapping: boolean;
+  getConsultantInfo: (data: ConsultantInfoType) => void;
   initZibox: (ziboxIp: string) => Promise<boolean>;
+  setTapping: React.Dispatch<React.SetStateAction<boolean>>;
   startMonitoring: (number: string, id: number) => void;
   stopMonitoring: (number: string, id: number) => void;
-  setTappingState: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 Consultant.defaultProps = {};

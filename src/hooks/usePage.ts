@@ -8,16 +8,21 @@ function usePage() {
   const countBranch = useSelector(
     (state: RootState) => state.branch.numberOfBranch,
   );
-  const countUser = useSelector((state: RootState) => state.user.numberOfUsers);
+  const countUser = useSelector(
+    (state: RootState) => state.user.userList.numberOfUsers,
+  );
+  const filterCountUser = useSelector(
+    (state: RootState) => state.user.filterUserList.numberOfUsers,
+  );
   const [page, setPage] = useState<number>(1);
 
-  const onChnageCurrentPage = useCallback((cur: number, total: number) => {
+  const onChangeCurrentPage = useCallback((cur: number, total: number) => {
     let maxPage = getMaxPage(total);
 
-    if(cur > maxPage){
-      setPage(maxPage)
+    if (cur > maxPage) {
+      setPage(maxPage);
     }
-  }, [])
+  }, []);
 
   const onClickNextPage = useCallback(
     (cur: number, total: number, isEnd = false) => {
@@ -49,10 +54,11 @@ function usePage() {
   return {
     page,
     countUser,
+    filterCountUser,
     countBranch,
     onClickNextPage,
     onClickPrevPage,
-    onChnageCurrentPage,
+    onChangeCurrentPage,
   };
 }
 

@@ -1,8 +1,7 @@
 import { History, Location } from 'history';
 
-export interface FetchType {
-  fetch?: boolean;
-  error?: boolean | FailureType;
+export interface FetchType extends FailureType {
+  fetch: boolean;
 }
 
 export interface HistoryType {
@@ -11,5 +10,5 @@ export interface HistoryType {
 }
 
 export interface FailureType {
-  error: Error;
+  error: Error | boolean;
 }

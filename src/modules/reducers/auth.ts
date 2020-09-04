@@ -52,7 +52,7 @@ const authReducer = createReducer<AuthType, AuthAction>(initialState, {
   [actions.FAILURE_LOGIN]: (state, action) => {
     return produce(state, (draft) => {
       draft.request.login.fetch = false;
-      draft.request.login.error = action.payload;
+      draft.request.login.error = action.payload.error;
     });
   },
   [actions.REQUEST_CHECK_LOGIN]: (state, action) => {
@@ -71,7 +71,7 @@ const authReducer = createReducer<AuthType, AuthAction>(initialState, {
   [actions.FAILURE_CHECK_LOGIN]: (state, action) => {
     return produce(state, (draft) => {
       draft.request.checkLogin.fetch = false;
-      draft.request.checkLogin.error = action.payload;
+      draft.request.checkLogin.error = action.payload.error;
     });
   },
   [actions.REQUEST_LOGOUT]: (state, action) => {
@@ -90,7 +90,7 @@ const authReducer = createReducer<AuthType, AuthAction>(initialState, {
   [actions.FAILURE_LOGOUT]: (state, action) => {
     return produce(state, (draft) => {
       draft.request.logout.fetch = false;
-      draft.request.logout.error = action.payload;
+      draft.request.logout.error = action.payload.error;
     });
   },
 });

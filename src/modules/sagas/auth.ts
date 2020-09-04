@@ -8,11 +8,11 @@ import {
   failureLogin,
   requestCheckLogin,
   REQUEST_CHECK_LOGIN,
+  successCheckLogin,
+  failureCheckLogin,
   requestLogout,
   REQUEST_LOGOUT,
   successLogout,
-  successCheckLogin,
-  failureCheckLogin,
   failureLogout,
 } from 'modules/actions/auth';
 import * as API from 'lib/api';
@@ -46,7 +46,7 @@ function* loginProcess(action: ReturnType<typeof requestLogin>) {
     }
   } catch (error) {
     console.log(error);
-    yield put(failureLogin(error.message));
+    yield put(failureLogin(error));
     alert('Wrong ID or password.');
   }
 }
@@ -78,7 +78,7 @@ function* checkLoginProcess(action: ReturnType<typeof requestCheckLogin>) {
     }
   } catch (error) {
     console.log(error);
-    yield put(failureCheckLogin(error.message));
+    yield put(failureCheckLogin(error));
     history!.push('/auth/login');
   }
 }
@@ -102,7 +102,7 @@ function* logoutProcess(action: ReturnType<typeof requestLogout>) {
     }
   } catch (error) {
     console.log(error);
-    yield put(failureLogout(error.message));
+    yield put(failureLogout(error));
   }
 }
 

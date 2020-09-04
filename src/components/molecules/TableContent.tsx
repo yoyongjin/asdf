@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { COLORS } from 'utils/color';
 import { TableProperty } from 'components/molecules';
 import { UserInfo } from 'modules/types/user';
+import { BranchInfo, TeamInfo } from 'modules/types/branch';
 
 const StyledWrapper = styled.tr`
   width: 100%;
@@ -12,22 +13,23 @@ const StyledWrapper = styled.tr`
 `;
 
 function TableContent({
-  userInfo,
-  threeDotsIcon,
-  hoverThreeDotsIcon,
-  branchList,
-  teamList,
+  adminId,
   adminList,
+  branchId,
+  branchList,
   branchName,
-  adminType,
-  onClickUpdateUser,
+  page,
+  teamId,
+  teamList,
+  userInfo,
+  optionIcon,
+  optionHoverIcon,
   getBranchList,
   getTeamList,
+  getUserInfo,
   onClickDeleteUser,
   onClickResetPassword,
-  page,
-  branchId,
-  teamId,
+  onClickUpdateUser,
 }: TableContentProps) {
   return (
     <>
@@ -36,22 +38,23 @@ function TableContent({
           <StyledWrapper key={`styled-property-${i}`}>
             <TableProperty
               key={`table-property-${i}`}
-              info={user}
-              threeDotsIcon={threeDotsIcon}
-              hoverThreeDotsIcon={hoverThreeDotsIcon}
-              branchList={branchList}
-              teamList={teamList}
+              adminId={adminId}
               adminList={adminList}
-              onClickUpdateUser={onClickUpdateUser}
+              branchId={branchId!}
+              branchList={branchList}
+              branchName={branchName}
+              info={user}
+              page={page!}
+              teamId={teamId!}
+              teamList={teamList}
+              optionIcon={optionIcon}
+              optionHoverIcon={optionHoverIcon}
               getBranchList={getBranchList!}
               getTeamList={getTeamList!}
+              getUserInfo={getUserInfo!}
               onClickDeleteUser={onClickDeleteUser!}
               onClickResetPassword={onClickResetPassword!}
-              page={page!}
-              branchId={branchId!}
-              branchName={branchName}
-              adminType={adminType}
-              teamId={teamId!}
+              onClickUpdateUser={onClickUpdateUser}
             />
           </StyledWrapper>
         );
@@ -65,41 +68,21 @@ interface SelectDataType {
   data: string;
 }
 
-interface BranchInfo {
-  branch_name: string;
-  created_at: string;
-  id: number;
-}
-
-interface TeamInfo {
-  branch_id: number;
-  id: number;
-  team_name: string;
-}
-
 interface TableContentProps {
-  userInfo: Array<UserInfo>;
-  threeDotsIcon: string;
-  hoverThreeDotsIcon: string;
-  branchList: Array<BranchInfo>;
-  teamList: Array<TeamInfo>;
+  adminId?: number;
   adminList: Array<SelectDataType>;
-  page?: number;
   branchId?: number;
+  branchList: Array<BranchInfo>;
   branchName?: string;
-  adminType?: number;
+  page?: number;
   teamId?: number;
-  onClickUpdateUser: (
-    id: string,
-    branchId: string,
-    teamId: string,
-    admin: string,
-    name: string,
-    userId: string,
-    password: string,
-    tel: string,
-    ip: string,
-  ) => void;
+  teamList: Array<TeamInfo>;
+  userInfo: Array<UserInfo>;
+  optionIcon: string;
+  optionHoverIcon: string;
+  getBranchList?: () => void;
+  getTeamList?: (branch_id: number) => void;
+  getUserInfo?: (info: UserInfo) => void;
   onClickDeleteUser?: (
     id: string,
     page: number,
@@ -107,8 +90,17 @@ interface TableContentProps {
     teamId: number,
   ) => void;
   onClickResetPassword?: (id: number) => void;
-  getBranchList?: () => void;
-  getTeamList?: (branch_id: number) => void;
+  onClickUpdateUser: (
+    id: number,
+    branchId: number,
+    teamId: number,
+    admin: number,
+    name: string,
+    userId: string,
+    password: string,
+    tel: string,
+    ip: string,
+  ) => void;
 }
 
 TableContent.defaultProps = {};

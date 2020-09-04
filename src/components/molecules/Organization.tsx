@@ -40,7 +40,7 @@ function Organization({
   handleDeleteTeam,
   handleDeleteBranch,
 }: OrganizationProps) {
-  const { form, onChangeInput, initTempValue } = useInputForm<Dic>({});
+  const { form, onChangeInput, setKeyValue } = useInputForm<Dic>({});
   const inputRef = useRef<HTMLInputElement[]>([]) as React.MutableRefObject<
     HTMLInputElement[]
   >;
@@ -72,7 +72,7 @@ function Organization({
             if (!branchIf.branch_name) {
               // 지점 입력이 처음일 때
               handleAddBranch!(value);
-              initTempValue(name, '');
+              setKeyValue(name, '');
               return;
             } else {
               handleUpdateBranch!(branchIf.id, value);
@@ -82,7 +82,7 @@ function Organization({
             if (!teamIf.team_name) {
               // 팀 입력이 처음일 때
               handleAddTeam!(value, teamIf.branch_id, teamIf.id);
-              initTempValue(name, '');
+              setKeyValue(name, '');
               return;
             } else {
               handleUpdateTeam!(teamIf.id, value, branchId);
@@ -141,7 +141,7 @@ function Organization({
       handleAddTeam,
       handleUpdateBranch,
       handleUpdateTeam,
-      initTempValue,
+      setKeyValue,
       handleDeleteTeam,
       handleDeleteBranch,
       form,

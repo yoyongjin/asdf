@@ -16,13 +16,13 @@ export interface BranchType<T> {
   branchName: common.FetchType;
   branchInfo: object | BranchInfoType<T>;
   numberOfBranch: number;
-  namesList: NameListType
+  namesList: NameListType;
 }
 
 export interface NameListType {
   branch: Array<BranchInfo> | null;
   team: Array<TeamInfo> | null;
-  userBranch:  Array<BranchInfo> | null;
+  userBranch: Array<BranchInfo> | null;
   userTeam: Array<TeamInfo> | null;
 }
 
