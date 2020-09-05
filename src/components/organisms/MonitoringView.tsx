@@ -95,8 +95,15 @@ function Monitoring({ location }: MonitoringProps) {
   );
 
   const getUsers = useCallback(
-    (branchId: number, teamId: number, count: number, page: number, path: string) => {
-      getUsersInfo(branchId, teamId, count, page, '', path);
+    (
+      branchId: number,
+      teamId: number,
+      count: number,
+      page: number,
+      path: string,
+      adminId?: number,
+    ) => {
+      getUsersInfo(branchId, teamId, count, page, '', path, adminId);
     },
     [getUsersInfo],
   );
@@ -109,7 +116,14 @@ function Monitoring({ location }: MonitoringProps) {
 
         if (form.branch !== branch || form.team !== team) {
           // 지점 또는 팀 선택이 변경될 경우
-          getUsers(form.branch, form.team, 2000, 1, location.pathname);
+          getUsers(
+            form.branch,
+            form.team,
+            2000,
+            1,
+            location.pathname,
+            loginInfo.admin_id,
+          );
           branch = form.branch;
           team = form.team;
         }
@@ -117,7 +131,14 @@ function Monitoring({ location }: MonitoringProps) {
       }
 
       // 첫 상담원 정보 가져올 때
-      getUsers(form.branch, form.team, 2000, 1, location.pathname);
+      getUsers(
+        form.branch,
+        form.team,
+        2000,
+        1,
+        location.pathname,
+        loginInfo.admin_id,
+      );
     } else if (loginInfo.admin_id === 1) {
       // 일반 관리자
       if (consultantInfo.length > 0) {
@@ -125,14 +146,28 @@ function Monitoring({ location }: MonitoringProps) {
 
         if (form.team !== team) {
           // 지점 또는 팀 선택이 변경될 경우
-          getUsers(loginInfo.branch_id, form.team, 2000, 1, location.pathname);
+          getUsers(
+            loginInfo.branch_id,
+            form.team,
+            2000,
+            1,
+            location.pathname,
+            loginInfo.admin_id,
+          );
           team = form.team;
         }
         return;
       }
 
       // 첫 상담원 정보 가져올 때
-      getUsers(loginInfo.branch_id, form.team, 2000, 1, location.pathname);
+      getUsers(
+        loginInfo.branch_id,
+        form.team,
+        2000,
+        1,
+        location.pathname,
+        loginInfo.admin_id,
+      );
     }
   }, [
     loginInfo.admin_id,
@@ -183,31 +218,18 @@ function Monitoring({ location }: MonitoringProps) {
           <Title
             selectType={selectInfo}
             onChangeSelect={onChangeSelect}
-            branch={form.branch}
+            branch={
+              loginInfo.admin_id === 1 ? loginInfo.branch_id : form.branch
+            }
             team={form.team}
           >
             상담원 모니터링
           </Title>
         </StyledTitle>
         <StyledConsultantArea>
-          {form.branch === -1 && form.team === -1
-            ? consultantInfo.map((consultant, i) => {
-                if (loginInfo.admin_id === 0) {
-                  // 상담원이 로그인 했을 경우
-                  return null;
-                }
-
-                if (consultant.admin_id === 2 || consultant.admin_id === 1) {
-                  // 가져온 데이터 중 관리자 제거
-                  return null;
-                }
-
-                if (
-                  loginInfo.admin_id === 2 ||
-                  loginInfo.branch_id === consultant.branch_id
-                ) {
-                  // 슈퍼관리자일 경우
-                  // 일반관리자일 경우에 지점이 같은 상담원만 보여주기
+          {loginInfo.admin_id === 2
+            ? form.branch === -1 && form.team === -1
+              ? consultantInfo.map((consultant, i) => {
                   return (
                     <StyledConsultant
                       key={`styled-consultant-${consultant.id}`}
@@ -225,27 +247,8 @@ function Monitoring({ location }: MonitoringProps) {
                       />
                     </StyledConsultant>
                   );
-                } else {
-                  return null;
-                }
-              })
-            : filterConsultantInfo.map((consultant, i) => {
-                if (loginInfo.admin_id === 0) {
-                  // 상담원이 로그인 했을 경우
-                  return null;
-                }
-
-                if (consultant.admin_id === 2 || consultant.admin_id === 1) {
-                  // 가져온 데이터 중 관리자 제거
-                  return null;
-                }
-
-                if (
-                  loginInfo.admin_id === 2 ||
-                  loginInfo.branch_id === consultant.branch_id
-                ) {
-                  // 슈퍼관리자일 경우
-                  // 일반관리자일 경우에 지점이 같은 상담원만 보여주기
+                })
+              : filterConsultantInfo.map((consultant, i) => {
                   return (
                     <StyledConsultant
                       key={`styled-consultant-${consultant.id}`}
@@ -263,10 +266,48 @@ function Monitoring({ location }: MonitoringProps) {
                       />
                     </StyledConsultant>
                   );
-                } else {
-                  return null;
-                }
-              })}
+                })
+            : loginInfo.admin_id === 1
+            ? form.team === -1
+              ? consultantInfo.map((consultant, i) => {
+                  return (
+                    <StyledConsultant
+                      key={`styled-consultant-${consultant.id}`}
+                    >
+                      <Consultant
+                        key={`consultant-${consultant.id}`}
+                        consultInfo={consultant}
+                        getConsultantInfo={getConsultantInfo}
+                        initZibox={initZibox}
+                        startMonitoring={startMonitoring}
+                        stopMonitoring={stopMonitoring}
+                        tapping={tapping}
+                        setTapping={setTapping}
+                        loginId={loginInfo.id}
+                      />
+                    </StyledConsultant>
+                  );
+                })
+              : filterConsultantInfo.map((consultant, i) => {
+                  return (
+                    <StyledConsultant
+                      key={`styled-consultant-${consultant.id}`}
+                    >
+                      <Consultant
+                        key={`consultant-${consultant.id}`}
+                        consultInfo={consultant}
+                        getConsultantInfo={getConsultantInfo}
+                        initZibox={initZibox}
+                        startMonitoring={startMonitoring}
+                        stopMonitoring={stopMonitoring}
+                        tapping={tapping}
+                        setTapping={setTapping}
+                        loginId={loginInfo.id}
+                      />
+                    </StyledConsultant>
+                  );
+                })
+            : null}
         </StyledConsultantArea>
       </StyledWrapper>
       <Modal

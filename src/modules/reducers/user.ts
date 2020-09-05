@@ -369,6 +369,14 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
           }
         }
 
+        if (draft.userList.consultants.length > 0) {
+          draft.userList.consultants = draft.userList.consultants.filter(
+            (values) => {
+              return values.id !== id;
+            },
+          );
+        }
+
         if (draft.filterUserList.users.length > 0) {
           let index = draft.filterUserList.users.findIndex((values) => {
             return values.id === id;
@@ -377,6 +385,14 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
           if (index > -1) {
             draft.filterUserList.users[index] = value;
           }
+        }
+
+        if (draft.filterUserList.consultants.length > 0) {
+          draft.filterUserList.consultants = draft.filterUserList.consultants.filter(
+            (values) => {
+              return values.id !== id;
+            },
+          );
         }
       }
     });
@@ -454,8 +470,8 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
   },
   [types.RESET_FILTERED_USER]: (state, action) => {
     return produce(state, (draft) => {
-     draft.filterUserList.users = [];
-     draft.filterUserList.numberOfUsers = 0;
+      draft.filterUserList.users = [];
+      draft.filterUserList.numberOfUsers = 0;
     });
   },
 });

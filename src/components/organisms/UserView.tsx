@@ -68,10 +68,10 @@ const tableTitle = [
 let branch = -1;
 let team = -1;
 let currentPage = 0;
-let search = '';
 
 function UserView({ location }: UserViewProps) {
   const [tempUserInfo, setTempUserInfo] = useState<UserInfoType>();
+  const [search, setSearch] = useState<string>('');
   const { loginInfo } = useAuth();
   const { branchList, teamList, getBranchList, getTeamList } = useBranch();
   const { form, onChangeSelect, onChangeInput, setKeyValue } = useInputForm({
@@ -94,6 +94,7 @@ function UserView({ location }: UserViewProps) {
     filterCountUser,
     page,
     onChangeCurrentPage,
+    onChangePageFirst,
     onClickNextPage,
     onClickPrevPage,
   } = usePage();
@@ -123,23 +124,9 @@ function UserView({ location }: UserViewProps) {
   }, [onClickVisible]);
 
   const onClickSearch = useCallback(() => {
-    getUsersInfo(
-      form.branch,
-      form.team,
-      5,
-      page,
-      form.search,
-      location.pathname,
-    );
-    search = form.search;
-  }, [
-    form.branch,
-    form.team,
-    form.search,
-    location.pathname,
-    page,
-    getUsersInfo,
-  ]);
+    setSearch(form.search);
+    onChangePageFirst();
+  }, [form.search, onChangePageFirst]);
 
   const getUsers = useCallback(
     (
@@ -149,9 +136,10 @@ function UserView({ location }: UserViewProps) {
       page: number,
       path: string,
       search = '',
+      adminId: number,
     ) => {
       // 서버로부터 데이터 요청
-      getUsersInfo(branchId, teamId, count, page, search, path);
+      getUsersInfo(branchId, teamId, count, page, search, path, adminId);
     },
     [getUsersInfo],
   );
@@ -168,45 +156,68 @@ function UserView({ location }: UserViewProps) {
   useEffect(() => {
     if (loginInfo.admin_id === 2) {
       // 슈퍼관리자
-      if (form.branch === -1 && currentPage === page) {
+      if (form.branch === -1 && filterUserInfo.length > 0) {
         // 필터링된 유저 리스트에서 전체 지점명을 볼 경우 필터링된 유저 리스트 초기화
-        if (form.search) return;
+        if (search.trim() && currentPage === page) {
+          if (!form.search.trim() && form.search !== search) {
+            // 실제 검색 내용과 입력중
+            setSearch('');
+          }
+          return;
+        }
         resetFilteredUsers();
       }
 
-      if (
-        form.branch !== branch ||
-        form.team !== team ||
-        currentPage !== page
-      ) {
-        // 지점 또는 팀 선택이 변경될 경우
-        // if(form.search) return;
-        getUsers(form.branch, form.team, 5, page, location.pathname);
-        branch = form.branch;
-        team = form.team;
-        currentPage = page;
+      if (form.search.trim() !== search.trim() && currentPage === page) {
+        // 실제 검색 내용과 입력한 내용이 다를 경우
+        if (!form.search.trim() && search.trim()) {
+          setSearch('');
+        }
+        return;
+      }
 
-        return;
-      }
-      if (!form.search.trim() && search) {
-        search = '';
-        return;
-      }
-      getUsers(form.branch, form.team, 5, page, location.pathname);
-      branch = form.branch;
-      team = form.team;
+      getUsers(
+        form.branch,
+        form.team,
+        5,
+        page,
+        location.pathname,
+        search,
+        loginInfo.admin_id,
+      );
       currentPage = page;
     } else if (loginInfo.admin_id === 1) {
       // 일반 관리자
-      if (form.team === -1 && currentPage === page) return;
+      if (form.team === -1 && filterUserInfo.length > 0) {
+        // 필터링된 유저 리스트에서 전체 지점명을 볼 경우 필터링된 유저 리스트 초기화
+        if (search.trim() && currentPage === page) {
+          if (!form.search.trim() && form.search !== search) {
+            // 실제 검색 내용과 입력중
+            setSearch('');
+          }
+          return;
+        }
+        resetFilteredUsers();
+      }
 
-      if (form.team !== team || currentPage !== page) {
-        // 팀 선택이 변경될 경우
-        getUsers(loginInfo.branch_id, form.team, 5, page, location.pathname);
-        team = form.team;
-        currentPage = page;
+      if (form.search.trim() !== search.trim() && currentPage === page) {
+        // 실제 검색 내용과 입력한 내용이 다를 경우
+        if (!form.search.trim() && search.trim()) {
+          setSearch('');
+        }
         return;
       }
+
+      getUsers(
+        loginInfo.branch_id,
+        form.team,
+        5,
+        page,
+        location.pathname,
+        search,
+        loginInfo.admin_id,
+      );
+      currentPage = page;
     }
   }, [
     loginInfo.admin_id,
@@ -214,7 +225,9 @@ function UserView({ location }: UserViewProps) {
     form.branch,
     form.team,
     form.search,
+    search,
     page,
+    filterUserInfo.length,
     location.pathname,
     getUsers,
     resetFilteredUsers,
@@ -250,15 +263,6 @@ function UserView({ location }: UserViewProps) {
     }
   }, [countUser, filterCountUser, page, onChangeCurrentPage]);
 
-  useEffect(() => {
-    if (form.search.trim() && search) {
-      onChangeCurrentPage(page, filterCountUser);
-    }
-    if (!form.search) {
-      search = '';
-    }
-  }, [page, form.search, filterCountUser, onChangeCurrentPage]);
-
   console.log('Lendering UserView');
   return (
     <>
@@ -268,7 +272,9 @@ function UserView({ location }: UserViewProps) {
             buttonType={buttonInfo}
             selectType={selectInfo}
             isSearch
-            branch={form.branch}
+            branch={
+              loginInfo.admin_id === 1 ? loginInfo.branch_id : form.branch
+            }
             team={form.team}
             search={form.search}
             onChange={onChangeInput}
@@ -292,12 +298,12 @@ function UserView({ location }: UserViewProps) {
               teamList={selectInfo.data2}
               userInfo={
                 loginInfo.admin_id === 2
-                  ? search && form.search !== ''
+                  ? search.trim() && form.search.trim()
                     ? filterUserInfo
                     : form.branch === -1 && form.team === -1
                     ? userInfo
                     : filterUserInfo
-                  : search && form.search !== ''
+                  : search.trim() && form.search.trim()
                   ? filterUserInfo
                   : form.team === -1
                   ? userInfo
@@ -316,7 +322,7 @@ function UserView({ location }: UserViewProps) {
           <StyledUserPage>
             <TablePagination
               count={
-                search && form.search !== ''
+                search.trim() && form.search.trim()
                   ? filterCountUser
                   : form.branch !== -1
                   ? filterCountUser

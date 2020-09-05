@@ -21,7 +21,7 @@ export interface RequestType {
   resetPassword: common.FetchType;
 }
 
-export interface UserListType{
+export interface UserListType {
   users: Array<UserInfo>;
   consultants: Array<ConsultantInfoType>;
   numberOfUsers: number;
@@ -60,7 +60,6 @@ export interface ConsultantInfoType {
   user_id?: number;
 }
 
-
 export interface UserInfoType {
   branch_id: string;
   team_id: string;
@@ -72,7 +71,6 @@ export interface UserInfoType {
   ziboxip: string;
 }
 
-
 export interface getRequestType {
   branchId: number;
   teamId: number;
@@ -80,6 +78,7 @@ export interface getRequestType {
   page: number;
   search?: string;
   url: string;
+  adminId?: number;
 }
 
 export interface SuccessUserType {
@@ -97,7 +96,6 @@ export interface UpdateUserInfoType extends UserInfoType {
   user_id: string;
 }
 
-
 export interface TestUser {
   id: number;
   branch_id: string;
@@ -114,7 +112,7 @@ export interface deleteUserType {
   id: string;
   page: number;
   branchId: number;
-  teamId: number
+  teamId: number;
 }
 
 export interface callStateType {

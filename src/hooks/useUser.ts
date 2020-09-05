@@ -13,9 +13,7 @@ import { RootState } from 'modules/reducers';
 import { LIMIT, PAGE } from 'utils/constants';
 
 function useUser() {
-  const userInfo = useSelector(
-    (state: RootState) => state.user.userList.users,
-  ); // 전체 유저 정보
+  const userInfo = useSelector((state: RootState) => state.user.userList.users); // 전체 유저 정보
   const consultantInfo = useSelector(
     (state: RootState) => state.user.userList.consultants,
   ); // 상담원 정보
@@ -36,6 +34,7 @@ function useUser() {
       page = 0,
       search = '',
       url?: string,
+      adminId?: number,
     ) => {
       const payload = {
         branchId,
@@ -44,6 +43,7 @@ function useUser() {
         page: page || PAGE,
         search,
         url: url!,
+        adminId,
       };
       dispatch(requestGetUserInfo(payload));
     },
@@ -52,7 +52,7 @@ function useUser() {
 
   const resetFilteredUsers = useCallback(() => {
     dispatch(resetFilteredUser());
-  }, [dispatch])
+  }, [dispatch]);
 
   const onClickInsertUser = useCallback(
     (

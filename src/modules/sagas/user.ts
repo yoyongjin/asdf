@@ -27,7 +27,15 @@ import * as API from 'lib/api';
 import Socket from 'lib/socket';
 
 function* getUserInfoProcess(action: ReturnType<typeof requestGetUserInfo>) {
-  const { branchId, teamId, limit, page, search, url } = action.payload;
+  const {
+    branchId,
+    teamId,
+    limit,
+    page,
+    search,
+    url,
+    adminId,
+  } = action.payload;
   const payload = {
     branch_id: branchId,
     team_id: teamId,
@@ -51,13 +59,24 @@ function* getUserInfoProcess(action: ReturnType<typeof requestGetUserInfo>) {
         url,
       };
 
-      if (branchId === -1 && teamId === -1 && search === '') {
-        // 전체 지점
-        yield put(successGetUserInfo(payload));
-        Socket.getInstance().onEmit('call-state');
-      } else {
-        // 필터링된 유저
-        yield put(successGetFilterUserInfo(payload));
+      if (adminId === 2) {
+        if (branchId === -1 && teamId === -1 && search === '') {
+          // 전체 지점
+          yield put(successGetUserInfo(payload));
+          Socket.getInstance().onEmit('call-state');
+        } else {
+          // 필터링된 유저
+          yield put(successGetFilterUserInfo(payload));
+        }
+      } else if (adminId === 1) {
+        if (teamId === -1 && search === '') {
+          // 전체 지점
+          yield put(successGetUserInfo(payload));
+          Socket.getInstance().onEmit('call-state');
+        } else {
+          // 필터링된 유저
+          yield put(successGetFilterUserInfo(payload));
+        }
       }
     }
   } catch (error) {

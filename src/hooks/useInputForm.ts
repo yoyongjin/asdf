@@ -12,6 +12,7 @@ function useInputForm<T>(initialForm: T) {
 
   const onChangeSelect = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>, data?: number) => {
+      console.log(data);
       if (data === -1) {
         alert('지점명을 선택한 후 진행해주세요.');
         return;

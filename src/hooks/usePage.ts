@@ -16,6 +16,10 @@ function usePage() {
   );
   const [page, setPage] = useState<number>(1);
 
+  const onChangePageFirst = useCallback(() => {
+    setPage(1);
+  }, []);
+
   const onChangeCurrentPage = useCallback((cur: number, total: number) => {
     let maxPage = getMaxPage(total);
 
@@ -59,6 +63,7 @@ function usePage() {
     onClickNextPage,
     onClickPrevPage,
     onChangeCurrentPage,
+    onChangePageFirst,
   };
 }
 
