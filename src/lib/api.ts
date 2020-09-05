@@ -5,7 +5,7 @@ import { apiServer } from 'utils/constants';
 export const instance = axios.create({
   baseURL: apiServer,
   timeout: 1000,
-  withCredentials: true
+  withCredentials: true,
 });
 
 // auth
@@ -106,7 +106,7 @@ export const updateUser = (
     ziboxip,
   });
 
-export const deleteUser = (id: string) =>
+export const deleteUser = (id: number) =>
   instance.delete('/api/auth', {
     data: {
       user_id: id,

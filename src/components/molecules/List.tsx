@@ -42,6 +42,7 @@ function List({
   info,
   page,
   teamId,
+  loginAdmin,
   onClickDeleteUser,
   onClickGetUserInfo,
   onClickResetPassword,
@@ -61,7 +62,7 @@ function List({
               } else if (i === 1) {
                 onClickResetPassword!(id);
               } else if (i === 2) {
-                onClickDeleteUser!(String(id), page!, branchId!, teamId!);
+                onClickDeleteUser!(id, page!, branchId!, teamId!, loginAdmin);
               }
             }}
           >
@@ -83,12 +84,14 @@ interface ListProps {
   info: UserInfo;
   page?: number;
   teamId?: number;
+  loginAdmin: number;
   onClickGetUserInfo?: (info: UserInfo) => void;
   onClickDeleteUser?: (
-    id: string,
+    id: number,
     page: number,
     branchId: number,
     teamId: number,
+    adminId: number,
   ) => void;
   onClickResetPassword?: (id: number) => void;
   onClickVisible?: () => void;

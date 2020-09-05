@@ -84,10 +84,11 @@ interface TableContentProps {
   getTeamList?: (branch_id: number) => void;
   getUserInfo?: (info: UserInfo) => void;
   onClickDeleteUser?: (
-    id: string,
+    id: number,
     page: number,
     branchId: number,
     teamId: number,
+    adminId: number,
   ) => void;
   onClickResetPassword?: (id: number) => void;
   onClickUpdateUser: (

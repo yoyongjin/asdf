@@ -59,8 +59,11 @@ function* getUserInfoProcess(action: ReturnType<typeof requestGetUserInfo>) {
         url,
       };
 
+      console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+      console.log(branchId, teamId, limit, page, search, url, adminId);
+
       if (adminId === 2) {
-        if (branchId === -1 && teamId === -1 && search === '') {
+        if (branchId === -1 && teamId === -1 && !search?.trim()) {
           // 전체 지점
           yield put(successGetUserInfo(payload));
           Socket.getInstance().onEmit('call-state');
@@ -69,7 +72,7 @@ function* getUserInfoProcess(action: ReturnType<typeof requestGetUserInfo>) {
           yield put(successGetFilterUserInfo(payload));
         }
       } else if (adminId === 1) {
-        if (teamId === -1 && search === '') {
+        if (teamId === -1 && !search?.trim()) {
           // 전체 지점
           yield put(successGetUserInfo(payload));
           Socket.getInstance().onEmit('call-state');
@@ -153,22 +156,22 @@ function* updateUserProcess(action: ReturnType<typeof requestUpdateUser>) {
 
 function* deleteUserProcess(action: ReturnType<typeof requestDeleteUser>) {
   try {
-    const { id, branchId, teamId, page } = action.payload;
+    const { id, branchId, teamId, page, adminId } = action.payload;
     console.log(id, branchId, teamId, page);
 
     const response = yield call(API.deleteUser, id);
     console.log(response);
     if (response.data.data) {
       const payload = {
-        adminId: 1,
+        adminId,
         branchId,
         teamId,
         limit: 5,
         page,
-        url: '',
+        url: '/main/manage/user',
       };
-      yield put(successDeleteUser());
       yield put(requestGetUserInfo(payload));
+      yield put(successDeleteUser());
     }
   } catch (error) {
     console.log(error);
@@ -184,6 +187,7 @@ function* resetPasswordProcess(
     const response = yield call(API.resetPassword, id);
     console.log(response);
     yield put(successResetPassword());
+    alert('초기 비밀번호는 0000 입니다.');
   } catch (error) {
     console.log(error);
     yield put(failureResetPassword(error));

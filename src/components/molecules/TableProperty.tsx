@@ -98,6 +98,7 @@ function TableProperty({
         {isHover && (
           <StyledList>
             <List
+              loginAdmin={adminId!}
               adminId={info.admin_id}
               branchId={branchId!}
               menu={menuList}
@@ -166,10 +167,11 @@ interface TableContentProps {
     ip: string,
   ) => void;
   onClickDeleteUser: (
-    id: string,
+    id: number,
     page: number,
     branchId: number,
     teamId: number,
+    adminId: number,
   ) => void;
   onClickResetPassword?: (id: number) => void;
   getBranchList: () => void;

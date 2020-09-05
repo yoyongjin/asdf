@@ -109,10 +109,11 @@ export interface TestUser {
 }
 
 export interface deleteUserType {
-  id: string;
+  id: number;
   page: number;
   branchId: number;
   teamId: number;
+  adminId: number;
 }
 
 export interface callStateType {

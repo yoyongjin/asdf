@@ -122,12 +122,13 @@ function useUser() {
   );
 
   const onClickDeleteUser = useCallback(
-    (id: string, page: number, branchId = -1, teamId = -1) => {
+    (id: number, page: number, branchId = -1, teamId = -1, adminId: number) => {
       const payload = {
         id,
         page,
         branchId,
         teamId,
+        adminId,
       };
       dispatch(requestDeleteUser(payload));
     },
