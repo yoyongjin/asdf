@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 
 import { Button, Select, Text } from 'components/atoms';
@@ -78,36 +78,31 @@ function Title({
   onChangeSelect,
   onClickSearch,
 }: TitleProps) {
-  let branchList: Array<SelectDataType> = [];
-  let teamList: Array<SelectDataType> = [];
-  let branch_name = '';
-  let team_name = '';
+  const branchList = useMemo(() => {
+    if (selectType) {
+      let temp1 = selectType!.data1 as Array<BranchInfo>;
+      return temp1.map((value) => {
+        let data = {
+          id: value.id,
+          data: value.branch_name,
+        };
+        return data;
+      });
+    }
+  }, [selectType]);
 
-  if (selectType) {
-    let temp1 = selectType.data1 as Array<BranchInfo>;
-    branchList = temp1.map((value) => {
-      let data = {
-        id: value.id,
-        data: value.branch_name,
-      };
-      if (Number(branch) === value.id) {
-        branch_name = value.branch_name;
-      }
-      return data;
-    });
-
-    let temp2 = selectType.data2 as Array<TeamInfo>;
-    teamList = temp2.map((value) => {
-      let data = {
-        id: value.id,
-        data: value.team_name,
-      };
-      if (Number(team) === value.id) {
-        team_name = value.team_name;
-      }
-      return data;
-    });
-  }
+  const teamList = useMemo(() => {
+    if (selectType) {
+      let temp2 = selectType!.data2 as Array<TeamInfo>;
+      return temp2.map((value) => {
+        let data = {
+          id: value.id,
+          data: value.team_name,
+        };
+        return data;
+      });
+    }
+  }, [selectType]);
 
   return (
     <StyledWrapper>
@@ -300,4 +295,4 @@ interface TitleProps {
 
 Title.defaultProps = {};
 
-export default React.memo(Title);
+export default Title;

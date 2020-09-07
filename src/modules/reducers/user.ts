@@ -275,7 +275,7 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
           }
         }
 
-        draft.userList.numberOfUsers += 1;
+        // draft.userList.numberOfUsers += 1;
         draft.userList.consultants.push(value);
       } else if (action.payload.admin_id === 1) {
         // 관리자일 경우

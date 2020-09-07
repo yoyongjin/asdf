@@ -232,7 +232,9 @@ function UserInfo({
           textValue={'팀명'}
           name={'team'}
           list={team}
-          onChange={(e) => onChangeSelect(e, form.branch)}
+          onChange={(e) =>
+            onChangeSelect(e, adminId === 1 ? branchId : form.branch)
+          }
         />
         <TextSelect
           defaultValue={form.admin}

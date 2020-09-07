@@ -62,13 +62,16 @@ function* getUserInfoProcess(action: ReturnType<typeof requestGetUserInfo>) {
       console.log(branchId, teamId, limit, page, search, url, adminId);
 
       if (adminId === 2) {
-        Socket.getInstance().onEmit('call-state');
         if (branchId === -1 && teamId === -1 && !search?.trim()) {
           // 전체 지점
           yield put(successGetUserInfo(payload));
         } else {
           // 필터링된 유저
           yield put(successGetFilterUserInfo(payload));
+        }
+
+        if(url === '/main'){
+          Socket.getInstance().onEmit('call-state');
         }
       } else if (adminId === 1) {
         if (teamId === -1 && !search?.trim()) {
@@ -78,7 +81,10 @@ function* getUserInfoProcess(action: ReturnType<typeof requestGetUserInfo>) {
           // 필터링된 유저
           yield put(successGetFilterUserInfo(payload));
         }
-        Socket.getInstance().onEmit('call-state');
+
+        if(url === '/main'){
+          Socket.getInstance().onEmit('call-state');
+        }
       }
     }
   } catch (error) {
