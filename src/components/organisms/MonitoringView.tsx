@@ -69,6 +69,7 @@ function Monitoring({ location }: MonitoringProps) {
     consultantInfo,
     filterConsultantInfo,
     getUsersInfo,
+    resetFilteredList,
     onClickUpdateUser,
   } = useUser();
   const { visible, onClickVisible } = useVisible();
@@ -111,11 +112,15 @@ function Monitoring({ location }: MonitoringProps) {
   useEffect(() => {
     if (loginInfo.admin_id === 2) {
       // 슈퍼 관리자
+      if (form.branch === -1 && filterConsultantInfo.length > 0) {
+        // 필터링된 유저 리스트에서 전체 지점명을 볼 경우 필터링된 유저 리스트 초기화
+        resetFilteredList(2);
+      }
+
       if (consultantInfo.length > 0) {
         if (form.branch === -1) return;
-
         if (form.branch !== branch || form.team !== team) {
-          // 지점 또는 팀 선택이 변경될 경우
+          // 지점명 또는 팀명 선택이 변경될 경우
           getUsers(
             form.branch,
             form.team,
@@ -139,8 +144,15 @@ function Monitoring({ location }: MonitoringProps) {
         location.pathname,
         loginInfo.admin_id,
       );
+      branch = form.branch;
+      team = form.team;
     } else if (loginInfo.admin_id === 1) {
       // 일반 관리자
+      if (form.team === -1 && filterConsultantInfo.length > 0) {
+        // 필터링된 유저 리스트에서 전체 지점명을 볼 경우 필터링된 유저 리스트 초기화
+        resetFilteredList(2);
+      }
+
       if (consultantInfo.length > 0) {
         if (form.team === -1) return;
 
@@ -168,15 +180,18 @@ function Monitoring({ location }: MonitoringProps) {
         location.pathname,
         loginInfo.admin_id,
       );
+      team = form.team;
     }
   }, [
     loginInfo.admin_id,
     loginInfo.branch_id,
     form.branch,
     form.team,
-    consultantInfo,
+    consultantInfo.length,
+    filterConsultantInfo.length,
     location.pathname,
     getUsers,
+    resetFilteredList,
   ]);
 
   useEffect(() => {

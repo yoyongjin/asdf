@@ -30,6 +30,7 @@ export const REQUEST_RESET_PASSWORD = 'REQUEST_RESET_PASSWORD';
 export const SUCCESS_RESET_PASSWORD = 'SUCCESS_RESET_PASSWORD';
 export const FAILURE_RESET_PASSWORD = 'FAILURE_RESET_PASSWORD';
 export const RESET_FILTERED_USER = 'RESET_FILTERED_USER';
+export const RESET_FILTERED_CONSULTANT = 'RESET_FILTERED_CONSULTANT';
 
 export const RUN_TIMER = 'RUN_TIMER';
 export const INSERT_USER = 'INSERT_USER';
@@ -68,7 +69,7 @@ export const failureUpdateUser = createAction(FAILURE_UPDATE_USER)<
 export const getCallStatus = createAction(GET_CALL_STATUS)<any>();
 export const insertUser = createAction(INSERT_USER)<UserInfo>();
 export const updateUser = createAction(UPDATE_USER)<UserInfo>();
-export const deleteUser = createAction(DELETE_USER)<{ id: string }>();
+export const deleteUser = createAction(DELETE_USER)<{ id: number }>();
 export const requestDeleteUser = createAction(REQUEST_DELETE_USER)<
   deleteUserType
 >();
@@ -94,3 +95,4 @@ export const updateConsultant = createAction(UPDATE_CONSULTANT)<
   ConsultantInfoType
 >();
 export const resetFilteredUser = createAction(RESET_FILTERED_USER)();
+export const resetFilteredConsultant = createAction(RESET_FILTERED_CONSULTANT)();

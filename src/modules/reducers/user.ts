@@ -107,6 +107,16 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
           );
         }
       });
+
+      if (state.filterUserList.consultants.length > 0) {
+        state.filterUserList.consultants.map((consultant, i) => {
+          if (consultant.call_type === 'call_offhook' && consultant.call_time) {
+            draft.filterUserList.consultants[i].diff = getDiffTime(
+              consultant.call_time,
+            );
+          }
+        });
+      }
     });
   },
   [types.REQUEST_ADD_USER]: (state, action) => {
@@ -174,8 +184,40 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
       }
     });
 
+    const newFilteredUserList = state.filterUserList.consultants.map((user) => {
+      let map = action.payload[user.number];
+      if (typeof map === 'string') {
+        map = JSON.parse(map);
+      }
+      if (map && map.number === user.number) {
+        const { type, number, time, monitoring_state, user_id } = map;
+        let newUser = Object.assign({}, user);
+        newUser.call_time = Number(time);
+        newUser.call_type = type;
+        if (monitoring_state) {
+          if (monitoring_state === 'y') {
+            newUser.monitoring = true;
+          } else if (monitoring_state === 'n') {
+            newUser.monitoring = false;
+          }
+        }
+
+        if (user_id) {
+          newUser.user_id = user_id;
+        }
+
+        return newUser;
+      } else {
+        return user;
+      }
+    });
+
     return produce(state, (draft) => {
       draft.userList.consultants = newUserList;
+
+      if (state.filterUserList.consultants.length > 0) {
+        draft.filterUserList.consultants = newFilteredUserList;
+      }
     });
   },
   [types.INSERT_USER]: (state, action) => {
@@ -234,9 +276,6 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
         }
 
         draft.userList.numberOfUsers += 1;
-
-        if (state.userList.consultants.length < 1) return;
-
         draft.userList.consultants.push(value);
       } else if (action.payload.admin_id === 1) {
         // 관리자일 경우
@@ -416,9 +455,20 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
     });
   },
   [types.DELETE_USER]: (state, action) => {
-    console.log(action.payload);
     return produce(state, (draft) => {
-      draft.userList.numberOfUsers -= 1;
+      if (state.userList.consultants.length > 0) {
+        let data = state.userList.consultants.filter((consultant) => {
+          return consultant.id !== action.payload.id;
+        });
+        draft.userList.consultants = data;
+      }
+
+      if (state.filterUserList.consultants.length > 0) {
+        let data = state.filterUserList.consultants.filter((consultant) => {
+          return consultant.id !== action.payload.id;
+        });
+        draft.filterUserList.consultants = data;
+      }
     });
   },
   [types.CHANGE_CALL_STATE]: (state, action) => {
@@ -430,6 +480,15 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
           draft.userList.consultants[i].call_type = type;
         }
       });
+
+      if (state.filterUserList.consultants.length > 0) {
+        state.filterUserList.consultants.map((values, i) => {
+          if (values.number === number) {
+            draft.filterUserList.consultants[i].call_time = Number(time);
+            draft.filterUserList.consultants[i].call_type = type;
+          }
+        });
+      }
     });
   },
   [types.REQUEST_RESET_PASSWORD]: (state, action) => {
@@ -466,12 +525,31 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
           }
         }
       });
+
+      state.filterUserList.consultants.map((values, i) => {
+        if (values.number === number) {
+          draft.filterUserList.consultants[i].call_time = Number(time);
+          draft.filterUserList.consultants[i].call_type = type;
+          if (monitoring_state === 'y') {
+            draft.filterUserList.consultants[i].monitoring = true;
+            draft.filterUserList.consultants[i].user_id = user_id;
+          } else if (monitoring_state === 'n') {
+            draft.filterUserList.consultants[i].monitoring = false;
+            draft.filterUserList.consultants[i].user_id = user_id;
+          }
+        }
+      });
     });
   },
   [types.RESET_FILTERED_USER]: (state, action) => {
     return produce(state, (draft) => {
       draft.filterUserList.users = [];
       draft.filterUserList.numberOfUsers = 0;
+    });
+  },
+  [types.RESET_FILTERED_CONSULTANT]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.filterUserList.consultants = [];
     });
   },
 });

@@ -10,6 +10,7 @@ import {
   changeMonitoringState,
   insertConsultant,
   updateConsultant,
+  deleteUser,
 } from 'modules/actions/user';
 import { UserInfo, ConsultantInfoType } from 'modules/types/user';
 
@@ -30,13 +31,15 @@ function useSocket() {
       switch (type) {
         case 'signup':
           console.log('Sign up user data', data);
-          let signupUser = data;
-          dispatch(insertUser(signupUser));
+          dispatch(insertUser(data));
           break;
         case 'update':
           console.log('Update user data', data);
-          let updateUserInfo = data;
-          dispatch(updateUser(updateUserInfo));
+          dispatch(updateUser(data));
+          break;
+        case 'delete':
+          console.log('Delete user data', data);
+          dispatch(deleteUser(data));
           break;
         default:
           break;

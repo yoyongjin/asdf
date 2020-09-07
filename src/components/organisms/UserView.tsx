@@ -83,7 +83,7 @@ function UserView({ location }: UserViewProps) {
     userInfo,
     filterUserInfo,
     getUsersInfo,
-    resetFilteredUsers,
+    resetFilteredList,
     onClickInsertUser,
     onClickUpdateUser,
     onClickDeleteUser,
@@ -165,7 +165,7 @@ function UserView({ location }: UserViewProps) {
           }
           return;
         }
-        resetFilteredUsers();
+        resetFilteredList(1);
       }
 
       if (form.search.trim() !== search.trim() && currentPage === page) {
@@ -197,7 +197,7 @@ function UserView({ location }: UserViewProps) {
           }
           return;
         }
-        resetFilteredUsers();
+        resetFilteredList(1);
       }
 
       if (form.search.trim() !== search.trim() && currentPage === page) {
@@ -230,7 +230,7 @@ function UserView({ location }: UserViewProps) {
     filterUserInfo.length,
     location.pathname,
     getUsers,
-    resetFilteredUsers,
+    resetFilteredList,
   ]);
 
   useEffect(() => {

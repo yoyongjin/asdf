@@ -59,14 +59,13 @@ function* getUserInfoProcess(action: ReturnType<typeof requestGetUserInfo>) {
         url,
       };
 
-      console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
       console.log(branchId, teamId, limit, page, search, url, adminId);
 
       if (adminId === 2) {
+        Socket.getInstance().onEmit('call-state');
         if (branchId === -1 && teamId === -1 && !search?.trim()) {
           // 전체 지점
           yield put(successGetUserInfo(payload));
-          Socket.getInstance().onEmit('call-state');
         } else {
           // 필터링된 유저
           yield put(successGetFilterUserInfo(payload));
@@ -75,11 +74,11 @@ function* getUserInfoProcess(action: ReturnType<typeof requestGetUserInfo>) {
         if (teamId === -1 && !search?.trim()) {
           // 전체 지점
           yield put(successGetUserInfo(payload));
-          Socket.getInstance().onEmit('call-state');
         } else {
           // 필터링된 유저
           yield put(successGetFilterUserInfo(payload));
         }
+        Socket.getInstance().onEmit('call-state');
       }
     }
   } catch (error) {

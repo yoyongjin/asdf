@@ -8,6 +8,7 @@ import {
   requestDeleteUser,
   requestResetPassword,
   resetFilteredUser,
+  resetFilteredConsultant,
 } from 'modules/actions/user';
 import { RootState } from 'modules/reducers';
 import { LIMIT, PAGE } from 'utils/constants';
@@ -50,8 +51,12 @@ function useUser() {
     [dispatch],
   );
 
-  const resetFilteredUsers = useCallback(() => {
-    dispatch(resetFilteredUser());
+  const resetFilteredList = useCallback((type: number) => {
+    if(type === 1){
+      dispatch(resetFilteredUser());
+    }else if(type === 2){
+      dispatch(resetFilteredConsultant());
+    }
   }, [dispatch]);
 
   const onClickInsertUser = useCallback(
@@ -141,7 +146,7 @@ function useUser() {
     filterUserInfo,
     filterConsultantInfo,
     getUsersInfo,
-    resetFilteredUsers,
+    resetFilteredList,
     onClickInsertUser,
     onClickUpdateUser,
     onClickDeleteUser,
