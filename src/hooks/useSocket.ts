@@ -27,9 +27,11 @@ function useSocket() {
     Socket.getInstance().onMessageUser((response) => {
       const { type, data } = response;
 
+      console.log(data.admin_id)
+
       let payload = {
         data,
-        branch_id: adminId === 2 ? data.admin_id : branchId,
+        branch_id: adminId === 2 ? data.branch_id : branchId,
       }
 
       switch (type) {
