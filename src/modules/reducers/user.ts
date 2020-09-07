@@ -276,6 +276,7 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
           }
         }
 
+        // if(state.userList.consultants.length < 1) return;
         // draft.userList.numberOfUsers += 1;
         draft.userList.consultants.push(value);
       } else if (admin_id === 1) {

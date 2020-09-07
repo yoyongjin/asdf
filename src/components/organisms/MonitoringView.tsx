@@ -54,6 +54,7 @@ const adminList = [
 
 let branch = -1; // 임시 지점 번호
 let team = -1; // 임시 팀 번호
+let request = false;
 
 function Monitoring({ location }: MonitoringProps) {
   const [tapping, setTapping] = useState<boolean>(false); // 내가 감청 중인지 아닌지 여부
@@ -118,8 +119,8 @@ function Monitoring({ location }: MonitoringProps) {
       }
 
       if (consultantInfo.length > 0) {
-        if (form.branch === -1) return;
-        if (form.branch !== branch || form.team !== team) {
+        if (form.branch === -1 && request) return;
+        if (form.branch !== branch || form.team !== team || !request) {
           // 지점명 또는 팀명 선택이 변경될 경우
           getUsers(
             form.branch,
@@ -146,6 +147,7 @@ function Monitoring({ location }: MonitoringProps) {
       );
       branch = form.branch;
       team = form.team;
+      request = true;
     } else if (loginInfo.admin_id === 1) {
       // 일반 관리자
       if (form.team === -1 && filterConsultantInfo.length > 0) {
@@ -154,9 +156,9 @@ function Monitoring({ location }: MonitoringProps) {
       }
 
       if (consultantInfo.length > 0) {
-        if (form.team === -1) return;
+        if (form.team === -1 && request) return;
 
-        if (form.team !== team) {
+        if (form.team !== team || !request) {
           // 지점 또는 팀 선택이 변경될 경우
           getUsers(
             loginInfo.branch_id,
