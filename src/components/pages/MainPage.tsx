@@ -37,10 +37,10 @@ function MainPage({ history, location }: MainPageProps) {
       // 로그인이 된 후 리스너 등록
       getInitInfo();
       getAllCallState();
-      getUserInfo();
+      getUserInfo(loginInfo.branch_id, loginInfo.admin_id);
       getChangeState();
     }
-  }, [loginInfo.id, getInitInfo, getAllCallState, getUserInfo, getChangeState]);
+  }, [loginInfo.id, loginInfo.branch_id, loginInfo.admin_id, getInitInfo, getAllCallState, getUserInfo, getChangeState]);
 
   console.log("Lendering MainPage")
   return (

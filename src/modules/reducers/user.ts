@@ -233,7 +233,7 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
       user_name,
       id,
       login_at,
-    } = action.payload;
+    } = action.payload.data;
 
     const value = {
       id,
@@ -249,7 +249,8 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
       login_at,
     };
     return produce(state, (draft) => {
-      if (action.payload.admin_id === 0) {
+      if (branch_id !== action.payload.branch_id) return;
+      if (admin_id === 0) {
         // 상담원일 경우
         if (state.userList.users.length > 4) {
           // 페이지가 넘어갈 경우
@@ -277,7 +278,7 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
 
         // draft.userList.numberOfUsers += 1;
         draft.userList.consultants.push(value);
-      } else if (action.payload.admin_id === 1) {
+      } else if (admin_id === 1) {
         // 관리자일 경우
         if (state.userList.users.length > 4) {
           draft.userList.users.unshift(value);
@@ -317,7 +318,7 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
       user_name,
       id,
       login_at,
-    } = action.payload;
+    } = action.payload.data;
     const value = {
       id,
       branch_id,
@@ -332,6 +333,7 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
       login_at,
     };
     return produce(state, (draft) => {
+      if (branch_id !== action.payload.branch_id) return;
       if (admin_id === 0) {
         // 상담원 수정 시
         if (draft.userList.users.length > 0) {

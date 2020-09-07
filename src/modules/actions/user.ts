@@ -67,8 +67,14 @@ export const failureUpdateUser = createAction(FAILURE_UPDATE_USER)<
   FailureType
 >();
 export const getCallStatus = createAction(GET_CALL_STATUS)<any>();
-export const insertUser = createAction(INSERT_USER)<UserInfo>();
-export const updateUser = createAction(UPDATE_USER)<UserInfo>();
+export const insertUser = createAction(INSERT_USER)<{
+  data: UserInfo;
+  branch_id: number;
+}>();
+export const updateUser = createAction(UPDATE_USER)<{
+  data: UserInfo;
+  branch_id: number;
+}>();
 export const deleteUser = createAction(DELETE_USER)<{ id: number }>();
 export const requestDeleteUser = createAction(REQUEST_DELETE_USER)<
   deleteUserType
@@ -95,4 +101,6 @@ export const updateConsultant = createAction(UPDATE_CONSULTANT)<
   ConsultantInfoType
 >();
 export const resetFilteredUser = createAction(RESET_FILTERED_USER)();
-export const resetFilteredConsultant = createAction(RESET_FILTERED_CONSULTANT)();
+export const resetFilteredConsultant = createAction(
+  RESET_FILTERED_CONSULTANT,
+)();

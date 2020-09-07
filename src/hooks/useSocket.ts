@@ -12,7 +12,6 @@ import {
   updateConsultant,
   deleteUser,
 } from 'modules/actions/user';
-import { UserInfo, ConsultantInfoType } from 'modules/types/user';
 
 function useSocket() {
   const dispatch = useDispatch();
@@ -24,18 +23,23 @@ function useSocket() {
     });
   }, [dispatch]);
 
-  const getUserInfo = useCallback(() => {
+  const getUserInfo = useCallback((branchId: number, adminId: number) => {
     Socket.getInstance().onMessageUser((response) => {
       const { type, data } = response;
+
+      let payload = {
+        data,
+        branch_id: adminId === 2 ? data.admin_id : branchId,
+      }
 
       switch (type) {
         case 'signup':
           console.log('Sign up user data', data);
-          dispatch(insertUser(data));
+          dispatch(insertUser(payload));
           break;
         case 'update':
           console.log('Update user data', data);
-          dispatch(updateUser(data));
+          dispatch(updateUser(payload));
           break;
         case 'delete':
           console.log('Delete user data', data);

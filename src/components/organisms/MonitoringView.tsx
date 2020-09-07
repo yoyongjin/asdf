@@ -285,6 +285,7 @@ function Monitoring({ location }: MonitoringProps) {
             : loginInfo.admin_id === 1
             ? form.team === -1
               ? consultantInfo.map((consultant, i) => {
+                  if (consultant.branch_id !== loginInfo.branch_id) return null;
                   return (
                     <StyledConsultant
                       key={`styled-consultant-${consultant.id}`}
@@ -304,6 +305,7 @@ function Monitoring({ location }: MonitoringProps) {
                   );
                 })
               : filterConsultantInfo.map((consultant, i) => {
+                  if (consultant.branch_id !== loginInfo.branch_id) return null;
                   return (
                     <StyledConsultant
                       key={`styled-consultant-${consultant.id}`}
