@@ -29,7 +29,7 @@ const StyledContent = styled.div`
 
 const StyledMainLogoSpace = styled.div`
   /* Position */
-  margin-left: 9.25rem;
+  margin-left: 148px;
   position: relative;
 
   /* Display */
@@ -53,7 +53,7 @@ const StyledLoginForm = styled.div`
 
 const StyledFooter = styled.div`
   /* Position */
-  margin-left: 18.88rem;
+  padding-left: 302px;
   position: relative;
 
   /* Display */

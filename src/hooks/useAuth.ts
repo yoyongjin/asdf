@@ -48,8 +48,8 @@ function useAuth() {
 
   return {
     loginInfo,
-    onClickLogin,
     onCheckLogin,
+    onClickLogin,
     onClickLogout,
   };
 }

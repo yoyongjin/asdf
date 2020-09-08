@@ -199,7 +199,7 @@ function Title({
             />
             <StyledPageSpace />
             <Button
-              bgImg={prevPageIcon}
+              image={prevPageIcon}
               width={1.3}
               height={1.3}
               bgColor={'inherit'}
@@ -210,7 +210,7 @@ function Title({
             />
             <StyledButtonSpace />
             <Button
-              bgImg={nextPageIcon}
+              image={nextPageIcon}
               width={1.3}
               height={1.3}
               bgColor={'inherit'}

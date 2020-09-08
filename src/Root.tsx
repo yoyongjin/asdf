@@ -10,21 +10,18 @@ import { GlobalStyle } from 'styles/global-styles';
 import rootReducer from 'modules/reducers';
 import rootSaga from 'modules/sagas';
 
+let middleware: any;
+
 const sagaMiddleware = createSagaMiddleware();
 
-// let middleware = null;
+// redux chrome extension 적용 여부
+if (process.env.NODE_ENV === 'development') {
+  middleware = composeWithDevTools(applyMiddleware(sagaMiddleware));
+} else if (process.env.NODE_ENV === 'production') {
+  middleware = applyMiddleware(sagaMiddleware);
+}
 
-// if (process.env.NODE_ENV === 'development') {
-//   // 개발툴 적용
-//   middleware = composeWithDevTools(applyMiddleware(sagaMiddleware));
-// } else if (process.env.NODE_ENV === 'production') {
-//   middleware = applyMiddleware(sagaMiddleware);
-// }
-
-const store = createStore(
-  rootReducer,
-  composeWithDevTools(applyMiddleware(sagaMiddleware)),
-);
+const store = createStore(rootReducer, middleware);
 sagaMiddleware.run(rootSaga);
 
 function Root() {

@@ -1,14 +1,11 @@
 import { History, Location } from 'history';
 
-export interface FetchType extends FailureType {
+export interface FetchType {
   fetch: boolean;
+  error: string;
 }
 
-export interface HistoryType {
+export interface RouterType {
   history?: History;
   location?: Location;
-}
-
-export interface FailureType {
-  error: Error | boolean;
 }

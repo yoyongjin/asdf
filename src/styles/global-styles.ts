@@ -5,24 +5,31 @@ export const GlobalStyle = createGlobalStyle`
     ${normalize}
     html,
     body {
+        /* Position */
         margin: 0;
         padding: 0;
+
+        /* Text */
         font-family: NanumGothic;
     }
     ::-webkit-scrollbar {
-        width: 6px; /* 1px wider than Lion. */
-        background-color: rgba(0, 0, 0, 0);
-        -webkit-border-radius: 6.25rem;
-    }
-    ::-webkit-scrollbar:hover {
-        background-color: rgba(0, 0, 0, 0);
+        /* Display */
+        width: 6px;
     }
     ::-webkit-scrollbar-thumb:vertical {
-        background: rgba(0, 0, 0, 0.2);
-        -webkit-border-radius: 3px;
+        /* Display */
+        border-radius: 6px;
+        -webkit-border-radius: 6px;
+
+        /* Color */
+        background-color: rgba(0, 0, 0, 0.2);
+    }
+    ::-webkit-scrollbar-thumb:vertical:hover {
+        /* Color */
+        background-color: rgba(0, 0, 0, 0.3);
     }
     ::-webkit-scrollbar-thumb:vertical:active {
-        background: rgba(0, 0, 0, 0.2);
-        -webkit-border-radius: 3px;
+        /* Color */
+        background-color: rgba(0, 0, 0, 0.4);
     }
 `;

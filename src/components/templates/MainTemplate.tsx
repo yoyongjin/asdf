@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import MainRouter from 'MainRouter';
 import { COLORS } from 'utils/color';
+import Logger from 'utils/log';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -32,7 +33,6 @@ const StyledContent = styled.div<StyledProps>`
 `;
 
 function MainTemplate({ gnb, bgColor }: MainTemplateProps) {
-  console.log('Lendering MainTemplate');
   return (
     <StyledWrapper>
       <StyledGnb>{gnb}</StyledGnb>

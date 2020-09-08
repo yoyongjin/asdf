@@ -116,7 +116,7 @@ function TableProperty({
           src={optionIcon}
           width={2}
           height={2}
-          bgHoverImg={optionHoverIcon}
+          hoverImg={optionHoverIcon}
         />
       </StyledProperty>
       {/* <Modal

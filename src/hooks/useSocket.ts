@@ -8,77 +8,80 @@ import {
   updateUser,
   changeCallState,
   changeMonitoringState,
-  insertConsultant,
-  updateConsultant,
   deleteUser,
 } from 'modules/actions/user';
+import Logger from 'utils/log';
 
 function useSocket() {
   const dispatch = useDispatch();
 
-  const getInitInfo = useCallback(() => {
+  const getInitCallStatus = useCallback(() => {
+    // 유저 상태 전달
     Socket.getInstance().onMessageInit((response) => {
-      console.log('Get init Data => ', response);
+      Logger.log('Get init data', response);
       dispatch(getCallStatus(response));
     });
   }, [dispatch]);
 
-  const getUserInfo = useCallback((branchId: number, adminId: number) => {
-    Socket.getInstance().onMessageUser((response) => {
-      const { type, data } = response;
-
-      console.log(data.admin_id)
-
-      let payload = {
-        data,
-        branch_id: adminId === 2 ? data.branch_id : branchId,
-      }
-
-      switch (type) {
-        case 'signup':
-          console.log('Sign up user data', data);
-          dispatch(insertUser(payload));
-          break;
-        case 'update':
-          console.log('Update user data', data);
-          dispatch(updateUser(payload));
-          break;
-        case 'delete':
-          console.log('Delete user data', data);
-          dispatch(deleteUser(data));
-          break;
-        default:
-          break;
-      }
-    });
-  }, [dispatch]);
-
-  const getChangeState = useCallback(() => {
-    Socket.getInstance().onMeesageCallState((response) => {
-      const { data } = response;
-      const _response = JSON.parse(data);
-
-      if (_response.monitoring_state) {
-        console.log('Change Monitoring State =>', _response);
-        dispatch(changeMonitoringState(_response));
-      } else {
-        console.log('Change Call State =>', _response);
-        dispatch(changeCallState(_response));
-      }
-    });
-  }, [dispatch]);
-
-  const getAllCallState = useCallback(() => {
+  const getAllCallStatus = useCallback(() => {
+    // 유저 상태 전달
     Socket.getInstance().onMessageAllCallStates((response) => {
       dispatch(getCallStatus(response));
     });
   }, [dispatch]);
 
+  const getChangeStatus = useCallback(() => {
+    Socket.getInstance().onMeesageCallState((response) => {
+      const { data } = response;
+      const _response = JSON.parse(data);
+
+      if (_response.monitoring_state) {
+        Logger.log('Change Monitoring State', _response);
+        dispatch(changeMonitoringState(_response));
+      } else {
+        Logger.log('Change Call State', _response);
+        dispatch(changeCallState(_response));
+      }
+    });
+  }, [dispatch]);
+
+  const getUserInfo = useCallback(
+    (branchId: number, adminId: number) => {
+      // 유저 추가, 수정, 삭제 시 관련 응답 전송
+      Socket.getInstance().onMessageUser((response) => {
+        const { type, data } = response;
+
+        let payload = {
+          data,
+          branch_id: adminId === 2 ? data.branch_id : branchId,
+        };
+
+        switch (type) {
+          case 'signup':
+            Logger.log('Sign up user data', data);
+            dispatch(insertUser(payload));
+            break;
+          case 'update':
+            Logger.log('Update user data', data);
+            dispatch(updateUser(payload));
+            break;
+          case 'delete':
+            Logger.log('Delete user data', data);
+            dispatch(deleteUser(data));
+            break;
+          default:
+            break;
+        }
+      });
+    },
+    [dispatch],
+  );
+
   return {
-    getInitInfo,
+    getAllCallStatus,
+    getChangeStatus,
+    getInitCallStatus,
     getUserInfo,
-    getChangeState,
-    getAllCallState,
   };
 }
 

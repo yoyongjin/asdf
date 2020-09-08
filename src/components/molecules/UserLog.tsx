@@ -43,8 +43,8 @@ const StyledText = styled.span`
 
 function UserLog({
   loginTime,
-  loginTimeImage,
   userName,
+  loginTimeImage,
   onClickLogout,
 }: UserLogProps) {
   return (
@@ -52,14 +52,14 @@ function UserLog({
       <StyledUser>
         <Text
           fontColor={COLORS.white}
-          fontWeight={700}
           fontSize={0.81}
+          fontWeight={700}
         >{`${userName} 님`}</Text>
       </StyledUser>
       <StyledLoginTime>
         <Image
-          src={loginTimeImage}
           alt={'Login time background image'}
+          src={loginTimeImage}
           width={11.88}
           height={1.43}
         />
@@ -73,7 +73,7 @@ function UserLog({
       </StyledLoginTime>
       <StyledLogout>
         <Button bgColor={'inherit'} width={5} onClick={onClickLogout}>
-          <Text fontSize={0.81} fontColor={COLORS.white} fontWeight={700}>
+          <Text fontColor={COLORS.white} fontSize={0.81} fontWeight={700}>
             로그아웃
           </Text>
         </Button>
@@ -84,8 +84,8 @@ function UserLog({
 
 interface UserLogProps {
   loginTime: number;
-  loginTimeImage: string;
   userName: string;
+  loginTimeImage: string;
   onClickLogout: () => void;
 }
 

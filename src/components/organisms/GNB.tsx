@@ -5,7 +5,7 @@ import { Location } from 'history';
 import { Image, Link } from 'components/atoms';
 import { LinkSelector, UserLog } from 'components/molecules';
 import { COLORS } from 'utils/color';
-import { LoginInfoType } from 'modules/types/auth';
+import { LoginInfoType } from 'types/auth';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -43,17 +43,21 @@ const StyledUserLog = styled.div`
 
 function GNB({
   loginInfo,
-  loginTimeImage,
-  logo,
   location,
+  loginTimeImg,
+  logoImg,
   onClickLogout,
 }: GNBProps) {
-  console.log('Lendering GNB');
   return (
     <StyledWrapper>
       <StyledLogo>
         <Link path="/main">
-          <Image src={logo} alt={'DB life logo'} width={8.69} height={3.25} />
+          <Image
+            alt={'DB life logo'}
+            src={logoImg}
+            width={8.69}
+            height={3.25}
+          />
         </Link>
       </StyledLogo>
       <StyledLink>
@@ -62,8 +66,8 @@ function GNB({
       <StyledUserLog>
         <UserLog
           loginTime={loginInfo.login_at}
-          loginTimeImage={loginTimeImage}
           userName={loginInfo.name}
+          loginTimeImage={loginTimeImg}
           onClickLogout={onClickLogout}
         />
       </StyledUserLog>
@@ -73,8 +77,8 @@ function GNB({
 
 interface GNBProps {
   loginInfo: LoginInfoType;
-  loginTimeImage: string;
-  logo: string;
+  loginTimeImg: string;
+  logoImg: string;
   location: Location;
   onClickLogout: () => void;
 }

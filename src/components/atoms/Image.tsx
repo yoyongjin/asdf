@@ -5,48 +5,44 @@ const StyledImage = styled.img<ImageProps>`
   /* Display */
   height: ${(props) => props.height}rem;
   width: ${(props) => props.width}rem;
-  /* background-image: url(${(props) => props.src}) no-repeat; */
-  /* background-repeat: no-repeat; */
 
-  ${(props) => {
-    if (props.bgHoverImg) {
-      // hover 이미지가 있을 때
-      return css<StyledImageProps>`
-        &:hover {
-          content: url(${(props) => props.bgHoverImg});
+  &:hover {
+    ${(props) => {
+      if (props.hoverImg) {
+        return css<StyledImageProps>`
           cursor: pointer;
-        }
-        &:active {
-          opacity: 0.8;
-        }
-      `;
-    }
-  }}
+          content: url(${(props) => props.hoverImg});
+        `;
+      }
 
-  ${(props) => {
-    if (props.onClick) {
-      // 이미지 클릭이 가능할 때
-      return css<StyledImageProps>`
-        &:hover {
+      if (props.onClick) {
+        return css<StyledImageProps>`
           cursor: pointer;
-          opacity: 0.5;
-        }
-        &:active {
+          opacity: 0.6;
+        `;
+      }
+    }}
+  }
+
+  &:active {
+    ${(props) => {
+      if (props.hoverImg || props.onClick) {
+        return css<StyledImageProps>`
           opacity: 0.8;
-        }
-      `;
-    }
-  }}
+        `;
+      }
+    }}
+  }
 `;
 
 function Image({ alt, src, onClick, ...rest }: ImageProps) {
-  return <StyledImage src={src} alt={alt} onClick={onClick} {...rest} />;
+  return <StyledImage alt={alt} src={src} onClick={onClick} {...rest} />;
 }
 
 interface StyledImageProps {
-  readonly bgHoverImg?: string;
-  readonly width: number;
   readonly height: number;
+  readonly hoverImg?: string;
+  readonly width: number;
 }
 
 interface ImageProps extends StyledImageProps {
@@ -56,8 +52,8 @@ interface ImageProps extends StyledImageProps {
 }
 
 Image.defaultProps = {
-  height: 3,
-  width: 10,
+  height: 2,
+  width: 5,
 };
 
 export default Image;

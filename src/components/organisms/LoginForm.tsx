@@ -18,15 +18,17 @@ const StyledWrapper = styled.div`
 `;
 
 const StyledTitle = styled.div`
-  /* Display */
+  /* Position */
   padding-bottom: 21px;
 `;
 
 const StyledInput = styled.div`
+  /* Position */
   margin-top: 8px;
 `;
 
 const StyledLogin = styled.div`
+  /* Position */
   padding-top: 12px;
 `;
 
@@ -64,7 +66,13 @@ function LoginForm({ history }: LoginFormProps) {
         if (name.indexOf('id') > -1) {
           refPassword!.current.focus();
         } else if (name.indexOf('password') > -1) {
-          onClickLogin(form.id, form.password, history);
+          const id = form.id.trim();
+          const password = form.password.trim();
+          if (!id || !password) {
+            alert('아이디와 패스워드를 정확히 입력해주세요.');
+            return;
+          }
+          onClickLogin(id, password, history);
         }
       }
     },
@@ -81,9 +89,9 @@ function LoginForm({ history }: LoginFormProps) {
     <StyledWrapper>
       <StyledTitle>
         <Text
-          fontSize={1.5}
           fontColor={COLORS.white}
           fontFamily={'NanumBarunGothic'}
+          fontSize={1.5}
           fontWeight={600}
           lineHeight={0.23}
         >
@@ -98,11 +106,7 @@ function LoginForm({ history }: LoginFormProps) {
               innerRef={
                 values.id === 0 ? refId : values.id === 1 ? refPassword : null
               }
-              type={values.type}
               name={values.name}
-              value={
-                values.id === 0 ? form.id : values.id === 1 ? form.password : ''
-              }
               placeholder={
                 values.id === 0
                   ? '아이디를 입력하세요.'
@@ -110,20 +114,25 @@ function LoginForm({ history }: LoginFormProps) {
                   ? '비밀번호를 입력하세요.'
                   : ''
               }
-              width={13.31}
-              height={2}
+              type={values.type}
+              value={
+                values.id === 0 ? form.id : values.id === 1 ? form.password : ''
+              }
+              borderColor={COLORS.dark_green}
               fontFamily={'NanumBarunGothic'}
               fontSize={0.88}
-              borderColor={COLORS.dark_green}
+              height={2}
               phColor={COLORS.green}
+              width={13.31}
               onChange={onChangeInput}
               onKeyDown={(e) => {
                 let value = '';
                 if (values.id === 0) {
-                  value = form.id;
+                  value = form.id.trim();
                 } else if (values.id === 1) {
-                  value = form.password;
+                  value = form.password.trim();
                 }
+                if (!value) return;
                 onKeyEvent(e, values.name, value);
               }}
             />
@@ -133,8 +142,8 @@ function LoginForm({ history }: LoginFormProps) {
       <StyledLogin>
         <Button
           bgColor={COLORS.dark_green}
-          width={13.3}
           height={2}
+          width={13.3}
           onClick={() => onClickLogin(form.id, form.password, history)}
         >
           <Text fontSize={0.8} fontColor={COLORS.white}>

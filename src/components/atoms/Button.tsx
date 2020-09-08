@@ -15,9 +15,9 @@ const StyledButton = styled.button<ButtonProps>`
   height: ${(props) => props.height}rem;
   width: ${(props) => props.width}rem;
   ${(props) => {
-    if (props.bgImg) {
+    if (props.image) {
       return css<StyledButtonProps>`
-        background-image: url(${(props) => props.bgImg});
+        background-image: url(${(props) => props.image});
         background-repeat: no-repeat;
         background-size: ${(props) => props.width}rem
           ${(props) => props.height}rem;
@@ -25,46 +25,28 @@ const StyledButton = styled.button<ButtonProps>`
     }
   }}
 
-  /* Text */
-  font-size: ${(props) => props.fontSize};
-
   /* Color */
   background-color: ${(props) => props.bgColor};
-  color: ${(props) => props.fontColor};
 
   &:hover {
     cursor: pointer;
     ${(props) => {
-      if (props.bgHoverImg) {
+      if (props.hoverImg) {
         return css<StyledButtonProps>`
-          background-image: url(${(props) => props.bgHoverImg});
+          background-image: url(${(props) => props.hoverImg});
           background-repeat: no-repeat;
           background-size: ${(props) => props.width}rem
-              ${(props) => props.height}rem;
-        `;
-      } else if (props.bgImg) {
-        return css`
-          opacity: 0.6;
+            ${(props) => props.height}rem;
         `;
       } else {
-        return css<StyledButtonProps>`
-          color: ${darken(0.1, props.fontColor)};
+        return css`
+          opacity: 0.8;
         `;
       }
     }}
   }
   &:active {
-    ${(props) => {
-      if (props.bgHoverImg || props.bgImg) {
-        return css`
-          opacity: 0.8;
-        `;
-      } else {
-        return css<StyledButtonProps>`
-          color: ${darken(0.2, props.fontColor)};
-        `;
-      }
-    }}
+    opacity: 0.9;
   }
   ${(props) => props.customStyle}
 `;
@@ -79,14 +61,14 @@ function Button({ children, onClick, ...rest }: ButtonProps) {
 
 interface StyledButtonProps {
   readonly bgColor: string;
-  readonly bgImg?: string;
-  readonly bgHoverImg?: string;
   readonly borderRadius: number;
   readonly borderWidth?: number;
   readonly customStyle?: string;
   readonly fontColor: string;
   readonly fontSize: number;
   readonly height: number;
+  readonly hoverImg?: string;
+  readonly image?: string;
   readonly width: number;
 }
 

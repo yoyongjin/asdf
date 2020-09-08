@@ -11,14 +11,14 @@ function AuthPage() {
     <LoginTemplate
       mainLogo={
         <Image
-          src={dblifeLogo}
           alt={'DB life Logo'}
-          width={16.75}
+          src={dblifeLogo}
           height={6.44}
+          width={16.75}
         />
       }
       subLogo={
-        <Image src={ziboxLogo} alt={'ZiBox Logo'} width={9} height={3.63} />
+        <Image alt={'ZiBox Logo'} src={ziboxLogo} height={3.63} width={9} />
       }
     />
   );

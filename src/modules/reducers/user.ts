@@ -9,27 +9,27 @@ const initialState: UserType = {
   request: {
     getUser: {
       fetch: false,
-      error: false,
+      error: '',
     },
     getConsultant: {
       fetch: false,
-      error: false,
+      error: '',
     },
     insertUser: {
       fetch: false,
-      error: false,
+      error: '',
     },
     updateUser: {
       fetch: false,
-      error: false,
+      error: '',
     },
     deleteUser: {
       fetch: false,
-      error: false,
+      error: '',
     },
     resetPassword: {
       fetch: false,
-      error: false,
+      error: '',
     },
   },
   userList: {
@@ -48,7 +48,7 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
   [types.REQUEST_GET_USER_INFO]: (state, action) => {
     return produce(state, (draft) => {
       draft.request.getUser.fetch = true;
-      draft.request.getUser.error = false;
+      draft.request.getUser.error = '';
     });
   },
   [types.SUCCESS_GET_USER_INFO]: (state, action) => {
@@ -58,7 +58,7 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
     });
     return produce(state, (draft) => {
       draft.request.getUser.fetch = false;
-      draft.request.getUser.error = false;
+      draft.request.getUser.error = '';
       if (url === '/main') {
         draft.userList.consultants = consultant.sort((r1, r2) => r2.id - r1.id); // 등록 순서로 정렬
         if (draft.filterUserList.consultants.length > 0) {
@@ -81,7 +81,7 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
     });
     return produce(state, (draft) => {
       draft.request.getUser.fetch = false;
-      draft.request.getUser.error = false;
+      draft.request.getUser.error = '';
       if (url === '/main') {
         draft.filterUserList.consultants = consultant.sort(
           (r1, r2) => r2.id - r1.id,
@@ -95,7 +95,7 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
   [types.FAILURE_GET_USER_INFO]: (state, action) => {
     return produce(state, (draft) => {
       draft.request.getUser.fetch = false;
-      draft.request.getUser.error = action.payload.error;
+      draft.request.getUser.error = action.payload;
     });
   },
   [types.RUN_TIMER]: (state, action) => {
@@ -122,37 +122,37 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
   [types.REQUEST_ADD_USER]: (state, action) => {
     return produce(state, (draft) => {
       draft.request.insertUser.fetch = true;
-      draft.request.insertUser.error = false;
+      draft.request.insertUser.error = '';
     });
   },
   [types.SUCCESS_ADD_USER]: (state, action) => {
     return produce(state, (draft) => {
       draft.request.insertUser.fetch = false;
-      draft.request.insertUser.error = false;
+      draft.request.insertUser.error = '';
     });
   },
   [types.FAILRUE_ADD_USER]: (state, action) => {
     return produce(state, (draft) => {
       draft.request.insertUser.fetch = false;
-      draft.request.insertUser.error = action.payload.error;
+      draft.request.insertUser.error = action.payload;
     });
   },
   [types.REQUEST_UPDATE_USER]: (state, action) => {
     return produce(state, (draft) => {
       draft.request.updateUser.fetch = true;
-      draft.request.updateUser.error = false;
+      draft.request.updateUser.error = '';
     });
   },
   [types.SUCCESS_UPDATE_USER]: (state, action) => {
     return produce(state, (draft) => {
       draft.request.updateUser.fetch = false;
-      draft.request.updateUser.error = false;
+      draft.request.updateUser.error = '';
     });
   },
   [types.FAILURE_UPDATE_USER]: (state, action) => {
     return produce(state, (draft) => {
       draft.request.updateUser.fetch = false;
-      draft.request.updateUser.error = action.payload.error;
+      draft.request.updateUser.error = action.payload;
     });
   },
   [types.GET_CALL_STATUS]: (state, action) => {
@@ -442,19 +442,19 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
   [types.REQUEST_DELETE_USER]: (state, action) => {
     return produce(state, (draft) => {
       draft.request.deleteUser.fetch = true;
-      draft.request.deleteUser.error = false;
+      draft.request.deleteUser.error = '';
     });
   },
   [types.SUCCESS_DELETE_USER]: (state, action) => {
     return produce(state, (draft) => {
       draft.request.deleteUser.fetch = false;
-      draft.request.deleteUser.error = false;
+      draft.request.deleteUser.error = '';
     });
   },
   [types.FAILURE_DELETE_USER]: (state, action) => {
     return produce(state, (draft) => {
       draft.request.deleteUser.fetch = false;
-      draft.request.deleteUser.error = action.payload.error;
+      draft.request.deleteUser.error = action.payload;
     });
   },
   [types.DELETE_USER]: (state, action) => {
@@ -497,19 +497,19 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
   [types.REQUEST_RESET_PASSWORD]: (state, action) => {
     return produce(state, (draft) => {
       draft.request.resetPassword.fetch = false;
-      draft.request.resetPassword.error = true;
+      draft.request.resetPassword.error = '';
     });
   },
   [types.SUCCESS_RESET_PASSWORD]: (state, action) => {
     return produce(state, (draft) => {
       draft.request.deleteUser.fetch = false;
-      draft.request.deleteUser.error = false;
+      draft.request.deleteUser.error = '';
     });
   },
   [types.FAILURE_RESET_PASSWORD]: (state, action) => {
     return produce(state, (draft) => {
       draft.request.deleteUser.fetch = false;
-      draft.request.deleteUser.error = action.payload.error;
+      draft.request.deleteUser.error = action.payload;
     });
   },
   [types.CHANGE_MONITORING_STATE]: (state, action) => {

@@ -7,35 +7,35 @@ import { BranchAction, BranchType } from 'modules/types/branch';
 const initialState: BranchType<string> = {
   branch: {
     fetch: false,
-    error: false,
+    error: '',
   },
   insertBranch: {
     fetch: false,
-    error: false,
+    error: '',
   },
   updateBranch: {
     fetch: false,
-    error: false,
+    error: '',
   },
   deleteBranch: {
     fetch: false,
-    error: false,
+    error: '',
   },
   insertTeam: {
     fetch: false,
-    error: false,
+    error: '',
   },
   updateTeam: {
     fetch: false,
-    error: false,
+    error: '',
   },
   deleteTeam: {
     fetch: false,
-    error: false,
+    error: '',
   },
   branchName: {
     fetch: false,
-    error: false,
+    error: '',
   },
   branchInfo: {},
   numberOfBranch: 0,
@@ -53,16 +53,12 @@ const userReducer = createReducer<BranchType<string>, BranchAction>(
     [types.REQUEST_GET_BRANCH_INFO]: (state, action) => {
       return produce(state, (draft) => {
         draft.branch.fetch = true;
-        draft.branch.error = false;
       });
     },
     [types.SUCCESS_GET_BRANCH_INFO]: (state, action) => {
       let keys = Object.keys(action.payload);
       let values = Object.values(action.payload);
       let temp = {};
-
-      console.log(keys)
-      console.log(values)
 
       keys.map((value, i) => {
         // 팀명 입력할 수 있는 란을 만들기 위해 추가
@@ -79,7 +75,7 @@ const userReducer = createReducer<BranchType<string>, BranchAction>(
 
       return produce(state, (draft) => {
         draft.branch.fetch = false;
-        draft.branch.error = false;
+        draft.branch.error = '';
         draft.branchInfo = temp;
         draft.numberOfBranch = keys.length;
       });
@@ -87,7 +83,7 @@ const userReducer = createReducer<BranchType<string>, BranchAction>(
     [types.FAILURE_GET_BRANCH_INFO]: (state, action) => {
       return produce(state, (draft) => {
         draft.branch.fetch = false;
-        draft.branch.error = true;
+        draft.branch.error = '';
       });
     },
     [types.ADD_TEMPERATURE_BRANCH_INFO]: (state, action) => {
@@ -143,13 +139,13 @@ const userReducer = createReducer<BranchType<string>, BranchAction>(
     [types.REQUEST_ADD_BRANCH_INFO]: (state, action) => {
       return produce(state, (draft) => {
         draft.insertBranch.fetch = true;
-        draft.insertBranch.error = false;
+        draft.insertBranch.error = '';
       });
     },
     [types.REQUEST_ADD_TEAM_INFO]: (state, action) => {
       return produce(state, (draft) => {
         draft.insertTeam.fetch = true;
-        draft.insertTeam.error = false;
+        draft.insertTeam.error = '';
       });
     },
     [types.SUCCESS_ADD_BRANCH_INFO]: (state, action) => {
@@ -158,7 +154,7 @@ const userReducer = createReducer<BranchType<string>, BranchAction>(
       const { name, id } = action.payload;
       return produce(state, (draft) => {
         draft.insertBranch.fetch = false;
-        draft.insertBranch.error = false;
+        draft.insertBranch.error = '';
         draft.branchInfo = {
           ...draft.branchInfo,
           [id]: [
@@ -184,7 +180,7 @@ const userReducer = createReducer<BranchType<string>, BranchAction>(
 
       return produce(state, (draft) => {
         draft.insertTeam.fetch = false;
-        draft.insertTeam.error = false;
+        draft.insertTeam.error = '';
 
         const _draft: any = draft.branchInfo;
 
@@ -200,7 +196,7 @@ const userReducer = createReducer<BranchType<string>, BranchAction>(
     [types.REQEUST_UPDATE_TEAM_INFO]: (state, action) => {
       return produce(state, (draft) => {
         draft.updateTeam.fetch = true;
-        draft.updateTeam.error = false;
+        draft.updateTeam.error = '';
       });
     },
     [types.SUCCESS_UPDATE_TEAM_INFO]: (state, action) => {
@@ -212,7 +208,7 @@ const userReducer = createReducer<BranchType<string>, BranchAction>(
         });
 
         draft.updateTeam.fetch = false;
-        draft.updateTeam.error = false;
+        draft.updateTeam.error = '';
         _draft[branch_id][index].team_name = name;
       });
     },
@@ -220,7 +216,7 @@ const userReducer = createReducer<BranchType<string>, BranchAction>(
       return produce(state, (draft) => {
         const { id, name } = action.payload;
         draft.updateTeam.fetch = false;
-        draft.updateTeam.error = false;
+        draft.updateTeam.error = '';
 
         const _draft: any = draft.branchInfo;
         const index = _draft[id].findIndex((value: any) => {
@@ -232,13 +228,13 @@ const userReducer = createReducer<BranchType<string>, BranchAction>(
     [types.REQUEST_GET_BRANCH_LIST]: (state, action) => {
       return produce(state, (draft) => {
         draft.branchName.fetch = true;
-        draft.branchName.error = false;
+        draft.branchName.error = '';
       });
     },
     [types.SUCCESS_GET_BRANCH_LIST]: (state, action) => {
       return produce(state, (draft) => {
         draft.branchName.fetch = false;
-        draft.branchName.error = false;
+        draft.branchName.error = '';
         action.payload.push({
           id: -1,
           branch_name: '지점명',
@@ -251,13 +247,13 @@ const userReducer = createReducer<BranchType<string>, BranchAction>(
     [types.REQUEST_GET_TEAM_LIST]: (state, action) => {
       return produce(state, (draft) => {
         draft.branchName.fetch = true;
-        draft.branchName.error = false;
+        draft.branchName.error = '';
       });
     },
     [types.SUCCESS_GET_TEAM_LIST]: (state, action) => {
       return produce(state, (draft) => {
         draft.branchName.fetch = false;
-        draft.branchName.error = false;
+        draft.branchName.error = '';
         action.payload.push({
           id: -1,
           team_name: '팀명',
@@ -269,7 +265,7 @@ const userReducer = createReducer<BranchType<string>, BranchAction>(
     [types.SUCCESS_GET_USER_BRANCH_LIST]: (state, action) => {
       return produce(state, (draft) => {
         draft.branchName.fetch = false;
-        draft.branchName.error = false;
+        draft.branchName.error = '';
         action.payload.push({
           id: -1,
           branch_name: '지점명',
@@ -284,7 +280,7 @@ const userReducer = createReducer<BranchType<string>, BranchAction>(
     [types.SUCCESS_GET_USER_TEAM_LIST]: (state, action) => {
       return produce(state, (draft) => {
         draft.branchName.fetch = false;
-        draft.branchName.error = false;
+        draft.branchName.error = '';
         action.payload.push({
           id: -1,
           team_name: '팀명',
@@ -310,14 +306,14 @@ const userReducer = createReducer<BranchType<string>, BranchAction>(
     [types.REQUEST_DELETE_BRANCH_INFO]: (state, action) => {
       return produce(state, (draft) => {
         draft.deleteBranch.fetch = true;
-        draft.deleteBranch.error = false;
+        draft.deleteBranch.error = '';
       });
     },
     [types.SUCCESS_DELETE_BRANCH_INFO]: (state, action) => {
       const { branch_id, count } = action.payload;
       return produce(state, (draft) => {
         draft.deleteBranch.fetch = false;
-        draft.deleteBranch.error = false;
+        draft.deleteBranch.error = '';
 
         if(count){
           alert("해당 지점의 팀을 다 삭제 후 진행해주세요.")
@@ -331,14 +327,14 @@ const userReducer = createReducer<BranchType<string>, BranchAction>(
     [types.REQUEST_DELETE_TEAM_INFO]: (state, action) => {
       return produce(state, (draft) => {
         draft.deleteTeam.fetch = true;
-        draft.deleteTeam.error = false;
+        draft.deleteTeam.error = '';
       });
     },
     [types.SUCCESS_DELETE_TEAM_INFO]: (state, action) => {
       const { branch_id, team_id, count } = action.payload;
       return produce(state, (draft) => {
         draft.deleteTeam.fetch = false;
-        draft.deleteTeam.error = false;
+        draft.deleteTeam.error = '';
 
         if(count){
           alert("해당 팀의 유저를 다 삭제 후 진행해주세요.")

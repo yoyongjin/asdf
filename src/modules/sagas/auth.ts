@@ -19,6 +19,7 @@ import * as API from 'lib/api';
 import Socket from 'lib/socket';
 import Zibox from 'lib/zibox';
 import { socketServer, TOKEN_NAME, DOMAIN } from 'utils/constants';
+import Logger from 'utils/log';
 
 function* loginProcess(action: ReturnType<typeof requestLogin>) {
   const { id, password, history } = action.payload;
@@ -32,7 +33,7 @@ function* loginProcess(action: ReturnType<typeof requestLogin>) {
       Zibox.getInstance().createZibox();
 
       const { user, token } = data;
-      console.log('Login Data => ', user);
+      Logger.log('Login data => ', user);
 
       Cookies.set(TOKEN_NAME, token, {
         expires: 1000 * 24 * 60 * 60,
@@ -45,9 +46,9 @@ function* loginProcess(action: ReturnType<typeof requestLogin>) {
       history!.push('/main');
     }
   } catch (error) {
-    console.log(error);
-    yield put(failureLogin(error));
-    alert('Wrong ID or password.');
+    Logger.log('Login failure', error);
+    yield put(failureLogin(error.message));
+    alert('아이디와 비밀번호를 확인해주세요.');
   }
 }
 
@@ -64,7 +65,7 @@ function* checkLoginProcess(action: ReturnType<typeof requestCheckLogin>) {
       Zibox.getInstance().createZibox();
 
       const { user, token } = data;
-      console.log('Login Check Data => ', user);
+      Logger.log('Login data => ', user);
 
       Cookies.set(TOKEN_NAME, token, {
         expires: 1000 * 24 * 60 * 60,
@@ -77,8 +78,8 @@ function* checkLoginProcess(action: ReturnType<typeof requestCheckLogin>) {
       history!.push(history!.location.pathname);
     }
   } catch (error) {
-    console.log(error);
-    yield put(failureCheckLogin(error));
+    Logger.log('Check login failure', error);
+    yield put(failureCheckLogin(error.message));
     history!.push('/auth/login');
   }
 }
@@ -92,7 +93,7 @@ function* logoutProcess(action: ReturnType<typeof requestLogout>) {
 
     if (status === 'success') {
       const { data: isSuccess } = data;
-      console.log('Logout Data => ', isSuccess);
+      Logger.log('Logout data => ', isSuccess);
 
       Cookies.remove(TOKEN_NAME, { domain: DOMAIN });
       yield put(successLogout());
@@ -101,8 +102,8 @@ function* logoutProcess(action: ReturnType<typeof requestLogout>) {
       window.location.reload();
     }
   } catch (error) {
-    console.log(error);
-    yield put(failureLogout(error));
+    Logger.log('Logout failure', error);
+    yield put(failureLogout(error.message));
   }
 }
 

@@ -1,6 +1,8 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
+import { NotFound } from 'components/pages';
+
 import {
   LoginForm,
   MonitoringView,
@@ -15,6 +17,7 @@ function MainRouter() {
       <Route exact path="/main/" component={MonitoringView} />
       <Route exact path="/main/manage/organization" component={OrganizationView} />
       <Route exact path="/main/manage/user" component={UserView} />
+      <Route component={NotFound} />
     </Switch>
   );
 }

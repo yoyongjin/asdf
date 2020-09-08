@@ -28,4 +28,4 @@ const rootStore = () => {
   return store;
 };
 
-export default rootStore;
+export default rootStore();
