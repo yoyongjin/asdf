@@ -26,13 +26,14 @@ class Zibox {
       // this.zibox.ftpOn();
       this.zibox.ftpOff();
       this.zibox.initializeAudioContext();
-      this.zibox.monIP('127.0.0.1');
+      // this.zibox.monIP('127.0.0.1');
       setTimeout(() => {
         this.zibox.monOn();
       }, 1000);
       return true;
     } catch (error) {
-      this.zibox.disconnect();
+      console.error(error)
+      // this.disconnect();
       return false;
     }
   }
@@ -46,9 +47,9 @@ class Zibox {
     this.zibox.monStart();
   }
 
-  monStop() {
-    this.zibox.recStop();
-    return this.zibox.monStop();
+  async monStop() {
+    await this.zibox.monStop();
+    return this.zibox.recStop();
   }
 }
 

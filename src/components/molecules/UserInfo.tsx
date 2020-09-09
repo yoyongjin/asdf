@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useCallback } from 'react';
 import styled from 'styled-components';
 
-import { Button } from 'components/atoms';
+import { Button, Text } from 'components/atoms';
 import { Title, TextInput, TextSelect } from 'components/molecules';
 import { COLORS } from 'utils/color';
 import { formatPhoneNumber } from 'utils/utils';
@@ -338,7 +338,14 @@ function UserInfo({
             }
           }}
         >
-          저장
+          <Text
+            fontColor={COLORS.white}
+            fontFamily={'NanumBarunGothic'}
+            fontSize={0.88}
+            fontWeight={700}
+          >
+            저장
+          </Text>
         </Button>
         <Button
           width={4.3}
@@ -357,7 +364,14 @@ function UserInfo({
             margin-right: 10px;
           `}
         >
-          취소
+          <Text
+            fontColor={COLORS.white}
+            fontFamily={'NanumBarunGothic'}
+            fontSize={0.88}
+            fontWeight={700}
+          >
+            취소
+          </Text>
         </Button>
       </StyledFooter>
     </StyledWrapper>
