@@ -152,19 +152,13 @@ function UserInfo({
       if (form.admin === 0) {
         // 상담원으로 추가/수정 할 경우
         if (!form.name.trim() || !form.tel.trim() || !form.zibox.trim()) {
-          alert('공란 없이 입력해주세요.');
+          alert('빈란 없이 입력해주세요.');
           return false;
         }
         return true;
       } else if (form.admin === 1) {
         // 관리자일 경우
-        if (
-          form.branch === -1 ||
-          form.team === -1 ||
-          !form.name.trim() ||
-          !form.id.trim() ||
-          !form.tel.trim()
-        ) {
+        if (!form.name.trim() || !form.id.trim() || !form.tel.trim()) {
           alert('빈란 없이 입력해주세요.');
           return false;
         }
@@ -181,19 +175,13 @@ function UserInfo({
       if (form.admin === 0) {
         // 상담원으로 추가/수정 할 경우
         if (!form.name.trim() || !form.tel.trim() || !form.zibox.trim()) {
-          alert('공란 없이 입력해주세요.');
+          alert('빈란 없이 입력해주세요.');
           return false;
         }
         return true;
       } else if (form.admin === 1) {
         // 관리자일 경우
-        if (
-          form.branch === -1 ||
-          form.team === -1 ||
-          !form.name.trim() ||
-          !form.id.trim() ||
-          !form.tel.trim()
-        ) {
+        if (!form.name.trim() || !form.id.trim() || !form.tel.trim()) {
           alert('빈란 없이 입력해주세요.');
           return false;
         }
