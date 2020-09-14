@@ -150,7 +150,9 @@ function Consultant({
                   if (consultInfo.user_id === loginId) {
                     // 내가 해당 상담원을 감청하고 있는 경우
                     stopMonitoring(consultInfo.number, loginId);
-                    setTapping(false);
+                    setTimeout(() => {
+                      setTapping(false);
+                    }, 500);
                   }
                   return;
                 }
@@ -160,7 +162,7 @@ function Consultant({
                   if (isSuccess) {
                     setTimeout(() => {
                       startMonitoring(consultInfo.number, loginId);
-                    }, 1000);
+                    }, 500);
                     setTapping(true);
                   } else {
                     alert('ZiBox IP를 확인해주세요.');
