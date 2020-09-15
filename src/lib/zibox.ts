@@ -26,6 +26,11 @@ class Zibox {
       // this.zibox.ftpOn();
       this.zibox.ftpOff();
       this.zibox.initializeAudioContext();
+      this.zibox.atsVolume(5);
+      this.zibox.leftVolume(10);
+      this.zibox.rightVolume(8);
+      this.zibox.micVolume(25);
+      this.zibox.spkVolume(40);
       // this.zibox.monIP('127.0.0.1');
       setTimeout(() => {
         this.zibox.monOn();
