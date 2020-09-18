@@ -119,7 +119,12 @@ function Monitoring({ location }: MonitoringProps) {
       }
 
       if (consultantInfo.length > 0) {
-        if (form.branch === -1 && request) return;
+        if (form.branch === -1 && request) {
+          branch = form.branch;
+          team = form.team;
+          return;
+        }
+
         if (form.branch !== branch || form.team !== team || !request) {
           // 지점명 또는 팀명 선택이 변경될 경우
           getUsers(
@@ -156,7 +161,10 @@ function Monitoring({ location }: MonitoringProps) {
       }
 
       if (consultantInfo.length > 0) {
-        if (form.team === -1 && request) return;
+        if (form.team === -1 && request) {
+          team = form.team;
+          return;
+        }
 
         if (form.team !== team || !request) {
           // 지점 또는 팀 선택이 변경될 경우
