@@ -8,6 +8,7 @@ import useAuth from 'hooks/useAuth';
 
 import insertBranchImage from 'images/bt-add-g-1-nor@3x.png';
 import insertBranchHoverImage from 'images/bt-add-g-1-over.png';
+import Logger from 'utils/log';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -77,7 +78,7 @@ function OrganizationView() {
   const branchKeys = Object.getOwnPropertyNames(branchInfo).reverse();
   const branchValues = Object.values(branchInfo).reverse();
 
-  console.log('Lendering OrganizationView');
+  Logger.log('Lendering OrganizationView');
   return (
     <StyledWrapper>
       <StyledTitle>

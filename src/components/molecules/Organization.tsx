@@ -105,14 +105,13 @@ function Organization({
                 return;
               }
 
-              if(form[name] === undefined){
+              if (form[name] === undefined) {
                 return;
               }
 
               handleDeleteBranch!(branchIf.id);
             } else if (name.indexOf('team') > -1) {
               const teamIf = branch[index] as TeamInfo;
-              console.log(teamIf);
 
               if (!teamIf.team_name) {
                 // 서버에 없는 데이터(팀명 입력 부분)
@@ -125,7 +124,7 @@ function Organization({
                 return;
               }
 
-              if(form[name] === undefined){
+              if (form[name] === undefined) {
                 return;
               }
               handleDeleteTeam!(branchId, teamIf.id);

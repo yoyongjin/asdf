@@ -19,6 +19,7 @@ import optionHoverIcon from 'images/bt-user-modi-over@2x.png';
 import addUserImage from 'images/bt-add-u-1-nor@3x.png';
 import addUserHoverImage from 'images/bt-add-u-1-over@3x.png';
 import { UserInfo as UserInfoType } from 'modules/types/user';
+import Logger from 'utils/log';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -263,7 +264,7 @@ function UserView({ location }: UserViewProps) {
     }
   }, [countUser, filterCountUser, page, onChangeCurrentPage]);
 
-  console.log('Lendering UserView');
+  Logger.log('Lendering UserView');
   return (
     <>
       <StyledWrapper>

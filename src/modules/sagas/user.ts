@@ -25,6 +25,7 @@ import {
 } from 'modules/actions/user';
 import * as API from 'lib/api';
 import Socket from 'lib/socket';
+import Logger from 'utils/log';
 
 function* getUserInfoProcess(action: ReturnType<typeof requestGetUserInfo>) {
   const {
@@ -43,14 +44,13 @@ function* getUserInfoProcess(action: ReturnType<typeof requestGetUserInfo>) {
     page,
     search_name: search!,
   };
-  console.log(payload);
 
   try {
     const response = yield call(API.getConsultantInfo, payload);
     const { status, data } = response.data;
 
     if (status === 'success') {
-      console.log('Get consultant data => ', data);
+      Logger.log('Get consultant data => ', data);
       const { users, max_count } = data;
 
       const payload = {
@@ -58,8 +58,6 @@ function* getUserInfoProcess(action: ReturnType<typeof requestGetUserInfo>) {
         count: max_count,
         url,
       };
-
-      console.log(branchId, teamId, limit, page, search, url, adminId);
 
       if (adminId === 2) {
         if (branchId === -1 && teamId === -1 && !search?.trim()) {
@@ -70,7 +68,7 @@ function* getUserInfoProcess(action: ReturnType<typeof requestGetUserInfo>) {
           yield put(successGetFilterUserInfo(payload));
         }
 
-        if(url === '/main'){
+        if (url === '/main') {
           Socket.getInstance().onEmit('call-state');
         }
       } else if (adminId === 1) {
@@ -82,7 +80,7 @@ function* getUserInfoProcess(action: ReturnType<typeof requestGetUserInfo>) {
           yield put(successGetFilterUserInfo(payload));
         }
 
-        if(url === '/main'){
+        if (url === '/main') {
           Socket.getInstance().onEmit('call-state');
         }
       }
@@ -104,7 +102,6 @@ function* insertUserProcess(action: ReturnType<typeof requestAddUser>) {
     number,
     ziboxip,
   } = action.payload;
-  console.log(action.payload);
   try {
     const response = yield call(
       API.insertUser,
@@ -117,7 +114,7 @@ function* insertUserProcess(action: ReturnType<typeof requestAddUser>) {
       number,
       ziboxip,
     );
-    console.log('insert user Data', response);
+    Logger.log('insert user Data', response);
     yield put(successAddUser());
   } catch (error) {
     console.log(error);
@@ -138,7 +135,6 @@ function* updateUserProcess(action: ReturnType<typeof requestUpdateUser>) {
     number,
     ziboxip,
   } = action.payload;
-  console.log(action.payload);
   try {
     const response = yield call(
       API.updateUser,
@@ -162,10 +158,8 @@ function* updateUserProcess(action: ReturnType<typeof requestUpdateUser>) {
 function* deleteUserProcess(action: ReturnType<typeof requestDeleteUser>) {
   try {
     const { id, branchId, teamId, page, adminId } = action.payload;
-    console.log(id, branchId, teamId, page);
 
     const response = yield call(API.deleteUser, id);
-    console.log(response);
     if (response.data.data) {
       const payload = {
         adminId,
@@ -190,7 +184,6 @@ function* resetPasswordProcess(
   try {
     const { id } = action.payload;
     const response = yield call(API.resetPassword, id);
-    console.log(response);
     yield put(successResetPassword());
     alert('초기 비밀번호는 0000 입니다.');
   } catch (error) {

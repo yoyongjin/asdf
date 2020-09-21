@@ -6,8 +6,7 @@ import {
   getCallStatus,
   insertUser,
   updateUser,
-  changeCallState,
-  changeMonitoringState,
+  changeStatus,
   deleteUser,
 } from 'modules/actions/user';
 import Logger from 'utils/log';
@@ -35,13 +34,8 @@ function useSocket() {
       const { data } = response;
       const _response = JSON.parse(data);
 
-      if (_response.monitoring_state) {
-        Logger.log('Change Monitoring State', _response);
-        dispatch(changeMonitoringState(_response));
-      } else {
-        Logger.log('Change Call State', _response);
-        dispatch(changeCallState(_response));
-      }
+      Logger.log('Change Status', _response);
+      dispatch(changeStatus(_response));
     });
   }, [dispatch]);
 

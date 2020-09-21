@@ -39,8 +39,7 @@ export const INSERT_CONSULTANT = 'INSERT_CONSULTANT';
 export const UPDATE_CONSULTANT = 'UPDATE_CONSULTANT';
 export const GET_CALL_STATUS = 'GET_CALL_STATUS';
 export const SET_CONSULTANT_STATUS = 'SET_CONSULTANT_STATUS';
-export const CHANGE_CALL_STATE = 'CHANGE_CALL_STATE';
-export const CHANGE_MONITORING_STATE = 'CHANGE_MONITORING_STATE';
+export const CHANGE_STATUS = 'CHANGE_STATUS';
 
 export const requestGetUserInfo = createAction(REQUEST_GET_USER_INFO)<
   getRequestType
@@ -76,10 +75,7 @@ export const requestDeleteUser = createAction(REQUEST_DELETE_USER)<
 >();
 export const successDeleteUser = createAction(SUCCESS_DELETE_USER)();
 export const failureDeleteUser = createAction(FAILURE_DELETE_USER)<string>();
-export const changeCallState = createAction(CHANGE_CALL_STATE)<callStateType>();
-export const changeMonitoringState = createAction(CHANGE_MONITORING_STATE)<
-  monitoringStateType
->();
+export const changeStatus = createAction(CHANGE_STATUS)<monitoringStateType>();
 export const requestResetPassword = createAction(REQUEST_RESET_PASSWORD)<{
   id: number;
 }>();

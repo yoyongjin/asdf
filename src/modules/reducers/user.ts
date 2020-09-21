@@ -1,7 +1,7 @@
 import { createReducer } from 'typesafe-actions';
 import produce from 'immer';
 
-import { UserAction, UserType } from 'modules/types/user';
+import { ConsultantInfoType, UserAction, UserType } from 'modules/types/user';
 import * as types from 'modules/actions/user';
 import { getDiffTime } from 'utils/utils';
 
@@ -60,7 +60,21 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
       draft.request.getUser.fetch = false;
       draft.request.getUser.error = '';
       if (url === '/main') {
-        draft.userList.consultants = consultant.sort((r1, r2) => r2.id - r1.id); // 등록 순서로 정렬
+        draft.userList.consultants = consultant.sort((r1, r2) => {
+          if (r1.branch_id === r2.branch_id) {
+            // id가 같으면 team_name순 정렬 (레벨값 우선 정렬)
+            if (r1.team_name !== r2.team_name) {
+              return r1.team_name < r2.team_name
+                ? -1
+                : r1.team_name > r2.team_name
+                ? 1
+                : 0;
+            }
+
+            return r1.name < r2.name ? -1 : r1.name > r2.name ? 1 : 0;
+          }
+          return r1.branch_id - r2.branch_id;
+        });
         if (draft.filterUserList.consultants.length > 0) {
           draft.filterUserList.consultants = [];
         }
@@ -83,9 +97,17 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
       draft.request.getUser.fetch = false;
       draft.request.getUser.error = '';
       if (url === '/main') {
-        draft.filterUserList.consultants = consultant.sort(
-          (r1, r2) => r2.id - r1.id,
-        ); // 등록 순서로 정렬
+        draft.filterUserList.consultants = consultant.sort((r1, r2) => {
+          if (r1.branch_id === r2.branch_id) {
+            // id가 같으면 team_name순 정렬 (레벨값 우선 정렬)
+            return r1.team_name < r2.team_name
+              ? -1
+              : r1.team_name > r2.team_name
+              ? 1
+              : 0;
+          }
+          return r1.branch_id - r2.branch_id;
+        });
       } else if (url === '/main/manage/user') {
         draft.filterUserList.users = users.sort((r1, r2) => r2.id - r1.id); // 등록 순서로 정렬
         draft.filterUserList.numberOfUsers = count;
@@ -278,6 +300,28 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
 
         // if(state.userList.consultants.length < 1) return;
         // draft.userList.numberOfUsers += 1;
+        let cons = Object.assign(
+          [],
+          state.userList.consultants,
+        ) as ConsultantInfoType[];
+        cons.push(value);
+
+        draft.userList.consultants = cons.sort((r1, r2) => {
+          if (r1.branch_id === r2.branch_id) {
+            // id가 같으면 team_name순 정렬 (레벨값 우선 정렬)
+            if (r1.team_name !== r2.team_name) {
+              return r1.team_name! < r2.team_name!
+                ? -1
+                : r1.team_name! > r2.team_name!
+                ? 1
+                : 0;
+            }
+
+            return r1.name < r2.name ? -1 : r1.name > r2.name ? 1 : 0;
+          }
+          return r1.branch_id - r2.branch_id;
+        });
+
         draft.userList.consultants.push(value);
       } else if (admin_id === 1) {
         // 관리자일 경우
@@ -474,26 +518,6 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
       }
     });
   },
-  [types.CHANGE_CALL_STATE]: (state, action) => {
-    const { type, time, number } = action.payload;
-    return produce(state, (draft) => {
-      state.userList.consultants.map((values, i) => {
-        if (values.number === number) {
-          draft.userList.consultants[i].call_time = Number(time);
-          draft.userList.consultants[i].call_type = type;
-        }
-      });
-
-      if (state.filterUserList.consultants.length > 0) {
-        state.filterUserList.consultants.map((values, i) => {
-          if (values.number === number) {
-            draft.filterUserList.consultants[i].call_time = Number(time);
-            draft.filterUserList.consultants[i].call_type = type;
-          }
-        });
-      }
-    });
-  },
   [types.REQUEST_RESET_PASSWORD]: (state, action) => {
     return produce(state, (draft) => {
       draft.request.resetPassword.fetch = false;
@@ -512,12 +536,37 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
       draft.request.deleteUser.error = action.payload;
     });
   },
-  [types.CHANGE_MONITORING_STATE]: (state, action) => {
+  // [types.CHANGE_CALL_STATE]: (state, action) => {
+  //   const { type, time, number } = action.payload;
+  //   return produce(state, (draft) => {
+  //     state.userList.consultants.map((values, i) => {
+  //       if (values.number === number) {
+  //         draft.userList.consultants[i].call_time = Number(time);
+  //         draft.userList.consultants[i].call_type = type;
+  //       }
+  //     });
+
+  //     if (state.filterUserList.consultants.length > 0) {
+  //       state.filterUserList.consultants.map((values, i) => {
+  //         if (values.number === number) {
+  //           draft.filterUserList.consultants[i].call_time = Number(time);
+  //           draft.filterUserList.consultants[i].call_type = type;
+  //         }
+  //       });
+  //     }
+  //   });
+  // },
+  [types.CHANGE_STATUS]: (state, action) => {
     const { type, time, number, monitoring_state, user_id } = action.payload;
     return produce(state, (draft) => {
       state.userList.consultants.map((values, i) => {
         if (values.number === number) {
-          draft.userList.consultants[i].call_time = Number(time);
+          if (type === 'call_offhook') {
+            draft.userList.consultants[i].call_time = Number(time);
+          } else {
+            draft.userList.consultants[i].call_time = 0;
+            draft.userList.consultants[i].diff = 0;
+          }
           draft.userList.consultants[i].call_type = type;
           if (monitoring_state === 'y') {
             draft.userList.consultants[i].monitoring = true;
@@ -531,7 +580,12 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
 
       state.filterUserList.consultants.map((values, i) => {
         if (values.number === number) {
-          draft.filterUserList.consultants[i].call_time = Number(time);
+          if (type === 'call_offhook') {
+            draft.filterUserList.consultants[i].call_time = Number(time);
+          } else {
+            draft.filterUserList.consultants[i].call_time = 0;
+            draft.filterUserList.consultants[i].diff = 0;
+          }
           draft.filterUserList.consultants[i].call_type = type;
           if (monitoring_state === 'y') {
             draft.filterUserList.consultants[i].monitoring = true;

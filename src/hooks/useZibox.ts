@@ -15,7 +15,7 @@ function useZibox() {
 
   const startMonitoring = useCallback((number: string, id: number) => {
     Zibox.getInstance().monStart();
-    console.log('startMonitoring');
+    console.log('Start monitoring');
     Socket.getInstance().onEmit('monitoring', {
       monitoring_state: 'y',
       number,
@@ -26,7 +26,7 @@ function useZibox() {
   const stopMonitoring = useCallback(async (number: string, id: number) => {
     try {
       await Zibox.getInstance().monStop();
-      console.log('stopMonitoring');
+      console.log('Stop monitoring');
       Zibox.getInstance().disconnect();
       Socket.getInstance().onEmit('monitoring', {
         monitoring_state: 'n',
@@ -38,16 +38,7 @@ function useZibox() {
     }
   }, []);
 
-  const emitMonitoring = useCallback((number: string, id: number) => {
-    console.log('emitMonitoring');
-    Socket.getInstance().onEmit('monitoring', {
-      monitoring_state: 'n',
-      number,
-      user_id: -1,
-    });
-  }, []);
-
-  return { initZibox, startMonitoring, stopMonitoring, emitMonitoring };
+  return { initZibox, startMonitoring, stopMonitoring };
 }
 
 export default useZibox;

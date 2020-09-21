@@ -32,13 +32,14 @@ import {
   requestDeleteBranchInfo,
 } from 'modules/actions/branch';
 import * as API from 'lib/api';
+import Logger from 'utils/log';
 
 function* getBranchInfoProcess(
   action: ReturnType<typeof requestGetBranchInfo>,
 ) {
   try {
     const response = yield call(API.getBranchInfo);
-    console.log('branch Data =>', response);
+    Logger.log('branch Data =>', response);
     const { login_at, ...rest } = response.data.data;
 
     yield put(successGetBranchInfo(rest));
@@ -51,7 +52,7 @@ function* insertBranch(action: ReturnType<typeof requestAddBranchInfo>) {
   try {
     const { name } = action.payload;
     const response = yield call(API.insertBranch, name);
-    console.log('insert branch Data =>', response);
+    Logger.log('insert branch Data =>', response);
     const { data, status } = response.data;
 
     if (status === 'success') {
@@ -70,7 +71,7 @@ function* insertTeam(action: ReturnType<typeof requestAddTeamInfo>) {
   try {
     const { name, branch_id, team_id } = action.payload;
     const response = yield call(API.insertTeam, name, branch_id);
-    console.log('insert team Data =>', response);
+    Logger.log('insert team Data =>', response);
     const { data, status } = response.data;
 
     if (status === 'success') {
@@ -91,7 +92,7 @@ function* updateTeam(action: ReturnType<typeof requestUpdateTeamInfo>) {
   try {
     const { id, name, branch_id } = action.payload;
     const response = yield call(API.updateTeam, id, name);
-    console.log('update team Data =>', response);
+    Logger.log('update team Data =>', response);
     const { data, status } = response.data;
 
     if (status === 'success') {
@@ -111,7 +112,7 @@ function* updateBranch(action: ReturnType<typeof requestUpdateBranchInfo>) {
   try {
     const { id, name } = action.payload;
     const response = yield call(API.updateBranch, id, name);
-    console.log('update branch Data =>', response);
+    Logger.log('update branch Data =>', response);
     const { data, status } = response.data;
 
     if (status === 'success') {
@@ -130,7 +131,7 @@ function* getBranchList(action: ReturnType<typeof requestGetBranchList>) {
   try {
     const { type } = action.payload;
     const response = yield call(API.getBranchList);
-    console.log('get branch list Data =>', response);
+    Logger.log('get branch list Data =>', response);
     const { status, data } = response.data;
     if (status === 'success') {
       if (type) {
@@ -148,7 +149,7 @@ function* getTeamList(action: ReturnType<typeof requestGetTeamList>) {
   const { branch_id, type } = action.payload;
   try {
     const response = yield call(API.getTeamList, branch_id);
-    console.log('get team list Data =>', response);
+    Logger.log('get team list Data =>', response);
     const { status, data } = response.data;
 
     if (status === 'success') {
@@ -169,7 +170,7 @@ function* deleteBranchProcess(
   try {
     const { branch_id } = action.payload;
     const response = yield call(API.deleteBranch, branch_id);
-    console.log('delete branch Data =>', response);
+    Logger.log('delete branch Data =>', response);
     const { data, status } = response.data;
 
     if (status === 'success') {
@@ -188,7 +189,7 @@ function* deleteTeamProcess(action: ReturnType<typeof requestDeleteTeamInfo>) {
   try {
     const { branch_id, team_id } = action.payload;
     const response = yield call(API.deleteTeam, branch_id, team_id);
-    console.log('delete team Data =>', response);
+    Logger.log('delete team Data =>', response);
     const { data, status } = response.data;
 
     if (status === 'success') {
