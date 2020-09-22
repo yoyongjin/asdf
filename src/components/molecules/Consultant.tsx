@@ -58,7 +58,7 @@ function Consultant({
     ) {
       // 감청 중 상담원이 통화 종료 했을 때 감청 종료 명령 날려주는 부분
       stopMonitoring(consultInfo.number, loginId);
-      setTapping();
+      setTapping(false);
     }
   }, [
     consultInfo.user_id,
