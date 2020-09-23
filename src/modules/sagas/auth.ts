@@ -37,7 +37,6 @@ function* loginProcess(action: ReturnType<typeof requestLogin>) {
 
       Cookies.set(TOKEN_NAME, token, {
         expires: 1000 * 24 * 60 * 60,
-        domain: DOMAIN,
       });
       API.instance.defaults.headers.common['token'] = token;
 
@@ -69,7 +68,6 @@ function* checkLoginProcess(action: ReturnType<typeof requestCheckLogin>) {
 
       Cookies.set(TOKEN_NAME, token, {
         expires: 1000 * 24 * 60 * 60,
-        domain: DOMAIN,
       });
       API.instance.defaults.headers.common['token'] = token;
 
