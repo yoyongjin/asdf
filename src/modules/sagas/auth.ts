@@ -93,7 +93,7 @@ function* logoutProcess(action: ReturnType<typeof requestLogout>) {
       const { data: isSuccess } = data;
       Logger.log('Logout data => ', isSuccess);
 
-      Cookies.remove(TOKEN_NAME, { domain: DOMAIN });
+      Cookies.remove(TOKEN_NAME);
       yield put(successLogout());
 
       history!.push('/auth/login');
