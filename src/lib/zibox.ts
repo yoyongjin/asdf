@@ -31,10 +31,11 @@ class Zibox {
       this.zibox.rightVolume(8);
       this.zibox.micVolume(25);
       this.zibox.spkVolume(40);
-      // this.zibox.monIP('127.0.0.1');
-      setTimeout(() => {
-        this.zibox.monOn();
-      }, 1000);
+
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      this.zibox.monOn();
+      this.zibox.monIP('127.0.0.1');
+
       return true;
     } catch (error) {
       console.error(error)

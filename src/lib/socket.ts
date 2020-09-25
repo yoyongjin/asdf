@@ -91,7 +91,7 @@ class Socket {
     });
   }
 
-  onEmit(type: string, data?: MonitoringState) {
+  onEmit(type: string, data?: any) {
     try {
       this.socket.emit(type, data!);
     } catch (error) {

@@ -270,6 +270,7 @@ function UserInfo({
           name={'tel'}
           value={formatPhoneNumber(form.tel)}
           fontSize={0.81}
+          disabled={form.admin !== 0}
         />
         <TextInput
           customStyle={`float:right;`}
