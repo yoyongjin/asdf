@@ -29,8 +29,8 @@ class Zibox {
       this.zibox.atsVolume(5);
       this.zibox.leftVolume(10);
       this.zibox.rightVolume(8);
-      this.zibox.micVolume(25);
-      this.zibox.spkVolume(40);
+      this.zibox.micVolume(35);
+      this.zibox.spkVolume(60);
 
       await new Promise(resolve => setTimeout(resolve, 1000))
       this.zibox.monOn();
