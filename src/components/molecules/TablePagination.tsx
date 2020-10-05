@@ -38,6 +38,7 @@ const StyledNext = styled.span`
 function TablePagination({
   curPage,
   count,
+  divide,
   onClickNextPage,
   onClickPrevPage,
 }: TablePaginationProps) {
@@ -64,7 +65,7 @@ function TablePagination({
       <StyledPage>
         <PageCount
           curPage={curPage}
-          maxPage={getMaxPage(count)}
+          maxPage={getMaxPage(count, divide)}
           padding={1}
         ></PageCount>
       </StyledPage>
@@ -74,7 +75,7 @@ function TablePagination({
             src={nextIcon}
             width={1}
             height={1}
-            onClick={() => onClickNextPage(curPage, count, false)}
+            onClick={() => onClickNextPage(curPage, count, divide, false)}
           ></Image>
         </StyledBlankSpace>
         <StyledBlankSpace>
@@ -82,7 +83,7 @@ function TablePagination({
             src={endIcon}
             width={1}
             height={1}
-            onClick={() => onClickNextPage(curPage, count, true)}
+            onClick={() => onClickNextPage(curPage, count, divide, true)}
           ></Image>
         </StyledBlankSpace>
       </StyledNext>
@@ -93,7 +94,13 @@ function TablePagination({
 interface TablePaginationProps {
   curPage: number;
   count: number;
-  onClickNextPage: (cur: number, total: number, isEnd?: boolean) => void;
+  divide: number;
+  onClickNextPage: (
+    cur: number,
+    total: number,
+    divide: number,
+    isEnd?: boolean,
+  ) => void;
   onClickPrevPage: (cur: number, total: number, isStart?: boolean) => void;
 }
 

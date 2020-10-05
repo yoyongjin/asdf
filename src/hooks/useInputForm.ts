@@ -41,6 +41,7 @@ function useInputForm<T>(initialForm: T) {
 }
 
 interface DataType {
+  userListCount: string;
   branch: string;
   team: string;
   admin: string;

@@ -4,6 +4,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'modules/reducers';
 import { getMaxPage } from 'utils/utils';
 
+// import useInputForm from 'hooks/useInputForm';
+
 function usePage() {
   const countBranch = useSelector(
     (state: RootState) => state.branch.numberOfBranch,
@@ -15,22 +17,28 @@ function usePage() {
     (state: RootState) => state.user.filterUserList.numberOfUsers,
   );
   const [page, setPage] = useState<number>(1);
+  // const { form } = useInputForm({
+  //   userListCount: 5,
+  // });
 
   const onChangePageFirst = useCallback(() => {
     setPage(1);
   }, []);
 
-  const onChangeCurrentPage = useCallback((cur: number, total: number) => {
-    let maxPage = getMaxPage(total);
+  const onChangeCurrentPage = useCallback(
+    (cur: number, total: number, divide: number) => {
+      let maxPage = getMaxPage(total, divide);
 
-    if (cur > maxPage) {
-      setPage(maxPage);
-    }
-  }, []);
+      if (cur > maxPage) {
+        setPage(maxPage);
+      }
+    },
+    [],
+  );
 
   const onClickNextPage = useCallback(
-    (cur: number, total: number, isEnd = false) => {
-      let maxPage = getMaxPage(total);
+    (cur: number, total: number, divide: number, isEnd = false) => {
+      let maxPage = getMaxPage(total, divide);
       if (cur >= maxPage) return;
 
       if (isEnd) {

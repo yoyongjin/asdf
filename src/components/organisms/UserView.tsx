@@ -35,7 +35,8 @@ const StyledTitle = styled.div`
 
 const StyledUserListArea = styled.div`
   /* Display */
-  height: calc(100% - 3.75rem);
+  /* height: calc(100% - 3.75rem); */
+  height: 100%;
   width: 100%;
 `;
 
@@ -66,6 +67,12 @@ const tableTitle = [
   { title: '', width: 10 },
 ];
 
+const userListOption = [
+  { id: 5, data: 5 },
+  { id: 10, data: 10 },
+  { id: 15, data: 15 },
+];
+
 let branch = -1;
 let team = -1;
 let currentPage = 0;
@@ -76,6 +83,7 @@ function UserView({ location }: UserViewProps) {
   const { loginInfo } = useAuth();
   const { branchList, teamList, getBranchList, getTeamList } = useBranch();
   const { form, onChangeSelect, onChangeInput, setKeyValue } = useInputForm({
+    userListCount: 5,
     branch: -1,
     team: -1,
     search: '',
@@ -100,6 +108,18 @@ function UserView({ location }: UserViewProps) {
     onClickPrevPage,
   } = usePage();
   const { visible, onClickVisible } = useVisible();
+
+  const userListOptionInfo = useMemo(() => {
+    return {
+      color: COLORS.dark_gray1,
+      borderRadius: 1,
+      borderColor: COLORS.dark_gray4,
+      data: userListOption,
+      width: 4,
+      height: 1.5,
+      paddingLeft: 16,
+    };
+  }, []);
 
   const selectInfo = useMemo(() => {
     return {
@@ -153,7 +173,7 @@ function UserView({ location }: UserViewProps) {
     },
     [setTempUserInfo, onClickVisible],
   );
-
+  console.log(form.userListCount);
   useEffect(() => {
     if (loginInfo.admin_id === 2) {
       // 슈퍼관리자
@@ -180,7 +200,7 @@ function UserView({ location }: UserViewProps) {
       getUsers(
         form.branch,
         form.team,
-        5,
+        form.userListCount,
         page,
         location.pathname,
         search,
@@ -212,7 +232,7 @@ function UserView({ location }: UserViewProps) {
       getUsers(
         loginInfo.branch_id,
         form.team,
-        5,
+        form.userListCount,
         page,
         location.pathname,
         search,
@@ -223,6 +243,7 @@ function UserView({ location }: UserViewProps) {
   }, [
     loginInfo.admin_id,
     loginInfo.branch_id,
+    form.userListCount,
     form.branch,
     form.team,
     form.search,
@@ -258,11 +279,17 @@ function UserView({ location }: UserViewProps) {
   useEffect(() => {
     // 페이지가 이동된 상태에서 지점명이나 팀명을 필터링했을 때, 현재 페이지를 변경시키는 부분
     if (filterCountUser > 0) {
-      onChangeCurrentPage(page, filterCountUser);
+      onChangeCurrentPage(page, filterCountUser, form.userListCount);
     } else {
-      onChangeCurrentPage(page, countUser);
+      onChangeCurrentPage(page, countUser, form.userListCount);
     }
-  }, [countUser, filterCountUser, page, onChangeCurrentPage]);
+  }, [
+    countUser,
+    filterCountUser,
+    page,
+    form.userListCount,
+    onChangeCurrentPage,
+  ]);
 
   Logger.log('Lendering UserView');
   return (
@@ -271,6 +298,7 @@ function UserView({ location }: UserViewProps) {
         <StyledTitle>
           <Title
             buttonType={buttonInfo}
+            userListOption={userListOptionInfo}
             selectType={selectInfo}
             isSearch
             branch={
@@ -329,6 +357,7 @@ function UserView({ location }: UserViewProps) {
                   ? filterCountUser
                   : countUser
               }
+              divide={form.userListCount}
               curPage={page}
               onClickNextPage={onClickNextPage}
               onClickPrevPage={onClickPrevPage}

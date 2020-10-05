@@ -65,6 +65,7 @@ const StyledButtonSpace = styled.span`
 function Title({
   buttonType,
   explanType,
+  userListOption,
   selectType,
   pageType,
   isSearch,
@@ -147,6 +148,22 @@ function Title({
         ) : null}
       </StyledLeft>
       <StyledRight>
+        {userListOption ? (
+          <StyledSelect>
+            <Select
+              // defaultValue={}
+              name={'userListCount'}
+              options={userListOption.data}
+              width={userListOption.width || 7.5}
+              height={userListOption.height || 1.7}
+              borderColor={userListOption.borderColor}
+              borderRadius={userListOption.borderRadius}
+              fontColor={userListOption.color}
+              paddingLeft={userListOption.paddingLeft}
+              onChange={(e) => onChangeSelect!(e)}
+            />
+          </StyledSelect>
+        ) : null}
         {selectType && selectType.data1!.length > 0 ? (
           <StyledSelect>
             <Select
@@ -194,7 +211,7 @@ function Title({
           <>
             <PageCount
               curPage={pageType.curPage}
-              maxPage={getMaxPage(pageType.count)}
+              maxPage={getMaxPage(pageType.count, 5)}
               textAlign={2}
             />
             <StyledPageSpace />
@@ -216,7 +233,7 @@ function Title({
               bgColor={'inherit'}
               borderRadius={0}
               onClick={() =>
-                pageType.onClickNextPage(pageType.curPage, pageType.count)
+                pageType.onClickNextPage(pageType.curPage, pageType.count, 5)
               }
             />
           </>
@@ -250,6 +267,16 @@ interface explanType {
   title: string;
 }
 
+interface userListOptionType {
+  color?: string;
+  borderRadius?: number;
+  borderColor?: string;
+  data?: any[];
+  width: number;
+  height: number;
+  paddingLeft?: number;
+}
+
 interface selectType {
   color?: string;
   borderRadius?: number;
@@ -265,7 +292,12 @@ interface pageType {
   curPage: number;
   count: number;
   onClickPrevPage: (cur: number, total: number, isStart?: boolean) => void;
-  onClickNextPage: (cur: number, total: number, isEnd?: boolean) => void;
+  onClickNextPage: (
+    cur: number,
+    total: number,
+    divide: number,
+    isEnd?: boolean,
+  ) => void;
 }
 
 interface SelectDataType {
@@ -276,6 +308,7 @@ interface SelectDataType {
 interface TitleProps {
   buttonType?: buttonType;
   explanType?: explanType;
+  userListOption?: userListOptionType;
   selectType?: selectType;
   pageType?: pageType;
   isSearch?: boolean;

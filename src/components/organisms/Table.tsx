@@ -25,6 +25,7 @@ const StyledHead = styled.thead<StyledProps>`
 const StyledBody = styled.tbody`
   /* Display */
   height: calc(100% - 1.87rem);
+  /* height: 100%; */
 
   /* Text */
   text-align: center;

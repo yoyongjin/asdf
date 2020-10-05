@@ -73,7 +73,7 @@ export const getTime = (timestamp: number) => {
   return Math.floor(timestamp / 1000);
 };
 
-export const getMaxPage = (count: number, divide = 5) => {
+export const getMaxPage = (count: number, divide: number) => {
   let maxPage = count / divide;
   if (maxPage === 0) {
     maxPage += 1;
