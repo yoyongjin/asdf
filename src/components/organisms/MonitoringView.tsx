@@ -14,6 +14,7 @@ import useInputForm from 'hooks/useInputForm';
 import useAuth from 'hooks/useAuth';
 import useVisible from 'hooks/useVisible';
 import useZibox from 'hooks/useZibox';
+import Logger from 'utils/log';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -236,6 +237,7 @@ function Monitoring({ location }: MonitoringProps) {
     };
   }, [loginInfo.id, onRunTimer, onRemoveTimer]);
 
+  // Logger.log('Lendering MonitoringView');
   return (
     <>
       <StyledWrapper>

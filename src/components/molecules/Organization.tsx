@@ -152,6 +152,7 @@ function Organization({
       isCtrl = true;
     }
   }, []);
+
   return (
     <StyledWrapper>
       {branch!.length < 1

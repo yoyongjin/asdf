@@ -210,4 +210,7 @@ interface ConsultantProps {
 
 Consultant.defaultProps = {};
 
-export default React.memo(Consultant);
+export default React.memo(
+  Consultant,
+  (prevProps, nextProps) => prevProps.consultInfo === nextProps.consultInfo,
+);

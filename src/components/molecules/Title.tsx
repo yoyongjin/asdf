@@ -328,4 +328,4 @@ interface TitleProps {
 
 Title.defaultProps = {};
 
-export default Title;
+export default React.memo(Title);
