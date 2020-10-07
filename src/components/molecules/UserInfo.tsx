@@ -158,7 +158,7 @@ function UserInfo({
         return true;
       } else if (form.admin === 1) {
         // 관리자일 경우
-        if (!form.name.trim() || !form.id.trim() || !form.tel.trim()) {
+        if (!form.name.trim() || !form.id.trim()) {
           alert('빈란 없이 입력해주세요.');
           return false;
         }
@@ -181,7 +181,7 @@ function UserInfo({
         return true;
       } else if (form.admin === 1) {
         // 관리자일 경우
-        if (!form.name.trim() || !form.id.trim() || !form.tel.trim()) {
+        if (!form.name.trim() || !form.id.trim()) {
           alert('빈란 없이 입력해주세요.');
           return false;
         }
