@@ -136,4 +136,7 @@ Table.defaultProps = {
   bgColor: COLORS.dark_gray1,
 };
 
-export default Table;
+export default React.memo(
+  Table,
+  (preProps, nextProps) => preProps.userInfo === nextProps.userInfo,
+);

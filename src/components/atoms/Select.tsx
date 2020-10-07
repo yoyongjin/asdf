@@ -93,4 +93,4 @@ Select.defaultProps = {
   width: 10,
 };
 
-export default Select;
+export default React.memo(Select);

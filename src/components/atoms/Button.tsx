@@ -88,4 +88,4 @@ Button.defaultProps = {
   width: 15,
 };
 
-export default Button;
+export default React.memo(Button);

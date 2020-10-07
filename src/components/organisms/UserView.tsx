@@ -173,7 +173,7 @@ function UserView({ location }: UserViewProps) {
     },
     [setTempUserInfo, onClickVisible],
   );
-  console.log(form.userListCount);
+
   useEffect(() => {
     if (loginInfo.admin_id === 2) {
       // 슈퍼관리자

@@ -106,4 +106,4 @@ interface TablePaginationProps {
 
 TablePagination.defaultProps = {};
 
-export default TablePagination;
+export default React.memo(TablePagination);

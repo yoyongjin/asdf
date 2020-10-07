@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
 
 import { Button, Input, Text } from 'components/atoms';
@@ -28,11 +28,14 @@ function SearchBar({
   onChange,
   onClickSearch,
 }: SearchBarProps) {
-  const onKeyPress = useCallback((e) => {
-    if(e.keyCode === 13){
-      onClickSearch!()
-    }
-  }, [onClickSearch])
+  const onKeyPress = useCallback(
+    (e) => {
+      if (e.keyCode === 13) {
+        onClickSearch!();
+      }
+    },
+    [onClickSearch],
+  );
 
   return (
     <StyledWrapper>
@@ -59,11 +62,7 @@ function SearchBar({
           bgColor={buttonColor}
           onClick={onClickSearch}
         >
-          <Text
-            fontSize={0.87}
-            fontColor={COLORS.white}
-            fontWeight={800}
-          >
+          <Text fontSize={0.87} fontColor={COLORS.white} fontWeight={800}>
             검색
           </Text>
         </Button>
@@ -95,4 +94,4 @@ SearchBar.defaultProps = {
   borderWidth: 1,
 };
 
-export default SearchBar;
+export default React.memo(SearchBar);
