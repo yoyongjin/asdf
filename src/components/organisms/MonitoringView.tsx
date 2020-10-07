@@ -259,10 +259,10 @@ function Monitoring({ location }: MonitoringProps) {
               ? consultantInfo.map((consultant, i) => {
                   return (
                     <StyledConsultant
-                      key={`styled-consultant-${consultant.id}`}
+                      key={`1-styled-consultant-${consultant.id}`}
                     >
                       <Consultant
-                        key={`consultant-${consultant.id}`}
+                        key={`1-consultant-${consultant.id}`}
                         consultInfo={consultant}
                         getConsultantInfo={getConsultantInfo}
                         initZibox={initZibox}
@@ -278,10 +278,10 @@ function Monitoring({ location }: MonitoringProps) {
               : filterConsultantInfo.map((consultant, i) => {
                   return (
                     <StyledConsultant
-                      key={`styled-consultant-${consultant.id}`}
+                      key={`2-styled-consultant-${consultant.id}`}
                     >
                       <Consultant
-                        key={`consultant-${consultant.id}`}
+                        key={`2-consultant-${consultant.id}`}
                         consultInfo={consultant}
                         getConsultantInfo={getConsultantInfo}
                         initZibox={initZibox}
@@ -300,10 +300,10 @@ function Monitoring({ location }: MonitoringProps) {
                   if (consultant.branch_id !== loginInfo.branch_id) return null;
                   return (
                     <StyledConsultant
-                      key={`styled-consultant-${consultant.id}`}
+                      key={`3-styled-consultant-${consultant.id}`}
                     >
                       <Consultant
-                        key={`consultant-${consultant.id}`}
+                        key={`3-consultant-${consultant.id}`}
                         consultInfo={consultant}
                         getConsultantInfo={getConsultantInfo}
                         initZibox={initZibox}
@@ -320,10 +320,10 @@ function Monitoring({ location }: MonitoringProps) {
                   if (consultant.branch_id !== loginInfo.branch_id) return null;
                   return (
                     <StyledConsultant
-                      key={`styled-consultant-${consultant.id}`}
+                      key={`4-styled-consultant-${consultant.id}`}
                     >
                       <Consultant
-                        key={`consultant-${consultant.id}`}
+                        key={`4-consultant-${consultant.id}`}
                         consultInfo={consultant}
                         getConsultantInfo={getConsultantInfo}
                         initZibox={initZibox}

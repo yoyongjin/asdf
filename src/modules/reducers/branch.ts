@@ -319,7 +319,6 @@ const userReducer = createReducer<BranchType<string>, BranchAction>(
     },
     [types.INIT_BRANCH_LIST]: (state, action) => {
       return produce(state, (draft) => {
-        console.log(action.payload);
         draft.namesList.userBranch = [action.payload];
       });
     },
