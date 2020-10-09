@@ -1,9 +1,11 @@
 import { createReducer } from 'typesafe-actions';
-import produce from 'immer';
+import produce, { enableES5 } from 'immer';
 
 import { ConsultantInfoType, UserAction, UserType } from 'modules/types/user';
 import * as types from 'modules/actions/user';
 import { getDiffTime } from 'utils/utils';
+
+enableES5();
 
 const initialState: UserType = {
   request: {
