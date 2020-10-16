@@ -13,8 +13,8 @@ import useBranch from 'hooks/useBranch';
 import useInputForm from 'hooks/useInputForm';
 import useAuth from 'hooks/useAuth';
 import useVisible from 'hooks/useVisible';
-import useZibox from 'hooks/useZibox';
-import Logger from 'utils/log';
+// import useZibox from 'hooks/useZibox';
+import useOcx from 'hooks/useOcx';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -58,9 +58,9 @@ let team = -1; // 임시 팀 번호
 let request = false;
 
 function Monitoring({ location }: MonitoringProps) {
-  const [tapping, setTapping] = useState<boolean>(false); // 내가 감청 중인지 아닌지 여부
+  // const [tapping, setTapping] = useState<Boolean>(false); // 내가 감청 중인지 아닌지 여부
   const [tempConsultInfo, setTempConsultInfo] = useState<ConsultantInfoType>();
-  const { loginInfo } = useAuth();
+  const { initSocket, loginInfo } = useAuth();
   const { branchList, teamList, getBranchList, getTeamList } = useBranch();
   const { form, onChangeSelect, setKeyValue } = useInputForm({
     branch: -1,
@@ -75,13 +75,14 @@ function Monitoring({ location }: MonitoringProps) {
     onClickUpdateUser,
   } = useUser();
   const { visible, onClickVisible } = useVisible();
-  const { initZibox, startMonitoring, stopMonitoring } = useZibox();
+  const { monit, monitPcIp, startMonitoringOcx, stopMonitoringOcx } = useOcx();
+  // const { initZibox, startMonitoring, stopMonitoring } = useZibox();
 
   const selectInfo = useMemo(() => {
     return {
-      color: COLORS.green,
+      color: COLORS.blue,
       borderRadius: 0,
-      borderColor: COLORS.green,
+      borderColor: COLORS.blue,
       data1: branchList as Array<BranchInfo>,
       data2: teamList as Array<TeamInfo>,
       height: 1.75,
@@ -105,14 +106,24 @@ function Monitoring({ location }: MonitoringProps) {
       page: number,
       path: string,
       adminId?: number,
+      loginId?: number,
     ) => {
-      getUsersInfo(branchId, teamId, count, page, '', path, adminId);
+      getUsersInfo(branchId, teamId, count, page, '', path, adminId, loginId);
     },
     [getUsersInfo],
   );
 
   useEffect(() => {
-    if (loginInfo.admin_id === 2) {
+    let index: number = consultantInfo.findIndex((consultant, i) => {
+      return tempConsultInfo?.id === consultant.id;
+    });
+    if (index > -1) {
+      setTempConsultInfo(consultantInfo[index]);
+    }
+  }, [tempConsultInfo, consultantInfo]);
+
+  useEffect(() => {
+    if (loginInfo.admin_id === 2 && initSocket === 1) {
       // 슈퍼 관리자
       if (form.branch === -1 && filterConsultantInfo.length > 0) {
         // 필터링된 유저 리스트에서 전체 지점명을 볼 경우 필터링된 유저 리스트 초기화
@@ -135,6 +146,7 @@ function Monitoring({ location }: MonitoringProps) {
             1,
             location.pathname,
             loginInfo.admin_id,
+            loginInfo.id,
           );
           branch = form.branch;
           team = form.team;
@@ -150,11 +162,12 @@ function Monitoring({ location }: MonitoringProps) {
         1,
         location.pathname,
         loginInfo.admin_id,
+        loginInfo.id,
       );
       branch = form.branch;
       team = form.team;
       request = true;
-    } else if (loginInfo.admin_id === 1) {
+    } else if (loginInfo.admin_id === 1 && initSocket === 1) {
       // 일반 관리자
       if (form.team === -1 && filterConsultantInfo.length > 0) {
         // 필터링된 유저 리스트에서 전체 지점명을 볼 경우 필터링된 유저 리스트 초기화
@@ -176,6 +189,7 @@ function Monitoring({ location }: MonitoringProps) {
             1,
             location.pathname,
             loginInfo.admin_id,
+            loginInfo.id,
           );
           team = form.team;
         }
@@ -190,10 +204,13 @@ function Monitoring({ location }: MonitoringProps) {
         1,
         location.pathname,
         loginInfo.admin_id,
+        loginInfo.id,
       );
       team = form.team;
     }
   }, [
+    initSocket,
+    loginInfo.id,
     loginInfo.admin_id,
     loginInfo.branch_id,
     form.branch,
@@ -237,7 +254,6 @@ function Monitoring({ location }: MonitoringProps) {
     };
   }, [loginInfo.id, onRunTimer, onRemoveTimer]);
 
-  // Logger.log('Lendering MonitoringView');
   return (
     <>
       <StyledWrapper>
@@ -265,11 +281,10 @@ function Monitoring({ location }: MonitoringProps) {
                         key={`1-consultant-${consultant.id}`}
                         consultInfo={consultant}
                         getConsultantInfo={getConsultantInfo}
-                        initZibox={initZibox}
-                        startMonitoring={startMonitoring}
-                        stopMonitoring={stopMonitoring}
-                        tapping={tapping}
-                        setTapping={setTapping}
+                        startMonitoringOcx={startMonitoringOcx}
+                        stopMonitoringOcx={stopMonitoringOcx}
+                        monit={monit}
+                        monitPcIp={monitPcIp}
                         loginId={loginInfo.id}
                       />
                     </StyledConsultant>
@@ -284,11 +299,10 @@ function Monitoring({ location }: MonitoringProps) {
                         key={`2-consultant-${consultant.id}`}
                         consultInfo={consultant}
                         getConsultantInfo={getConsultantInfo}
-                        initZibox={initZibox}
-                        startMonitoring={startMonitoring}
-                        stopMonitoring={stopMonitoring}
-                        tapping={tapping}
-                        setTapping={setTapping}
+                        startMonitoringOcx={startMonitoringOcx}
+                        stopMonitoringOcx={stopMonitoringOcx}
+                        monit={monit}
+                        monitPcIp={monitPcIp}
                         loginId={loginInfo.id}
                       />
                     </StyledConsultant>
@@ -306,11 +320,10 @@ function Monitoring({ location }: MonitoringProps) {
                         key={`3-consultant-${consultant.id}`}
                         consultInfo={consultant}
                         getConsultantInfo={getConsultantInfo}
-                        initZibox={initZibox}
-                        startMonitoring={startMonitoring}
-                        stopMonitoring={stopMonitoring}
-                        tapping={tapping}
-                        setTapping={setTapping}
+                        startMonitoringOcx={startMonitoringOcx}
+                        stopMonitoringOcx={stopMonitoringOcx}
+                        monit={monit}
+                        monitPcIp={monitPcIp}
                         loginId={loginInfo.id}
                       />
                     </StyledConsultant>
@@ -326,11 +339,10 @@ function Monitoring({ location }: MonitoringProps) {
                         key={`4-consultant-${consultant.id}`}
                         consultInfo={consultant}
                         getConsultantInfo={getConsultantInfo}
-                        initZibox={initZibox}
-                        startMonitoring={startMonitoring}
-                        stopMonitoring={stopMonitoring}
-                        tapping={tapping}
-                        setTapping={setTapping}
+                        startMonitoringOcx={startMonitoringOcx}
+                        stopMonitoringOcx={stopMonitoringOcx}
+                        monit={monit}
+                        monitPcIp={monitPcIp}
                         loginId={loginInfo.id}
                       />
                     </StyledConsultant>

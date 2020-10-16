@@ -73,8 +73,6 @@ const userListOption = [
   { id: 15, data: 15 },
 ];
 
-let branch = -1;
-let team = -1;
 let currentPage = 0;
 
 function UserView({ location }: UserViewProps) {
@@ -291,7 +289,6 @@ function UserView({ location }: UserViewProps) {
     onChangeCurrentPage,
   ]);
 
-  Logger.log('Lendering UserView');
   return (
     <>
       <StyledWrapper>

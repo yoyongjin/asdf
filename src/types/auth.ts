@@ -8,6 +8,7 @@ export type AuthAction = ActionType<typeof actions>;
 export interface AuthType {
   request: RequestType;
   loginInfo: LoginInfoType;
+  socket: number;
 }
 
 export interface RequestType {

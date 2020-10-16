@@ -11,7 +11,7 @@ import nextPageIcon from 'images/bt-page-next.png';
 const StyledWrapper = styled.div`
   /* Display */
   height: 100%;
-  border-bottom: 0.05rem solid ${COLORS.green};
+  border-bottom: 0.05rem solid ${COLORS.blue};
 `;
 
 const StyledLeft = styled.span`
@@ -112,7 +112,7 @@ function Title({
           <Text
             fontSize={fontSize ? fontSize : 1.12}
             fontWeight={800}
-            fontColor={COLORS.green}
+            fontColor={COLORS.blue}
             fontFamily={'NanumGothic'}
           >
             {children}
@@ -124,7 +124,7 @@ function Title({
               <Button
                 width={7.3}
                 height={1.5}
-                bgColor={COLORS.green}
+                bgColor={COLORS.dark_blue}
                 onClick={buttonType!.onClick}
               >
                 <Text

@@ -3,7 +3,6 @@ import styled from 'styled-components';
 
 import MainRouter from 'MainRouter';
 import { COLORS } from 'utils/color';
-import Logger from 'utils/log';
 
 const StyledWrapper = styled.div`
   /* Display */

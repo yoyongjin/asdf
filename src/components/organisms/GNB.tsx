@@ -14,11 +14,12 @@ const StyledWrapper = styled.div`
   width: 100%;
 
   /* Color */
-  background-color: ${COLORS.green};
+  background-color: ${COLORS.blue};
 `;
 
 const StyledLogo = styled.div`
   /* Position */
+  margin-top: 10px;
   margin-left: 26px;
 `;
 
@@ -55,8 +56,8 @@ function GNB({
           <Image
             alt={'DB life logo'}
             src={logoImg}
-            width={8.69}
-            height={3.25}
+            width={8.38}
+            height={2.1}
           />
         </Link>
       </StyledLogo>

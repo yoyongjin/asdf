@@ -10,7 +10,8 @@ import useInputForm from 'hooks/useInputForm';
 const StyledWrapper = styled.div`
   /* Display */
   width: 25rem;
-  height: 100%;
+    margin: 0 auto;
+  /* height: 100%; */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -118,7 +119,7 @@ function LoginForm({ history }: LoginFormProps) {
               value={
                 values.id === 0 ? form.id : values.id === 1 ? form.password : ''
               }
-              borderColor={COLORS.dark_green}
+              borderColor={COLORS.dark_blue}
               fontFamily={'NanumBarunGothic'}
               fontSize={0.88}
               height={2}
@@ -141,7 +142,7 @@ function LoginForm({ history }: LoginFormProps) {
       })}
       <StyledLogin>
         <Button
-          bgColor={COLORS.dark_green}
+          bgColor={COLORS.dark_blue}
           height={2}
           width={13.3}
           onClick={() => onClickLogin(form.id, form.password, history)}

@@ -24,7 +24,7 @@ const StyledContent = styled.div`
   width: 100%;
 
   /* Color */
-  background-color: ${COLORS.green};
+  background-color: ${COLORS.blue};
 `;
 
 const StyledMainLogoSpace = styled.div`

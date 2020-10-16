@@ -4,7 +4,7 @@ import { apiServer } from 'utils/constants';
 
 export const instance = axios.create({
   baseURL: apiServer,
-  timeout: 1000,
+  timeout: 5000,
   withCredentials: true,
 });
 
@@ -121,3 +121,16 @@ export const deleteTeam = (branchId: number, teamId: number) =>
   });
 
 export const deleteBranch = (id: number) => instance.delete(`api/branch/${id}`);
+
+export const changeStatus = (
+  number: string,
+  status: number,
+  userId?: number,
+  type: string = 'monitoring_status',
+) =>
+  instance.post('api/state/zibox', {
+    number,
+    status,
+    type,
+    user_id: userId,
+  });

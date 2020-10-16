@@ -2,7 +2,13 @@ import React, { useEffect, useMemo, useCallback } from 'react';
 import styled from 'styled-components';
 
 import { Button, Text } from 'components/atoms';
-import { Title, TextInput, TextSelect } from 'components/molecules';
+import {
+  Title,
+  TextInput,
+  TextSelect,
+  ZiboxStatus,
+  PhoneStatus,
+} from 'components/molecules';
 import { COLORS } from 'utils/color';
 import { formatPhoneNumber } from 'utils/utils';
 import useInputForm from 'hooks/useInputForm';
@@ -28,21 +34,39 @@ const StyledContent = styled.div`
   height: 382px;
   /* height: 80%; */
   /* max-height: 30rem; */
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+`;
+
+const StyledUserInfo = styled.div`
+  height: 40%;
   display: flex;
   flex-wrap: wrap;
   align-items: stretch;
   justify-content: space-between;
   align-content: flex-start;
-  /* align-content: space-around; */
-  border-bottom: 0.05rem solid ${COLORS.green};
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+`;
+
+const StyledStatus = styled.div`
+  display: flex;
+  height: 60%;
+`;
+
+const StyledZibox = styled.div`
+  width: 50%;
+  padding-top: 16px;
+`;
+
+const StyledPhone = styled.div`
+  width: 50%;
+  padding-top: 16px;
 `;
 
 const StyledFooter = styled.div`
   width: 100%;
   height: 10%;
   padding-top: 1rem;
+  border-top: 0.05rem solid ${COLORS.blue};
 `;
 
 function UserInfo({
@@ -151,7 +175,7 @@ function UserInfo({
 
       if (form.admin === 0) {
         // 상담원으로 추가/수정 할 경우
-        if (!form.name.trim() || !form.tel.trim() || !form.zibox.trim()) {
+        if (!form.name.trim() || !form.tel.trim()) {
           alert('빈란 없이 입력해주세요.');
           return false;
         }
@@ -174,7 +198,7 @@ function UserInfo({
 
       if (form.admin === 0) {
         // 상담원으로 추가/수정 할 경우
-        if (!form.name.trim() || !form.tel.trim() || !form.zibox.trim()) {
+        if (!form.name.trim() || !form.tel.trim()) {
           alert('빈란 없이 입력해주세요.');
           return false;
         }
@@ -196,7 +220,6 @@ function UserInfo({
     form.branch,
     form.admin,
     form.name,
-    form.zibox,
     form.team,
     form.tel,
   ]);
@@ -206,88 +229,100 @@ function UserInfo({
         <Title fontSize={1.13}>사용자 정보</Title>
       </StyledTitle>
       <StyledContent>
-        <TextSelect
-          defaultValue={form.branch}
-          // defaultOption={'지점명'}
-          textValue={'지점명'}
-          name={'branch'}
-          list={branch}
-          onChange={(e) => onChangeSelect(e)}
-        />
-        <TextSelect
-          defaultValue={form.team}
-          // defaultOption={team_name || '팀명'}
-          textValue={'팀명'}
-          name={'team'}
-          list={team}
-          onChange={(e) =>
-            onChangeSelect(e, adminId === 1 ? branchId : form.branch)
-          }
-        />
-        <TextSelect
-          defaultValue={form.admin}
-          textValue={'권한'}
-          name={'admin'}
-          list={adminList}
-          onChange={onChangeSelect}
-        />
-        <TextInput
-          customStyle={`float:right;`}
-          height={1.63}
-          textValue={'이름'}
-          onChange={onChangeInput}
-          name={'name'}
-          value={form.name}
-          fontSize={0.81}
-        />
-        <TextInput
-          customStyle={`float:right;`}
-          height={1.63}
-          textValue={'아이디'}
-          onChange={onChangeInput}
-          name={'id'}
-          value={form.id}
-          fontSize={0.81}
-          disabled={form.admin === 0}
-        />
-        <TextInput
-          customStyle={`float:right;`}
-          height={1.63}
-          type={'password'}
-          textValue={'비밀번호'}
-          onChange={onChangeInput}
-          name={'password'}
-          value={form.password}
-          fontSize={0.81}
-          disabled={form.admin === 0}
-        />
-        <TextInput
-          customStyle={`float:right;`}
-          padRight={2}
-          height={1.63}
-          textValue={'전화번호'}
-          onChange={onChangeInput}
-          name={'tel'}
-          value={formatPhoneNumber(form.tel)}
-          fontSize={0.81}
-          disabled={form.admin !== 0}
-        />
-        <TextInput
-          customStyle={`float:right;`}
-          height={1.63}
-          textValue={'ZiBox IP 직접 입력하기'}
-          onChange={onChangeInput}
-          name={'zibox'}
-          value={form.zibox}
-          fontSize={0.81}
-          disabled={form.admin !== 0}
-        />
+        <StyledUserInfo>
+          <TextSelect
+            defaultValue={form.branch}
+            // defaultOption={'지점명'}
+            textValue={'지점명'}
+            name={'branch'}
+            list={branch}
+            onChange={(e) => onChangeSelect(e)}
+          />
+          <TextSelect
+            defaultValue={form.team}
+            // defaultOption={team_name || '팀명'}
+            textValue={'팀명'}
+            name={'team'}
+            list={team}
+            onChange={(e) =>
+              onChangeSelect(e, adminId === 1 ? branchId : form.branch)
+            }
+          />
+          <TextSelect
+            defaultValue={form.admin}
+            textValue={'권한'}
+            name={'admin'}
+            list={adminList}
+            onChange={onChangeSelect}
+          />
+          <TextInput
+            customStyle={`float:right;`}
+            height={1.63}
+            textValue={'이름'}
+            onChange={onChangeInput}
+            name={'name'}
+            value={form.name}
+            fontSize={0.81}
+          />
+          <TextInput
+            customStyle={`float:right;`}
+            height={1.63}
+            textValue={'아이디'}
+            onChange={onChangeInput}
+            name={'id'}
+            value={form.id}
+            fontSize={0.81}
+            disabled={form.admin === 0}
+          />
+          <TextInput
+            customStyle={`float:right;`}
+            height={1.63}
+            type={'password'}
+            textValue={'비밀번호'}
+            onChange={onChangeInput}
+            name={'password'}
+            value={form.password}
+            fontSize={0.81}
+            disabled={form.admin === 0}
+          />
+          <TextInput
+            customStyle={`float:right;`}
+            padRight={2}
+            height={1.63}
+            textValue={'전화번호'}
+            onChange={onChangeInput}
+            name={'tel'}
+            value={formatPhoneNumber(form.tel)}
+            fontSize={0.81}
+            disabled={form.admin !== 0}
+          />
+          <TextInput
+            customStyle={`float:right;`}
+            height={1.63}
+            textValue={'ZiBox IP 직접 입력하기'}
+            onChange={onChangeInput}
+            name={'zibox'}
+            value={form.zibox}
+            fontSize={0.81}
+            disabled={true}
+          />
+        </StyledUserInfo>
+        {data && data.id ? (
+          <StyledStatus>
+            <StyledZibox>
+              <ZiboxStatus data={data!}></ZiboxStatus>
+            </StyledZibox>
+            <StyledPhone>
+              <PhoneStatus data={data!}></PhoneStatus>
+            </StyledPhone>
+          </StyledStatus>
+        ) : null}
       </StyledContent>
       <StyledFooter>
         <Button
           width={4.3}
           height={1.63}
-          bgColor={COLORS.green}
+          bgColor={COLORS.blue}
           customStyle={`
             float:right;
           `}

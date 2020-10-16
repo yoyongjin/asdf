@@ -65,14 +65,14 @@ function UserLog({
         />
         <StyledText>
           <Text
-            fontColor={COLORS.green}
+            fontColor={COLORS.blue}
             fontSize={0.75}
             fontWeight={700}
           >{`${getYYYYMMDD(loginTime)} ${getHourMinSecV2(loginTime)}`}</Text>
         </StyledText>
       </StyledLoginTime>
       <StyledLogout>
-        <Button bgColor={'inherit'} width={5} onClick={onClickLogout}>
+        <Button bgColor={COLORS.blue} width={5} onClick={onClickLogout}>
           <Text fontColor={COLORS.white} fontSize={0.81} fontWeight={700}>
             로그아웃
           </Text>

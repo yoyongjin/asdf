@@ -8,7 +8,9 @@ import {
   updateUser,
   changeStatus,
   deleteUser,
+  saveStatus,
 } from 'modules/actions/user';
+import { setInitSocket } from 'modules/actions/auth';
 import Logger from 'utils/log';
 
 function useSocket() {
@@ -18,25 +20,41 @@ function useSocket() {
     // 유저 상태 전달
     Socket.getInstance().onMessageInit((response) => {
       Logger.log('Get init data', response);
-      dispatch(getCallStatus(response));
+      dispatch(setInitSocket(response));
     });
   }, [dispatch]);
 
   const getAllCallStatus = useCallback(() => {
     // 유저 상태 전달
     Socket.getInstance().onMessageAllCallStates((response) => {
-      dispatch(getCallStatus(response));
+      // dispatch(getCallStatus(response));
     });
-  }, [dispatch]);
+  }, []);
 
   const getChangeStatus = useCallback(() => {
-    Socket.getInstance().onMeesageCallState((response) => {
-      const { data } = response;
-      const _response = JSON.parse(data);
+    Socket.getInstance().onMeesageCallState(
+      (response: string | { [key: string]: string }) => {
+        if (typeof response === 'string') {
+          console.error(response);
+          return;
+        }
+        const { data, type } = response;
+        const _response = JSON.parse(data);
 
-      Logger.log('Change Status', _response);
-      dispatch(changeStatus(_response));
-    });
+        switch (type) {
+          case 'initevent':
+            dispatch(saveStatus(_response));
+            Logger.log('Init Status', _response);
+            break;
+          default:
+            dispatch(changeStatus({data: _response, type}));
+            Logger.log('Change Status', _response);
+            break;
+        }
+
+        // dispatch(changeStatus(_response));
+      },
+    );
   }, [dispatch]);
 
   const getUserInfo = useCallback(

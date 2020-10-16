@@ -34,6 +34,7 @@ const initialState: AuthType = {
     login_at: 0,
     created_at: '',
   },
+  socket: 0,
 };
 
 // 리듀서
@@ -99,6 +100,11 @@ const authReducer = createReducer<AuthType, AuthAction>(initialState, {
     return produce(state, (draft) => {
       draft.request.logout.fetch = false;
       draft.request.logout.error = action.payload;
+    });
+  },
+  [actions.SET_INIT_SOCKET]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.socket = action.payload;
     });
   },
 });

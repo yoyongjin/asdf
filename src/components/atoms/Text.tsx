@@ -46,7 +46,7 @@ interface StyledTextProps {
 }
 
 interface TextProps extends StyledTextProps {
-  children: number | string;
+  children: number | string | React.ReactChild;
   onClick?: () => void;
 }
 

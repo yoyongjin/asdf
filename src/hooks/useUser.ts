@@ -36,6 +36,7 @@ function useUser() {
       search = '',
       url?: string,
       adminId?: number,
+      loginId?: number,
     ) => {
       const payload = {
         branchId,
@@ -45,6 +46,7 @@ function useUser() {
         search,
         url: url!,
         adminId,
+        loginId,
       };
       dispatch(requestGetUserInfo(payload));
     },

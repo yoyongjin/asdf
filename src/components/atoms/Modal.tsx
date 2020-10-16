@@ -57,4 +57,4 @@ interface ModalProps {
 
 Modal.defaultProps = {};
 
-export default Modal;
+export default React.memo(Modal);

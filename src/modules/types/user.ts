@@ -10,6 +10,35 @@ export interface UserType {
   request: RequestType;
   userList: UserListType;
   filterUserList: UserListType;
+  status: { [key: string]: StatusType };
+  monit: {
+    tapping: boolean;
+    pc_ip: string;
+  };
+}
+
+export interface StatusType {
+  call?: {
+    call: string;
+    connection: number;
+    number: string;
+    time: number;
+  };
+  consultant?: {
+    number: string;
+    tmr: number;
+  };
+  zibox?: {
+    ats: number;
+    connection: number;
+    monitoring: number;
+    number: string;
+    pc_ip: string;
+    record: number;
+    zibox_ip: string;
+    zibox_mac: string;
+    monit_user: number;
+  };
 }
 
 export interface RequestType {
@@ -41,22 +70,23 @@ export interface UserInfo {
   ziboxip: string;
 }
 
-export interface ConsultantInfoType {
-  admin_id: number;
-  branch_id: number;
-  branch_name: null | string;
-  id: number;
-  login_at?: number;
-  name: string;
-  number: string;
-  team_id: number;
-  team_name: null | string;
-  user_name: string;
-  ziboxip: string;
+export interface ConsultantInfoType extends UserInfo {
+  call_status?: string;
+  consultant_status?: number;
+  phone_status?: number;
+  ats_status?: number;
+  zibox_status?: number;
+  monit_status?: number;
+  record_status?: number;
   call_time?: number;
-  call_type?: string;
   diff?: number;
+  pc_ip?: string;
+  zibox_ip?: string;
+  zibox_mac?: string;
+  monit_user?: number;
+  // 밑에는 삭제 예정
   monitoring?: boolean;
+  call_type?: string;
   user_id?: number;
 }
 
@@ -79,12 +109,14 @@ export interface getRequestType {
   search?: string;
   url: string;
   adminId?: number;
+  loginId?: number;
 }
 
 export interface SuccessUserType {
   users: Array<UserInfo>;
   count: number;
   url: string;
+  loginId: number;
 }
 
 export interface SuccessConsultantType {
@@ -117,7 +149,7 @@ export interface deleteUserType {
 }
 
 export interface callStateType {
-  type: string;
+  status: string;
   number: string;
   time: string;
 }

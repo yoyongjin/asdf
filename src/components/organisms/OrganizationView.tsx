@@ -78,7 +78,6 @@ function OrganizationView() {
   const branchKeys = Object.getOwnPropertyNames(branchInfo).reverse();
   const branchValues = Object.values(branchInfo).reverse();
 
-  Logger.log('Lendering OrganizationView');
   return (
     <StyledWrapper>
       <StyledTitle>

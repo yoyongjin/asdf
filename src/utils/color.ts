@@ -12,6 +12,8 @@ export const COLORS = {
   light_green: '#a2f4cf',
   green: '#00854a',
   dark_green: '#00512d',
+  blue: '#008bec',
+  dark_blue: '#00416e',
   red: '#ff0000',
   black: '#474747',
 };

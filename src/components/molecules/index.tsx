@@ -3,7 +3,9 @@ import LinkSelector from './LinkSelector';
 import List from './List';
 import Organization from './Organization';
 import PageCount from './PageCount';
+import PhoneStatus from './PhoneStatus';
 import SearchBar from './SearchBar';
+import ZiboxStatus from './ZiboxStatus';
 import TableContent from './TableContent';
 import TableTitle from './TableTitle';
 import TablePagination from './TablePagination';
@@ -20,6 +22,7 @@ export {
   List,
   Organization,
   PageCount,
+  PhoneStatus,
   SearchBar,
   TableContent,
   TableTitle,
@@ -30,4 +33,5 @@ export {
   Title,
   UserInfo,
   UserLog,
+  ZiboxStatus,
 };

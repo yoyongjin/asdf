@@ -44,6 +44,11 @@ const initialState: UserType = {
     consultants: [],
     numberOfUsers: 0,
   },
+  status: {},
+  monit: {
+    tapping: false,
+    pc_ip: '',
+  },
 };
 
 const userReducer = createReducer<UserType, UserAction>(initialState, {
@@ -54,7 +59,7 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
     });
   },
   [types.SUCCESS_GET_USER_INFO]: (state, action) => {
-    const { users, count, url } = action.payload;
+    const { users, count, url, loginId } = action.payload;
     const consultant = users.filter((user) => {
       return user.admin_id === 0;
     });
@@ -62,7 +67,55 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
       draft.request.getUser.fetch = false;
       draft.request.getUser.error = '';
       if (url === '/main') {
-        draft.userList.consultants = consultant.sort((r1, r2) => {
+        let temp = consultant.map((user) => {
+          let value = state.status[user.number];
+          let newUser: ConsultantInfoType = Object.assign({}, user);
+          if (value && value.call) {
+            const { call, connection, number, time } = value.call;
+            if (number === user.number) {
+              newUser.call_time = time;
+              newUser.call_status = call;
+              newUser.phone_status = connection;
+            }
+          }
+
+          if (value && value.consultant) {
+            const { number, tmr } = value.consultant;
+            if (number === user.number) {
+              newUser.consultant_status = tmr;
+            }
+          }
+
+          if (value && value.zibox) {
+            const {
+              ats,
+              connection,
+              monitoring,
+              number,
+              pc_ip,
+              record,
+              zibox_ip,
+              zibox_mac,
+              monit_user,
+            } = value.zibox;
+            if (number === user.number) {
+              newUser.zibox_status = connection;
+              newUser.ats_status = ats;
+              newUser.record_status = record;
+              newUser.monit_status = monitoring;
+              newUser.zibox_ip = zibox_ip;
+              newUser.zibox_mac = zibox_mac;
+              newUser.pc_ip = pc_ip;
+              newUser.monit_user = monit_user;
+              if (loginId === monit_user) {
+                draft.monit.tapping = true;
+              }
+            }
+          }
+
+          return newUser;
+        });
+        draft.userList.consultants = temp.sort((r1, r2) => {
           if (r1.branch_id === r2.branch_id) {
             // id가 같으면 team_name순 정렬 (레벨값 우선 정렬)
             if (r1.team_name !== r2.team_name) {
@@ -91,7 +144,7 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
     });
   },
   [types.SUCCESS_GET_FILTER_USER_INFO]: (state, action) => {
-    const { users, count, url } = action.payload;
+    const { users, count, url, loginId } = action.payload;
     const consultant = users.filter((user) => {
       return user.admin_id === 0;
     });
@@ -99,7 +152,55 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
       draft.request.getUser.fetch = false;
       draft.request.getUser.error = '';
       if (url === '/main') {
-        draft.filterUserList.consultants = consultant.sort((r1, r2) => {
+        let temp = consultant.map((user) => {
+          let value = state.status[user.number];
+          let newUser: ConsultantInfoType = Object.assign({}, user);
+          if (value && value.call) {
+            const { call, connection, number, time } = value.call;
+            if (number === user.number) {
+              newUser.call_time = time;
+              newUser.call_status = call;
+              newUser.phone_status = connection;
+            }
+          }
+
+          if (value && value.consultant) {
+            const { number, tmr } = value.consultant;
+            if (number === user.number) {
+              newUser.consultant_status = tmr;
+            }
+          }
+
+          if (value && value.zibox) {
+            const {
+              ats,
+              connection,
+              monitoring,
+              number,
+              pc_ip,
+              record,
+              zibox_ip,
+              zibox_mac,
+              monit_user,
+            } = value.zibox;
+            if (number === user.number) {
+              newUser.zibox_status = connection;
+              newUser.ats_status = ats;
+              newUser.record_status = record;
+              newUser.monit_status = monitoring;
+              newUser.zibox_ip = zibox_ip;
+              newUser.zibox_mac = zibox_mac;
+              newUser.pc_ip = pc_ip;
+              newUser.monit_user = monit_user;
+              if (loginId === monit_user) {
+                draft.monit.tapping = true;
+              }
+            }
+          }
+
+          return newUser;
+        });
+        draft.filterUserList.consultants = temp.sort((r1, r2) => {
           if (r1.branch_id === r2.branch_id) {
             // id가 같으면 team_name순 정렬 (레벨값 우선 정렬)
             return r1.team_name < r2.team_name
@@ -125,7 +226,11 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
   [types.RUN_TIMER]: (state, action) => {
     return produce(state, (draft) => {
       state.userList.consultants.map((consultant, i) => {
-        if (consultant.call_type === 'call_offhook' && consultant.call_time) {
+        if (
+          consultant.consultant_status === 1 &&
+          consultant.call_status !== 'call_idle' &&
+          consultant.call_time
+        ) {
           draft.userList.consultants[i].diff = getDiffTime(
             consultant.call_time,
           );
@@ -134,7 +239,11 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
 
       if (state.filterUserList.consultants.length > 0) {
         state.filterUserList.consultants.map((consultant, i) => {
-          if (consultant.call_type === 'call_offhook' && consultant.call_time) {
+          if (
+            consultant.consultant_status === 1 &&
+            consultant.call_status !== 'call_idle' &&
+            consultant.call_time
+          ) {
             draft.filterUserList.consultants[i].diff = getDiffTime(
               consultant.call_time,
             );
@@ -186,10 +295,10 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
         map = JSON.parse(map);
       }
       if (map && map.number === user.number) {
-        const { type, number, time, monitoring_state, user_id } = map;
+        const { status, number, time, monitoring_state, user_id } = map;
         let newUser = Object.assign({}, user);
         newUser.call_time = Number(time);
-        newUser.call_type = type;
+        newUser.call_type = status;
         if (monitoring_state) {
           if (monitoring_state === 'y') {
             newUser.monitoring = true;
@@ -214,10 +323,10 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
         map = JSON.parse(map);
       }
       if (map && map.number === user.number) {
-        const { type, number, time, monitoring_state, user_id } = map;
+        const { status, number, time, monitoring_state, user_id } = map;
         let newUser = Object.assign({}, user);
         newUser.call_time = Number(time);
-        newUser.call_type = type;
+        newUser.call_type = status;
         if (monitoring_state) {
           if (monitoring_state === 'y') {
             newUser.monitoring = true;
@@ -273,14 +382,19 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
       login_at,
     };
     return produce(state, (draft) => {
+      console.log(action.payload.branch_id);
       if (branch_id !== action.payload.branch_id) return;
       if (admin_id === 0) {
         // 상담원일 경우
         if (state.userList.users.length > 4) {
           // 페이지가 넘어갈 경우
+          console.log(value);
+          console.log('11111111111111111111111111');
           draft.userList.users.unshift(value);
           draft.userList.users.pop();
         } else {
+          console.log(value);
+          console.log('222222222222222222222222222222');
           draft.userList.users.unshift(value);
         }
 
@@ -324,7 +438,7 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
           return r1.branch_id - r2.branch_id;
         });
 
-        draft.userList.consultants.push(value);
+        // draft.userList.consultants.push(value);
       } else if (admin_id === 1) {
         // 관리자일 경우
         if (state.userList.users.length > 4) {
@@ -559,45 +673,136 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
   //   });
   // },
   [types.CHANGE_STATUS]: (state, action) => {
-    const { type, time, number, monitoring_state, user_id } = action.payload;
+    // const { status, time, number, monitoring_state, user_id } = action.payload;
+    const {
+      number,
+      call,
+      tmr,
+      ats,
+      connection,
+      monitoring,
+      record,
+      zibox_ip,
+      zibox_mac,
+      pc_ip,
+      time,
+      monit_user,
+    } = action.payload.data;
     return produce(state, (draft) => {
       state.userList.consultants.map((values, i) => {
         if (values.number === number) {
-          if (type === 'call_offhook') {
-            draft.userList.consultants[i].call_time = Number(time);
-          } else {
-            draft.userList.consultants[i].call_time = 0;
-            draft.userList.consultants[i].diff = 0;
-          }
-          draft.userList.consultants[i].call_type = type;
-          if (monitoring_state === 'y') {
-            draft.userList.consultants[i].monitoring = true;
-            draft.userList.consultants[i].user_id = user_id;
-          } else if (monitoring_state === 'n') {
-            draft.userList.consultants[i].monitoring = false;
-            draft.userList.consultants[i].user_id = user_id;
+          switch (action.payload.type) {
+            case 'tmrevent':
+              draft.userList.consultants[i].consultant_status = tmr;
+              break;
+            case 'ziboxevent':
+              draft.userList.consultants[i].ats_status = ats;
+              draft.userList.consultants[i].record_status = record;
+              draft.userList.consultants[i].monit_status = monitoring;
+              draft.userList.consultants[i].zibox_status = connection;
+              draft.userList.consultants[i].pc_ip = pc_ip;
+              draft.userList.consultants[i].zibox_ip = zibox_ip;
+              draft.userList.consultants[i].zibox_mac = zibox_mac;
+              if (monit_user) {
+                draft.userList.consultants[i].monit_user = monit_user;
+                draft.monit.tapping = true;
+              } else {
+                draft.userList.consultants[i].monit_user = monit_user;
+                draft.monit.tapping = false;
+              }
+              break;
+            case 'callevent':
+              draft.userList.consultants[i].call_status = call;
+              draft.userList.consultants[i].call_time = time;
+              break;
+            case 'phoneevent':
+              draft.userList.consultants[i].phone_status = connection;
+              break;
+            default:
+              break;
           }
         }
       });
+      // 이건 감청하는 주체를 파악하기 위해 넣어놓은거임
+      // draft.filterUserList.consultants[i].user_id = user_id;
 
       state.filterUserList.consultants.map((values, i) => {
         if (values.number === number) {
-          if (type === 'call_offhook') {
-            draft.filterUserList.consultants[i].call_time = Number(time);
-          } else {
-            draft.filterUserList.consultants[i].call_time = 0;
-            draft.filterUserList.consultants[i].diff = 0;
-          }
-          draft.filterUserList.consultants[i].call_type = type;
-          if (monitoring_state === 'y') {
-            draft.filterUserList.consultants[i].monitoring = true;
-            draft.filterUserList.consultants[i].user_id = user_id;
-          } else if (monitoring_state === 'n') {
-            draft.filterUserList.consultants[i].monitoring = false;
-            draft.filterUserList.consultants[i].user_id = user_id;
+          switch (action.payload.type) {
+            case 'tmrevent':
+              draft.filterUserList.consultants[i].consultant_status = tmr;
+              break;
+            case 'ziboxevent':
+              draft.filterUserList.consultants[i].ats_status = ats;
+              draft.filterUserList.consultants[i].record_status = record;
+              draft.filterUserList.consultants[i].monit_status = monitoring;
+              draft.filterUserList.consultants[i].zibox_status = connection;
+              draft.filterUserList.consultants[i].pc_ip = pc_ip;
+              draft.filterUserList.consultants[i].zibox_ip = zibox_ip;
+              draft.filterUserList.consultants[i].zibox_mac = zibox_mac;
+              draft.filterUserList.consultants[i].monit_user = monit_user;
+              if (monit_user) {
+                draft.filterUserList.consultants[i].monit_user = monit_user;
+                draft.monit.tapping = true;
+              } else {
+                draft.filterUserList.consultants[i].monit_user = monit_user;
+                draft.monit.tapping = false;
+              }
+              break;
+            case 'callevent':
+              draft.filterUserList.consultants[i].call_status = call;
+              draft.filterUserList.consultants[i].call_time = time;
+              break;
+            case 'phoneevent':
+              draft.userList.consultants[i].phone_status = connection;
+              break;
+            default:
+              break;
           }
         }
       });
+    });
+  },
+  [types.SAVE_STATUS]: (state, action) => {
+    let parseData = {};
+
+    for (let key in action.payload) {
+      let parseValue = JSON.parse(action.payload[key]);
+      parseData = {
+        ...parseData,
+        [key]: parseValue,
+      };
+    }
+
+    return produce(state, (draft) => {
+      draft.status = parseData;
+    });
+  },
+  [types.SET_MONIT_STATUS]: (state, action) => {
+    return produce(state, (draft) => {
+      state.userList.consultants.findIndex((consult) => {});
+      switch (action.payload) {
+        case 0:
+          // 감청 종료
+          draft.monit.tapping = false;
+          break;
+        case 1:
+          // 감청 시작
+          draft.monit.tapping = true;
+          break;
+        case 2:
+          // 버퍼링 시작
+          break;
+        case 3:
+          // 버퍼링 종료
+          break;
+        case 4:
+          // 타임아웃
+          draft.monit.tapping = false;
+          break;
+        default:
+          break;
+      }
     });
   },
   [types.RESET_FILTERED_USER]: (state, action) => {

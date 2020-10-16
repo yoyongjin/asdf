@@ -22,6 +22,9 @@ import {
   failureDeleteUser,
   successResetPassword,
   failureResetPassword,
+  changeMonitStatus,
+  CHANGE_MONIT_STATUS,
+  setMonitStatus,
 } from 'modules/actions/user';
 import * as API from 'lib/api';
 import Socket from 'lib/socket';
@@ -36,6 +39,7 @@ function* getUserInfoProcess(action: ReturnType<typeof requestGetUserInfo>) {
     search,
     url,
     adminId,
+    loginId,
   } = action.payload;
   const payload = {
     branch_id: branchId,
@@ -57,6 +61,7 @@ function* getUserInfoProcess(action: ReturnType<typeof requestGetUserInfo>) {
         users,
         count: max_count,
         url,
+        loginId: loginId!,
       };
 
       if (adminId === 2) {
@@ -68,9 +73,9 @@ function* getUserInfoProcess(action: ReturnType<typeof requestGetUserInfo>) {
           yield put(successGetFilterUserInfo(payload));
         }
 
-        if (url === '/main') {
-          Socket.getInstance().onEmit('call-state');
-        }
+        // if (url === '/main') {
+        //   Socket.getInstance().onEmit('all-state');
+        // }
       } else if (adminId === 1) {
         if (teamId === -1 && !search?.trim()) {
           // 전체 지점
@@ -80,9 +85,9 @@ function* getUserInfoProcess(action: ReturnType<typeof requestGetUserInfo>) {
           yield put(successGetFilterUserInfo(payload));
         }
 
-        if (url === '/main') {
-          Socket.getInstance().onEmit('call-state');
-        }
+        // if (url === '/main') {
+        //   Socket.getInstance().onEmit('all-state');
+        // }
       }
     }
   } catch (error) {
@@ -136,7 +141,7 @@ function* updateUserProcess(action: ReturnType<typeof requestUpdateUser>) {
     ziboxip,
   } = action.payload;
   try {
-    const response = yield call(
+    yield call(
       API.updateUser,
       user_id,
       branch_id,
@@ -183,12 +188,25 @@ function* resetPasswordProcess(
 ) {
   try {
     const { id } = action.payload;
-    const response = yield call(API.resetPassword, id);
+    yield call(API.resetPassword, id);
     yield put(successResetPassword());
     alert('초기 비밀번호는 0000 입니다.');
   } catch (error) {
     console.log(error);
     yield put(failureResetPassword(error));
+  }
+}
+
+function* changeMonitProcess(action: ReturnType<typeof changeMonitStatus>) {
+  try {
+    const { number, status, user_id } = action.payload;
+
+    const resposne = yield call(API.changeStatus, number, status, user_id);
+
+    console.log(JSON.stringify(resposne));
+    yield put(setMonitStatus(status));
+  } catch (error) {
+    console.log(error);
   }
 }
 
@@ -212,6 +230,10 @@ function* watchResetPassword() {
   yield takeLatest(REQUEST_RESET_PASSWORD, resetPasswordProcess);
 }
 
+function* watchChangeMonit() {
+  yield takeLatest(CHANGE_MONIT_STATUS, changeMonitProcess);
+}
+
 function* userSaga() {
   yield all([
     fork(watchGetUserInfo),
@@ -219,6 +241,7 @@ function* userSaga() {
     fork(watchUpdateUser),
     fork(watchDeleteUser),
     fork(watchResetPassword),
+    fork(watchChangeMonit),
   ]);
 }
 

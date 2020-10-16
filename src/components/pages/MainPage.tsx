@@ -4,20 +4,23 @@ import { RouteComponentProps } from 'react-router-dom';
 import { GNB } from 'components/organisms';
 import { MainTemplate } from 'components/templates';
 import useAuth from 'hooks/useAuth';
-import useSocket from 'hooks/useSocket';
+import useOcx from 'hooks/useOcx';
+// import useSocket from 'hooks/useSocket';
 import { COLORS } from 'utils/color';
 
-import dblifeLogo from 'images/db-logo-cont@3x.png';
+// import dblifeLogo from 'images/db-logo-cont@3x.png';
+import linaLogo from 'images/ln-logo-moni@3x.png';
 import loginTimeImage from 'images/bg-login-time@3x.png';
 
 function MainPage({ history, location }: MainPageProps) {
-  const { loginInfo, onCheckLogin, onClickLogout } = useAuth();
-  const {
-    getAllCallStatus,
-    getChangeStatus,
-    getInitCallStatus,
-    getUserInfo,
-  } = useSocket();
+  const { initSocket, loginInfo, onCheckLogin, onClickLogout } = useAuth();
+  // const {
+  //   getAllCallStatus,
+  //   getChangeStatus,
+  //   getInitCallStatus,
+  //   getUserInfo,
+  // } = useSocket();
+  const { beforeUnload, connectServerOcx, getAllStateOcx, getMonitoringStateOcx } = useOcx();
 
   const bgColor = useMemo(() => {
     if (location.pathname === '/main') {
@@ -35,21 +38,31 @@ function MainPage({ history, location }: MainPageProps) {
   }, [loginInfo.id, history, onCheckLogin]);
 
   useEffect(() => {
+    connectServerOcx();
     if (loginInfo.id) {
       // 로그인이 된 후 리스너 등록
-      getAllCallStatus();
-      getChangeStatus();
-      getInitCallStatus();
-      getUserInfo(loginInfo.branch_id, loginInfo.admin_id);
+      getAllStateOcx(loginInfo.branch_id, loginInfo.admin_id);
+      getMonitoringStateOcx();
+      beforeUnload();
+      // IE_getMonitoringStatus();
+      // getAllCallStatus();
+      // getChangeStatus();
+      // getInitCallStatus();
+      // getUserInfo(loginInfo.branch_id, loginInfo.admin_id);
     }
   }, [
     loginInfo.id,
     loginInfo.admin_id,
     loginInfo.branch_id,
-    getAllCallStatus,
-    getChangeStatus,
-    getInitCallStatus,
-    getUserInfo,
+    connectServerOcx,
+    getAllStateOcx,
+    getMonitoringStateOcx,
+    beforeUnload,
+    // getAllCallStatus,
+    // getChangeStatus,
+    // getInitCallStatus,
+    // getUserInfo,
+    // IE_getMonitoringStatus,
   ]);
 
   return (
@@ -58,7 +71,7 @@ function MainPage({ history, location }: MainPageProps) {
         <GNB
           location={location}
           loginInfo={loginInfo}
-          logoImg={dblifeLogo}
+          logoImg={linaLogo}
           loginTimeImg={loginTimeImage}
           onClickLogout={() => onClickLogout(history)}
         />
