@@ -9,6 +9,7 @@ import {
   requestResetPassword,
   resetFilteredUser,
   resetFilteredConsultant,
+  disconnectForce,
 } from 'modules/actions/user';
 import { RootState } from 'modules/reducers';
 import { LIMIT, PAGE } from 'utils/constants';
@@ -53,13 +54,16 @@ function useUser() {
     [dispatch],
   );
 
-  const resetFilteredList = useCallback((type: number) => {
-    if(type === 1){
-      dispatch(resetFilteredUser());
-    }else if(type === 2){
-      dispatch(resetFilteredConsultant());
-    }
-  }, [dispatch]);
+  const resetFilteredList = useCallback(
+    (type: number) => {
+      if (type === 1) {
+        dispatch(resetFilteredUser());
+      } else if (type === 2) {
+        dispatch(resetFilteredConsultant());
+      }
+    },
+    [dispatch],
+  );
 
   const onClickInsertUser = useCallback(
     (
@@ -142,6 +146,13 @@ function useUser() {
     [dispatch],
   );
 
+  const onClickDisconnect = useCallback((number: string) => {
+    const payload = {
+      number,
+    };
+    dispatch(disconnectForce(payload));
+  }, [dispatch]);
+
   return {
     userInfo,
     consultantInfo,
@@ -153,6 +164,7 @@ function useUser() {
     onClickUpdateUser,
     onClickDeleteUser,
     onClickResetPassword,
+    onClickDisconnect,
   };
 }
 

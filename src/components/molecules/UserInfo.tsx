@@ -73,6 +73,7 @@ function UserInfo({
   onClickVisible,
   onClickInsertUser,
   onClickUpdateUser,
+  onClickDisconnect,
   adminList,
   data,
   isVisible,
@@ -308,14 +309,32 @@ function UserInfo({
           />
         </StyledUserInfo>
         {data && data.id ? (
-          <StyledStatus>
-            <StyledZibox>
-              <ZiboxStatus data={data!}></ZiboxStatus>
-            </StyledZibox>
-            <StyledPhone>
-              <PhoneStatus data={data!}></PhoneStatus>
-            </StyledPhone>
-          </StyledStatus>
+          <>
+            <StyledStatus>
+              <StyledZibox>
+                <ZiboxStatus data={data!}></ZiboxStatus>
+              </StyledZibox>
+              <StyledPhone>
+                <PhoneStatus data={data!}></PhoneStatus>
+              </StyledPhone>
+            </StyledStatus>
+
+            <Button
+              width={8}
+              height={1.63}
+              bgColor={COLORS.red}
+              onClick={() => onClickDisconnect!(data.number)}
+            >
+              <Text
+                fontColor={COLORS.white}
+                fontFamily={'NanumBarunGothic'}
+                fontSize={0.88}
+                fontWeight={700}
+              >
+                연결 끊기
+              </Text>
+            </Button>
+          </>
         ) : null}
       </StyledContent>
       <StyledFooter>
@@ -431,6 +450,7 @@ interface UserInfoProps {
     tel: string,
     ip: string,
   ) => void;
+  onClickDisconnect?: (number: string) => void;
 }
 
 interface SelectDataType {

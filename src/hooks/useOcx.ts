@@ -9,6 +9,7 @@ import {
   updateUser,
   deleteUser,
   changeMonitStatus,
+  resetStatus,
 } from 'modules/actions/user';
 import MonitorOcx from 'lib/monitorOcx';
 import Logger from 'utils/log';
@@ -21,6 +22,7 @@ function useOcx() {
   const monitPcIp = useSelector((state: RootState) => state.user.monit.pc_ip);
 
   const connectServerOcx = useCallback(() => {
+    console.log("@@@@@@@@@@@@@@@@@소켓 연결 이벤트 등록@@@@@@@@@@@@@@@@@@@@@@@@@@@")
     MonitorOcx.getInstance().onMessageConnect((response: number) => {
       dispatch(setInitSocket(response));
     });
@@ -45,6 +47,10 @@ function useOcx() {
               case 'initevent':
                 dispatch(saveStatus(_response));
                 console.log('Init Status', _response);
+                break;
+              case 'resetevent':
+                dispatch(resetStatus(_response));
+                console.log('Reset Status', _response);
                 break;
               case 'signup':
                 let payload1 = {

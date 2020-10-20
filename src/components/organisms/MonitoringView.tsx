@@ -73,8 +73,9 @@ function Monitoring({ location }: MonitoringProps) {
     getUsersInfo,
     resetFilteredList,
     onClickUpdateUser,
+    onClickDisconnect,
   } = useUser();
-  const { visible, onClickVisible } = useVisible();
+  const { visible, onClickVisible, } = useVisible();
   const { monit, monitPcIp, startMonitoringOcx, stopMonitoringOcx } = useOcx();
   // const { initZibox, startMonitoring, stopMonitoring } = useZibox();
 
@@ -363,6 +364,7 @@ function Monitoring({ location }: MonitoringProps) {
             adminId={loginInfo.admin_id}
             branchId={loginInfo.branch_id}
             branchName={loginInfo.branch_name}
+            onClickDisconnect={onClickDisconnect}
           />
         }
       />

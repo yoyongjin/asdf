@@ -123,14 +123,21 @@ export const deleteTeam = (branchId: number, teamId: number) =>
 export const deleteBranch = (id: number) => instance.delete(`api/branch/${id}`);
 
 export const changeStatus = (
+  route: string,
   number: string,
-  status: number,
+  type: string,
+  status?: number,
   userId?: number,
-  type: string = 'monitoring_status',
 ) =>
-  instance.post('api/state/zibox', {
+  instance.post(`api/state/${route}`, {
     number,
-    status,
     type,
+    status,
     user_id: userId,
   });
+
+export const disconnectForce = (number: string) => {
+  return axios.post('http://192.168.1.116:3000/v1/auth/logout', {
+    number,
+  });
+};

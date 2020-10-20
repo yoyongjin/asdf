@@ -13,7 +13,7 @@ import linaLogo from 'images/ln-logo-moni@3x.png';
 import loginTimeImage from 'images/bg-login-time@3x.png';
 
 function MainPage({ history, location }: MainPageProps) {
-  const { initSocket, loginInfo, onCheckLogin, onClickLogout } = useAuth();
+  const { loginInfo, onCheckLogin, onClickLogout } = useAuth();
   // const {
   //   getAllCallStatus,
   //   getChangeStatus,
@@ -34,11 +34,12 @@ function MainPage({ history, location }: MainPageProps) {
     if (!loginInfo.id) {
       // 로그인이 되있지 않을 경우
       onCheckLogin(history);
+      connectServerOcx();
     }
-  }, [loginInfo.id, history, onCheckLogin]);
+  }, [loginInfo.id, history, connectServerOcx, onCheckLogin]);
 
   useEffect(() => {
-    connectServerOcx();
+    // connectServerOcx();
     if (loginInfo.id) {
       // 로그인이 된 후 리스너 등록
       getAllStateOcx(loginInfo.branch_id, loginInfo.admin_id);
@@ -54,7 +55,7 @@ function MainPage({ history, location }: MainPageProps) {
     loginInfo.id,
     loginInfo.admin_id,
     loginInfo.branch_id,
-    connectServerOcx,
+    // connectServerOcx,
     getAllStateOcx,
     getMonitoringStateOcx,
     beforeUnload,

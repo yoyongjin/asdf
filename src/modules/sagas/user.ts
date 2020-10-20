@@ -25,6 +25,8 @@ import {
   changeMonitStatus,
   CHANGE_MONIT_STATUS,
   setMonitStatus,
+  disconnectForce,
+  DISCONNECT_FORCE,
 } from 'modules/actions/user';
 import * as API from 'lib/api';
 import Socket from 'lib/socket';
@@ -201,10 +203,35 @@ function* changeMonitProcess(action: ReturnType<typeof changeMonitStatus>) {
   try {
     const { number, status, user_id } = action.payload;
 
-    const resposne = yield call(API.changeStatus, number, status, user_id);
+    const response = yield call(
+      API.changeStatus,
+      'zibox',
+      number,
+      'monitoring_status',
+      status,
+      user_id,
+    );
 
-    console.log(JSON.stringify(resposne));
+    console.log(JSON.stringify(response));
     yield put(setMonitStatus(status));
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+function* disconnectForceProcess(action: ReturnType<typeof disconnectForce>) {
+  try {
+    const { number } = action.payload;
+    console.log(number);
+
+    const response = yield call(API.disconnectForce, number);
+    const { data } = response;
+
+    if (data.success) {
+      yield call(API.changeStatus, 'reset', number, 'reset_status');
+    } else {
+      alert('연결 끊기 실패');
+    }
   } catch (error) {
     console.log(error);
   }
@@ -234,6 +261,10 @@ function* watchChangeMonit() {
   yield takeLatest(CHANGE_MONIT_STATUS, changeMonitProcess);
 }
 
+function* watchDisconnectForce() {
+  yield takeLatest(DISCONNECT_FORCE, disconnectForceProcess);
+}
+
 function* userSaga() {
   yield all([
     fork(watchGetUserInfo),
@@ -242,6 +273,7 @@ function* userSaga() {
     fork(watchDeleteUser),
     fork(watchResetPassword),
     fork(watchChangeMonit),
+    fork(watchDisconnectForce),
   ]);
 }
 

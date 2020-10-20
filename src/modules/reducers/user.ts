@@ -382,19 +382,14 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
       login_at,
     };
     return produce(state, (draft) => {
-      console.log(action.payload.branch_id);
       if (branch_id !== action.payload.branch_id) return;
       if (admin_id === 0) {
         // 상담원일 경우
         if (state.userList.users.length > 4) {
           // 페이지가 넘어갈 경우
-          console.log(value);
-          console.log('11111111111111111111111111');
           draft.userList.users.unshift(value);
           draft.userList.users.pop();
         } else {
-          console.log(value);
-          console.log('222222222222222222222222222222');
           draft.userList.users.unshift(value);
         }
 
@@ -689,6 +684,74 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
       monit_user,
     } = action.payload.data;
     return produce(state, (draft) => {
+      let isExist = false;
+      for (let key in state.status) {
+        if (key === number) {
+          isExist = true;
+          let value = draft.status[number] as any;
+          switch (action.payload.type) {
+            case 'tmrevent':
+              value.consultant = action.payload.data;
+              break;
+            case 'ziboxevent':
+              value.zibox = action.payload.data;
+              break;
+            case 'callevent':
+            case 'phoneevent':
+              value.call = action.payload.data;
+              break;
+            default:
+              break;
+          }
+        }
+      }
+
+      if (!isExist) {
+        let parseData = {};
+        switch (action.payload.type) {
+          case 'tmrevent':
+            parseData = {
+              ...state.status,
+              [number]: {
+                consultant: {
+                  number,
+                  tmr,
+                },
+              },
+            };
+
+            (draft.status as any) = parseData;
+            break;
+          case 'ziboxevent':
+            parseData = {
+              ...state.status,
+              [number]: {
+                zibox: {
+                  number,
+                  ats,
+                  connection,
+                  monitoring,
+                  pc_ip,
+                  record,
+                  zibox_ip,
+                  zibox_mac,
+                  monit_user,
+                },
+              },
+            };
+
+            (draft.status as any) = parseData;
+            // value.zibox = action.payload.data;
+            break;
+          case 'callevent':
+          case 'phoneevent':
+            // value.call = action.payload.data;
+            break;
+          default:
+            break;
+        }
+      }
+
       state.userList.consultants.map((values, i) => {
         if (values.number === number) {
           switch (action.payload.type) {
@@ -723,6 +786,8 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
           }
         }
       });
+
+      // }
       // 이건 감청하는 주체를 파악하기 위해 넣어놓은거임
       // draft.filterUserList.consultants[i].user_id = user_id;
 
@@ -776,6 +841,71 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
 
     return produce(state, (draft) => {
       draft.status = parseData;
+    });
+  },
+  [types.RESET_STATUS]: (state, action) => {
+    return produce(state, (draft) => {
+      for (let key in state.status) {
+        if (key === action.payload.call!.number) {
+          draft.status = action.payload as any;
+        }
+      }
+
+      state.userList.consultants.map((values, i) => {
+        if (values.number === action.payload.call!.number) {
+          draft.userList.consultants[
+            i
+          ].consultant_status = action.payload.consultant!.tmr;
+          draft.userList.consultants[
+            i
+          ].record_status = action.payload.zibox!.record;
+          draft.userList.consultants[
+            i
+          ].monit_status = action.payload.zibox!.monitoring;
+          draft.userList.consultants[
+            i
+          ].zibox_status = action.payload.zibox!.connection;
+          draft.userList.consultants[
+            i
+          ].monit_user = action.payload.zibox!.monit_user;
+          draft.monit.tapping = false;
+          draft.userList.consultants[i].call_status = action.payload.call!.call;
+          draft.userList.consultants[i].call_time = action.payload.call!.time;
+          draft.userList.consultants[
+            i
+          ].phone_status = action.payload.call!.connection;
+        }
+      });
+
+      state.filterUserList.consultants.map((values, i) => {
+        if (values.number === action.payload.call!.number) {
+          draft.filterUserList.consultants[
+            i
+          ].consultant_status = action.payload.consultant!.tmr;
+          draft.filterUserList.consultants[
+            i
+          ].record_status = action.payload.zibox!.record;
+          draft.filterUserList.consultants[
+            i
+          ].monit_status = action.payload.zibox!.monitoring;
+          draft.filterUserList.consultants[
+            i
+          ].zibox_status = action.payload.zibox!.connection;
+          draft.filterUserList.consultants[
+            i
+          ].monit_user = action.payload.zibox!.monit_user;
+          draft.monit.tapping = false;
+          draft.filterUserList.consultants[
+            i
+          ].call_status = action.payload.call!.call;
+          draft.filterUserList.consultants[
+            i
+          ].call_time = action.payload.call!.time;
+          draft.filterUserList.consultants[
+            i
+          ].phone_status = action.payload.call!.connection;
+        }
+      });
     });
   },
   [types.SET_MONIT_STATUS]: (state, action) => {

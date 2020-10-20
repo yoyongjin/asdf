@@ -76,8 +76,6 @@ function PhoneStatus({ data }: PhoneStatusProps) {
         }
       }
 
-      console.log(phone_status);
-
       setStatus({
         phone: phone_status || '알 수 없음',
       });
