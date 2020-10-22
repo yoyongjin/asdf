@@ -1,5 +1,6 @@
 export const apiServer = process.env.REACT_APP_API_SERVER;
 export const socketServer = process.env.REACT_APP_SOCKET_SERVER;
+export const celeringServer = process.env.REACT_APP_CELERING_SERVER;
 export const ziboxPort = process.env.REACT_APP_ZIBOX_PORT;
 export const LIMIT = 30;
 export const PAGE = 1;
@@ -30,6 +31,9 @@ export const ZIBOX_TYPE = {
   MONIT_START: '감청 시작',
   MONIT_STOP: '감청 종료',
   MONIT_ERROR: '감청 오류',
+  MONIT_BUFFER_START: '버퍼링 시작',
+  MONIT_BUFFER_STOP: '버퍼링 종료',
+  MONIT_CONNECTION_TIMEOUT: '타임아웃',
 };
 
 export const PHONE_TYPE = {
@@ -42,4 +46,6 @@ export const PHONE_TYPE = {
   PHONE_CONNECTION_ERROR_02: '연결 실패(서버를 찾을 수 없음)',
   PHONE_DISCONNECTION_01: '정상 접속 종료',
   PHONE_DISCONNECTION_02: '비정상 접속 종료',
+  PHONE_DISCONNECTION_03: '법인폰이 끊어졌을 때',
+  PHONE_RECONNECTION: '재연결',
 };

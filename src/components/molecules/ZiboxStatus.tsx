@@ -130,6 +130,18 @@ function ZiboxStatus({ data }: ZiboxStatusProps) {
             // 감청 시작
             monit_status = ZIBOX_TYPE.MONIT_START;
             break;
+          case 2:
+            // 버퍼링 시작
+            monit_status = ZIBOX_TYPE.MONIT_BUFFER_START;
+            break;
+          case 3:
+            // 버퍼링 시작
+            monit_status = ZIBOX_TYPE.MONIT_BUFFER_STOP;
+            break;
+          case 4:
+            // 타임아웃
+            monit_status = ZIBOX_TYPE.MONIT_CONNECTION_TIMEOUT;
+            break;
           default:
             break;
         }

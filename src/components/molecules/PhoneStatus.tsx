@@ -39,6 +39,10 @@ function PhoneStatus({ data }: PhoneStatusProps) {
             // 초기 로딩
             phone_status = PHONE_TYPE.PHONE_LOAD;
             break;
+          case -4:
+            // 법인폰과 서버가 끊어졌을 때
+            phone_status = PHONE_TYPE.PHONE_DISCONNECTION_03;
+            break;
           case -3:
             // 비정상 접속 종료
             phone_status = PHONE_TYPE.PHONE_DISCONNECTION_02;
@@ -70,6 +74,9 @@ function PhoneStatus({ data }: PhoneStatusProps) {
           case 4:
             // 필요한 데이터가 존재하지 않음(접속 실패)
             phone_status = PHONE_TYPE.PHONE_CONNECTION_ERROR_01;
+            break;
+          case 6:
+            phone_status = PHONE_TYPE.PHONE_RECONNECTION;
             break;
           default:
             break;

@@ -157,7 +157,7 @@ function Consultant({
               borderRadius={0.81}
               onClick={async (e) => {
                 if (!consultInfo.pc_ip) return;
-                if (loginId !== consultInfo.monit_user) return;
+                if (monit && loginId !== consultInfo.monit_user) return;
 
                 console.log('현재 나의 감청 상태');
                 console.log(monit);

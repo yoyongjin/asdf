@@ -12,7 +12,6 @@ import {
   resetStatus,
 } from 'modules/actions/user';
 import MonitorOcx from 'lib/monitorOcx';
-import Logger from 'utils/log';
 import { RootState } from 'modules/reducers';
 
 function useOcx() {
@@ -22,7 +21,9 @@ function useOcx() {
   const monitPcIp = useSelector((state: RootState) => state.user.monit.pc_ip);
 
   const connectServerOcx = useCallback(() => {
-    console.log("@@@@@@@@@@@@@@@@@소켓 연결 이벤트 등록@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+    console.log(
+      '@@@@@@@@@@@@@@@@@소켓 연결 이벤트 등록@@@@@@@@@@@@@@@@@@@@@@@@@@@',
+    );
     MonitorOcx.getInstance().onMessageConnect((response: number) => {
       dispatch(setInitSocket(response));
     });
@@ -111,15 +112,10 @@ function useOcx() {
   }, []);
 
   const beforeUnload = useCallback(() => {
-    window.onbeforeunload = function() {
-
+    window.onbeforeunload = () => {
       MonitorOcx.getInstance().disconnect();
-  
-  }
-  
-  
-  
-  }, [])
+    };
+  }, []);
 
   return {
     monit,

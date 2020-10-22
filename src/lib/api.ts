@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { apiServer } from 'utils/constants';
+import { apiServer, celeringServer } from 'utils/constants';
 
 export const instance = axios.create({
   baseURL: apiServer,
@@ -137,7 +137,7 @@ export const changeStatus = (
   });
 
 export const disconnectForce = (number: string) => {
-  return axios.post('http://192.168.1.116:3000/v1/auth/logout', {
+  return axios.post(`${celeringServer}/v1/auth/logout`, {
     number,
   });
 };

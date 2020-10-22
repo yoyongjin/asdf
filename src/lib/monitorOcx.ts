@@ -32,7 +32,7 @@ class MonitorOcx {
   connect(key: number): MonitorOcx {
     console.log('@@@@@@@@@@SocketCreate@@@@@@@@@@');
     console.log(JSON.stringify(key));
-      setTimeout(() => {
+    setTimeout(() => {
       try {
         this.socket.SocketCreate(this.address, key);
       } catch (error) {
@@ -95,8 +95,7 @@ class MonitorOcx {
     console.log('onMessageMonitorStatus');
     this.socket.DevMonitorStatus = (status: string, message: string) => {
       console.log('@@@@@@@@@@DevMonitorStatus@@@@@@@@@@');
-      console.log(status);
-      console.log(message);
+      console.log(status, message);
       /**
        * 0 감청 종료
        * 1 감청 시작
