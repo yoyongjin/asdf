@@ -100,11 +100,15 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
         draft.filterUserList.consultants = consultant.sort((r1, r2) => {
           if (r1.branch_id === r2.branch_id) {
             // id가 같으면 team_name순 정렬 (레벨값 우선 정렬)
-            return r1.team_name < r2.team_name
-              ? -1
-              : r1.team_name > r2.team_name
-              ? 1
-              : 0;
+            if (r1.team_name !== r2.team_name) {
+              return r1.team_name < r2.team_name
+                ? -1
+                : r1.team_name > r2.team_name
+                ? 1
+                : 0;
+            }
+
+            return r1.name < r2.name ? -1 : r1.name > r2.name ? 1 : 0;
           }
           return r1.branch_id - r2.branch_id;
         });
@@ -322,7 +326,7 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
           return r1.branch_id - r2.branch_id;
         });
 
-        draft.userList.consultants.push(value);
+        // draft.userList.consultants.push(value);
       } else if (admin_id === 1) {
         // 관리자일 경우
         if (state.userList.users.length > 4) {

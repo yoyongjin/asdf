@@ -23,7 +23,7 @@ function useZibox() {
     });
   }, []);
 
-  const stopMonitoring = useCallback(async (number: string, id: number) => {
+  const stopMonitoring = useCallback(async (number: string) => {
     try {
       await Zibox.getInstance().monStop();
       console.log('Stop monitoring');

@@ -43,31 +43,31 @@ const StyledTapping = styled.div``;
 function Consultant({
   consultInfo,
   loginId,
-  tapping,
+  monit,
   getConsultantInfo,
   initZibox,
-  setTapping,
+  setMonit,
   startMonitoring,
   stopMonitoring,
 }: ConsultantProps) {
   useEffect(() => {
     if (
-      tapping &&
-      loginId === consultInfo.user_id &&
-      consultInfo.call_type !== 'call_offhook'
+      consultInfo.call_type !== 'call_offhook' &&
+      monit &&
+      loginId === consultInfo.user_id
     ) {
-      // 감청 중 상담원이 통화 종료 했을 때 감청 종료 명령 날려주는 부분
-      stopMonitoring(consultInfo.number, loginId);
-      setTapping(false);
+      // 감청 중 해당 상담원이 통화 종료 했을 때 감청 종료 명령 날려주는 부분
+      stopMonitoring(consultInfo.number);
+      setMonit(false);
     }
   }, [
+    consultInfo.call_type,
+    consultInfo.number,
     consultInfo.user_id,
     loginId,
+    monit,
+    setMonit,
     stopMonitoring,
-    setTapping,
-    consultInfo.number,
-    consultInfo.call_type,
-    tapping,
   ]);
 
   return (
@@ -91,21 +91,14 @@ function Consultant({
         )}
       </StyledCallStatusArea>
       <StyledCallImage>
-        {consultInfo.call_type !== 'call_offhook' ? (
-          <Image
-            src={waitingIcon}
-            alt={'Waiting consultant'}
-            width={4}
-            height={4}
-          />
-        ) : (
-          <Image
-            src={callingIcon}
-            alt={'Calling consultant'}
-            width={4}
-            height={4}
-          />
-        )}
+        <Image
+          src={
+            consultInfo.call_type !== 'call_offhook' ? waitingIcon : callingIcon
+          }
+          alt={'Consultant Status Img'}
+          width={4}
+          height={4}
+        />
       </StyledCallImage>
       <StyledUserInfo>
         <Text
@@ -125,9 +118,7 @@ function Consultant({
       </StyledUserInfo>
       <StyledTapping>
         {consultInfo.call_type === 'call_offhook' ? (
-          tapping &&
-          consultInfo.user_id !== loginId &&
-          !consultInfo.monitoring ? null : (
+          monit && !consultInfo.monitoring ? null : (
             <Button
               width={4.6}
               height={1.6}
@@ -150,10 +141,10 @@ function Consultant({
                 if (consultInfo.monitoring) {
                   // 감청 중인 경우
                   if (consultInfo.user_id === loginId) {
-                    // 내가 해당 상담원을 감청하고 있는 경우
-                    stopMonitoring(consultInfo.number, loginId);
+                    // 로그인한 유저가 감청하고 있는 대상일 경우
+                    stopMonitoring(consultInfo.number);
                     setTimeout(() => {
-                      setTapping(false);
+                      setMonit(false);
                     }, 500);
                   }
                   return;
@@ -165,9 +156,9 @@ function Consultant({
                     setTimeout(() => {
                       startMonitoring(consultInfo.number, loginId);
                     }, 500);
-                    setTapping(true);
+                    setMonit(true);
                   } else {
-                    alert('ZiBox IP를 확인해주세요.');
+                    alert('ZiBox 연결에 실패하였습니다.');
                   }
                 } catch (error) {
                   console.log(error);
@@ -200,12 +191,12 @@ function Consultant({
 interface ConsultantProps {
   consultInfo: ConsultantInfoType;
   loginId: number;
-  tapping: boolean;
+  monit: boolean;
   getConsultantInfo: (data: ConsultantInfoType) => void;
   initZibox: (ziboxIp: string) => Promise<boolean>;
-  setTapping: React.Dispatch<React.SetStateAction<boolean>>;
+  setMonit: React.Dispatch<React.SetStateAction<boolean>>;
   startMonitoring: (number: string, id: number) => void;
-  stopMonitoring: (number: string, id: number) => void;
+  stopMonitoring: (number: string) => void;
 }
 
 Consultant.defaultProps = {};

@@ -14,7 +14,6 @@ import useInputForm from 'hooks/useInputForm';
 import useAuth from 'hooks/useAuth';
 import useVisible from 'hooks/useVisible';
 import useZibox from 'hooks/useZibox';
-import Logger from 'utils/log';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -58,7 +57,7 @@ let team = -1; // 임시 팀 번호
 let request = false;
 
 function Monitoring({ location }: MonitoringProps) {
-  const [tapping, setTapping] = useState<boolean>(false); // 내가 감청 중인지 아닌지 여부
+  const [monit, setMonit] = useState<boolean>(false); // 현재 로그인한 유저의 감청 여부 상태
   const [tempConsultInfo, setTempConsultInfo] = useState<ConsultantInfoType>();
   const { loginInfo } = useAuth();
   const { branchList, teamList, getBranchList, getTeamList } = useBranch();
@@ -109,6 +108,39 @@ function Monitoring({ location }: MonitoringProps) {
       getUsersInfo(branchId, teamId, count, page, '', path, adminId);
     },
     [getUsersInfo],
+  );
+
+  const consultantView = useCallback(
+    (consultant: ConsultantInfoType) => {
+      return (
+        <StyledConsultant
+          key={`${loginInfo.admin_id}-${form.branch}-${form.team}-styled-consultant-${consultant.id}`}
+        >
+          <Consultant
+            key={`${loginInfo.admin_id}-${form.branch}-${form.team}-consultant-${consultant.id}`}
+            consultInfo={consultant}
+            loginId={loginInfo.id}
+            monit={monit}
+            getConsultantInfo={getConsultantInfo}
+            setMonit={setMonit}
+            initZibox={initZibox}
+            startMonitoring={startMonitoring}
+            stopMonitoring={stopMonitoring}
+          />
+        </StyledConsultant>
+      );
+    },
+    [
+      getConsultantInfo,
+      initZibox,
+      loginInfo.id,
+      startMonitoring,
+      stopMonitoring,
+      monit,
+      loginInfo.admin_id,
+      form.branch,
+      form.team,
+    ],
   );
 
   useEffect(() => {
@@ -237,7 +269,6 @@ function Monitoring({ location }: MonitoringProps) {
     };
   }, [loginInfo.id, onRunTimer, onRemoveTimer]);
 
-  // Logger.log('Lendering MonitoringView');
   return (
     <>
       <StyledWrapper>
@@ -257,84 +288,20 @@ function Monitoring({ location }: MonitoringProps) {
           {loginInfo.admin_id === 2
             ? form.branch === -1 && form.team === -1
               ? consultantInfo.map((consultant, i) => {
-                  return (
-                    <StyledConsultant
-                      key={`1-styled-consultant-${consultant.id}`}
-                    >
-                      <Consultant
-                        key={`1-consultant-${consultant.id}`}
-                        consultInfo={consultant}
-                        getConsultantInfo={getConsultantInfo}
-                        initZibox={initZibox}
-                        startMonitoring={startMonitoring}
-                        stopMonitoring={stopMonitoring}
-                        tapping={tapping}
-                        setTapping={setTapping}
-                        loginId={loginInfo.id}
-                      />
-                    </StyledConsultant>
-                  );
+                  return consultantView(consultant);
                 })
               : filterConsultantInfo.map((consultant, i) => {
-                  return (
-                    <StyledConsultant
-                      key={`2-styled-consultant-${consultant.id}`}
-                    >
-                      <Consultant
-                        key={`2-consultant-${consultant.id}`}
-                        consultInfo={consultant}
-                        getConsultantInfo={getConsultantInfo}
-                        initZibox={initZibox}
-                        startMonitoring={startMonitoring}
-                        stopMonitoring={stopMonitoring}
-                        tapping={tapping}
-                        setTapping={setTapping}
-                        loginId={loginInfo.id}
-                      />
-                    </StyledConsultant>
-                  );
+                  return consultantView(consultant);
                 })
             : loginInfo.admin_id === 1
             ? form.team === -1
               ? consultantInfo.map((consultant, i) => {
                   if (consultant.branch_id !== loginInfo.branch_id) return null;
-                  return (
-                    <StyledConsultant
-                      key={`3-styled-consultant-${consultant.id}`}
-                    >
-                      <Consultant
-                        key={`3-consultant-${consultant.id}`}
-                        consultInfo={consultant}
-                        getConsultantInfo={getConsultantInfo}
-                        initZibox={initZibox}
-                        startMonitoring={startMonitoring}
-                        stopMonitoring={stopMonitoring}
-                        tapping={tapping}
-                        setTapping={setTapping}
-                        loginId={loginInfo.id}
-                      />
-                    </StyledConsultant>
-                  );
+                  return consultantView(consultant);
                 })
               : filterConsultantInfo.map((consultant, i) => {
                   if (consultant.branch_id !== loginInfo.branch_id) return null;
-                  return (
-                    <StyledConsultant
-                      key={`4-styled-consultant-${consultant.id}`}
-                    >
-                      <Consultant
-                        key={`4-consultant-${consultant.id}`}
-                        consultInfo={consultant}
-                        getConsultantInfo={getConsultantInfo}
-                        initZibox={initZibox}
-                        startMonitoring={startMonitoring}
-                        stopMonitoring={stopMonitoring}
-                        tapping={tapping}
-                        setTapping={setTapping}
-                        loginId={loginInfo.id}
-                      />
-                    </StyledConsultant>
-                  );
+                  return consultantView(consultant);
                 })
             : null}
         </StyledConsultantArea>
