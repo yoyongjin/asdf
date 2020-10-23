@@ -1,7 +1,8 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { setInitSocket } from 'modules/actions/auth';
+import MonitorOcx from 'lib/monitorOcx';
+import { socketServer } from 'utils/constants';
 import {
   changeStatus,
   saveStatus,
@@ -11,23 +12,40 @@ import {
   changeMonitStatus,
   resetStatus,
 } from 'modules/actions/user';
-import MonitorOcx from 'lib/monitorOcx';
+import { setInitSocket } from 'modules/actions/auth';
 import { RootState } from 'modules/reducers';
 
 function useOcx() {
   const dispatch = useDispatch();
 
   const monit = useSelector((state: RootState) => state.user.monit.tapping);
-  const monitPcIp = useSelector((state: RootState) => state.user.monit.pc_ip);
+
+  const createOcx = useCallback(async () => {
+    return await MonitorOcx.getInstance().url(socketServer!);
+  }, []);
 
   const connectServerOcx = useCallback(() => {
-    console.log(
-      '@@@@@@@@@@@@@@@@@소켓 연결 이벤트 등록@@@@@@@@@@@@@@@@@@@@@@@@@@@',
-    );
     MonitorOcx.getInstance().onMessageConnect((response: number) => {
       dispatch(setInitSocket(response));
     });
   }, [dispatch]);
+
+  const startMonitoringOcx = useCallback(
+    (
+      ip: string,
+      number: string,
+      userId: number,
+      port?: number,
+      mode?: number,
+    ) => {
+      MonitorOcx.getInstance().startMonitor(ip, number, userId, port, mode);
+    },
+    [],
+  );
+
+  const stopMonitoringOcx = useCallback(() => {
+    MonitorOcx.getInstance().stopMonitor();
+  }, []);
 
   const getAllStateOcx = useCallback(
     (branchId: number, adminId: number) => {
@@ -85,6 +103,26 @@ function useOcx() {
     [dispatch],
   );
 
+  const beforeUnload = useCallback(
+    (monit?: boolean) => {
+      console.log('Register Reload Event');
+      window.onbeforeunload = () => {
+        let number = MonitorOcx.getInstance().disconnect();
+
+        if (monit) {
+          stopMonitoringOcx();
+          let payload = {
+            number: number!,
+            user_id: 0,
+            status: 0,
+          };
+          dispatch(changeMonitStatus(payload));
+        }
+      };
+    },
+    [dispatch, stopMonitoringOcx],
+  );
+
   const getMonitoringStateOcx = useCallback(() => {
     MonitorOcx.getInstance().onMessageMonitorStatus(
       (response: { status: number; number: string; user_id: number }) => {
@@ -94,32 +132,9 @@ function useOcx() {
     );
   }, [dispatch]);
 
-  const startMonitoringOcx = useCallback(
-    (
-      ip: string,
-      number: string,
-      userId: number,
-      port?: number,
-      mode?: number,
-    ) => {
-      MonitorOcx.getInstance().startMonitor(ip, number, userId, port, mode);
-    },
-    [],
-  );
-
-  const stopMonitoringOcx = useCallback(() => {
-    MonitorOcx.getInstance().stopMonitor();
-  }, []);
-
-  const beforeUnload = useCallback(() => {
-    window.onbeforeunload = () => {
-      MonitorOcx.getInstance().disconnect();
-    };
-  }, []);
-
   return {
     monit,
-    monitPcIp,
+    createOcx,
     connectServerOcx,
     getAllStateOcx,
     getMonitoringStateOcx,

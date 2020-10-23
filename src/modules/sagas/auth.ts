@@ -31,11 +31,7 @@ function* loginProcess(action: ReturnType<typeof requestLogin>) {
 
     if (status === 'success') {
       const { user, token } = data;
-      // Socket.getInstance()
-      //   .url(socketServer!)
-      //   .onEmit('initialize', { user_id: user.id });
-      // Zibox.getInstance().createZibox();
-      MonitorOcx.getInstance().url(socketServer!).connect(user.id);
+      MonitorOcx.getInstance().connect(user.id);
       Logger.log('Login data => ', user);
 
       Cookies.set(TOKEN_NAME, token, {
@@ -68,11 +64,7 @@ function* checkLoginProcess(action: ReturnType<typeof requestCheckLogin>) {
 
     if (status === 'success') {
       const { user, token } = data;
-      // Socket.getInstance()
-      //   .url(socketServer!)
-      //   .onEmit('initialize', { user_id: user.id });
-      // Zibox.getInstance().createZibox();
-      MonitorOcx.getInstance().url(socketServer!).connect(user.id);
+      MonitorOcx.getInstance().connect(user.id);
 
       Logger.log('Login data => ', user);
 

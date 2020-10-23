@@ -76,7 +76,7 @@ function Monitoring({ location }: MonitoringProps) {
     onClickDisconnect,
   } = useUser();
   const { visible, onClickVisible, } = useVisible();
-  const { monit, monitPcIp, startMonitoringOcx, stopMonitoringOcx } = useOcx();
+  const { monit, startMonitoringOcx, stopMonitoringOcx } = useOcx();
   // const { initZibox, startMonitoring, stopMonitoring } = useZibox();
 
   const selectInfo = useMemo(() => {
@@ -285,7 +285,6 @@ function Monitoring({ location }: MonitoringProps) {
                         startMonitoringOcx={startMonitoringOcx}
                         stopMonitoringOcx={stopMonitoringOcx}
                         monit={monit}
-                        monitPcIp={monitPcIp}
                         loginId={loginInfo.id}
                       />
                     </StyledConsultant>
@@ -303,7 +302,6 @@ function Monitoring({ location }: MonitoringProps) {
                         startMonitoringOcx={startMonitoringOcx}
                         stopMonitoringOcx={stopMonitoringOcx}
                         monit={monit}
-                        monitPcIp={monitPcIp}
                         loginId={loginInfo.id}
                       />
                     </StyledConsultant>
@@ -324,7 +322,6 @@ function Monitoring({ location }: MonitoringProps) {
                         startMonitoringOcx={startMonitoringOcx}
                         stopMonitoringOcx={stopMonitoringOcx}
                         monit={monit}
-                        monitPcIp={monitPcIp}
                         loginId={loginInfo.id}
                       />
                     </StyledConsultant>
@@ -343,7 +340,6 @@ function Monitoring({ location }: MonitoringProps) {
                         startMonitoringOcx={startMonitoringOcx}
                         stopMonitoringOcx={stopMonitoringOcx}
                         monit={monit}
-                        monitPcIp={monitPcIp}
                         loginId={loginInfo.id}
                       />
                     </StyledConsultant>

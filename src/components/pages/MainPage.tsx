@@ -5,22 +5,21 @@ import { GNB } from 'components/organisms';
 import { MainTemplate } from 'components/templates';
 import useAuth from 'hooks/useAuth';
 import useOcx from 'hooks/useOcx';
-// import useSocket from 'hooks/useSocket';
 import { COLORS } from 'utils/color';
 
-// import dblifeLogo from 'images/db-logo-cont@3x.png';
 import linaLogo from 'images/ln-logo-moni@3x.png';
 import loginTimeImage from 'images/bg-login-time@3x.png';
 
 function MainPage({ history, location }: MainPageProps) {
   const { loginInfo, onCheckLogin, onClickLogout } = useAuth();
-  // const {
-  //   getAllCallStatus,
-  //   getChangeStatus,
-  //   getInitCallStatus,
-  //   getUserInfo,
-  // } = useSocket();
-  const { beforeUnload, connectServerOcx, getAllStateOcx, getMonitoringStateOcx } = useOcx();
+  const {
+    monit,
+    createOcx,
+    beforeUnload,
+    connectServerOcx,
+    getAllStateOcx,
+    getMonitoringStateOcx,
+  } = useOcx();
 
   const bgColor = useMemo(() => {
     if (location.pathname === '/main') {
@@ -33,37 +32,28 @@ function MainPage({ history, location }: MainPageProps) {
   useEffect(() => {
     if (!loginInfo.id) {
       // 로그인이 되있지 않을 경우
+      createOcx().then(() => {
+        connectServerOcx();
+      });
       onCheckLogin(history);
-      connectServerOcx();
     }
-  }, [loginInfo.id, history, connectServerOcx, onCheckLogin]);
+  }, [loginInfo.id, history, createOcx, connectServerOcx, onCheckLogin]);
 
   useEffect(() => {
-    // connectServerOcx();
     if (loginInfo.id) {
       // 로그인이 된 후 리스너 등록
       getAllStateOcx(loginInfo.branch_id, loginInfo.admin_id);
       getMonitoringStateOcx();
-      beforeUnload();
-      // IE_getMonitoringStatus();
-      // getAllCallStatus();
-      // getChangeStatus();
-      // getInitCallStatus();
-      // getUserInfo(loginInfo.branch_id, loginInfo.admin_id);
+      beforeUnload(monit);
     }
   }, [
+    monit,
     loginInfo.id,
     loginInfo.admin_id,
     loginInfo.branch_id,
-    // connectServerOcx,
     getAllStateOcx,
     getMonitoringStateOcx,
     beforeUnload,
-    // getAllCallStatus,
-    // getChangeStatus,
-    // getInitCallStatus,
-    // getUserInfo,
-    // IE_getMonitoringStatus,
   ]);
 
   return (

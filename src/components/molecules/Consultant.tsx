@@ -45,7 +45,6 @@ const StyledTapping = styled.div``;
 function Consultant({
   consultInfo,
   monit,
-  monitPcIp,
   loginId,
   getConsultantInfo,
   startMonitoringOcx,
@@ -202,7 +201,6 @@ interface ConsultantProps {
   consultInfo: ConsultantInfoType;
   loginId: number;
   monit: boolean;
-  monitPcIp: string;
   getConsultantInfo: (data: ConsultantInfoType) => void;
   startMonitoringOcx: (
     ip: string,

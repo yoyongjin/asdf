@@ -31,14 +31,13 @@
     <script type="text/javascript">
       function setOcx() {
         window.ZiBoxMonitor = ZiBoxMonitor;
-        // window.IrSocket = IRSocketIO;
       }
     </script>
     <script src="%PUBLIC_URL%/lib/zibox-bundle.js"></script>
 
     <title>ZiBox with lina</title>
   </head>
-  <body>
+  <body onload="setOcx()">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <object

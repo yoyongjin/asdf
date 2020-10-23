@@ -20,43 +20,46 @@ class MonitorOcx {
     return MonitorOcx.instance;
   }
 
-  url(address: string): MonitorOcx {
-    if (!address) return this;
+  url(address: string): Promise<unknown> {
+    return new Promise((resolve, reject) => {
+      if (!address) return this;
 
-    this.address = address;
-    this.socket = (window as any).ZiBoxMonitor;
-
-    return this;
+      this.address = address;
+      this.socket = (window as any).ZiBoxMonitor;
+      resolve(this);
+    });
   }
 
   connect(key: number): MonitorOcx {
-    console.log('@@@@@@@@@@SocketCreate@@@@@@@@@@');
-    console.log(JSON.stringify(key));
+    console.log('Create Socket');
     setTimeout(() => {
       try {
         this.socket.SocketCreate(this.address, key);
       } catch (error) {
-        console.log('ZiboxMonitor ocx 소켓 연결 에러');
+        console.log('ZiboxMonitor Create Socket ERROR');
         console.log(error);
       }
-    }, 3000);
+    }, 1000);
 
     return this;
   }
 
   disconnect() {
+    console.log('Disconnect Socket');
     try {
       this.socket.SocketClose();
     } catch (error) {
-      console.log('ZiboxMonitor ocx 소켓 연결 끊기 에러');
+      console.log('ZiboxMonitor Disconnect Socket ERROR');
       console.log(error);
     }
+
+    return this.number;
   }
 
   onMessageConnect(callback: (parameters: number) => void) {
-    console.log('onMessageConnect');
-    (window as any).ZiBoxMonitor.DevConnect = (message: string) => {
-      console.log('@@@@@@@@@@DevConnect@@@@@@@@@@');
+    console.log('Register Connect Event');
+    this.socket.DevConnect = (message: string) => {
+      console.log('@@@@@ DevConnect Event Response @@@@@');
       console.log(message);
       /**
        * -3 서버를 찾을 수 없음
@@ -70,10 +73,11 @@ class MonitorOcx {
   }
 
   onMessageStatus(callback: (parameter: string) => void) {
-    console.log('onMessageStatus');
-    (window as any).ZiBoxMonitor.DevPeerStatus = (message: string) => {
-      console.log('@@@@@@@@@@DevPeerStatus@@@@@@@@@@');
+    console.log('Register Status Event');
+    this.socket.DevPeerStatus = (message: string) => {
+      console.log('@@@@@ DevPeerStatus Event Response @@@@@');
       console.log(message);
+
       const data = JSON.parse(message);
       const { status } = data;
 
@@ -92,9 +96,9 @@ class MonitorOcx {
       user_id: number;
     }) => void,
   ) {
-    console.log('onMessageMonitorStatus');
+    console.log('Register Monit Status Event');
     this.socket.DevMonitorStatus = (status: string, message: string) => {
-      console.log('@@@@@@@@@@DevMonitorStatus@@@@@@@@@@');
+      console.log('@@@@@ DevMonitorStatus Event Response @@@@@');
       console.log(status, message);
       /**
        * 0 감청 종료
@@ -119,15 +123,21 @@ class MonitorOcx {
     port: number = Number(ziboxPort),
     mode = 2,
   ) {
-    console.log('@@@@@@@@@@StartMonitor@@@@@@@@@@');
-    console.log(ip, port, mode, number, userId);
+    console.log('Start Monitoring');
+    console.log(
+      `ip: ${ip}`,
+      `port: ${port}`,
+      `mode: ${mode}`,
+      `number: ${number}`,
+      `user id: ${userId}`,
+    );
     this.socket.StartMonitor(ip, port, mode);
     this.number = number;
     this.user = userId;
   }
 
   stopMonitor() {
-    console.log('@@@@@@@@@@StopMonitor@@@@@@@@@@');
+    console.log('Stop Monitoring');
     this.socket.stopMonitor();
   }
 }

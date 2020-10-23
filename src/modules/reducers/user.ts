@@ -107,9 +107,9 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
               newUser.zibox_mac = zibox_mac;
               newUser.pc_ip = pc_ip;
               newUser.monit_user = monit_user;
-              if (loginId === monit_user) {
-                draft.monit.tapping = true;
-              }
+              // if (loginId === monit_user) {
+              //   draft.monit.tapping = true;
+              // }
             }
           }
 
@@ -192,9 +192,9 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
               newUser.zibox_mac = zibox_mac;
               newUser.pc_ip = pc_ip;
               newUser.monit_user = monit_user;
-              if (loginId === monit_user) {
-                draft.monit.tapping = true;
-              }
+              // if (loginId === monit_user) {
+              //   draft.monit.tapping = true;
+              // }
             }
           }
 
