@@ -118,8 +118,6 @@ function useOcx() {
           };
           dispatch(changeMonitStatus(payload));
         }
-
-        return '종료하시겠습니까?'
       });
     },
     [dispatch, stopMonitoringOcx],
