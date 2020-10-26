@@ -101,7 +101,7 @@ function* logoutProcess(action: ReturnType<typeof requestLogout>) {
       yield put(successLogout());
 
       history!.push('/auth/login');
-      window.location.reload();
+      // window.location.reload();
     }
   } catch (error) {
     Logger.log('Logout failure', error);

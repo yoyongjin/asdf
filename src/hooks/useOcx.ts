@@ -106,7 +106,7 @@ function useOcx() {
   const beforeUnload = useCallback(
     (monit?: boolean) => {
       console.log('Register Reload Event');
-      window.onbeforeunload = () => {
+      window.addEventListener('beforeunload', (e) => {
         let number = MonitorOcx.getInstance().disconnect();
 
         if (monit) {
@@ -118,7 +118,9 @@ function useOcx() {
           };
           dispatch(changeMonitStatus(payload));
         }
-      };
+
+        return '종료하시겠습니까?'
+      });
     },
     [dispatch, stopMonitoringOcx],
   );

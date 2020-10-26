@@ -48,6 +48,9 @@ class MonitorOcx {
     console.log('Disconnect Socket');
     try {
       this.socket.SocketClose();
+      this.socket = null;
+      this.number = '';
+      this.user = 0;
     } catch (error) {
       console.log('ZiboxMonitor Disconnect Socket ERROR');
       console.log(error);
