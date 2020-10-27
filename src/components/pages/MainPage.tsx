@@ -13,7 +13,6 @@ import loginTimeImage from 'images/bg-login-time@3x.png';
 function MainPage({ history, location }: MainPageProps) {
   const { loginInfo, onCheckLogin, onClickLogout } = useAuth();
   const {
-    monit,
     createOcx,
     beforeUnload,
     connectServerOcx,
@@ -44,10 +43,9 @@ function MainPage({ history, location }: MainPageProps) {
       // 로그인이 된 후 리스너 등록
       getAllStateOcx(loginInfo.branch_id, loginInfo.admin_id);
       getMonitoringStateOcx();
-      beforeUnload(monit);
+      beforeUnload();
     }
   }, [
-    monit,
     loginInfo.id,
     loginInfo.admin_id,
     loginInfo.branch_id,

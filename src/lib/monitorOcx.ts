@@ -30,6 +30,10 @@ class MonitorOcx {
     });
   }
 
+  getNumber(): string {
+    return this.number!;
+  }
+
   connect(key: number): MonitorOcx {
     console.log('Create Socket');
     setTimeout(() => {
@@ -141,7 +145,9 @@ class MonitorOcx {
 
   stopMonitor() {
     console.log('Stop Monitoring');
-    this.socket.stopMonitor();
+    if (this.number) {
+      this.socket.stopMonitor();
+    }
   }
 }
 

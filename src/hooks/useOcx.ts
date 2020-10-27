@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import MonitorOcx from 'lib/monitorOcx';
-import { socketServer } from 'utils/constants';
+import { apiServer, socketServer } from 'utils/constants';
 import {
   changeStatus,
   saveStatus,
@@ -103,25 +103,36 @@ function useOcx() {
     [dispatch],
   );
 
-  const beforeUnload = useCallback(
-    (monit?: boolean) => {
-      console.log('Register Reload Event');
-      window.addEventListener('beforeunload', (e) => {
-        let number = MonitorOcx.getInstance().disconnect();
+  const beforeUnload = useCallback(() => {
+    console.log('Register Reload Event');
+    window.addEventListener('beforeunload', (e) => {
+      let number = MonitorOcx.getInstance().getNumber();
 
-        if (monit) {
-          stopMonitoringOcx();
-          let payload = {
-            number: number!,
-            user_id: 0,
-            status: 0,
-          };
-          dispatch(changeMonitStatus(payload));
-        }
-      });
-    },
-    [dispatch, stopMonitoringOcx],
-  );
+      stopMonitoringOcx();
+
+      if (number) {
+        const xhr = new XMLHttpRequest();
+        const param = {
+          number: number!,
+          type: 'monitoring_status',
+          status: 0,
+        };
+
+        xhr.onload = function () {
+          if (xhr.status === 200 || xhr.status === 201) {
+            console.log(xhr.responseText);
+          } else {
+            console.error(xhr.responseText);
+          }
+        };
+        xhr.open('POST', `${apiServer}/api/state/zibox`, false);
+        xhr.setRequestHeader('Content-Type', 'application/json'); // 컨텐츠타입을 json으로
+        xhr.send(JSON.stringify(param)); // 데이터를 stringify해서 보냄
+      }
+
+      MonitorOcx.getInstance().disconnect();
+    });
+  }, [stopMonitoringOcx]);
 
   const getMonitoringStateOcx = useCallback(() => {
     MonitorOcx.getInstance().onMessageMonitorStatus(

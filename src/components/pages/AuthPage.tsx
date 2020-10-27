@@ -4,14 +4,14 @@ import { LinaLoginTemplate } from 'components/templates';
 import useOcx from 'hooks/useOcx';
 
 function AuthPage() {
-  const { monit, createOcx, connectServerOcx, beforeUnload } = useOcx();
+  const { createOcx, connectServerOcx, beforeUnload } = useOcx();
 
   useEffect(() => {
     createOcx().then(() => {
       connectServerOcx();
-      beforeUnload(monit);
+      beforeUnload();
     });
-  }, [monit, createOcx, connectServerOcx, beforeUnload]);
+  }, [createOcx, connectServerOcx, beforeUnload]);
 
   return <LinaLoginTemplate />;
 }
