@@ -25,7 +25,7 @@ class Zibox {
       // this.zibox.ftpIP('118.131.74.196' + ',zibox,irlink');
       // this.zibox.ftpOn();
       this.zibox.ftpOff();
-      this.zibox.initializeAudioContext();
+      // this.zibox.initializeAudioContext();
       this.zibox.atsVolume(5);
       this.zibox.leftVolume(10);
       this.zibox.rightVolume(8);
