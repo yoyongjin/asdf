@@ -42,6 +42,7 @@ const initialState: UserType = {
     consultants: [],
     numberOfUsers: 0,
   },
+  monit: false,
 };
 
 const userReducer = createReducer<UserType, UserAction>(initialState, {

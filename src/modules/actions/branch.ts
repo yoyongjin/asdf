@@ -101,7 +101,15 @@ export const successGetUserTeamList = createAction(SUCCESS_GET_USER_TEAM_LIST)<
 >();
 export const initBranchList = createAction(INIT_BRANCH_LIST)<BranchInfo>();
 export const initTeamList = createAction(INIT_TEAM_LST)();
-export const requestDeleteBranchInfo = createAction(REQUEST_DELETE_BRANCH_INFO)<TemporaryTeam>();
-export const requestDeleteTeamInfo = createAction(REQUEST_DELETE_TEAM_INFO)<DelelteData>();
-export const successDeleteBranchInfo = createAction(SUCCESS_DELETE_BRANCH_INFO)<SuccessDeleteBranch>();
-export const successDeleteTeamInfo = createAction(SUCCESS_DELETE_TEAM_INFO)<DelelteData>();
+export const requestDeleteBranchInfo = createAction(REQUEST_DELETE_BRANCH_INFO)<
+  TemporaryTeam
+>();
+export const requestDeleteTeamInfo = createAction(REQUEST_DELETE_TEAM_INFO)<
+  DelelteData
+>();
+export const successDeleteBranchInfo = createAction(SUCCESS_DELETE_BRANCH_INFO)<
+  SuccessDeleteBranch
+>();
+export const successDeleteTeamInfo = createAction(SUCCESS_DELETE_TEAM_INFO)<
+  DelelteData
+>();

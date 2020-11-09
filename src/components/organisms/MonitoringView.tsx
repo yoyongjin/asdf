@@ -57,7 +57,7 @@ let team = -1; // 임시 팀 번호
 let request = false;
 
 function Monitoring({ location }: MonitoringProps) {
-  const [monit, setMonit] = useState<boolean>(false); // 현재 로그인한 유저의 감청 여부 상태
+  // const [monit, setMonit] = useState<boolean>(false); // 현재 로그인한 유저의 감청 여부 상태
   const [tempConsultInfo, setTempConsultInfo] = useState<ConsultantInfoType>();
   const { loginInfo } = useAuth();
   const { branchList, teamList, getBranchList, getTeamList } = useBranch();
@@ -65,7 +65,7 @@ function Monitoring({ location }: MonitoringProps) {
     branch: -1,
     team: -1,
   });
-  const { onRunTimer, onRemoveTimer } = useMonitoring();
+  const { monit, setMonit, onRunTimer, onRemoveTimer } = useMonitoring();
   const {
     consultantInfo,
     filterConsultantInfo,
@@ -136,6 +136,7 @@ function Monitoring({ location }: MonitoringProps) {
       loginInfo.id,
       startMonitoring,
       stopMonitoring,
+      setMonit,
       monit,
       loginInfo.admin_id,
       form.branch,

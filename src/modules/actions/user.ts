@@ -40,6 +40,7 @@ export const UPDATE_CONSULTANT = 'UPDATE_CONSULTANT';
 export const GET_CALL_STATUS = 'GET_CALL_STATUS';
 export const SET_CONSULTANT_STATUS = 'SET_CONSULTANT_STATUS';
 export const CHANGE_STATUS = 'CHANGE_STATUS';
+export const CHANGE_MONIT_STATUS = 'CHANGE_MONIT_STATUS';
 
 export const requestGetUserInfo = createAction(REQUEST_GET_USER_INFO)<
   getRequestType
@@ -93,3 +94,4 @@ export const resetFilteredUser = createAction(RESET_FILTERED_USER)();
 export const resetFilteredConsultant = createAction(
   RESET_FILTERED_CONSULTANT,
 )();
+export const changeMonitStatus = createAction(CHANGE_MONIT_STATUS)<boolean>();
