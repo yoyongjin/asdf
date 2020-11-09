@@ -81,19 +81,36 @@ function Consultant({
           fontWeight={700}
           fontSize={0.87}
         >
-          {consultInfo.consultant_status === 1
-            ? consultInfo.call_status === CALL_TYPE.CALL_OFFHOOK
-              ? '발신중'
-              : consultInfo.call_status === CALL_TYPE.CALL_CONNECT
-              ? '통화중'
-              : '상태만 변경'
-            : consultInfo.consultant_status === 2
-            ? '후처리중'
-            : consultInfo.consultant_status === 3
-            ? '휴식'
-            : consultInfo.consultant_status === 4
-            ? '이석'
-            : '대기중'}
+          <>
+            {consultInfo.consultant_status === 1
+              ? consultInfo.call_status === CALL_TYPE.CALL_OFFHOOK
+                ? '연결중'
+                : consultInfo.call_status === CALL_TYPE.CALL_INCOMMING
+                ? '연결중'
+                : consultInfo.call_status === CALL_TYPE.CALL_CONNECT
+                ? '통화중'
+                : ''
+              : consultInfo.consultant_status === 2
+              ? '후처리중'
+              : consultInfo.consultant_status === 3
+              ? '휴식'
+              : consultInfo.consultant_status === 4
+              ? '이석'
+              : consultInfo.consultant_status === -1
+              ? '로그아웃'
+              : '대기중'}
+            {`(${consultInfo.consultant_status}/${
+              consultInfo.call_status === CALL_TYPE.CALL_OFFHOOK
+                ? 1
+                : consultInfo.call_status === CALL_TYPE.CALL_CONNECT
+                ? 2
+                : consultInfo.call_status === CALL_TYPE.CALL_INCOMMING
+                ? 4
+                : consultInfo.call_status === CALL_TYPE.CALL_IDLE
+                ? 0
+                : consultInfo.call_status
+            })`}
+          </>
         </Text>
         {consultInfo.consultant_status === 1 &&
         consultInfo.call_status !== CALL_TYPE.CALL_IDLE ? (
@@ -136,7 +153,7 @@ function Consultant({
         {consultInfo.consultant_status === 1 &&
         consultInfo.call_status !== CALL_TYPE.CALL_IDLE &&
         consultInfo.zibox_status === 1 ? (
-          monit && consultInfo.monit_status !== 1 ? null : (
+         monit && consultInfo.monit_status !== 1 ? null : (
             // 통화중일 경우 + 지박스가 연결 되었을 경우
             <Button
               width={4.6}

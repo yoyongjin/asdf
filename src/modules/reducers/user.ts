@@ -768,10 +768,10 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
               draft.userList.consultants[i].zibox_mac = zibox_mac;
               if (monit_user) {
                 draft.userList.consultants[i].monit_user = monit_user;
-                draft.monit.tapping = true;
+                // draft.monit.tapping = true;
               } else {
                 draft.userList.consultants[i].monit_user = monit_user;
-                draft.monit.tapping = false;
+                // draft.monit.tapping = false;
               }
               break;
             case 'callevent':
@@ -808,10 +808,10 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
               draft.filterUserList.consultants[i].monit_user = monit_user;
               if (monit_user) {
                 draft.filterUserList.consultants[i].monit_user = monit_user;
-                draft.monit.tapping = true;
+                // draft.monit.tapping = true;
               } else {
                 draft.filterUserList.consultants[i].monit_user = monit_user;
-                draft.monit.tapping = false;
+                // draft.monit.tapping = false;
               }
               break;
             case 'callevent':
@@ -868,7 +868,7 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
           draft.userList.consultants[
             i
           ].monit_user = action.payload.zibox!.monit_user;
-          draft.monit.tapping = false;
+          // draft.monit.tapping = false;
           draft.userList.consultants[i].call_status = action.payload.call!.call;
           draft.userList.consultants[i].call_time = action.payload.call!.time;
           draft.userList.consultants[
@@ -894,7 +894,7 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
           draft.filterUserList.consultants[
             i
           ].monit_user = action.payload.zibox!.monit_user;
-          draft.monit.tapping = false;
+          // draft.monit.tapping = false;
           draft.filterUserList.consultants[
             i
           ].call_status = action.payload.call!.call;

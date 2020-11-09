@@ -128,7 +128,7 @@ class MonitorOcx {
     number: string,
     userId: number,
     port: number = Number(ziboxPort),
-    mode = 2,
+    mode = 1,
   ) {
     console.log('Start Monitoring');
     console.log(

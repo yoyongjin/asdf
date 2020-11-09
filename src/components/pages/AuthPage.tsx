@@ -7,6 +7,10 @@ function AuthPage() {
   const { createOcx, connectServerOcx, beforeUnload } = useOcx();
 
   useEffect(() => {
+    (window as any).ZiBoxMonitor.SocketClose();
+  }, []);
+
+  useEffect(() => {
     createOcx().then(() => {
       connectServerOcx();
       beforeUnload();

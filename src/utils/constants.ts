@@ -11,6 +11,7 @@ export const CALL_TYPE = {
   CALL_IDLE: 'call_idle',
   CALL_OFFHOOK: 'call_offhook',
   CALL_CONNECT: 'call_connect',
+  CALL_INCOMMING: 'call_incomming',
 };
 
 export const ZIBOX_TYPE = {
