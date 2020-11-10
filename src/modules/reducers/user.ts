@@ -614,6 +614,11 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
       draft.filterUserList.consultants = [];
     });
   },
+  [types.CHANGE_MONIT_STATUS]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.monit = action.payload;
+    });
+  },
 });
 
 export default userReducer;
