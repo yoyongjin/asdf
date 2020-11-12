@@ -33,8 +33,9 @@ class Zibox {
       // this.zibox.spkVolume(60);
 
       await new Promise(resolve => setTimeout(resolve, 1000))
-      this.zibox.monOn();
       this.zibox.monIP('127.0.0.1');
+      await new Promise(resolve => setTimeout(resolve, 10))
+      this.zibox.monOn();
 
       return true;
     } catch (error) {
