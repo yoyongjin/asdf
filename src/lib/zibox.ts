@@ -26,11 +26,11 @@ class Zibox {
       // this.zibox.ftpOn();
       this.zibox.ftpOff();
       // this.zibox.initializeAudioContext();
-      this.zibox.atsVolume(5);
-      this.zibox.leftVolume(10);
-      this.zibox.rightVolume(8);
-      this.zibox.micVolume(40);
-      this.zibox.spkVolume(60);
+      // this.zibox.atsVolume(5);
+      // this.zibox.leftVolume(10);
+      // this.zibox.rightVolume(8);
+      // this.zibox.micVolume(40);
+      // this.zibox.spkVolume(60);
 
       await new Promise(resolve => setTimeout(resolve, 1000))
       this.zibox.monOn();
