@@ -30,6 +30,8 @@ export const SUCCESS_RESET_PASSWORD = 'SUCCESS_RESET_PASSWORD';
 export const FAILURE_RESET_PASSWORD = 'FAILURE_RESET_PASSWORD';
 export const RESET_FILTERED_USER = 'RESET_FILTERED_USER';
 export const RESET_FILTERED_CONSULTANT = 'RESET_FILTERED_CONSULTANT';
+export const SORT_USERLIST = 'SORT_USERLIST';
+
 
 export const RUN_TIMER = 'RUN_TIMER';
 export const INSERT_USER = 'INSERT_USER';
@@ -93,3 +95,4 @@ export const resetFilteredUser = createAction(RESET_FILTERED_USER)();
 export const resetFilteredConsultant = createAction(
   RESET_FILTERED_CONSULTANT,
 )();
+export const sortUserList =createAction(SORT_USERLIST)<number>();

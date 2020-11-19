@@ -10,6 +10,7 @@ export interface UserType {
   request: RequestType;
   userList: UserListType;
   filterUserList: UserListType;
+  sortListNum: Number;
 }
 
 export interface RequestType {

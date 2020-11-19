@@ -56,7 +56,6 @@ const adminList = [
 ];
 
 const tableTitle = [
-  { title: 'No.', width: 7 },
   { title: '지점명', width: 14 },
   { title: '팀명', width: 7 },
   { title: '권한', width: 7 },
@@ -175,6 +174,7 @@ function UserView({ location }: UserViewProps) {
   );
 
   useEffect(() => {
+   
     if (loginInfo.admin_id === 2) {
       // 슈퍼관리자
       if (form.branch === -1 && filterUserInfo.length > 0) {
@@ -290,6 +290,7 @@ function UserView({ location }: UserViewProps) {
     form.userListCount,
     onChangeCurrentPage,
   ]);
+  
 
   Logger.log('Lendering UserView');
   return (

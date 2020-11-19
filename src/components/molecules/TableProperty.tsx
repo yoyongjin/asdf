@@ -71,9 +71,10 @@ function TableProperty({
   return (
     <>
       {infoKeyList.map((key, i) => {
-        if (key === 'branch_id' || key === 'team_id' || key === 'login_at')
+        if (key === 'id' || key === 'branch_id' || key === 'team_id' || key === 'login_at')
           return null;
 
+  
         return (
           <StyledWrapper key={`styled-list-wrapper-${i}`}>
             <Text
