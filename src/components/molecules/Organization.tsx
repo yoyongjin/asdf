@@ -6,6 +6,8 @@ import { BranchInfo, TeamInfo } from 'modules/types/branch';
 import useInputForm from 'hooks/useInputForm';
 import { COLORS } from 'utils/color';
 
+import { company, COMPANY } from 'utils/constants'
+
 const StyledWrapper = styled.div`
   /* Display */
   width: 13.75rem;
@@ -179,7 +181,7 @@ function Organization({
                     height={2.5}
                     borderWidth={2.5}
                     borderRadius={20}
-                    borderColor={COLORS.green}
+                    borderColor={company === COMPANY.DBLIFE ? COLORS.green : COLORS.light_blue}
                     textAlign={1}
                     fontSize={0.87}
                     fontWeight={800}

@@ -1,9 +1,16 @@
 import { createReducer } from 'typesafe-actions';
 import produce from 'immer';
 
-import { ConsultantInfoType, UserAction, UserType } from 'modules/types/user';
+import {
+  ConsultantInfoType,
+  UserAction,
+  UserType,
+  UserInfo,
+} from 'modules/types/user';
 import * as types from 'modules/actions/user';
 import { getDiffTime } from 'utils/utils';
+import { setConstantValue } from 'typescript';
+import { getSortList } from 'utils/utils';
 
 const initialState: UserType = {
   request: {
@@ -43,6 +50,7 @@ const initialState: UserType = {
     numberOfUsers: 0,
   },
   monit: false,
+  sortListNum: -1,
 };
 
 const userReducer = createReducer<UserType, UserAction>(initialState, {
@@ -114,8 +122,43 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
           return r1.branch_id - r2.branch_id;
         });
       } else if (url === '/main/manage/user') {
+        // let originUserList = Object.assign([], state.filterUserList.users) as Array<UserInfo>;
+        // switch(draft.sortListNum) {
+        //   case -1:
+        //       draft.filterUserList.users = users.sort((r1, r2) => r2.id - r1.id); // 등록 순서로 정렬
+        //       break;
+        //   case 0:
+        //     // draft.userList.users=originUserList.sort((r1, r2) => collator.compare(r2.branch_name,r1.branch_name)).reverse();
+        //     draft.filterUserList.users=getSortList(originUserList,"branch_name");
+        //     break;
+        //   case 1:
+        //     // draft.userList.users=originUserList.sort((r1, r2) => collator.compare(r2.team_name,r1.team_name)).reverse();
+        //     draft.filterUserList.users=getSortList(originUserList,"team_name");
+        //     break;
+        //   case 2:
+        //     draft.filterUserList.users=getSortList(originUserList,"admin_id").reverse();
+        //     // draft.userList.users=originUserList.sort((r1, r2) => collator.compare(String(r2.admin_id),String(r1.admin_id)));
+        //     break;
+        //   case 3:
+        //     draft.filterUserList.users=getSortList(originUserList,"name")
+        //     // draft.userList.users=originUserList.sort((r1, r2) => collator.compare(r2.name,r1.name)).reverse();
+        //     break;
+        //   case 4:
+        //     draft.filterUserList.users=getSortList(originUserList,"user_name")
+        //     // draft.userList.users=originUserList.sort((r1, r2) => collator.compare(r2.user_name,r1.user_name)).reverse();
+        //     break;
+        //   case 5:
+        //     draft.filterUserList.users=getSortList(originUserList,"number")
+        //     // draft.userList.users=originUserList.sort((r1, r2) => collator.compare(r2.number,r1.number)).reverse();
+        //     break;
+        //   case 6:
+        //     draft.filterUserList.users=getSortList(originUserList,"ziboxip")
+        //     // draft.userList.users=originUserList.sort((r1, r2) => collator.compare(r2.ziboxip,r1.ziboxip)).reverse();
+        //     break;
+        // }
         draft.filterUserList.users = users.sort((r1, r2) => r2.id - r1.id); // 등록 순서로 정렬
         draft.filterUserList.numberOfUsers = count;
+        // draft.sortListNum = -1;
       }
     });
   },
@@ -617,6 +660,95 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
   [types.CHANGE_MONIT_STATUS]: (state, action) => {
     return produce(state, (draft) => {
       draft.monit = action.payload;
+    });
+  },
+  [types.SORT_USERLIST]: (state, action) => {
+    let originUserList = Object.assign(
+      [],
+      state.userList.users,
+    ) as Array<UserInfo>;
+    let filterUserList = Object.assign(
+      [],
+      state.filterUserList.users,
+    ) as Array<UserInfo>;
+    return produce(state, (draft) => {
+      // if(action.payload === draft.sortListNum) {
+      //   return;
+      // }
+      draft.sortListNum = action.payload;
+      switch (action.payload) {
+        case 0:
+          if (state.filterUserList.users.length > 0) {
+            draft.filterUserList.users = getSortList(
+              filterUserList,
+              'branch_name',
+            );
+            return;
+          }
+          // draft.userList.users=originUserList.sort((r1, r2) => collator.compare(r2.branch_name,r1.branch_name)).reverse();
+          draft.userList.users = getSortList(originUserList, 'branch_name');
+          break;
+        case 1:
+          if (state.filterUserList.users.length > 0) {
+            draft.filterUserList.users = getSortList(
+              filterUserList,
+              'team_name',
+            );
+            return;
+          }
+          // draft.userList.users=originUserList.sort((r1, r2) => collator.compare(r2.team_name,r1.team_name)).reverse();
+          draft.userList.users = getSortList(originUserList, 'team_name');
+          break;
+        case 2:
+          if (state.filterUserList.users.length > 0) {
+            draft.filterUserList.users = getSortList(
+              filterUserList,
+              'admin_id',
+            ).reverse();
+            return;
+          }
+          draft.userList.users = getSortList(
+            originUserList,
+            'admin_id',
+          ).reverse();
+          // draft.userList.users=originUserList.sort((r1, r2) => collator.compare(String(r2.admin_id),String(r1.admin_id)));
+          break;
+        case 3:
+          if (state.filterUserList.users.length > 0) {
+            draft.filterUserList.users = getSortList(filterUserList, 'name');
+            return;
+          }
+          draft.userList.users = getSortList(originUserList, 'name');
+          // draft.userList.users=originUserList.sort((r1, r2) => collator.compare(r2.name,r1.name)).reverse();
+          break;
+        case 4:
+          if (state.filterUserList.users.length > 0) {
+            draft.filterUserList.users = getSortList(
+              filterUserList,
+              'user_name',
+            );
+            return;
+          }
+          draft.userList.users = getSortList(originUserList, 'user_name');
+          // draft.userList.users=originUserList.sort((r1, r2) => collator.compare(r2.user_name,r1.user_name)).reverse();
+          break;
+        case 5:
+          if (state.filterUserList.users.length > 0) {
+            draft.filterUserList.users = getSortList(filterUserList, 'number');
+            return;
+          }
+          draft.userList.users = getSortList(originUserList, 'number');
+          // draft.userList.users=originUserList.sort((r1, r2) => collator.compare(r2.number,r1.number)).reverse();
+          break;
+        case 6:
+          if (state.filterUserList.users.length > 0) {
+            draft.filterUserList.users = getSortList(filterUserList, 'ziboxip');
+            return;
+          }
+          draft.userList.users = getSortList(originUserList, 'ziboxip');
+          // draft.userList.users=originUserList.sort((r1, r2) => collator.compare(r2.ziboxip,r1.ziboxip)).reverse();
+          break;
+      }
     });
   },
 });

@@ -7,19 +7,21 @@ import { LinkSelector, UserLog } from 'components/molecules';
 import { COLORS } from 'utils/color';
 import { LoginInfoType } from 'types/auth';
 
-const StyledWrapper = styled.div`
+import { company, COMPANY } from 'utils/constants'
+
+const StyledWrapper = styled.div<StyledProps>`
   /* Display */
   display: flex;
   height: 100%;
   width: 100%;
 
   /* Color */
-  background-color: ${COLORS.green};
+  background-color:  ${(props) => props.bgColor};
 `;
 
-const StyledLogo = styled.div`
+const StyledLogo = styled.div<StyledLogoProps>`
   /* Position */
-  margin-left: 26px;
+  margin-left: ${(props) => props.marginLeft}px;
 `;
 
 const StyledLink = styled.div`
@@ -35,13 +37,14 @@ const StyledLink = styled.div`
 const StyledUserLog = styled.div`
   /* Position */
   margin-right: 25px;
-
   /* Display */
   flex-grow: 2;
   float: right;
 `;
 
 function GNB({
+  bgColor,
+  marginLeft,
   loginInfo,
   location,
   loginTimeImg,
@@ -49,14 +52,14 @@ function GNB({
   onClickLogout,
 }: GNBProps) {
   return (
-    <StyledWrapper>
-      <StyledLogo>
+    <StyledWrapper bgColor={bgColor}>
+      <StyledLogo marginLeft={marginLeft}>
         <Link path="/main">
           <Image
             alt={'DB life logo'}
             src={logoImg}
-            width={8.69}
-            height={3.25}
+            width={company === COMPANY.DBLIFE ? 8.69 : 8.25}
+            height={company === COMPANY.DBLIFE ? 3.25 : 3.875}
           />
         </Link>
       </StyledLogo>
@@ -75,12 +78,25 @@ function GNB({
   );
 }
 
-interface GNBProps {
+interface StyledProps {
+  bgColor: string;
+}
+interface StyledLogoProps {
+  marginLeft: number;
+}
+
+interface GNBProps extends StyledProps, StyledLogoProps
+{
   loginInfo: LoginInfoType;
   loginTimeImg: string;
   logoImg: string;
   location: Location;
   onClickLogout: () => void;
 }
+
+GNB.defaultProps = {
+  bgColor: COLORS.dark_blue2,
+  marginLeft: 0
+};
 
 export default React.memo(GNB);

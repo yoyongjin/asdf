@@ -30,6 +30,7 @@ export const SUCCESS_RESET_PASSWORD = 'SUCCESS_RESET_PASSWORD';
 export const FAILURE_RESET_PASSWORD = 'FAILURE_RESET_PASSWORD';
 export const RESET_FILTERED_USER = 'RESET_FILTERED_USER';
 export const RESET_FILTERED_CONSULTANT = 'RESET_FILTERED_CONSULTANT';
+export const SORT_USERLIST = 'SORT_USERLIST';
 
 export const RUN_TIMER = 'RUN_TIMER';
 export const INSERT_USER = 'INSERT_USER';
@@ -42,12 +43,12 @@ export const SET_CONSULTANT_STATUS = 'SET_CONSULTANT_STATUS';
 export const CHANGE_STATUS = 'CHANGE_STATUS';
 export const CHANGE_MONIT_STATUS = 'CHANGE_MONIT_STATUS';
 
-export const requestGetUserInfo = createAction(REQUEST_GET_USER_INFO)<
-  getRequestType
->();
-export const successGetUserInfo = createAction(SUCCESS_GET_USER_INFO)<
-  SuccessUserType
->();
+export const requestGetUserInfo = createAction(
+  REQUEST_GET_USER_INFO,
+)<getRequestType>();
+export const successGetUserInfo = createAction(
+  SUCCESS_GET_USER_INFO,
+)<SuccessUserType>();
 export const successGetFilterUserInfo = createAction(
   SUCCESS_GET_FILTER_USER_INFO,
 )<SuccessUserType>();
@@ -56,9 +57,9 @@ export const runTimer = createAction(RUN_TIMER)();
 export const requestAddUser = createAction(REQUEST_ADD_USER)<UserInfoType>();
 export const successAddUser = createAction(SUCCESS_ADD_USER)();
 export const failureAddUser = createAction(FAILRUE_ADD_USER)<string>();
-export const requestUpdateUser = createAction(REQUEST_UPDATE_USER)<
-  UpdateUserInfoType
->();
+export const requestUpdateUser = createAction(
+  REQUEST_UPDATE_USER,
+)<UpdateUserInfoType>();
 export const successUpdateUser = createAction(SUCCESS_UPDATE_USER)();
 export const failureUpdateUser = createAction(FAILURE_UPDATE_USER)<string>();
 export const getCallStatus = createAction(GET_CALL_STATUS)<any>();
@@ -71,9 +72,9 @@ export const updateUser = createAction(UPDATE_USER)<{
   branch_id: number;
 }>();
 export const deleteUser = createAction(DELETE_USER)<{ id: number }>();
-export const requestDeleteUser = createAction(REQUEST_DELETE_USER)<
-  deleteUserType
->();
+export const requestDeleteUser = createAction(
+  REQUEST_DELETE_USER,
+)<deleteUserType>();
 export const successDeleteUser = createAction(SUCCESS_DELETE_USER)();
 export const failureDeleteUser = createAction(FAILURE_DELETE_USER)<string>();
 export const changeStatus = createAction(CHANGE_STATUS)<monitoringStateType>();
@@ -81,17 +82,18 @@ export const requestResetPassword = createAction(REQUEST_RESET_PASSWORD)<{
   id: number;
 }>();
 export const successResetPassword = createAction(SUCCESS_RESET_PASSWORD)();
-export const failureResetPassword = createAction(FAILURE_RESET_PASSWORD)<
-  string
->();
-export const insertConsultant = createAction(INSERT_CONSULTANT)<
-  ConsultantInfoType
->();
-export const updateConsultant = createAction(UPDATE_CONSULTANT)<
-  ConsultantInfoType
->();
+export const failureResetPassword = createAction(
+  FAILURE_RESET_PASSWORD,
+)<string>();
+export const insertConsultant = createAction(
+  INSERT_CONSULTANT,
+)<ConsultantInfoType>();
+export const updateConsultant = createAction(
+  UPDATE_CONSULTANT,
+)<ConsultantInfoType>();
 export const resetFilteredUser = createAction(RESET_FILTERED_USER)();
 export const resetFilteredConsultant = createAction(
   RESET_FILTERED_CONSULTANT,
 )();
 export const changeMonitStatus = createAction(CHANGE_MONIT_STATUS)<boolean>();
+export const sortUserList = createAction(SORT_USERLIST)<number>();

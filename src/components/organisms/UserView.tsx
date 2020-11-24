@@ -21,6 +21,8 @@ import addUserHoverImage from 'images/bt-add-u-1-over@3x.png';
 import { UserInfo as UserInfoType } from 'modules/types/user';
 import Logger from 'utils/log';
 
+import { company, COMPANY } from 'utils/constants'
+
 const StyledWrapper = styled.div`
   /* Display */
   height: 100%;
@@ -56,7 +58,6 @@ const adminList = [
 ];
 
 const tableTitle = [
-  { title: 'No.', width: 7 },
   { title: '지점명', width: 14 },
   { title: '팀명', width: 7 },
   { title: '권한', width: 7 },
@@ -175,6 +176,7 @@ function UserView({ location }: UserViewProps) {
   );
 
   useEffect(() => {
+   
     if (loginInfo.admin_id === 2) {
       // 슈퍼관리자
       if (form.branch === -1 && filterUserInfo.length > 0) {
@@ -290,6 +292,7 @@ function UserView({ location }: UserViewProps) {
     form.userListCount,
     onChangeCurrentPage,
   ]);
+  
 
   Logger.log('Lendering UserView');
   return (
@@ -309,6 +312,8 @@ function UserView({ location }: UserViewProps) {
             onChange={onChangeInput}
             onChangeSelect={onChangeSelect}
             onClickSearch={onClickSearch}
+            color={company === COMPANY.DBLIFE ? COLORS.green : COLORS.light_blue2}
+            bdBottomColor={company === COMPANY.DBLIFE ? COLORS.green : COLORS.light_blue}
           >
             사용자 관리
           </Title>

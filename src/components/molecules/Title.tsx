@@ -8,10 +8,12 @@ import { getMaxPage } from 'utils/utils';
 import prevPageIcon from 'images/bt-page-pre.png';
 import nextPageIcon from 'images/bt-page-next.png';
 
-const StyledWrapper = styled.div`
+import { company, COMPANY } from 'utils/constants'
+
+const StyledWrapper = styled.div<StyledProps>`
   /* Display */
   height: 100%;
-  border-bottom: 0.05rem solid ${COLORS.green};
+  border-bottom: 0.05rem solid ${(props) => props.bdBottomColor};
 `;
 
 const StyledLeft = styled.span`
@@ -37,6 +39,8 @@ const StyleTitle = styled.div`
 const StyledButton = styled.div`
   padding-left: 9.5px;
   padding-right: 7px;
+  position: relative;
+  top: 10%;
 `;
 
 const StyledExplanation = styled.div`
@@ -63,6 +67,7 @@ const StyledButtonSpace = styled.span`
 `;
 
 function Title({
+  bdBottomColor,
   buttonType,
   explanType,
   userListOption,
@@ -71,6 +76,7 @@ function Title({
   isSearch,
   children,
   fontSize,
+  color,
   branch,
   team,
   search,
@@ -106,13 +112,13 @@ function Title({
   }, [selectType]);
 
   return (
-    <StyledWrapper>
+    <StyledWrapper bdBottomColor={bdBottomColor}>
       <StyledLeft>
         <StyleTitle>
           <Text
             fontSize={fontSize ? fontSize : 1.12}
             fontWeight={800}
-            fontColor={COLORS.green}
+            fontColor={color}
             fontFamily={'NanumGothic'}
           >
             {children}
@@ -124,7 +130,8 @@ function Title({
               <Button
                 width={7.3}
                 height={1.5}
-                bgColor={COLORS.green}
+                // bgColor={COLORS.green}
+                image={buttonType.bgImage}
                 onClick={buttonType!.onClick}
               >
                 <Text
@@ -305,7 +312,11 @@ interface SelectDataType {
   data: string;
 }
 
-interface TitleProps {
+interface StyledProps {
+  bdBottomColor?: string;
+}
+
+interface TitleProps extends StyledProps {
   buttonType?: buttonType;
   explanType?: explanType;
   userListOption?: userListOptionType;
@@ -314,6 +325,7 @@ interface TitleProps {
   isSearch?: boolean;
   children: string;
   fontSize?: number;
+  color?: string;
   branch?: number;
   team?: number;
   search?: string;
@@ -326,6 +338,8 @@ interface TitleProps {
   onClickSearch?: () => void;
 }
 
-Title.defaultProps = {};
+Title.defaultProps = {
+  bdBottomColor: COLORS.light_blue
+};
 
 export default React.memo(Title);

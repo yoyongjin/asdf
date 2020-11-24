@@ -11,6 +11,7 @@ export interface UserType {
   userList: UserListType;
   filterUserList: UserListType;
   monit: boolean;
+  sortListNum: Number;
 }
 
 export interface RequestType {
