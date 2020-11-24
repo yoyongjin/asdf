@@ -1,4 +1,5 @@
 import LoginTemplate from './LoginTemplate';
 import MainTemplate from './MainTemplate';
+import ZmsLoginTemplate from './ZmsLoginTemplate';
 
-export { LoginTemplate, MainTemplate };
+export { LoginTemplate, MainTemplate, ZmsLoginTemplate };

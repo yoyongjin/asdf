@@ -21,6 +21,8 @@ import addUserHoverImage from 'images/bt-add-u-1-over@3x.png';
 import { UserInfo as UserInfoType } from 'modules/types/user';
 import Logger from 'utils/log';
 
+import { company, COMPANY } from 'utils/constants'
+
 const StyledWrapper = styled.div`
   /* Display */
   height: 100%;
@@ -310,6 +312,8 @@ function UserView({ location }: UserViewProps) {
             onChange={onChangeInput}
             onChangeSelect={onChangeSelect}
             onClickSearch={onClickSearch}
+            color={company === COMPANY.DBLIFE ? COLORS.green : COLORS.light_blue2}
+            bdBottomColor={company === COMPANY.DBLIFE ? COLORS.green : COLORS.light_blue}
           >
             사용자 관리
           </Title>

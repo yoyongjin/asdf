@@ -44,7 +44,8 @@ const StyledMainLogo = styled.span`
   /* Position */
   left: 20%;
   position: absolute;
-  top: 30%;
+  top: 30%; 
+  
 `;
 
 const StyledLoginForm = styled.div`

@@ -6,12 +6,18 @@ import { getHourMinSecV1 } from 'utils/utils';
 import { COLORS } from 'utils/color';
 import { ConsultantInfoType } from 'modules/types/user';
 
-import callingIcon from 'images/icon-mnt-red@2x.png';
+import monitoringIcon from 'images/icon-mnt-red@2x.png';
+import callingIcon from 'images/zms/icon-mnt-blue@2x.png';
 import waitingIcon from 'images/icon-mnt-grey.png';
-import tappingStartIcon from 'images/bt-mnt-listen-nor.png';
-import tappingStartOverIcon from 'images/bt-mnt-listen-over.png';
-import OthertappingIcon from 'images/bt-mnt-listen-ing.png';
-import tappingStopIcon from 'images/bt-mnt-listen-fin-nor.png';
+import tappingStartIcon from 'images/bt-mnt-listen-nor.png'; 
+import tappingStartOverIcon from 'images/bt-mnt-listen-over.png'; 
+import OthertappingIcon from 'images/bt-mnt-listen-ing.png'; 
+import tappingStopIcon from 'images/bt-mnt-listen-fin-nor.png'; 
+import zmsTappingStartIcon from 'images/zms/bt-mnt-listen-nor.png';
+import zmsOthertappingIcon from 'images/zms/bt-mnt-listen-ing.png';
+import zmsTappingStopIcon from 'images/zms/bt-mnt-listen-fin-nor.png';
+
+import { company, COMPANY } from 'utils/constants'
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -91,9 +97,17 @@ function Consultant({
         )}
       </StyledCallStatusArea>
       <StyledCallImage>
-        {consultInfo.call_type !== 'call_offhook' ? (
+        {consultInfo.call_type !== 'call_offhook' ?
+          (
           <Image
             src={waitingIcon}
+            alt={'Waiting consultant'}
+            width={4}
+            height={4}
+          />
+        ) : consultInfo.monitoring ? (
+          <Image
+            src={monitoringIcon}
             alt={'Waiting consultant'}
             width={4}
             height={4}
@@ -135,11 +149,11 @@ function Consultant({
               image={
                 consultInfo.monitoring
                   ? consultInfo.user_id === loginId
-                    ? tappingStopIcon
-                    : OthertappingIcon
-                  : tappingStartIcon
+                    ? company === COMPANY.DBLIFE ? tappingStopIcon : zmsTappingStopIcon
+                    : company === COMPANY.DBLIFE ? OthertappingIcon : zmsOthertappingIcon
+                  : company === COMPANY.DBLIFE ? tappingStartIcon : zmsTappingStartIcon
               }
-              hoverImg={consultInfo.monitoring ? '' : tappingStartOverIcon}
+              hoverImg={consultInfo.monitoring ? '' : company === COMPANY.DBLIFE ? tappingStartOverIcon : zmsTappingStartIcon}
               borderRadius={0.81}
               fontColor={
                 consultInfo.monitoring && consultInfo.user_id === loginId
