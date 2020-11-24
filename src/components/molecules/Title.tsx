@@ -7,8 +7,10 @@ import { COLORS } from 'utils/color';
 import { getMaxPage } from 'utils/utils';
 import prevPageIcon from 'images/bt-page-pre.png';
 import nextPageIcon from 'images/bt-page-next.png';
+import zmsPrevPageIcon from 'images/zms/bt-page-pre.png';
+import zmsNextPageIcon from 'images/zms/bt-page-next.png';
 
-import { company, COMPANY } from 'utils/constants'
+import { company, COMPANY } from 'utils/constants';
 
 const StyledWrapper = styled.div<StyledProps>`
   /* Display */
@@ -223,7 +225,9 @@ function Title({
             />
             <StyledPageSpace />
             <Button
-              image={prevPageIcon}
+              image={
+                company === COMPANY.DBLIFE ? prevPageIcon : zmsPrevPageIcon
+              }
               width={1.3}
               height={1.3}
               bgColor={'inherit'}
@@ -234,7 +238,9 @@ function Title({
             />
             <StyledButtonSpace />
             <Button
-              image={nextPageIcon}
+              image={
+                company === COMPANY.DBLIFE ? nextPageIcon : zmsNextPageIcon
+              }
               width={1.3}
               height={1.3}
               bgColor={'inherit'}
@@ -339,7 +345,7 @@ interface TitleProps extends StyledProps {
 }
 
 Title.defaultProps = {
-  bdBottomColor: COLORS.light_blue
+  bdBottomColor: COLORS.light_blue,
 };
 
 export default React.memo(Title);

@@ -8,11 +8,11 @@ import useAuth from 'hooks/useAuth';
 
 import insertBranchImage from 'images/bt-add-g-1-nor@3x.png';
 import insertBranchHoverImage from 'images/bt-add-g-1-over.png';
-import zmsInsertBranchImage from 'images/zms/bt-add-g-1-nor@3x.png'
+import zmsInsertBranchImage from 'images/zms/bt-add-g-1-nor@3x.png';
 import Logger from 'utils/log';
 import { COLORS } from 'utils/color';
 
-import { company, COMPANY } from 'utils/constants'
+import { company, COMPANY } from 'utils/constants';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -71,7 +71,7 @@ function OrganizationView() {
     bgImage: zmsInsertBranchImage,
     bgHoverImage: zmsInsertBranchImage,
     type: 'organization',
-  }
+  };
 
   const explanType = {
     title: '※ 팀추가 : 팀명 입력 후 엔터',
@@ -100,7 +100,9 @@ function OrganizationView() {
           pageType={pageType()}
           adminType={loginInfo.admin_id}
           color={company === COMPANY.DBLIFE ? COLORS.green : COLORS.light_blue2}
-          bdBottomColor={company === COMPANY.DBLIFE ? COLORS.green : COLORS.light_blue}
+          bdBottomColor={
+            company === COMPANY.DBLIFE ? COLORS.green : COLORS.light_blue
+          }
         >
           조직 관리
         </Title>

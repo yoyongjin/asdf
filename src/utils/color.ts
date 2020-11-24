@@ -18,6 +18,7 @@ export const COLORS = {
   blue: '#4995d2',
   light_blue: '#789be3',
   light_blue2: '#496cd2',
+  light_blue3: '#a3d9ff',
   dark_blue: '#1f2021',
   dark_blue2: '#35383b',
 };

@@ -80,7 +80,7 @@ interface ButtonProps extends StyledButtonProps {
 }
 
 Button.defaultProps = {
-  bgColor: COLORS.black,
+  bgColor: COLORS.white,
   borderRadius: 1,
   fontColor: COLORS.white,
   fontSize: 1,
