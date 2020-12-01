@@ -37,7 +37,7 @@ const StyledContent = styled.div`
   align-content: flex-start;
   /* align-content: space-around; */
   border-bottom: 0.05rem solid
-    ${company === COMPANY.DBLIFE ? COLORS.light_green : COLORS.light_blue};
+    ${company === COMPANY.DBLIFE ? COLORS.green : COLORS.light_blue};
   padding-top: 1rem;
   padding-bottom: 1rem;
 `;
@@ -69,6 +69,7 @@ function UserInfo({
       password: '',
       tel: data && data!.number ? data!.number : '',
       zibox: data && data!.ziboxip ? data!.ziboxip : '',
+      volume: data && data!.volume ? data!.volume : 0,
     };
   }, [data]);
 
@@ -285,6 +286,16 @@ function UserInfo({
           fontSize={0.81}
           disabled={form.admin !== 0}
         />
+        <TextInput
+          customStyle={`float:right;`}
+          height={1.63}
+          textValue={'볼륨'}
+          onChange={onChangeInput}
+          name={'volume'}
+          value={String(form.volume)}
+          fontSize={0.81}
+          disabled={form.admin !== 0}
+        />
       </StyledContent>
       <StyledFooter>
         <Button
@@ -310,6 +321,7 @@ function UserInfo({
                   form.password,
                   form.tel,
                   form.zibox,
+                  form.volume,
                 );
                 onClickVisible();
               }
@@ -325,6 +337,7 @@ function UserInfo({
                   form.password,
                   form.tel,
                   form.zibox,
+                  form.volume,
                 );
                 initValue(initialized);
                 onClickVisible();
@@ -389,6 +402,7 @@ interface UserInfoProps {
     password: string,
     tel: string,
     ip: string,
+    volume: number,
   ) => void;
   onClickUpdateUser?: (
     id: number,
@@ -400,6 +414,7 @@ interface UserInfoProps {
     password: string,
     tel: string,
     ip: string,
+    volume: number,
   ) => void;
 }
 
