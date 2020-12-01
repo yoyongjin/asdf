@@ -15,7 +15,7 @@ import useAuth from 'hooks/useAuth';
 import useVisible from 'hooks/useVisible';
 import useZibox from 'hooks/useZibox';
 
-import { company, COMPANY } from 'utils/constants'
+import { company, COMPANY } from 'utils/constants';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -34,8 +34,11 @@ const StyledConsultantArea = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  /* align-items: flex-start; */
   align-content: flex-start;
   margin-top: 5px;
+  margin-left: 1rem;
+  margin-right: 1rem;
 
   /* Other */
   overflow: auto;
@@ -43,10 +46,11 @@ const StyledConsultantArea = styled.div`
 
 const StyledConsultant = styled.span`
   /* Display */
-  padding-top: 7px;
+  /* padding-top: 7px;
   padding-bottom: 8px;
   padding-left: 5px;
-  padding-right: 5px;
+  padding-right: 5px; */
+  margin: 7px 5px 8px 5px;
 `;
 
 const adminList = [
@@ -82,7 +86,8 @@ function Monitoring({ location }: MonitoringProps) {
     return {
       color: company === COMPANY.DBLIFE ? COLORS.green : COLORS.light_blue,
       borderRadius: 0,
-      borderColor: company === COMPANY.DBLIFE ? COLORS.green : COLORS.light_blue,
+      borderColor:
+        company === COMPANY.DBLIFE ? COLORS.green : COLORS.light_blue,
       data1: branchList as Array<BranchInfo>,
       data2: teamList as Array<TeamInfo>,
       height: 1.75,
@@ -283,8 +288,12 @@ function Monitoring({ location }: MonitoringProps) {
               loginInfo.admin_id === 1 ? loginInfo.branch_id : form.branch
             }
             team={form.team}
-            color={company === COMPANY.DBLIFE ? COLORS.green : COLORS.light_blue2}
-            bdBottomColor={company === COMPANY.DBLIFE ? COLORS.green : COLORS.light_blue}
+            color={
+              company === COMPANY.DBLIFE ? COLORS.green : COLORS.light_blue2
+            }
+            bdBottomColor={
+              company === COMPANY.DBLIFE ? COLORS.green : COLORS.light_blue
+            }
           >
             상담원 모니터링
           </Title>

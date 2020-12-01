@@ -51,13 +51,16 @@ function useUser() {
     [dispatch],
   );
 
-  const resetFilteredList = useCallback((type: number) => {
-    if(type === 1){
-      dispatch(resetFilteredUser());
-    }else if(type === 2){
-      dispatch(resetFilteredConsultant());
-    }
-  }, [dispatch]);
+  const resetFilteredList = useCallback(
+    (type: number) => {
+      if (type === 1) {
+        dispatch(resetFilteredUser());
+      } else if (type === 2) {
+        dispatch(resetFilteredConsultant());
+      }
+    },
+    [dispatch],
+  );
 
   const onClickInsertUser = useCallback(
     (
@@ -69,6 +72,7 @@ function useUser() {
       password: string,
       tel: string,
       ip: string,
+      volume: number,
     ) => {
       let number = tel.replace(/-/g, '');
       const payload = {
@@ -80,6 +84,7 @@ function useUser() {
         password,
         number: number,
         ziboxip: ip,
+        volume: String(volume),
       };
 
       dispatch(requestAddUser(payload));
@@ -98,6 +103,7 @@ function useUser() {
       password: string,
       tel: string,
       ip: string,
+      volume: number,
     ) => {
       let number = tel.replace(/-/g, '');
       const payload = {
@@ -110,6 +116,7 @@ function useUser() {
         password,
         number,
         ziboxip: ip,
+        volume: String(volume),
       };
       dispatch(requestUpdateUser(payload));
     },

@@ -303,6 +303,7 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
       user_name,
       id,
       login_at,
+      volume,
     } = action.payload.data;
 
     const value = {
@@ -317,6 +318,7 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
       number,
       ziboxip,
       login_at,
+      volume,
     };
     return produce(state, (draft) => {
       if (branch_id !== action.payload.branch_id) return;
@@ -411,6 +413,7 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
       user_name,
       id,
       login_at,
+      volume,
     } = action.payload.data;
     const value = {
       id,
@@ -424,6 +427,7 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
       number,
       ziboxip,
       login_at,
+      volume,
     };
     return produce(state, (draft) => {
       if (branch_id !== action.payload.branch_id) return;

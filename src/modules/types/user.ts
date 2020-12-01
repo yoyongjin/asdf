@@ -41,6 +41,7 @@ export interface UserInfo {
   team_name: string;
   user_name: string;
   ziboxip: string;
+  volume: number;
 }
 
 export interface ConsultantInfoType {
@@ -55,6 +56,7 @@ export interface ConsultantInfoType {
   team_name: null | string;
   user_name: string;
   ziboxip: string;
+  volume: number;
   call_time?: number;
   call_type?: string;
   diff?: number;
@@ -71,6 +73,7 @@ export interface UserInfoType {
   password: string;
   number: string;
   ziboxip: string;
+  volume: string;
 }
 
 export interface getRequestType {
