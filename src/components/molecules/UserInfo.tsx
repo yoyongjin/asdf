@@ -305,7 +305,7 @@ function UserInfo({
             name={'zibox'}
             value={form.zibox}
             fontSize={0.81}
-            disabled={true}
+            disabled={form.admin !== 0}
           />
         </StyledUserInfo>
         {data && data.id ? (
