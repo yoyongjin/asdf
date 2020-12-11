@@ -151,7 +151,12 @@ function Consultant({
                 }
 
                 try {
-                  const isSuccess = await initZibox(consultInfo.ziboxip);
+                  const isSuccess = await initZibox(
+                    consultInfo.id,
+                    consultInfo.ziboxip,
+                    consultInfo.ziboxmic,
+                    consultInfo.ziboxspk,
+                  );
                   if (isSuccess) {
                     setTimeout(() => {
                       startMonitoring(consultInfo.number, loginId);
@@ -193,7 +198,12 @@ interface ConsultantProps {
   loginId: number;
   monit: boolean;
   getConsultantInfo: (data: ConsultantInfoType) => void;
-  initZibox: (ziboxIp: string) => Promise<boolean>;
+  initZibox: (
+    id: number,
+    ziboxIp: string,
+    ziboxMic: number,
+    ziboxSpk: number,
+  ) => Promise<boolean>;
   setMonit: React.Dispatch<React.SetStateAction<boolean>>;
   startMonitoring: (number: string, id: number) => void;
   stopMonitoring: (number: string) => void;

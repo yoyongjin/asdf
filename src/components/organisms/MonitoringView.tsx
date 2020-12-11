@@ -61,9 +61,11 @@ function Monitoring({ location }: MonitoringProps) {
   const [tempConsultInfo, setTempConsultInfo] = useState<ConsultantInfoType>();
   const { loginInfo } = useAuth();
   const { branchList, teamList, getBranchList, getTeamList } = useBranch();
-  const { form, onChangeSelect, setKeyValue } = useInputForm({
+  const { form, onChangeSelect, setKeyValue, onChangeInput } = useInputForm({
     branch: -1,
     team: -1,
+    left: 1.5,
+    right: 1.5,
   });
   const { monit, setMonit, onRunTimer, onRemoveTimer } = useMonitoring();
   const {
@@ -74,7 +76,14 @@ function Monitoring({ location }: MonitoringProps) {
     onClickUpdateUser,
   } = useUser();
   const { visible, onClickVisible } = useVisible();
-  const { initZibox, startMonitoring, stopMonitoring } = useZibox();
+  const { initZibox, startMonitoring, stopMonitoring, setVolume } = useZibox();
+  
+  const volumeInfo = useMemo(() => {
+    return {
+      left_vol: form.left,
+      right_vol: form.right,
+    };
+  }, [form.left, form.right]);
 
   const selectInfo = useMemo(() => {
     return {
@@ -143,6 +152,18 @@ function Monitoring({ location }: MonitoringProps) {
       form.team,
     ],
   );
+
+  useEffect(() => {
+    if (monit) {
+      setVolume(0, form.left);
+    }
+  }, [monit, form.left, setVolume]);
+
+  useEffect(() => {
+    if (monit) {
+      setVolume(1, form.right);
+    }
+  }, [monit, form.right, setVolume]);
 
   useEffect(() => {
     if (loginInfo.admin_id === 2) {
@@ -276,7 +297,10 @@ function Monitoring({ location }: MonitoringProps) {
         <StyledTitle>
           <Title
             selectType={selectInfo}
+            volumeType={volumeInfo}
             onChangeSelect={onChangeSelect}
+            onChangeInput={onChangeInput}
+            setVolume={setVolume}
             branch={
               loginInfo.admin_id === 1 ? loginInfo.branch_id : form.branch
             }
@@ -285,6 +309,7 @@ function Monitoring({ location }: MonitoringProps) {
             상담원 모니터링
           </Title>
         </StyledTitle>
+        <div>
         <StyledConsultantArea>
           {loginInfo.admin_id === 2
             ? form.branch === -1 && form.team === -1
@@ -306,6 +331,7 @@ function Monitoring({ location }: MonitoringProps) {
                 })
             : null}
         </StyledConsultantArea>
+        </div>
       </StyledWrapper>
       <Modal
         isVisible={visible}

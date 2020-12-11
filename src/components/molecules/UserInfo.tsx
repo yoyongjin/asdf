@@ -66,6 +66,8 @@ function UserInfo({
       password: '',
       tel: data && data!.number ? data!.number : '',
       zibox: data && data!.ziboxip ? data!.ziboxip : '',
+      mic: data && data!.ziboxmic ? data!.ziboxmic : 0,
+      spk: data && data!.ziboxspk ? data!.ziboxspk : 0,
     };
   }, [data]);
 
@@ -282,6 +284,34 @@ function UserInfo({
           fontSize={0.81}
           disabled={form.admin !== 0}
         />
+        <TextInput
+          customStyle={`float:right;`}
+          height={1.63}
+          textValue={'마이크 볼륨'}
+          onChange={onChangeInput}
+          name={'mic'}
+          value={String(form.mic)}
+          type={'range'}
+          step={1}
+          min={0}
+          max={60}
+          fontSize={0.81}
+          disabled={!data ? true : form.admin !== 0 ? true : false}
+        />
+        <TextInput
+          customStyle={`float:right;`}
+          height={1.63}
+          textValue={'스피커 볼륨'}
+          onChange={onChangeInput}
+          name={'spk'}
+          value={String(form.spk)}
+          type={'range'}
+          step={1}
+          min={0}
+          max={60}
+          fontSize={0.81}
+          disabled={!data ? true : form.admin !== 0 ? true : false}
+        />
       </StyledContent>
       <StyledFooter>
         <Button
@@ -305,6 +335,8 @@ function UserInfo({
                   form.password,
                   form.tel,
                   form.zibox,
+                  Number(form.mic),
+                  Number(form.spk),
                 );
                 onClickVisible();
               }
@@ -395,6 +427,8 @@ interface UserInfoProps {
     password: string,
     tel: string,
     ip: string,
+    mic: number,
+    spk: number,
   ) => void;
 }
 

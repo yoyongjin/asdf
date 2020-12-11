@@ -98,6 +98,8 @@ function useUser() {
       password: string,
       tel: string,
       ip: string,
+      mic: number,
+      spk: number,
     ) => {
       let number = tel.replace(/-/g, '');
       const payload = {
@@ -110,6 +112,8 @@ function useUser() {
         password,
         number,
         ziboxip: ip,
+        ziboxmic: mic,
+        ziboxspk: spk,
       };
       dispatch(requestUpdateUser(payload));
     },

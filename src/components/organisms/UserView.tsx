@@ -56,7 +56,7 @@ const adminList = [
 ];
 
 const tableTitle = [
-  { title: 'No.', width: 7 },
+  // { title: 'No.', width: 7 },
   { title: '지점명', width: 14 },
   { title: '팀명', width: 7 },
   { title: '권한', width: 7 },

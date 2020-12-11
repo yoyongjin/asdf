@@ -260,6 +260,8 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
       user_name,
       id,
       login_at,
+      ziboxmic,
+      ziboxspk,
     } = action.payload.data;
 
     const value = {
@@ -274,6 +276,8 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
       number,
       ziboxip,
       login_at,
+      ziboxmic,
+      ziboxspk
     };
     return produce(state, (draft) => {
       if (branch_id !== action.payload.branch_id) return;
@@ -368,6 +372,8 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
       user_name,
       id,
       login_at,
+      ziboxmic,
+      ziboxspk,
     } = action.payload.data;
     const value = {
       id,
@@ -381,6 +387,8 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
       number,
       ziboxip,
       login_at,
+      ziboxmic,
+      ziboxspk,
     };
     return produce(state, (draft) => {
       if (branch_id !== action.payload.branch_id) return;
@@ -411,6 +419,8 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
             draft.userList.consultants[index].admin_id = admin_id;
             draft.userList.consultants[index].user_name = user_name;
             draft.userList.consultants[index].ziboxip = ziboxip;
+            draft.userList.consultants[index].ziboxmic = ziboxmic;
+            draft.userList.consultants[index].ziboxspk = ziboxspk;
           }
         }
 
@@ -429,6 +439,8 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
             draft.filterUserList.users[index].admin_id = admin_id;
             draft.filterUserList.users[index].user_name = user_name;
             draft.filterUserList.users[index].ziboxip = ziboxip;
+            draft.filterUserList.users[index].ziboxmic = ziboxmic;
+            draft.filterUserList.users[index].ziboxspk = ziboxspk;
           }
         }
 
@@ -446,6 +458,8 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
             draft.filterUserList.consultants[index].admin_id = admin_id;
             draft.filterUserList.consultants[index].user_name = user_name;
             draft.filterUserList.consultants[index].ziboxip = ziboxip;
+            draft.filterUserList.consultants[index].ziboxmic = ziboxmic;
+            draft.filterUserList.consultants[index].ziboxspk = ziboxspk;
           }
         }
       } else if (admin_id === 1) {

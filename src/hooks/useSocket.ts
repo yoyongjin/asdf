@@ -44,6 +44,8 @@ function useSocket() {
       // 유저 추가, 수정, 삭제 시 관련 응답 전송
       Socket.getInstance().onMessageUser((response) => {
         const { type, data } = response;
+        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+        console.log(data)
 
         let payload = {
           data,

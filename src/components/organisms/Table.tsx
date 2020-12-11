@@ -129,6 +129,8 @@ interface TableProps extends StyledProps {
     password: string,
     tel: string,
     ip: string,
+    mic: number,
+    spk: number,
   ) => void;
 }
 

@@ -1,17 +1,30 @@
 import { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
+
 import Zibox from 'lib/zibox';
 import Socket from 'lib/socket';
+import { requestZiboxVolume } from 'modules/actions/user';
 
 function useZibox() {
-  const initZibox = useCallback(async (ziboxIp: string) => {
-    try {
-      const response = await Zibox.getInstance().connect(ziboxIp);
-      return response;
-    } catch (error) {
-      console.log(error);
-      return false;
-    }
-  }, []);
+  const dispatch = useDispatch();
+
+  const initZibox = useCallback(
+    async (id: number, ziboxIp: string, ziboxmic: number, ziboxspk: number) => {
+      try {
+        const response = await Zibox.getInstance().connect(
+          id,
+          ziboxIp,
+          ziboxmic,
+          ziboxspk,
+        );
+        return response;
+      } catch (error) {
+        console.log(error);
+        return false;
+      }
+    },
+    [],
+  );
 
   const startMonitoring = useCallback((number: string, id: number) => {
     Zibox.getInstance().monStart();
@@ -38,7 +51,44 @@ function useZibox() {
     }
   }, []);
 
-  return { initZibox, startMonitoring, stopMonitoring };
+  const setVolume = useCallback((type: number, gauge: number) => {
+    Zibox.getInstance().monVolume(type, gauge);
+  }, []);
+
+  const setEvent = useCallback(() => {
+    Zibox.getInstance().setEventListener(
+      (cmd: string, response: { status: string; data: any; type: string }) => {
+        if (!response) return;
+        const { status, data, type } = response;
+
+        if (status === 'y') {
+          switch (type) {
+            case 'vol_info':
+              if (data.mic && data.spk) {
+                const param = {
+                  id: 2,
+                  ziboxmic: data.mic,
+                  ziboxspk: data.spk,
+                };
+                dispatch(requestZiboxVolume(param));
+              }
+
+              break;
+            default:
+              break;
+          }
+        }
+      },
+    );
+  }, [dispatch]);
+
+  return {
+    initZibox,
+    startMonitoring,
+    stopMonitoring,
+    setVolume,
+    setEvent,
+  };
 }
 
 export default useZibox;

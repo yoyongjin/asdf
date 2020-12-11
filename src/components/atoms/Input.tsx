@@ -99,6 +99,9 @@ function Input({
   placeholder,
   type,
   value,
+  step,
+  min,
+  max,
   onChange,
   onKeyDown,
   onKeyUp,
@@ -112,6 +115,9 @@ function Input({
       value={value}
       placeholder={placeholder}
       disabled={disabled}
+      step={step}
+      min={min}
+      max={max}
       onChange={onChange}
       onKeyDown={onKeyDown}
       onKeyUp={onKeyUp}
@@ -147,6 +153,9 @@ interface InputProps extends StyledInputProps {
   readonly placeholder?: string;
   readonly type: string;
   readonly value: string;
+  readonly step?: number;
+  readonly min?: number;
+  readonly max?: number;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   onKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void;

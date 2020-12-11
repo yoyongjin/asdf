@@ -71,7 +71,14 @@ function TableProperty({
   return (
     <>
       {infoKeyList.map((key, i) => {
-        if (key === 'branch_id' || key === 'team_id' || key === 'login_at')
+        if (
+          key === 'branch_id' ||
+          key === 'team_id' ||
+          key === 'login_at' ||
+          key === 'ziboxmic' ||
+          key === 'ziboxspk' ||
+          key === 'id'
+        )
           return null;
 
         return (
@@ -165,6 +172,8 @@ interface TableContentProps {
     password: string,
     tel: string,
     ip: string,
+    mic: number,
+    spk: number,
   ) => void;
   onClickDeleteUser: (
     id: number,

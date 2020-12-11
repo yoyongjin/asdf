@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
 
-import { Button, Select, Text } from 'components/atoms';
+import { Button, Select, Text, Input } from 'components/atoms';
 import { SearchBar, PageCount } from 'components/molecules';
 import { COLORS } from 'utils/color';
 import { getMaxPage } from 'utils/utils';
@@ -52,6 +52,16 @@ const StyledSearch = styled.div`
   padding-left: 5px;
 `;
 
+const StyledVolume = styled.div`
+  display: flex;
+`;
+
+const StyledValue = styled.div`
+  align-self: center;
+  color: ${COLORS.green};
+  font-weight: 700;
+`;
+
 const StyledPageSpace = styled.span`
   padding-left: 10px;
   padding-right: 10px;
@@ -69,6 +79,7 @@ function Title({
   selectType,
   pageType,
   isSearch,
+  volumeType,
   children,
   fontSize,
   branch,
@@ -77,7 +88,9 @@ function Title({
   adminType,
   onChange,
   onChangeSelect,
+  onChangeInput,
   onClickSearch,
+  setVolume,
 }: TitleProps) {
   const branchList = useMemo(() => {
     if (selectType) {
@@ -148,6 +161,38 @@ function Title({
         ) : null}
       </StyledLeft>
       <StyledRight>
+        {volumeType ? (
+          <>
+            <StyledVolume>
+              <StyledValue>고객</StyledValue>
+              <Input
+                customStyle={`float:right;`}
+                type={'range'}
+                name={'left'}
+                min={0}
+                max={3}
+                value={String(volumeType.left_vol)}
+                step={0.1}
+                width={7}
+                onChange={(e) => onChangeInput!(e)}
+              />
+            </StyledVolume>
+            <StyledVolume>
+              <StyledValue>상담원</StyledValue>
+              <Input
+                customStyle={`float:right;`}
+                type={'range'}
+                name={'right'}
+                min={0}
+                max={3}
+                value={String(volumeType.right_vol)}
+                step={0.1}
+                width={7}
+                onChange={(e) => onChangeInput!(e)}
+              />
+            </StyledVolume>
+          </>
+        ) : null}
         {userListOption ? (
           <StyledSelect>
             <Select
@@ -300,6 +345,11 @@ interface pageType {
   ) => void;
 }
 
+interface volumeType {
+  left_vol: number;
+  right_vol: number;
+}
+
 interface SelectDataType {
   id: number;
   data: string;
@@ -311,6 +361,7 @@ interface TitleProps {
   userListOption?: userListOptionType;
   selectType?: selectType;
   pageType?: pageType;
+  volumeType?: volumeType;
   isSearch?: boolean;
   children: string;
   fontSize?: number;
@@ -318,12 +369,14 @@ interface TitleProps {
   team?: number;
   search?: string;
   adminType?: number;
+  onChangeInput?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onChangeSelect?: (
     e: React.ChangeEvent<HTMLSelectElement>,
     data?: number,
   ) => void;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onClickSearch?: () => void;
+  setVolume?: (type: number, gauge: number) => void;
 }
 
 Title.defaultProps = {};

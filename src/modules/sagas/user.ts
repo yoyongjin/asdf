@@ -22,6 +22,10 @@ import {
   failureDeleteUser,
   successResetPassword,
   failureResetPassword,
+  REQUEST_ZIBOX_VOLUME,
+  requestZiboxVolume,
+  successZiboxVolume,
+  failureZiboxVolume,
 } from 'modules/actions/user';
 import * as API from 'lib/api';
 import Socket from 'lib/socket';
@@ -134,6 +138,8 @@ function* updateUserProcess(action: ReturnType<typeof requestUpdateUser>) {
     password,
     number,
     ziboxip,
+    ziboxmic,
+    ziboxspk,
   } = action.payload;
   try {
     const response = yield call(
@@ -147,6 +153,8 @@ function* updateUserProcess(action: ReturnType<typeof requestUpdateUser>) {
       password,
       number,
       ziboxip,
+      ziboxmic!,
+      ziboxspk!,
     );
     yield put(successUpdateUser());
   } catch (error) {
@@ -192,6 +200,20 @@ function* resetPasswordProcess(
   }
 }
 
+function* updateZiboxVolumeProcess(
+  action: ReturnType<typeof requestZiboxVolume>,
+) {
+  try {
+    const { id, ziboxmic, ziboxspk } = action.payload;
+    const response = yield call(API.updateZiboxVolume, id, ziboxmic, ziboxspk);
+
+    yield put(successZiboxVolume(action.payload));
+  } catch (error) {
+    console.log(error);
+    yield put(failureZiboxVolume(error));
+  }
+}
+
 function* watchGetUserInfo() {
   yield takeLatest(REQUEST_GET_USER_INFO, getUserInfoProcess);
 }
@@ -212,6 +234,10 @@ function* watchResetPassword() {
   yield takeLatest(REQUEST_RESET_PASSWORD, resetPasswordProcess);
 }
 
+function* watchUpdateZiboxVolume() {
+  yield takeLatest(REQUEST_ZIBOX_VOLUME , updateZiboxVolumeProcess);
+}
+
 function* userSaga() {
   yield all([
     fork(watchGetUserInfo),
@@ -219,6 +245,7 @@ function* userSaga() {
     fork(watchUpdateUser),
     fork(watchDeleteUser),
     fork(watchResetPassword),
+    fork(watchUpdateZiboxVolume),
   ]);
 }
 

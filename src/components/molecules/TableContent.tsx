@@ -101,6 +101,8 @@ interface TableContentProps {
     password: string,
     tel: string,
     ip: string,
+    mic: number,
+    spk: number,
   ) => void;
 }
 

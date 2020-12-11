@@ -93,6 +93,8 @@ export const updateUser = (
   user_pass: string,
   number: string,
   ziboxip: string,
+  ziboxmic: number,
+  ziboxspk: number,
 ) =>
   instance.patch('/api/auth', {
     user_id,
@@ -104,6 +106,8 @@ export const updateUser = (
     user_pass,
     number,
     ziboxip,
+    ziboxmic,
+    ziboxspk,
   });
 
 export const deleteUser = (id: number) =>
@@ -121,3 +125,10 @@ export const deleteTeam = (branchId: number, teamId: number) =>
   });
 
 export const deleteBranch = (id: number) => instance.delete(`api/branch/${id}`);
+
+export const updateZiboxVolume = (id: number, mic: number, spk: number) =>
+  instance.patch('/api/auth/zibox_vol', {
+    user_id: id,
+    ziboxmic: mic,
+    ziboxspk: spk,
+  });

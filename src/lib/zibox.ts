@@ -1,6 +1,7 @@
 class Zibox {
   private static instance: Zibox;
   private zibox: any;
+  private user_id: number = 0;
 
   constructor() {
     if (Zibox.instance) return Zibox.instance;
@@ -19,7 +20,12 @@ class Zibox {
     this.zibox = new (window as any).Zibox();
   }
 
-  async connect(ziboxip: string) {
+  async connect(
+    id: number,
+    ziboxip: string,
+    ziboxmic: number,
+    ziboxspk: number,
+  ) {
     try {
       await this.zibox.connect(ziboxip);
       // this.zibox.ftpIP('118.131.74.196' + ',zibox,irlink');
@@ -29,24 +35,28 @@ class Zibox {
       // this.zibox.atsVolume(5);
       // this.zibox.leftVolume(10);
       // this.zibox.rightVolume(8);
-      // this.zibox.micVolume(40);
-      // this.zibox.spkVolume(60);
-
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      if (ziboxmic && ziboxspk) {
+        this.zibox.micVolume(ziboxmic);
+        this.zibox.spkVolume(ziboxspk);
+      }
+      await new Promise((resolve) => setTimeout(resolve, 500));
       this.zibox.monIP('127.0.0.1');
-      await new Promise(resolve => setTimeout(resolve, 10))
+      await new Promise((resolve) => setTimeout(resolve, 500));
       this.zibox.monOn();
+
+      this.zibox.disitalVolumeInfo();
+      this.user_id = id;
 
       return true;
     } catch (error) {
-      console.error(error)
-      // this.disconnect();
+      console.error(error);
       return false;
     }
   }
 
   disconnect() {
     this.zibox.disconnect();
+    this.user_id = 0;
   }
 
   monStart() {
@@ -57,6 +67,34 @@ class Zibox {
   async monStop() {
     await this.zibox.monStop();
     return this.zibox.recStop();
+  }
+
+  monVolume(type: number, gauge: number) {
+    if (type === 0) {
+      // 왼쪽 볼륨
+      this.zibox.leftMonVolume(gauge);
+    } else if (type === 1) {
+      // 오른쪽 볼륨
+      this.zibox.rightMonVolume(gauge);
+    }
+  }
+
+  setVolume(type: number, gauge: number) {
+    if (type === 0) {
+      // 마이크 볼륨
+      this.zibox.micVolume(gauge);
+    } else if (type === 1) {
+      // 스피커 볼륨
+      this.zibox.spkVolume(gauge);
+    }
+  }
+
+  setEventListener(callback: (type: string, date: any) => void) {
+    console.log(this.user_id)
+    this.zibox.onCommandEventListener = function (type: string, data: any) {
+      console.log('onCommandEventListener => ', ' ', type, ' ', data);
+      callback(type, data);
+    };
   }
 }
 
