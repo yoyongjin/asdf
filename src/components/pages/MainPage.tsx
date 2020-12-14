@@ -9,6 +9,7 @@ import { COLORS } from 'utils/color';
 
 import dblifeLogo from 'images/db-logo-cont@3x.png';
 import loginTimeImage from 'images/bg-login-time@3x.png';
+import useZibox from 'hooks/useZibox';
 
 function MainPage({ history, location }: MainPageProps) {
   const { loginInfo, onCheckLogin, onClickLogout } = useAuth();
@@ -18,6 +19,7 @@ function MainPage({ history, location }: MainPageProps) {
     getInitCallStatus,
     getUserInfo,
   } = useSocket();
+  const { setEvent } = useZibox();
 
   const bgColor = useMemo(() => {
     if (location.pathname === '/main') {
@@ -41,6 +43,7 @@ function MainPage({ history, location }: MainPageProps) {
       getChangeStatus();
       getInitCallStatus();
       getUserInfo(loginInfo.branch_id, loginInfo.admin_id);
+      setEvent();
     }
   }, [
     loginInfo.id,
@@ -50,6 +53,7 @@ function MainPage({ history, location }: MainPageProps) {
     getChangeStatus,
     getInitCallStatus,
     getUserInfo,
+    setEvent,
   ]);
 
   return (

@@ -5,14 +5,16 @@ import Zibox from 'lib/zibox';
 import Socket from 'lib/socket';
 import { requestZiboxVolume } from 'modules/actions/user';
 
+let user_id: number = 0;
+
 function useZibox() {
   const dispatch = useDispatch();
 
   const initZibox = useCallback(
     async (id: number, ziboxIp: string, ziboxmic: number, ziboxspk: number) => {
+      user_id = id;
       try {
         const response = await Zibox.getInstance().connect(
-          id,
           ziboxIp,
           ziboxmic,
           ziboxspk,
@@ -64,9 +66,12 @@ function useZibox() {
         if (status === 'y') {
           switch (type) {
             case 'vol_info':
-              if (data.mic && data.spk) {
+              if (
+                typeof data.mic === 'string' &&
+                typeof data.spk === 'string'
+              ) {
                 const param = {
-                  id: 2,
+                  id: user_id,
                   ziboxmic: data.mic,
                   ziboxspk: data.spk,
                 };
