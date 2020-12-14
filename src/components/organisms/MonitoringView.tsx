@@ -309,7 +309,6 @@ function Monitoring({ location }: MonitoringProps) {
             상담원 모니터링
           </Title>
         </StyledTitle>
-        <div>
         <StyledConsultantArea>
           {loginInfo.admin_id === 2
             ? form.branch === -1 && form.team === -1
@@ -331,7 +330,6 @@ function Monitoring({ location }: MonitoringProps) {
                 })
             : null}
         </StyledConsultantArea>
-        </div>
       </StyledWrapper>
       <Modal
         isVisible={visible}
