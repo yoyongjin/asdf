@@ -3,6 +3,8 @@ import React, { useEffect } from 'react';
 import { LinaLoginTemplate } from 'components/templates';
 import useOcx from 'hooks/useOcx';
 
+
+
 function AuthPage() {
   const { createOcx, connectServerOcx, beforeUnload } = useOcx();
 

@@ -7,6 +7,8 @@ import { LinkSelector, UserLog } from 'components/molecules';
 import { COLORS } from 'utils/color';
 import { LoginInfoType } from 'types/auth';
 
+import { company, COMPANY } from 'utils/constants'
+
 const StyledWrapper = styled.div`
   /* Display */
   display: flex;
@@ -14,13 +16,13 @@ const StyledWrapper = styled.div`
   width: 100%;
 
   /* Color */
-  background-color: ${COLORS.blue};
+  background-color: ${company === COMPANY.LINA ? COLORS.blue : COLORS.dark_blue2};
 `;
 
 const StyledLogo = styled.div`
   /* Position */
-  margin-top: 10px;
-  margin-left: 26px;
+  margin-top: ${company === COMPANY.LINA ? 10 : 0}px;
+  margin-left: ${company === COMPANY.LINA ? 26 : 0}px;
 `;
 
 const StyledLink = styled.div`
@@ -51,13 +53,13 @@ function GNB({
 }: GNBProps) {
   return (
     <StyledWrapper>
-      <StyledLogo>
+      <StyledLogo >
         <Link path="/main">
           <Image
             alt={'DB life logo'}
             src={logoImg}
-            width={8.38}
-            height={2.1}
+            width={company === COMPANY.LINA ? 8.38 : 8.25}
+            height={company === COMPANY.LINA ? 2.1 : 3.875}
           />
         </Link>
       </StyledLogo>

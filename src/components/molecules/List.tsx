@@ -5,6 +5,8 @@ import { Text } from 'components/atoms';
 import { COLORS } from 'utils/color';
 import { UserInfo } from 'modules/types/user';
 
+import { company, COMPANY } from 'utils/constants';
+
 const StyledWrapper = styled.ul`
   /* Position */
   position: absolute;
@@ -29,7 +31,9 @@ const StyledContent = styled.li`
   background-color: ${COLORS.dark_gray5};
 
   &:hover {
-    background-color: ${COLORS.light_green};
+    background-color:${company === COMPANY.LINA
+      ? COLORS.light_green
+      : COLORS.light_blue3};
     cursor: pointer;
   }
 `;

@@ -20,6 +20,7 @@ const StyledSelect = styled.select<SelectProps>`
   /* Color */
   border-color: ${(props) => props.borderColor};
   color: ${(props) => props.fontColor};
+  background-color: ${(props) => props.bgColor};
 
   /* Other */
   outline: none;
@@ -68,6 +69,7 @@ interface StyledSelectProps extends StyledOptionProps {
   height: number;
   paddingLeft: number;
   width: number;
+  bgColor?: string;
 }
 
 interface StyledOptionProps {
@@ -91,6 +93,7 @@ Select.defaultProps = {
   optionFontColor: COLORS.black,
   paddingLeft: 6,
   width: 10,
+  bgColor: COLORS.white,
 };
 
 export default React.memo(Select);

@@ -9,6 +9,9 @@ import { COLORS } from 'utils/color';
 
 import linaLogo from 'images/ln-logo-moni@3x.png';
 import loginTimeImage from 'images/bg-login-time@3x.png';
+import zmsLogo from 'images/zms/sub-gnb-logo.png'
+
+import { company, COMPANY } from 'utils/constants';
 
 function MainPage({ history, location }: MainPageProps) {
   const { loginInfo, onCheckLogin, onClickLogout } = useAuth();
@@ -57,10 +60,18 @@ function MainPage({ history, location }: MainPageProps) {
   return (
     <MainTemplate
       gnb={
+        company === COMPANY.LINA ? 
         <GNB
           location={location}
           loginInfo={loginInfo}
           logoImg={linaLogo}
+          loginTimeImg={loginTimeImage}
+          onClickLogout={() => onClickLogout(history)}
+        /> : 
+        <GNB
+          location={location}
+          loginInfo={loginInfo}
+          logoImg={zmsLogo}
           loginTimeImg={loginTimeImage}
           onClickLogout={() => onClickLogout(history)}
         />

@@ -15,6 +15,7 @@ import useAuth from 'hooks/useAuth';
 import useVisible from 'hooks/useVisible';
 // import useZibox from 'hooks/useZibox';
 import useOcx from 'hooks/useOcx';
+import { company, COMPANY } from 'utils/constants'
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -81,9 +82,9 @@ function Monitoring({ location }: MonitoringProps) {
 
   const selectInfo = useMemo(() => {
     return {
-      color: COLORS.blue,
+      color: company === COMPANY.LINA ? COLORS.blue : COLORS.light_blue,
       borderRadius: 0,
-      borderColor: COLORS.blue,
+      borderColor: company === COMPANY.LINA ? COLORS.blue : COLORS.light_blue,
       data1: branchList as Array<BranchInfo>,
       data2: teamList as Array<TeamInfo>,
       height: 1.75,

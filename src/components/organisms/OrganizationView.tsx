@@ -8,7 +8,10 @@ import useAuth from 'hooks/useAuth';
 
 import insertBranchImage from 'images/bt-add-g-1-nor@3x.png';
 import insertBranchHoverImage from 'images/bt-add-g-1-over.png';
+import zmsInsertBranchImage from 'images/zms/bt-add-g-1-nor@3x.png';
 import Logger from 'utils/log';
+
+import { company, COMPANY } from 'utils/constants';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -56,8 +59,15 @@ function OrganizationView() {
   const buttonType = {
     title: '+ 지점 추가하기',
     onClick: onClickAddTempBranch,
-    bgImage: insertBranchImage,
-    bgHoverImage: insertBranchHoverImage,
+
+    type: 'organization',
+  };
+
+  const zmsButtonType = {
+    title: '',
+    onClick: onClickAddTempBranch,
+    bgImage: zmsInsertBranchImage,
+    bgHoverImage: zmsInsertBranchImage,
     type: 'organization',
   };
 
@@ -82,7 +92,7 @@ function OrganizationView() {
     <StyledWrapper>
       <StyledTitle>
         <Title
-          buttonType={buttonType}
+          buttonType={company === COMPANY.LINA ? buttonType : zmsButtonType}
           explanType={explanType}
           pageType={pageType()}
           adminType={loginInfo.admin_id}

@@ -18,8 +18,11 @@ import optionIcon from 'images/bt-user-modi-nor@2x.png';
 import optionHoverIcon from 'images/bt-user-modi-over@2x.png';
 import addUserImage from 'images/bt-add-u-1-nor@3x.png';
 import addUserHoverImage from 'images/bt-add-u-1-over@3x.png';
+import zmsAddUserImage from 'images/zms/bt-add-u-1-nor@3x.png';
 import { UserInfo as UserInfoType } from 'modules/types/user';
 import Logger from 'utils/log';
+
+import { company, COMPANY } from 'utils/constants';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -135,8 +138,18 @@ function UserView({ location }: UserViewProps) {
   const buttonInfo = useMemo(() => {
     return {
       title: '+ 사용자 등록',
-      bgImage: addUserImage,
-      bgHoverImage: addUserHoverImage,
+      // bgImage: addUserImage,
+      // bgHoverImage: addUserHoverImage,
+      type: 'user',
+      onClick: onClickVisible,
+    };
+  }, [onClickVisible]);
+
+  const zmsButtonInfo = useMemo(() => {
+    return {
+      title: '',
+      bgImage: zmsAddUserImage,
+      bgHoverImage: zmsAddUserImage,
       type: 'user',
       onClick: onClickVisible,
     };
@@ -294,7 +307,7 @@ function UserView({ location }: UserViewProps) {
       <StyledWrapper>
         <StyledTitle>
           <Title
-            buttonType={buttonInfo}
+            buttonType={company === COMPANY.LINA ? buttonInfo : zmsButtonInfo}
             userListOption={userListOptionInfo}
             selectType={selectInfo}
             isSearch

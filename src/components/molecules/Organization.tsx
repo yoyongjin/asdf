@@ -6,12 +6,14 @@ import { BranchInfo, TeamInfo } from 'modules/types/branch';
 import useInputForm from 'hooks/useInputForm';
 import { COLORS } from 'utils/color';
 
+import { company, COMPANY } from 'utils/constants'
+
 const StyledWrapper = styled.div`
   /* Display */
   width: 13.75rem;
   height: 100%;
   text-align: center;
-  border-right: 1px solid ${COLORS.blue};
+  border-right: 1px solid ${company === COMPANY.LINA ? COLORS.blue : COLORS.light_blue};
 
   /* Other */
   overflow: auto;
@@ -179,7 +181,7 @@ function Organization({
                     height={2.5}
                     borderWidth={2.5}
                     borderRadius={20}
-                    borderColor={COLORS.blue}
+                    borderColor={company === COMPANY.LINA ? COLORS.blue : COLORS.light_blue}
                     textAlign={1}
                     fontSize={0.87}
                     fontWeight={800}

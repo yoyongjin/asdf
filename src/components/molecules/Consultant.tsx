@@ -14,6 +14,11 @@ import tappingStartIcon from 'images/bt-mnt-listen-nor.png';
 import tappingStartOverIcon from 'images/bt-mnt-listen-over.png';
 import OthertappingIcon from 'images/bt-mnt-listen-ing.png';
 import tappingStopIcon from 'images/bt-mnt-listen-fin-nor.png';
+import zmsTappingStartIcon from 'images/zms/bt-mnt-listen-nor.png';
+import zmsOthertappingIcon from 'images/zms/bt-mnt-listen-ing.png';
+import zmsTappingStopIcon from 'images/zms/bt-mnt-listen-fin-nor.png';
+
+import { company, COMPANY } from 'utils/constants';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -163,12 +168,15 @@ function Consultant({
                 consultInfo.monit_status === 1
                   ? // 감청 중
                     loginId === consultInfo.monit_user
-                    ? // 내가 감청 중
-                      tappingStopIcon
-                    : // 다른 관리자가 감청 중
-                      OthertappingIcon
-                  : // 감청 대기
-                    tappingStartIcon
+                    ? company === COMPANY.LINA ? 
+                    // 내가 감청 중
+                      tappingStopIcon : zmsTappingStopIcon
+                    : company === COMPANY.LINA ? 
+                    // 다른 관리자가 감청 중
+                      OthertappingIcon : zmsOthertappingIcon
+                  : company === COMPANY.LINA ? 
+                  // 감청 대기
+                    tappingStartIcon : zmsTappingStartIcon
               }
               borderRadius={0.81}
               onClick={async (e) => {

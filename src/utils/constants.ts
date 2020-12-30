@@ -6,6 +6,11 @@ export const LIMIT = 30;
 export const PAGE = 1;
 export const TOKEN_NAME = '4d751c5adb209285c49f2140e1cfb01c';
 export const DOMAIN = '.celering.io';
+export const company = process.env.REACT_APP_COMPANY as string;
+export const COMPANY= {
+  LINA : 'LINA',
+  DEFAULT: 'DEFAULT',
+}
 
 export const CALL_TYPE = {
   CALL_IDLE: 'call_idle',
