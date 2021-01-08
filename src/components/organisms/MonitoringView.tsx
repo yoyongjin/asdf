@@ -15,7 +15,10 @@ import useAuth from 'hooks/useAuth';
 import useVisible from 'hooks/useVisible';
 import useZibox from 'hooks/useZibox';
 
-import { company, COMPANY } from 'utils/constants';
+import { company, COMPANY, CONSULTANTBOXWIDTH } from 'utils/constants';
+
+const AREAMAGIN = 27; //상담사 박스 영역 마진
+const BOXMAGIN = 5; //상담사 박스 마진
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -30,12 +33,10 @@ const StyledTitle = styled.div`
 
 const StyledConsultantAreaWrap = styled.div`
   /* Display */
-  height: calc(100% - 3.75rem - 5px);
+  height: calc(100% - 3.75rem - 10px);
   display: flex;
   justify-content: center;
-  margin: 5px 0px;
-  /* margin-left: 1rem;
-  margin-right: 1rem; */
+  margin-top: 5px;
   /* Other */
   overflow: auto;
 `;
@@ -45,7 +46,6 @@ const StyledConsultantArea = styled.div`
   flex-wrap: wrap;
   align-content: flex-start;
   flex-direction: row;
-  flex: 0 1 auto;
 `;
 
 const StyledConsultant = styled.span`
@@ -55,7 +55,7 @@ const StyledConsultant = styled.span`
   padding-left: 5px;
   padding-right: 5px; */
 
-  margin: 0.4375rem 0.3125rem 0.5rem 0.3125rem;
+  margin: 7px ${BOXMAGIN}px 8px;
 `;
 
 const adminList = [
@@ -69,6 +69,7 @@ let request = false;
 
 function Monitoring({ location }: MonitoringProps) {
   // const [monit, setMonit] = useState<boolean>(false); // 현재 로그인한 유저의 감청 여부 상태
+  const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
   const [tempConsultInfo, setTempConsultInfo] = useState<ConsultantInfoType>();
   const { loginInfo } = useAuth();
   const { branchList, teamList, getBranchList, getTeamList } = useBranch();
@@ -282,6 +283,26 @@ function Monitoring({ location }: MonitoringProps) {
     };
   }, [loginInfo.id, onRunTimer, onRemoveTimer]);
 
+  useEffect((): any => {
+    window.addEventListener('resize', handleWindowResize);
+    return () => {
+      window.removeEventListener('resize', handleWindowResize);
+    };
+  }, []);
+
+  const handleWindowResize = (): void => {
+    setWindowWidth(window.innerWidth);
+  };
+
+  const calculateMaxWidth = (): number => {
+    return (
+      Math.floor(
+        (windowWidth - 2 * AREAMAGIN) / (CONSULTANTBOXWIDTH + 2 * BOXMAGIN),
+      ) *
+      (CONSULTANTBOXWIDTH + 2 * BOXMAGIN)
+    );
+  };
+
   return (
     <>
       <StyledWrapper>
@@ -304,7 +325,9 @@ function Monitoring({ location }: MonitoringProps) {
           </Title>
         </StyledTitle>
         <StyledConsultantAreaWrap>
-          <StyledConsultantArea>
+          <StyledConsultantArea
+            style={{ maxWidth: calculateMaxWidth() + 'px' }}
+          >
             {loginInfo.admin_id === 2
               ? form.branch === -1 && form.team === -1
                 ? consultantInfo.map((consultant, i) => {
