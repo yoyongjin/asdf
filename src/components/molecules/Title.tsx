@@ -10,7 +10,7 @@ import nextPageIcon from 'images/bt-page-next.png';
 import zmsPrevPageIcon from 'images/zms/bt-page-pre.png';
 import zmsNextPageIcon from 'images/zms/bt-page-next.png';
 
-import { company, COMPANY } from 'utils/constants';
+import { company, COMPANY_MAP } from 'utils/constants';
 
 const StyledWrapper = styled.div<StyledProps>`
   /* Display */
@@ -64,8 +64,6 @@ const StyledVolume = styled.div`
 
 const StyledValue = styled.div`
   align-self: center;
-  color: ${COLORS.green};
-  font-weight: 700;
 `;
 
 const StyledPageSpace = styled.span`
@@ -173,7 +171,11 @@ function Title({
         {volumeType ? (
           <>
             <StyledVolume>
-              <StyledValue>고객</StyledValue>
+              <StyledValue>
+                <Text fontColor={color} fontWeight={600}>
+                  고객
+                </Text>
+              </StyledValue>
               <Input
                 customStyle={`float:right;`}
                 type={'range'}
@@ -187,7 +189,11 @@ function Title({
               />
             </StyledVolume>
             <StyledVolume>
-              <StyledValue>상담원</StyledValue>
+              <StyledValue>
+                <Text fontColor={color} fontWeight={600}>
+                  상담원
+                </Text>
+              </StyledValue>
               <Input
                 customStyle={`float:right;`}
                 type={'range'}
@@ -271,7 +277,7 @@ function Title({
             <StyledPageSpace />
             <Button
               image={
-                company === COMPANY.DBLIFE ? prevPageIcon : zmsPrevPageIcon
+                company === COMPANY_MAP.DBLIFE ? prevPageIcon : zmsPrevPageIcon
               }
               width={1.3}
               height={1.3}
@@ -284,7 +290,7 @@ function Title({
             <StyledButtonSpace />
             <Button
               image={
-                company === COMPANY.DBLIFE ? nextPageIcon : zmsNextPageIcon
+                company === COMPANY_MAP.DBLIFE ? nextPageIcon : zmsNextPageIcon
               }
               width={1.3}
               height={1.3}

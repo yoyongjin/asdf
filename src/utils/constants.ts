@@ -5,8 +5,7 @@ export const LIMIT = 30;
 export const PAGE = 1;
 export const TOKEN_NAME = '4d751c5adb209285c49f2140e1cfb01c';
 export const DOMAIN = '.celering.io';
-export const COMPANY = {
+export const COMPANY_MAP = {
   DBLIFE: 'DBLIFE',
-  DEFAULT: 'DEFAULT',
 };
-export const CONSULTANTBOXWIDTH = 200; //상담사 박스 너비
+export const CONSULTANT_BOX_WIDTH = 200; //상담사 박스 너비

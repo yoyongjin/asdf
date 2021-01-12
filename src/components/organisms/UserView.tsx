@@ -22,7 +22,7 @@ import zmsAddUserImage from 'images/zms/bt-add-u-1-nor@3x.png';
 import { UserInfo as UserInfoType } from 'modules/types/user';
 import Logger from 'utils/log';
 
-import { company, COMPANY } from 'utils/constants';
+import { company, COMPANY_MAP } from 'utils/constants';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -310,7 +310,7 @@ function UserView({ location }: UserViewProps) {
       <StyledWrapper>
         <StyledTitle>
           <Title
-            buttonType={company === COMPANY.DBLIFE ? buttonInfo : zmsButtonInfo}
+            buttonType={company === COMPANY_MAP.DBLIFE ? buttonInfo : zmsButtonInfo}
             userListOption={userListOptionInfo}
             selectType={selectInfo}
             isSearch
@@ -323,10 +323,10 @@ function UserView({ location }: UserViewProps) {
             onChangeSelect={onChangeSelect}
             onClickSearch={onClickSearch}
             color={
-              company === COMPANY.DBLIFE ? COLORS.green : COLORS.light_blue2
+              company === COMPANY_MAP.DBLIFE ? COLORS.green : COLORS.light_blue2
             }
             bdBottomColor={
-              company === COMPANY.DBLIFE ? COLORS.green : COLORS.light_blue
+              company === COMPANY_MAP.DBLIFE ? COLORS.green : COLORS.light_blue
             }
           >
             사용자 관리

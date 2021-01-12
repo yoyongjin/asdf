@@ -13,7 +13,7 @@ import {
 import { TeamInfo, BranchInfo } from 'modules/types/branch';
 import useBranch from 'hooks/useBranch';
 
-import { company, COMPANY } from 'utils/constants';
+import { company, COMPANY_MAP } from 'utils/constants';
 
 const StyledWrapper = styled.div`
   width: 100%;
@@ -37,7 +37,7 @@ const StyledContent = styled.div`
   align-content: flex-start;
   /* align-content: space-around; */
   border-bottom: 0.05rem solid
-    ${company === COMPANY.DBLIFE ? COLORS.green : COLORS.light_blue};
+    ${company === COMPANY_MAP.DBLIFE ? COLORS.green : COLORS.light_blue};
   padding-top: 1rem;
   padding-bottom: 1rem;
 `;
@@ -321,7 +321,7 @@ function UserInfo({
           width={4.3}
           height={1.63}
           bgColor={
-            company === COMPANY.DBLIFE ? COLORS.green : COLORS.light_blue2
+            company === COMPANY_MAP.DBLIFE ? COLORS.green : COLORS.light_blue2
           }
           customStyle={`
             float:right;

@@ -5,7 +5,7 @@ import { Text } from 'components/atoms';
 import { COLORS } from 'utils/color';
 import { UserInfo } from 'modules/types/user';
 
-import { company, COMPANY } from 'utils/constants';
+import { company, COMPANY_MAP } from 'utils/constants';
 
 const StyledWrapper = styled.ul`
   /* Position */
@@ -31,7 +31,7 @@ const StyledContent = styled.li`
   background-color: ${COLORS.dark_gray5};
 
   &:hover {
-    background-color: ${company === COMPANY.DBLIFE
+    background-color: ${company === COMPANY_MAP.DBLIFE
       ? COLORS.light_green
       : COLORS.light_blue3};
     cursor: pointer;

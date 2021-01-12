@@ -6,7 +6,7 @@ import { BranchInfo, TeamInfo } from 'modules/types/branch';
 import useInputForm from 'hooks/useInputForm';
 import { COLORS } from 'utils/color';
 
-import { company, COMPANY } from 'utils/constants';
+import { company, COMPANY_MAP } from 'utils/constants';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -14,7 +14,7 @@ const StyledWrapper = styled.div`
   height: 100%;
   text-align: center;
   border-right: 1px solid
-    ${company === COMPANY.DBLIFE ? COLORS.green : COLORS.light_blue};
+    ${company === COMPANY_MAP.DBLIFE ? COLORS.green : COLORS.light_blue};
 
   /* Other */
   overflow: auto;
@@ -183,7 +183,7 @@ function Organization({
                     borderWidth={2.5}
                     borderRadius={20}
                     borderColor={
-                      company === COMPANY.DBLIFE
+                      company === COMPANY_MAP.DBLIFE
                         ? COLORS.green
                         : COLORS.light_blue
                     }

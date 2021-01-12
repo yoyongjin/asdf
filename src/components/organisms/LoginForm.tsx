@@ -7,7 +7,7 @@ import { COLORS } from 'utils/color';
 import useAuth from 'hooks/useAuth';
 import useInputForm from 'hooks/useInputForm';
 
-import { company, COMPANY } from 'utils/constants';
+import { company, COMPANY_MAP } from 'utils/constants';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -89,7 +89,7 @@ function LoginForm({ history }: LoginFormProps) {
 
   return (
     <StyledWrapper>
-      {company === COMPANY.DBLIFE ? 
+      {company === COMPANY_MAP.DBLIFE ? 
       <StyledTitle>
         <Text
           fontColor={COLORS.white}
@@ -121,12 +121,12 @@ function LoginForm({ history }: LoginFormProps) {
               value={
                 values.id === 0 ? form.id : values.id === 1 ? form.password : ''
               }
-              borderColor={company === COMPANY.DBLIFE ? COLORS.dark_green : COLORS.blue}
+              borderColor={company === COMPANY_MAP.DBLIFE ? COLORS.dark_green : COLORS.blue}
               fontFamily={'NanumBarunGothic'}
               fontSize={0.88}
-              height={company === COMPANY.DBLIFE ? 2 : 1.75}
-              phColor={company === COMPANY.DBLIFE ? COLORS.green : COLORS.blue}
-              width={company === COMPANY.DBLIFE ? 13.31 : 14.8}
+              height={company === COMPANY_MAP.DBLIFE ? 2 : 1.75}
+              phColor={company === COMPANY_MAP.DBLIFE ? COLORS.green : COLORS.blue}
+              width={company === COMPANY_MAP.DBLIFE ? 13.31 : 14.8}
               onChange={onChangeInput}
               onKeyDown={(e) => {
                 let value = '';
@@ -144,9 +144,9 @@ function LoginForm({ history }: LoginFormProps) {
       })}
       <StyledLogin>
         <Button
-          bgColor={company === COMPANY.DBLIFE ? COLORS.dark_green : COLORS.blue}
+          bgColor={company === COMPANY_MAP.DBLIFE ? COLORS.dark_green : COLORS.blue}
           height={2}
-          width={company === COMPANY.DBLIFE ? 13.31 : 15}
+          width={company === COMPANY_MAP.DBLIFE ? 13.31 : 15}
           onClick={() => onClickLogin(form.id, form.password, history)}
         >
           <Text fontSize={0.8} fontColor={COLORS.white}>

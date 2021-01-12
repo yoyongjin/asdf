@@ -5,7 +5,7 @@ import { Button, Image, Text } from 'components/atoms';
 import { COLORS } from 'utils/color';
 import { getYYYYMMDD, getHourMinSecV2 } from 'utils/utils';
 
-import { company, COMPANY } from 'utils/constants';
+import { company, COMPANY_MAP } from 'utils/constants';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -68,7 +68,7 @@ function UserLog({
         <StyledText>
           <Text
             fontColor={
-              company === COMPANY.DBLIFE ? COLORS.green : COLORS.light_blue2
+              company === COMPANY_MAP.DBLIFE ? COLORS.green : COLORS.light_blue2
             }
             fontSize={0.75}
             fontWeight={700}

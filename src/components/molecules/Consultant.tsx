@@ -17,11 +17,11 @@ import zmsTappingStartIcon from 'images/zms/bt-mnt-listen-nor.png';
 import zmsOthertappingIcon from 'images/zms/bt-mnt-listen-ing.png';
 import zmsTappingStopIcon from 'images/zms/bt-mnt-listen-fin-nor.png';
 
-import { company, COMPANY, CONSULTANTBOXWIDTH } from 'utils/constants';
+import { company, COMPANY_MAP, CONSULTANT_BOX_WIDTH } from 'utils/constants';
 
 const StyledWrapper = styled.div`
   /* Display */
-  width: ${CONSULTANTBOXWIDTH}px;
+  width: ${CONSULTANT_BOX_WIDTH}px;
   height: 15rem;
   text-align: center;
 
@@ -146,22 +146,22 @@ function Consultant({
               image={
                 consultInfo.monitoring
                   ? consultInfo.user_id === loginId
-                    ? company === COMPANY.DBLIFE
+                    ? company === COMPANY_MAP.DBLIFE
                       ? tappingStopIcon
                       : zmsTappingStopIcon
-                    : company === COMPANY.DBLIFE
+                    : company === COMPANY_MAP.DBLIFE
                     ? OthertappingIcon
                     : zmsOthertappingIcon
-                  : company === COMPANY.DBLIFE
+                  : company === COMPANY_MAP.DBLIFE
                   ? tappingStartIcon
                   : zmsTappingStartIcon
               }
               hoverImg={
                 consultInfo.monitoring
                   ? ''
-                  : company === COMPANY.DBLIFE
+                  : company === COMPANY_MAP.DBLIFE
                   ? tappingStartOverIcon
-                  : zmsTappingStartIcon
+                  : ''
               }
               borderRadius={0.81}
               fontColor={

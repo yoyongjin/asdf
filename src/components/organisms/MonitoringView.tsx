@@ -15,7 +15,7 @@ import useAuth from 'hooks/useAuth';
 import useVisible from 'hooks/useVisible';
 import useZibox from 'hooks/useZibox';
 
-import { company, COMPANY, CONSULTANTBOXWIDTH } from 'utils/constants';
+import { company, COMPANY_MAP, CONSULTANT_BOX_WIDTH } from 'utils/constants';
 
 const AREAMAGIN = 27; //상담사 박스 영역 마진
 const BOXMAGIN = 5; //상담사 박스 마진
@@ -99,10 +99,10 @@ function Monitoring({ location }: MonitoringProps) {
 
   const selectInfo = useMemo(() => {
     return {
-      color: company === COMPANY.DBLIFE ? COLORS.green : COLORS.light_blue,
+      color: company === COMPANY_MAP.DBLIFE ? COLORS.green : COLORS.light_blue,
       borderRadius: 0,
       borderColor:
-        company === COMPANY.DBLIFE ? COLORS.green : COLORS.light_blue,
+        company === COMPANY_MAP.DBLIFE ? COLORS.green : COLORS.light_blue,
       data1: branchList as Array<BranchInfo>,
       data2: teamList as Array<TeamInfo>,
       height: 1.75,
@@ -318,9 +318,9 @@ function Monitoring({ location }: MonitoringProps) {
   const calculateMaxWidth = (): number => {
     return (
       Math.floor(
-        (windowWidth - 2 * AREAMAGIN) / (CONSULTANTBOXWIDTH + 2 * BOXMAGIN),
+        (windowWidth - 2 * AREAMAGIN) / (CONSULTANT_BOX_WIDTH + 2 * BOXMAGIN),
       ) *
-      (CONSULTANTBOXWIDTH + 2 * BOXMAGIN)
+      (CONSULTANT_BOX_WIDTH + 2 * BOXMAGIN)
     );
   };
 
@@ -339,10 +339,10 @@ function Monitoring({ location }: MonitoringProps) {
             }
             team={form.team}
             color={
-              company === COMPANY.DBLIFE ? COLORS.green : COLORS.light_blue2
+              company === COMPANY_MAP.DBLIFE ? COLORS.green : COLORS.light_blue2
             }
             bdBottomColor={
-              company === COMPANY.DBLIFE ? COLORS.green : COLORS.light_blue
+              company === COMPANY_MAP.DBLIFE ? COLORS.green : COLORS.light_blue
             }
           >
             상담원 모니터링

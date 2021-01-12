@@ -3,7 +3,7 @@ import React from 'react';
 import { Image } from 'components/atoms';
 import { LoginTemplate, ZmsLoginTemplate } from 'components/templates';
 
-import { company, COMPANY } from 'utils/constants';
+import { company, COMPANY_MAP } from 'utils/constants';
 
 import dblifeLogo from 'images/logo/db-logo-login@3x.png';
 import ziboxLogo from 'images/logo/zibox-sn@3x.png';
@@ -13,7 +13,7 @@ function AuthPage() {
   return (
     <div>
     {
-      company === COMPANY.DBLIFE ? 
+      company === COMPANY_MAP.DBLIFE ? 
       <LoginTemplate
           mainLogo={
             <Image

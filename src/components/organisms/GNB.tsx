@@ -7,7 +7,7 @@ import { LinkSelector, UserLog } from 'components/molecules';
 import { COLORS } from 'utils/color';
 import { LoginInfoType } from 'types/auth';
 
-import { company, COMPANY } from 'utils/constants'
+import { company, COMPANY_MAP } from 'utils/constants'
 
 const StyledWrapper = styled.div<StyledProps>`
   /* Display */
@@ -58,8 +58,8 @@ function GNB({
           <Image
             alt={'DB life logo'}
             src={logoImg}
-            width={company === COMPANY.DBLIFE ? 8.69 : 8.25}
-            height={company === COMPANY.DBLIFE ? 3.25 : 3.875}
+            width={company === COMPANY_MAP.DBLIFE ? 8.69 : 8.25}
+            height={company === COMPANY_MAP.DBLIFE ? 3.25 : 3.875}
           />
         </Link>
       </StyledLogo>

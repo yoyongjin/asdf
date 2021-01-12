@@ -12,7 +12,7 @@ import zmsLogo from 'images/zms/sub-gnb-logo.png'
 import loginTimeImage from 'images/bg-login-time@3x.png';
 import useZibox from 'hooks/useZibox';
 
-import { company, COMPANY } from 'utils/constants';
+import { company, COMPANY_MAP } from 'utils/constants';
 
 function MainPage({ history, location }: MainPageProps) {
   const { loginInfo, onCheckLogin, onClickLogout } = useAuth();
@@ -62,7 +62,7 @@ function MainPage({ history, location }: MainPageProps) {
   return (
     <MainTemplate
       gnb={
-        company === COMPANY.DBLIFE ? 
+        company === COMPANY_MAP.DBLIFE ? 
         <GNB
           bgColor={COLORS.green}
           marginLeft={26}
