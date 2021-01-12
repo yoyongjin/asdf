@@ -1,5 +1,4 @@
 import { AsYouType } from 'libphonenumber-js';
-import { UserInfo } from  'modules/types/user';
 
 const krPhone = new AsYouType('KR');
 
@@ -85,8 +84,3 @@ export const getMaxPage = (count: number, divide: number) => {
 
   return maxPage;
 };
-
-export const getSortList = (originList:Array<UserInfo>, property: String) => {
-  let collator = new Intl.Collator('kr', { sensitivity: 'variant' });
-  return originList.sort((r1: any, r2: any) => collator.compare(r2[property.toString()],r1[property.toString()])).reverse();
-}

@@ -1,13 +1,8 @@
-import React, {useCallback} from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { useDispatch } from 'react-redux';
 
 import { Text } from 'components/atoms';
 import { COLORS } from 'utils/color';
-
-import {
-  sortUserList
-} from 'modules/actions/user';
 
 const StyledWrapper = styled.tr`
   /* Display */
@@ -20,21 +15,12 @@ const StyledTitle = styled.th<StyledProps>`
 `;
 
 function TableTitle({ titleList, fontColor }: TableTitleProps) {
-  const dispatch = useDispatch();
-
-  const handleClick = useCallback(
-    (id: number) => {
-      dispatch(sortUserList(id));
-    },
-    [dispatch],
-  );
-
   return (
     <StyledWrapper>
       {titleList.map((values, i) => {
         return (
           <StyledTitle key={`styled-title-${i}`} width={values.width}>
-            <Text fontSize={0.81} fontColor={fontColor} fontWeight={700} onClick={()=>handleClick(i)}> 
+            <Text fontSize={0.81} fontColor={fontColor} fontWeight={700}> 
               {values.title}
             </Text>
           </StyledTitle>
