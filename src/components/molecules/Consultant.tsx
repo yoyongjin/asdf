@@ -17,11 +17,11 @@ import zmsTappingStartIcon from 'images/zms/bt-mnt-listen-nor.png';
 import zmsOthertappingIcon from 'images/zms/bt-mnt-listen-ing.png';
 import zmsTappingStopIcon from 'images/zms/bt-mnt-listen-fin-nor.png';
 
-import { company, COMPANY } from 'utils/constants';
+import { company, COMPANY, CONSULTANTBOXWIDTH } from 'utils/constants';
 
 const StyledWrapper = styled.div`
   /* Display */
-  width: 12.5rem;
+  width: ${CONSULTANTBOXWIDTH}px;
   height: 15rem;
   text-align: center;
 

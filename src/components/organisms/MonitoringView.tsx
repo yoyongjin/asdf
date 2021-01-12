@@ -15,7 +15,10 @@ import useAuth from 'hooks/useAuth';
 import useVisible from 'hooks/useVisible';
 import useZibox from 'hooks/useZibox';
 
-import { company, COMPANY } from 'utils/constants';
+import { company, COMPANY, CONSULTANTBOXWIDTH } from 'utils/constants';
+
+const AREAMAGIN = 27; //상담사 박스 영역 마진
+const BOXMAGIN = 5; //상담사 박스 마진
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -28,20 +31,21 @@ const StyledTitle = styled.div`
   height: 3.75rem;
 `;
 
-const StyledConsultantArea = styled.div`
+const StyledConsultantAreaWrap = styled.div`
   /* Display */
-  height: calc(100% - 3.75rem - 5px);
+  height: calc(100% - 3.75rem - 10px);
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  /* align-items: flex-start; */
-  align-content: flex-start;
   margin-top: 5px;
-  margin-left: 1rem;
-  margin-right: 1rem;
-
   /* Other */
   overflow: auto;
+`;
+
+const StyledConsultantArea = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  flex-direction: row;
 `;
 
 const StyledConsultant = styled.span`
@@ -50,7 +54,8 @@ const StyledConsultant = styled.span`
   padding-bottom: 8px;
   padding-left: 5px;
   padding-right: 5px; */
-  margin: 7px 5px 8px 5px;
+
+  margin: 7px ${BOXMAGIN}px 8px;
 `;
 
 const adminList = [
@@ -64,6 +69,7 @@ let request = false;
 
 function Monitoring({ location }: MonitoringProps) {
   // const [monit, setMonit] = useState<boolean>(false); // 현재 로그인한 유저의 감청 여부 상태
+  const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
   const [tempConsultInfo, setTempConsultInfo] = useState<ConsultantInfoType>();
   const { loginInfo } = useAuth();
   const { branchList, teamList, getBranchList, getTeamList } = useBranch();
@@ -298,6 +304,26 @@ function Monitoring({ location }: MonitoringProps) {
     };
   }, [loginInfo.id, onRunTimer, onRemoveTimer]);
 
+  useEffect((): any => {
+    window.addEventListener('resize', handleWindowResize);
+    return () => {
+      window.removeEventListener('resize', handleWindowResize);
+    };
+  }, []);
+
+  const handleWindowResize = (): void => {
+    setWindowWidth(window.innerWidth);
+  };
+
+  const calculateMaxWidth = (): number => {
+    return (
+      Math.floor(
+        (windowWidth - 2 * AREAMAGIN) / (CONSULTANTBOXWIDTH + 2 * BOXMAGIN),
+      ) *
+      (CONSULTANTBOXWIDTH + 2 * BOXMAGIN)
+    );
+  };
+
   return (
     <>
       <StyledWrapper>
@@ -322,27 +348,33 @@ function Monitoring({ location }: MonitoringProps) {
             상담원 모니터링
           </Title>
         </StyledTitle>
-        <StyledConsultantArea>
-          {loginInfo.admin_id === 2
-            ? form.branch === -1 && form.team === -1
-              ? consultantInfo.map((consultant, i) => {
-                  return consultantView(consultant);
-                })
-              : filterConsultantInfo.map((consultant, i) => {
-                  return consultantView(consultant);
-                })
-            : loginInfo.admin_id === 1
-            ? form.team === -1
-              ? consultantInfo.map((consultant, i) => {
-                  if (consultant.branch_id !== loginInfo.branch_id) return null;
-                  return consultantView(consultant);
-                })
-              : filterConsultantInfo.map((consultant, i) => {
-                  if (consultant.branch_id !== loginInfo.branch_id) return null;
-                  return consultantView(consultant);
-                })
-            : null}
-        </StyledConsultantArea>
+        <StyledConsultantAreaWrap>
+          <StyledConsultantArea
+            style={{ maxWidth: calculateMaxWidth() + 'px' }}
+          >
+            {loginInfo.admin_id === 2
+              ? form.branch === -1 && form.team === -1
+                ? consultantInfo.map((consultant, i) => {
+                    return consultantView(consultant);
+                  })
+                : filterConsultantInfo.map((consultant, i) => {
+                    return consultantView(consultant);
+                  })
+              : loginInfo.admin_id === 1
+              ? form.team === -1
+                ? consultantInfo.map((consultant, i) => {
+                    if (consultant.branch_id !== loginInfo.branch_id)
+                      return null;
+                    return consultantView(consultant);
+                  })
+                : filterConsultantInfo.map((consultant, i) => {
+                    if (consultant.branch_id !== loginInfo.branch_id)
+                      return null;
+                    return consultantView(consultant);
+                  })
+              : null}
+          </StyledConsultantArea>
+        </StyledConsultantAreaWrap>
       </StyledWrapper>
       <Modal
         isVisible={visible}
