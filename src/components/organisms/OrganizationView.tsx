@@ -11,7 +11,7 @@ import insertBranchHoverImage from 'images/bt-add-g-1-over.png';
 import zmsInsertBranchImage from 'images/zms/bt-add-g-1-nor@3x.png';
 import Logger from 'utils/log';
 
-import { company, COMPANY } from 'utils/constants';
+import { company, COMPANY_MAP } from 'utils/constants';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -92,7 +92,7 @@ function OrganizationView() {
     <StyledWrapper>
       <StyledTitle>
         <Title
-          buttonType={company === COMPANY.LINA ? buttonType : zmsButtonType}
+          buttonType={company === COMPANY_MAP.LINA ? buttonType : zmsButtonType}
           explanType={explanType}
           pageType={pageType()}
           adminType={loginInfo.admin_id}

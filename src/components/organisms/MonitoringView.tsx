@@ -13,9 +13,12 @@ import useBranch from 'hooks/useBranch';
 import useInputForm from 'hooks/useInputForm';
 import useAuth from 'hooks/useAuth';
 import useVisible from 'hooks/useVisible';
-// import useZibox from 'hooks/useZibox';
 import useOcx from 'hooks/useOcx';
-import { company, COMPANY } from 'utils/constants'
+
+import { company, COMPANY_MAP, CONSULTANT_BOX_WIDTH } from 'utils/constants';
+
+const AREAMAGIN = 27; //상담사 박스 영역 마진
+const BOXMAGIN = 5; //상담사 박스 마진
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -28,25 +31,31 @@ const StyledTitle = styled.div`
   height: 3.75rem;
 `;
 
-const StyledConsultantArea = styled.div`
+const StyledConsultantAreaWrap = styled.div`
   /* Display */
-  height: calc(100% - 3.75rem - 5px);
+  height: calc(100% - 3.75rem - 10px);
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  align-content: flex-start;
   margin-top: 5px;
-
   /* Other */
   overflow: auto;
 `;
 
+const StyledConsultantArea = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  flex-direction: row;
+`;
+
 const StyledConsultant = styled.span`
   /* Display */
-  padding-top: 7px;
+  /* padding-top: 7px;
   padding-bottom: 8px;
   padding-left: 5px;
-  padding-right: 5px;
+  padding-right: 5px; */
+
+  margin: 7px ${BOXMAGIN}px 8px;
 `;
 
 const adminList = [
@@ -60,6 +69,7 @@ let request = false;
 
 function Monitoring({ location }: MonitoringProps) {
   // const [tapping, setTapping] = useState<Boolean>(false); // 내가 감청 중인지 아닌지 여부
+  const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
   const [tempConsultInfo, setTempConsultInfo] = useState<ConsultantInfoType>();
   const { initSocket, loginInfo } = useAuth();
   const { branchList, teamList, getBranchList, getTeamList } = useBranch();
@@ -76,15 +86,15 @@ function Monitoring({ location }: MonitoringProps) {
     onClickUpdateUser,
     onClickDisconnect,
   } = useUser();
-  const { visible, onClickVisible, } = useVisible();
+  const { visible, onClickVisible } = useVisible();
   const { monit, startMonitoringOcx, stopMonitoringOcx } = useOcx();
-  // const { initZibox, startMonitoring, stopMonitoring } = useZibox();
 
   const selectInfo = useMemo(() => {
     return {
-      color: company === COMPANY.LINA ? COLORS.blue : COLORS.light_blue,
+      color: company === COMPANY_MAP.LINA ? COLORS.blue : COLORS.light_blue,
       borderRadius: 0,
-      borderColor: company === COMPANY.LINA ? COLORS.blue : COLORS.light_blue,
+      borderColor:
+        company === COMPANY_MAP.LINA ? COLORS.blue : COLORS.light_blue,
       data1: branchList as Array<BranchInfo>,
       data2: teamList as Array<TeamInfo>,
       height: 1.75,
@@ -256,6 +266,26 @@ function Monitoring({ location }: MonitoringProps) {
     };
   }, [loginInfo.id, onRunTimer, onRemoveTimer]);
 
+  useEffect((): any => {
+    window.addEventListener('resize', handleWindowResize);
+    return () => {
+      window.removeEventListener('resize', handleWindowResize);
+    };
+  }, []);
+
+  const handleWindowResize = (): void => {
+    setWindowWidth(window.innerWidth);
+  };
+
+  const calculateMaxWidth = (): number => {
+    return (
+      Math.floor(
+        (windowWidth - 2 * AREAMAGIN) / (CONSULTANT_BOX_WIDTH + 2 * BOXMAGIN),
+      ) *
+      (CONSULTANT_BOX_WIDTH + 2 * BOXMAGIN)
+    );
+  };
+
   return (
     <>
       <StyledWrapper>
@@ -271,83 +301,89 @@ function Monitoring({ location }: MonitoringProps) {
             상담원 모니터링
           </Title>
         </StyledTitle>
-        <StyledConsultantArea>
-          {loginInfo.admin_id === 2
-            ? form.branch === -1 && form.team === -1
-              ? consultantInfo.map((consultant, i) => {
-                  return (
-                    <StyledConsultant
-                      key={`1-styled-consultant-${consultant.id}`}
-                    >
-                      <Consultant
-                        key={`1-consultant-${consultant.id}`}
-                        consultInfo={consultant}
-                        getConsultantInfo={getConsultantInfo}
-                        startMonitoringOcx={startMonitoringOcx}
-                        stopMonitoringOcx={stopMonitoringOcx}
-                        monit={monit}
-                        loginId={loginInfo.id}
-                      />
-                    </StyledConsultant>
-                  );
-                })
-              : filterConsultantInfo.map((consultant, i) => {
-                  return (
-                    <StyledConsultant
-                      key={`2-styled-consultant-${consultant.id}`}
-                    >
-                      <Consultant
-                        key={`2-consultant-${consultant.id}`}
-                        consultInfo={consultant}
-                        getConsultantInfo={getConsultantInfo}
-                        startMonitoringOcx={startMonitoringOcx}
-                        stopMonitoringOcx={stopMonitoringOcx}
-                        monit={monit}
-                        loginId={loginInfo.id}
-                      />
-                    </StyledConsultant>
-                  );
-                })
-            : loginInfo.admin_id === 1
-            ? form.team === -1
-              ? consultantInfo.map((consultant, i) => {
-                  if (consultant.branch_id !== loginInfo.branch_id) return null;
-                  return (
-                    <StyledConsultant
-                      key={`3-styled-consultant-${consultant.id}`}
-                    >
-                      <Consultant
-                        key={`3-consultant-${consultant.id}`}
-                        consultInfo={consultant}
-                        getConsultantInfo={getConsultantInfo}
-                        startMonitoringOcx={startMonitoringOcx}
-                        stopMonitoringOcx={stopMonitoringOcx}
-                        monit={monit}
-                        loginId={loginInfo.id}
-                      />
-                    </StyledConsultant>
-                  );
-                })
-              : filterConsultantInfo.map((consultant, i) => {
-                  if (consultant.branch_id !== loginInfo.branch_id) return null;
-                  return (
-                    <StyledConsultant
-                      key={`4-styled-consultant-${consultant.id}`}
-                    >
-                      <Consultant
-                        key={`4-consultant-${consultant.id}`}
-                        consultInfo={consultant}
-                        getConsultantInfo={getConsultantInfo}
-                        startMonitoringOcx={startMonitoringOcx}
-                        stopMonitoringOcx={stopMonitoringOcx}
-                        monit={monit}
-                        loginId={loginInfo.id}
-                      />
-                    </StyledConsultant>
-                  );
-                })
-            : null}
-        </StyledConsultantArea>
+        <StyledConsultantAreaWrap>
+          <StyledConsultantArea
+            style={{ maxWidth: calculateMaxWidth() + 'px' }}
+          >
+            {loginInfo.admin_id === 2
+              ? form.branch === -1 && form.team === -1
+                ? consultantInfo.map((consultant, i) => {
+                    return (
+                      <StyledConsultant
+                        key={`1-styled-consultant-${consultant.id}`}
+                      >
+                        <Consultant
+                          key={`1-consultant-${consultant.id}`}
+                          consultInfo={consultant}
+                          getConsultantInfo={getConsultantInfo}
+                          startMonitoringOcx={startMonitoringOcx}
+                          stopMonitoringOcx={stopMonitoringOcx}
+                          monit={monit}
+                          loginId={loginInfo.id}
+                        />
+                      </StyledConsultant>
+                    );
+                  })
+                : filterConsultantInfo.map((consultant, i) => {
+                    return (
+                      <StyledConsultant
+                        key={`2-styled-consultant-${consultant.id}`}
+                      >
+                        <Consultant
+                          key={`2-consultant-${consultant.id}`}
+                          consultInfo={consultant}
+                          getConsultantInfo={getConsultantInfo}
+                          startMonitoringOcx={startMonitoringOcx}
+                          stopMonitoringOcx={stopMonitoringOcx}
+                          monit={monit}
+                          loginId={loginInfo.id}
+                        />
+                      </StyledConsultant>
+                    );
+                  })
+              : loginInfo.admin_id === 1
+              ? form.team === -1
+                ? consultantInfo.map((consultant, i) => {
+                    if (consultant.branch_id !== loginInfo.branch_id)
+                      return null;
+                    return (
+                      <StyledConsultant
+                        key={`3-styled-consultant-${consultant.id}`}
+                      >
+                        <Consultant
+                          key={`3-consultant-${consultant.id}`}
+                          consultInfo={consultant}
+                          getConsultantInfo={getConsultantInfo}
+                          startMonitoringOcx={startMonitoringOcx}
+                          stopMonitoringOcx={stopMonitoringOcx}
+                          monit={monit}
+                          loginId={loginInfo.id}
+                        />
+                      </StyledConsultant>
+                    );
+                  })
+                : filterConsultantInfo.map((consultant, i) => {
+                    if (consultant.branch_id !== loginInfo.branch_id)
+                      return null;
+                    return (
+                      <StyledConsultant
+                        key={`4-styled-consultant-${consultant.id}`}
+                      >
+                        <Consultant
+                          key={`4-consultant-${consultant.id}`}
+                          consultInfo={consultant}
+                          getConsultantInfo={getConsultantInfo}
+                          startMonitoringOcx={startMonitoringOcx}
+                          stopMonitoringOcx={stopMonitoringOcx}
+                          monit={monit}
+                          loginId={loginInfo.id}
+                        />
+                      </StyledConsultant>
+                    );
+                  })
+              : null}
+          </StyledConsultantArea>
+        </StyledConsultantAreaWrap>
       </StyledWrapper>
       <Modal
         isVisible={visible}

@@ -6,7 +6,7 @@ import { COLORS } from 'utils/color';
 import LinaLoginImage from 'images/login-bg.png';
 import zmsLoginImage from 'images/zms/main-visual.png'
 
-import { company, COMPANY } from 'utils/constants';
+import { company, COMPANY_MAP } from 'utils/constants';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -14,14 +14,14 @@ const StyledWrapper = styled.div`
   max-width: 140rem;
   min-width: 70rem;
   width: 100vw;
-  background-color: ${company === COMPANY.LINA ? '#008bec' : '#1f2021'};
+  background-color: ${company === COMPANY_MAP.LINA ? '#008bec' : '#1f2021'};
 `;
 
 const StyledMain = styled.div<{ main: string }>`
-  width: ${company === COMPANY.LINA ? 1235 : 800}px; 
-  height: ${company === COMPANY.LINA ? 800 : 480}px;
+  width: ${company === COMPANY_MAP.LINA ? 1235 : 800}px; 
+  height: ${company === COMPANY_MAP.LINA ? 800 : 480}px;
   margin: 0 auto;
-  background-size: ${company === COMPANY.LINA ? 1235 : 800}px;
+  background-size: ${company === COMPANY_MAP.LINA ? 1235 : 800}px;
   background-image: url(${(props) => props.main});
   background-repeat: no-repeat;
 `;
@@ -33,7 +33,7 @@ const StyledLoginForm = styled.div`
 function LoginTemplate({}: LoginTemplateProps) {
   return (
     <StyledWrapper>
-      <StyledMain main={company === COMPANY.LINA ? LinaLoginImage : zmsLoginImage }>
+      <StyledMain main={company === COMPANY_MAP.LINA ? LinaLoginImage : zmsLoginImage }>
         <StyledLoginForm>
           <MainRouter />
         </StyledLoginForm>

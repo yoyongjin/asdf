@@ -10,12 +10,12 @@ import nextPageIcon from 'images/bt-page-next.png';
 import zmsPrevPageIcon from 'images/zms/bt-page-pre.png';
 import zmsNextPageIcon from 'images/zms/bt-page-next.png';
 
-import { company, COMPANY } from 'utils/constants';
+import { company, COMPANY_MAP } from 'utils/constants';
 
 const StyledWrapper = styled.div`
   /* Display */
   height: 100%;
-  border-bottom: 0.05rem solid ${company === COMPANY.LINA ? COLORS.blue : COLORS.light_blue};
+  border-bottom: 0.05rem solid ${company === COMPANY_MAP.LINA ? COLORS.blue : COLORS.light_blue};
 `;
 
 const StyledLeft = styled.span`
@@ -42,7 +42,7 @@ const StyledButton = styled.div`
   padding-left: 9.5px;
   padding-right: 7px;
   position: relative;
-  top: ${company=== COMPANY.LINA ? 5 : 12}%;
+  top: ${company=== COMPANY_MAP.LINA ? 5 : 12}%;
 `;
 
 const StyledExplanation = styled.div`
@@ -118,7 +118,7 @@ function Title({
           <Text
             fontSize={fontSize ? fontSize : 1.12}
             fontWeight={800}
-            fontColor={company === COMPANY.LINA ? COLORS.blue : COLORS.light_blue2}
+            fontColor={company === COMPANY_MAP.LINA ? COLORS.blue : COLORS.light_blue2}
             fontFamily={'NanumGothic'}
           >
             {children}
@@ -223,7 +223,7 @@ function Title({
             />
             <StyledPageSpace />
             <Button
-              image={company === COMPANY.LINA ? prevPageIcon : zmsPrevPageIcon}
+              image={company === COMPANY_MAP.LINA ? prevPageIcon : zmsPrevPageIcon}
               width={1.3}
               height={1.3}
               bgColor={COLORS.white}
@@ -234,7 +234,7 @@ function Title({
             />
             <StyledButtonSpace />
             <Button
-              image={company === COMPANY.LINA ? nextPageIcon : zmsNextPageIcon}
+              image={company === COMPANY_MAP.LINA ? nextPageIcon : zmsNextPageIcon}
               width={1.3}
               height={1.3}
               bgColor={COLORS.white}

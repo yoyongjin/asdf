@@ -18,7 +18,7 @@ import zmsTappingStartIcon from 'images/zms/bt-mnt-listen-nor.png';
 import zmsOthertappingIcon from 'images/zms/bt-mnt-listen-ing.png';
 import zmsTappingStopIcon from 'images/zms/bt-mnt-listen-fin-nor.png';
 
-import { company, COMPANY } from 'utils/constants';
+import { company, COMPANY_MAP } from 'utils/constants';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -168,13 +168,13 @@ function Consultant({
                 consultInfo.monit_status === 1
                   ? // 감청 중
                     loginId === consultInfo.monit_user
-                    ? company === COMPANY.LINA ? 
+                    ? company === COMPANY_MAP.LINA ? 
                     // 내가 감청 중
                       tappingStopIcon : zmsTappingStopIcon
-                    : company === COMPANY.LINA ? 
+                    : company === COMPANY_MAP.LINA ? 
                     // 다른 관리자가 감청 중
                       OthertappingIcon : zmsOthertappingIcon
-                  : company === COMPANY.LINA ? 
+                  : company === COMPANY_MAP.LINA ? 
                   // 감청 대기
                     tappingStartIcon : zmsTappingStartIcon
               }

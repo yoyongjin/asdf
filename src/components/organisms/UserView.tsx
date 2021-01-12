@@ -22,7 +22,7 @@ import zmsAddUserImage from 'images/zms/bt-add-u-1-nor@3x.png';
 import { UserInfo as UserInfoType } from 'modules/types/user';
 import Logger from 'utils/log';
 
-import { company, COMPANY } from 'utils/constants';
+import { company, COMPANY_MAP } from 'utils/constants';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -307,7 +307,7 @@ function UserView({ location }: UserViewProps) {
       <StyledWrapper>
         <StyledTitle>
           <Title
-            buttonType={company === COMPANY.LINA ? buttonInfo : zmsButtonInfo}
+            buttonType={company === COMPANY_MAP.LINA ? buttonInfo : zmsButtonInfo}
             userListOption={userListOptionInfo}
             selectType={selectInfo}
             isSearch

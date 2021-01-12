@@ -5,7 +5,7 @@ import { Button, Image, Text } from 'components/atoms';
 import { COLORS } from 'utils/color';
 import { getYYYYMMDD, getHourMinSecV2 } from 'utils/utils';
 
-import { company, COMPANY } from 'utils/constants'
+import { company, COMPANY_MAP } from 'utils/constants'
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -67,14 +67,14 @@ function UserLog({
         />
         <StyledText>
           <Text
-            fontColor={company === COMPANY.LINA ? COLORS.blue : COLORS.light_blue2}
+            fontColor={company === COMPANY_MAP.LINA ? COLORS.blue : COLORS.light_blue2}
             fontSize={0.75}
             fontWeight={700}
           >{`${getYYYYMMDD(loginTime)} ${getHourMinSecV2(loginTime)}`}</Text>
         </StyledText>
       </StyledLoginTime>
       <StyledLogout>
-        <Button bgColor={ company === COMPANY.LINA ? COLORS.blue : COLORS.dark_blue2} width={5} onClick={onClickLogout}>
+        <Button bgColor={ company === COMPANY_MAP.LINA ? COLORS.blue : COLORS.dark_blue2} width={5} onClick={onClickLogout}>
           <Text fontColor={COLORS.white} fontSize={0.81} fontWeight={700}>
             로그아웃
           </Text>
