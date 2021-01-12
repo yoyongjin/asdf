@@ -13,6 +13,8 @@ import {
 import { TeamInfo, BranchInfo } from 'modules/types/branch';
 import useBranch from 'hooks/useBranch';
 
+import { company, COMPANY } from 'utils/constants';
+
 const StyledWrapper = styled.div`
   width: 100%;
   height: 100%;
@@ -34,7 +36,8 @@ const StyledContent = styled.div`
   justify-content: space-between;
   align-content: flex-start;
   /* align-content: space-around; */
-  border-bottom: 0.05rem solid ${COLORS.green};
+  border-bottom: 0.05rem solid
+    ${company === COMPANY.DBLIFE ? COLORS.green : COLORS.light_blue};
   padding-top: 1rem;
   padding-bottom: 1rem;
 `;
@@ -317,7 +320,9 @@ function UserInfo({
         <Button
           width={4.3}
           height={1.63}
-          bgColor={COLORS.green}
+          bgColor={
+            company === COMPANY.DBLIFE ? COLORS.green : COLORS.light_blue2
+          }
           customStyle={`
             float:right;
           `}

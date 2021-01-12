@@ -1,5 +1,6 @@
 export const COLORS = {
   white: '#ffffff',
+  gray: '#6a6a6a',
   light_gray: '#e9eef3',
   light_gray2: '#babcc6',
   light_gray3: '#adb5bd',
@@ -14,4 +15,10 @@ export const COLORS = {
   dark_green: '#00512d',
   red: '#ff0000',
   black: '#474747',
+  blue: '#4995d2',
+  light_blue: '#789be3',
+  light_blue2: '#496cd2',
+  light_blue3: '#a3d9ff',
+  dark_blue: '#1f2021',
+  dark_blue2: '#35383b',
 };

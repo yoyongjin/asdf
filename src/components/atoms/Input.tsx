@@ -71,7 +71,7 @@ const StyledInput = styled.input<StyledInputProps>`
   ::placeholder {
     /* Display */
     font-weight: 800;
-    color: ${(props) => props.fontColor};
+    color: ${(props) => props.phColor};
     font-size: 0.87rem;
   }
   ::-webkit-search-cancel-button {

@@ -51,13 +51,16 @@ function useUser() {
     [dispatch],
   );
 
-  const resetFilteredList = useCallback((type: number) => {
-    if(type === 1){
-      dispatch(resetFilteredUser());
-    }else if(type === 2){
-      dispatch(resetFilteredConsultant());
-    }
-  }, [dispatch]);
+  const resetFilteredList = useCallback(
+    (type: number) => {
+      if (type === 1) {
+        dispatch(resetFilteredUser());
+      } else if (type === 2) {
+        dispatch(resetFilteredConsultant());
+      }
+    },
+    [dispatch],
+  );
 
   const onClickInsertUser = useCallback(
     (

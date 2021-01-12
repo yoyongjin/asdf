@@ -60,7 +60,7 @@ function Button({ children, onClick, ...rest }: ButtonProps) {
 }
 
 interface StyledButtonProps {
-  readonly bgColor: string;
+  readonly bgColor?: string;
   readonly borderRadius: number;
   readonly borderWidth?: number;
   readonly customStyle?: string;
@@ -80,7 +80,7 @@ interface ButtonProps extends StyledButtonProps {
 }
 
 Button.defaultProps = {
-  bgColor: COLORS.black,
+  bgColor: COLORS.white,
   borderRadius: 1,
   fontColor: COLORS.white,
   fontSize: 1,

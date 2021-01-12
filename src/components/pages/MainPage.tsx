@@ -8,8 +8,11 @@ import useSocket from 'hooks/useSocket';
 import { COLORS } from 'utils/color';
 
 import dblifeLogo from 'images/db-logo-cont@3x.png';
+import zmsLogo from 'images/zms/sub-gnb-logo.png'
 import loginTimeImage from 'images/bg-login-time@3x.png';
 import useZibox from 'hooks/useZibox';
+
+import { company, COMPANY } from 'utils/constants';
 
 function MainPage({ history, location }: MainPageProps) {
   const { loginInfo, onCheckLogin, onClickLogout } = useAuth();
@@ -59,13 +62,25 @@ function MainPage({ history, location }: MainPageProps) {
   return (
     <MainTemplate
       gnb={
+        company === COMPANY.DBLIFE ? 
         <GNB
+          bgColor={COLORS.green}
+          marginLeft={26}
           location={location}
           loginInfo={loginInfo}
           logoImg={dblifeLogo}
           loginTimeImg={loginTimeImage}
           onClickLogout={() => onClickLogout(history)}
-        />
+        /> :
+        <GNB
+          bgColor={COLORS.dark_blue2}
+          marginLeft={0}
+          location={location}
+          loginInfo={loginInfo}
+          logoImg={zmsLogo}
+          loginTimeImg={loginTimeImage}
+          onClickLogout={() => onClickLogout(history)}
+      />
       }
       bgColor={bgColor}
     />

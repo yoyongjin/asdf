@@ -33,6 +33,7 @@ export const RESET_FILTERED_CONSULTANT = 'RESET_FILTERED_CONSULTANT';
 export const REQUEST_ZIBOX_VOLUME = 'UPDATE_ZIBOX_VOLUME';
 export const SUCCESS_ZIBOX_VOLUME = 'SUCCESS_ZIBOX_VOLUME';
 export const FAILURE_ZIBOX_VOLUME = 'FAILURE_ZIBOX_VOLUME';
+export const SORT_USERLIST = 'SORT_USERLIST';
 
 export const RUN_TIMER = 'RUN_TIMER';
 export const INSERT_USER = 'INSERT_USER';
@@ -109,3 +110,4 @@ export const successZiboxVolume = createAction(SUCCESS_ZIBOX_VOLUME)<{
   ziboxspk: number;
 }>();
 export const failureZiboxVolume = createAction(FAILURE_ZIBOX_VOLUME)<string>();
+export const sortUserList = createAction(SORT_USERLIST)<number>();

@@ -51,6 +51,7 @@ interface DataType {
   password: string;
   tel: string;
   zibox: string;
+  volum: number;
 }
 
 export default useInputForm;

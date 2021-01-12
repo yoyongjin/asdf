@@ -7,6 +7,8 @@ import { COLORS } from 'utils/color';
 import useAuth from 'hooks/useAuth';
 import useInputForm from 'hooks/useInputForm';
 
+import { company, COMPANY } from 'utils/constants';
+
 const StyledWrapper = styled.div`
   /* Display */
   width: 25rem;
@@ -87,6 +89,7 @@ function LoginForm({ history }: LoginFormProps) {
 
   return (
     <StyledWrapper>
+      {company === COMPANY.DBLIFE ? 
       <StyledTitle>
         <Text
           fontColor={COLORS.white}
@@ -97,7 +100,7 @@ function LoginForm({ history }: LoginFormProps) {
         >
           로그인
         </Text>
-      </StyledTitle>
+      </StyledTitle> : null }
       {formList.map((values, i) => {
         return (
           <StyledInput key={`styled-loginform-${i}`}>
@@ -118,12 +121,12 @@ function LoginForm({ history }: LoginFormProps) {
               value={
                 values.id === 0 ? form.id : values.id === 1 ? form.password : ''
               }
-              borderColor={COLORS.dark_green}
+              borderColor={company === COMPANY.DBLIFE ? COLORS.dark_green : COLORS.blue}
               fontFamily={'NanumBarunGothic'}
               fontSize={0.88}
-              height={2}
-              phColor={COLORS.green}
-              width={13.31}
+              height={company === COMPANY.DBLIFE ? 2 : 1.75}
+              phColor={company === COMPANY.DBLIFE ? COLORS.green : COLORS.blue}
+              width={company === COMPANY.DBLIFE ? 13.31 : 14.8}
               onChange={onChangeInput}
               onKeyDown={(e) => {
                 let value = '';
@@ -141,9 +144,9 @@ function LoginForm({ history }: LoginFormProps) {
       })}
       <StyledLogin>
         <Button
-          bgColor={COLORS.dark_green}
+          bgColor={company === COMPANY.DBLIFE ? COLORS.dark_green : COLORS.blue}
           height={2}
-          width={13.3}
+          width={company === COMPANY.DBLIFE ? 13.31 : 15}
           onClick={() => onClickLogin(form.id, form.password, history)}
         >
           <Text fontSize={0.8} fontColor={COLORS.white}>

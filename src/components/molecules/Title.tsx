@@ -7,11 +7,15 @@ import { COLORS } from 'utils/color';
 import { getMaxPage } from 'utils/utils';
 import prevPageIcon from 'images/bt-page-pre.png';
 import nextPageIcon from 'images/bt-page-next.png';
+import zmsPrevPageIcon from 'images/zms/bt-page-pre.png';
+import zmsNextPageIcon from 'images/zms/bt-page-next.png';
 
-const StyledWrapper = styled.div`
+import { company, COMPANY } from 'utils/constants';
+
+const StyledWrapper = styled.div<StyledProps>`
   /* Display */
   height: 100%;
-  border-bottom: 0.05rem solid ${COLORS.green};
+  border-bottom: 0.05rem solid ${(props) => props.bdBottomColor};
 `;
 
 const StyledLeft = styled.span`
@@ -37,6 +41,8 @@ const StyleTitle = styled.div`
 const StyledButton = styled.div`
   padding-left: 9.5px;
   padding-right: 7px;
+  position: relative;
+  top: 10%;
 `;
 
 const StyledExplanation = styled.div`
@@ -73,6 +79,7 @@ const StyledButtonSpace = styled.span`
 `;
 
 function Title({
+  bdBottomColor,
   buttonType,
   explanType,
   userListOption,
@@ -82,6 +89,7 @@ function Title({
   volumeType,
   children,
   fontSize,
+  color,
   branch,
   team,
   search,
@@ -119,13 +127,13 @@ function Title({
   }, [selectType]);
 
   return (
-    <StyledWrapper>
+    <StyledWrapper bdBottomColor={bdBottomColor}>
       <StyledLeft>
         <StyleTitle>
           <Text
             fontSize={fontSize ? fontSize : 1.12}
             fontWeight={800}
-            fontColor={COLORS.green}
+            fontColor={color}
             fontFamily={'NanumGothic'}
           >
             {children}
@@ -137,7 +145,8 @@ function Title({
               <Button
                 width={7.3}
                 height={1.5}
-                bgColor={COLORS.green}
+                // bgColor={COLORS.green}
+                image={buttonType.bgImage}
                 onClick={buttonType!.onClick}
               >
                 <Text
@@ -261,7 +270,9 @@ function Title({
             />
             <StyledPageSpace />
             <Button
-              image={prevPageIcon}
+              image={
+                company === COMPANY.DBLIFE ? prevPageIcon : zmsPrevPageIcon
+              }
               width={1.3}
               height={1.3}
               bgColor={'inherit'}
@@ -272,7 +283,9 @@ function Title({
             />
             <StyledButtonSpace />
             <Button
-              image={nextPageIcon}
+              image={
+                company === COMPANY.DBLIFE ? nextPageIcon : zmsNextPageIcon
+              }
               width={1.3}
               height={1.3}
               bgColor={'inherit'}
@@ -355,7 +368,11 @@ interface SelectDataType {
   data: string;
 }
 
-interface TitleProps {
+interface StyledProps {
+  bdBottomColor?: string;
+}
+
+interface TitleProps extends StyledProps {
   buttonType?: buttonType;
   explanType?: explanType;
   userListOption?: userListOptionType;
@@ -365,6 +382,7 @@ interface TitleProps {
   isSearch?: boolean;
   children: string;
   fontSize?: number;
+  color?: string;
   branch?: number;
   team?: number;
   search?: string;
@@ -379,6 +397,8 @@ interface TitleProps {
   setVolume?: (type: number, gauge: number) => void;
 }
 
-Title.defaultProps = {};
+Title.defaultProps = {
+  bdBottomColor: COLORS.light_blue,
+};
 
 export default React.memo(Title);
