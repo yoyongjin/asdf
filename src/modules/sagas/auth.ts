@@ -16,8 +16,9 @@ import {
   failureLogout,
 } from 'modules/actions/auth';
 import * as API from 'lib/api';
-import Socket from 'lib/socket';
-import Zibox from 'lib/zibox';
+import MonitorOcx from 'lib/monitorOcx';
+// import Socket from 'lib/socket';
+// import Zibox from 'lib/zibox';
 import { socketServer, TOKEN_NAME } from 'utils/constants';
 import Logger from 'utils/log';
 
@@ -30,11 +31,7 @@ function* loginProcess(action: ReturnType<typeof requestLogin>) {
 
     if (status === 'success') {
       const { user, token } = data;
-      Socket.getInstance()
-        .url(socketServer!)
-        .onEmit('initialize', { user_id: user.id });
-      Zibox.getInstance().createZibox();
-
+      MonitorOcx.getInstance().connect(user.id);
       Logger.log('Login data => ', user);
 
       Cookies.set(TOKEN_NAME, token, {
@@ -49,10 +46,10 @@ function* loginProcess(action: ReturnType<typeof requestLogin>) {
   } catch (error) {
     Logger.log('Login failure', error);
     yield put(failureLogin(error.message));
-    if(error.message.indexOf('400') > -1){
+    if (error.message.indexOf('400') > -1) {
       alert('아이디와 비밀번호를 확인해주세요.');
-    }else if(error.message.indexOf('403') > -1){
-      alert("이미 로그인 중입니다.");
+    } else if (error.message.indexOf('403') > -1) {
+      alert('이미 로그인 중입니다.');
     }
   }
 }
@@ -67,10 +64,7 @@ function* checkLoginProcess(action: ReturnType<typeof requestCheckLogin>) {
 
     if (status === 'success') {
       const { user, token } = data;
-      Socket.getInstance()
-        .url(socketServer!)
-        .onEmit('initialize', { user_id: user.id });
-      Zibox.getInstance().createZibox();
+      MonitorOcx.getInstance().connect(user.id);
 
       Logger.log('Login data => ', user);
 
@@ -101,11 +95,13 @@ function* logoutProcess(action: ReturnType<typeof requestLogout>) {
       const { data: isSuccess } = data;
       Logger.log('Logout data => ', isSuccess);
 
+      MonitorOcx.getInstance().disconnect();
+
       Cookies.remove(TOKEN_NAME);
       yield put(successLogout());
 
       history!.push('/auth/login');
-      window.location.reload();
+      // window.location.reload();
     }
   } catch (error) {
     Logger.log('Logout failure', error);

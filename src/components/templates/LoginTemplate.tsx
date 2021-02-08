@@ -3,92 +3,71 @@ import styled from 'styled-components';
 
 import MainRouter from 'MainRouter';
 import { COLORS } from 'utils/color';
+import { Text } from 'components/atoms';
 
 const StyledWrapper = styled.div`
   /* Display */
+  display: flex;
+  justify-content: center;
   height: 100vh;
   max-width: 140rem;
   min-width: 70rem;
   width: 100vw;
-`;
 
-const StyledTitle = styled.div`
-  /* Display */
-  height: 11.69rem;
+  /* Color */
+  background-color: ${COLORS.dark_blue3};
 `;
 
 const StyledContent = styled.div`
   /* Display */
   display: flex;
-  height: 19.81rem;
-  width: 100%;
-
-  /* Color */
-  background-color: ${COLORS.green};
-`;
-
-const StyledMainLogoSpace = styled.div`
-  /* Position */
-  margin-left: 148px;
-  position: relative;
-
-  /* Display */
+  flex-direction: column;
+  align-items: center;
   height: 100%;
-  width: 28.25rem;
-
-  /* Color */
-  background-color: ${COLORS.white};
+  width: 50.06rem;
 `;
 
-const StyledMainLogo = styled.span`
-  /* Position */
-  left: 20%;
-  position: absolute;
-  top: 30%; 
-  
+const StyledMainLogo = styled.div`
+  width: 100%;
 `;
 
 const StyledLoginForm = styled.div`
-  width: calc(100% - 9.25rem - 28.25rem);
-`;
-
-const StyledFooter = styled.div`
-  /* Position */
-  padding-left: 302px;
-  position: relative;
-
-  /* Display */
-  height: calc(100% - 11.69rem - 19.81rem);
-`;
-
-const StyledSubLogo = styled.div`
-  /* Position */
   position: absolute;
-  top: 50%;
+  top: 380px;
+  /* top: 45%; */
+  /* margin-top: 384px; */
 `;
 
-function LoginTemplate({ mainLogo, subLogo }: LoginTemplateProps) {
+const StyledIRLinkCorp = styled.div`
+  height: 0.75rem;
+  margin-top: 15.88rem;
+`;
+
+function LoginTemplate({ mainLogo }: LoginTemplateProps) {
   return (
     <StyledWrapper>
-      <StyledTitle />
       <StyledContent>
-        <StyledMainLogoSpace>
-          <StyledMainLogo>{mainLogo}</StyledMainLogo>
-        </StyledMainLogoSpace>
+        <StyledMainLogo>{mainLogo}</StyledMainLogo>
         <StyledLoginForm>
           <MainRouter />
         </StyledLoginForm>
+        <StyledIRLinkCorp>
+          <Text
+            fontColor={COLORS.gray}
+            fontFamily={'FranklinGothic-Cond'}
+            fontSize={0.75}
+            fontWeight={500}
+          >
+            ⓒ IR-Link Corp.
+          </Text>
+        </StyledIRLinkCorp>
       </StyledContent>
-      <StyledFooter>
-        <StyledSubLogo>{subLogo}</StyledSubLogo>
-      </StyledFooter>
     </StyledWrapper>
   );
 }
 
 interface LoginTemplateProps {
   mainLogo: React.ReactChild;
-  subLogo: React.ReactChild;
 }
 
 export default LoginTemplate;

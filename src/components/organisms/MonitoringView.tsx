@@ -14,6 +14,7 @@ import useInputForm from 'hooks/useInputForm';
 import useAuth from 'hooks/useAuth';
 import useVisible from 'hooks/useVisible';
 import useZibox from 'hooks/useZibox';
+import useOcx from 'hooks/useOcx';
 
 import { company, COMPANY_MAP, CONSULTANT_BOX_WIDTH } from 'utils/constants';
 
@@ -69,9 +70,10 @@ let request = false;
 
 function Monitoring({ location }: MonitoringProps) {
   // const [monit, setMonit] = useState<boolean>(false); // 현재 로그인한 유저의 감청 여부 상태
+  // const [tapping, setTapping] = useState<Boolean>(false); // 내가 감청 중인지 아닌지 여부
   const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
   const [tempConsultInfo, setTempConsultInfo] = useState<ConsultantInfoType>();
-  const { loginInfo } = useAuth();
+  const { initSocket, loginInfo } = useAuth();
   const { branchList, teamList, getBranchList, getTeamList } = useBranch();
   const { form, onChangeSelect, setKeyValue, onChangeInput } = useInputForm({
     branch: -1,
@@ -86,9 +88,11 @@ function Monitoring({ location }: MonitoringProps) {
     getUsersInfo,
     resetFilteredList,
     onClickUpdateUser,
+    onClickDisconnect,
   } = useUser();
   const { visible, onClickVisible } = useVisible();
   const { initZibox, startMonitoring, stopMonitoring, setVolume } = useZibox();
+  const { startMonitoringOcx, stopMonitoringOcx } = useOcx();
   
   const volumeInfo = useMemo(() => {
     return {
@@ -99,10 +103,10 @@ function Monitoring({ location }: MonitoringProps) {
 
   const selectInfo = useMemo(() => {
     return {
-      color: company === COMPANY_MAP.DBLIFE ? COLORS.green : COLORS.light_blue,
+      color: company === COMPANY_MAP.DBLIFE ? COLORS.green : COMPANY_MAP.LINA ? COLORS.blue : COLORS.light_blue,
       borderRadius: 0,
       borderColor:
-        company === COMPANY_MAP.DBLIFE ? COLORS.green : COLORS.light_blue,
+        company === COMPANY_MAP.DBLIFE ? COLORS.green : COMPANY_MAP.LINA ? COLORS.blue : COLORS.light_blue,
       data1: branchList as Array<BranchInfo>,
       data2: teamList as Array<TeamInfo>,
       height: 1.75,
@@ -126,8 +130,9 @@ function Monitoring({ location }: MonitoringProps) {
       page: number,
       path: string,
       adminId?: number,
+      loginId?: number,
     ) => {
-      getUsersInfo(branchId, teamId, count, page, '', path, adminId);
+      getUsersInfo(branchId, teamId, count, page, '', path, adminId, loginId);
     },
     [getUsersInfo],
   );
@@ -142,7 +147,7 @@ function Monitoring({ location }: MonitoringProps) {
             key={`${loginInfo.admin_id}-${form.branch}-${form.team}-consultant-${consultant.id}`}
             consultInfo={consultant}
             loginId={loginInfo.id}
-            monit={monit}
+            monit={monit.tapping}
             getConsultantInfo={getConsultantInfo}
             setMonit={setMonit}
             initZibox={initZibox}
@@ -179,7 +184,16 @@ function Monitoring({ location }: MonitoringProps) {
   }, [monit, form.right, setVolume]);
 
   useEffect(() => {
-    if (loginInfo.admin_id === 2) {
+    let index: number = consultantInfo.findIndex((consultant, i) => {
+      return tempConsultInfo?.id === consultant.id;
+    });
+    if (index > -1) {
+      setTempConsultInfo(consultantInfo[index]);
+    }
+  }, [tempConsultInfo, consultantInfo]);
+
+  useEffect(() => {
+    if (loginInfo.admin_id === 2 && initSocket === 1) {
       // 슈퍼 관리자
       if (form.branch === -1 && filterConsultantInfo.length > 0) {
         // 필터링된 유저 리스트에서 전체 지점명을 볼 경우 필터링된 유저 리스트 초기화
@@ -202,6 +216,7 @@ function Monitoring({ location }: MonitoringProps) {
             1,
             location.pathname,
             loginInfo.admin_id,
+            loginInfo.id,
           );
           branch = form.branch;
           team = form.team;
@@ -217,11 +232,12 @@ function Monitoring({ location }: MonitoringProps) {
         1,
         location.pathname,
         loginInfo.admin_id,
+        loginInfo.id,
       );
       branch = form.branch;
       team = form.team;
       request = true;
-    } else if (loginInfo.admin_id === 1) {
+    } else if (loginInfo.admin_id === 1 && initSocket === 1) {
       // 일반 관리자
       if (form.team === -1 && filterConsultantInfo.length > 0) {
         // 필터링된 유저 리스트에서 전체 지점명을 볼 경우 필터링된 유저 리스트 초기화
@@ -243,6 +259,7 @@ function Monitoring({ location }: MonitoringProps) {
             1,
             location.pathname,
             loginInfo.admin_id,
+            loginInfo.id,
           );
           team = form.team;
         }
@@ -257,10 +274,13 @@ function Monitoring({ location }: MonitoringProps) {
         1,
         location.pathname,
         loginInfo.admin_id,
+        loginInfo.id,
       );
       team = form.team;
     }
   }, [
+    initSocket,
+    loginInfo.id,
     loginInfo.admin_id,
     loginInfo.branch_id,
     form.branch,
@@ -388,6 +408,7 @@ function Monitoring({ location }: MonitoringProps) {
             adminId={loginInfo.admin_id}
             branchId={loginInfo.branch_id}
             branchName={loginInfo.branch_name}
+            onClickDisconnect={onClickDisconnect}
           />
         }
       />

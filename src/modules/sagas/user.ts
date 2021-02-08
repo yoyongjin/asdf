@@ -26,6 +26,11 @@ import {
   requestZiboxVolume,
   successZiboxVolume,
   failureZiboxVolume,
+  changeMonitStatus,
+  CHANGE_MONIT_STATUS,
+  setMonitStatus,
+  disconnectForce,
+  DISCONNECT_FORCE,
 } from 'modules/actions/user';
 import * as API from 'lib/api';
 import Socket from 'lib/socket';
@@ -40,6 +45,7 @@ function* getUserInfoProcess(action: ReturnType<typeof requestGetUserInfo>) {
     search,
     url,
     adminId,
+    loginId,
   } = action.payload;
   const payload = {
     branch_id: branchId,
@@ -61,6 +67,7 @@ function* getUserInfoProcess(action: ReturnType<typeof requestGetUserInfo>) {
         users,
         count: max_count,
         url,
+        loginId: loginId!,
       };
 
       if (adminId === 2) {
@@ -73,7 +80,7 @@ function* getUserInfoProcess(action: ReturnType<typeof requestGetUserInfo>) {
         }
 
         if (url === '/main') {
-          Socket.getInstance().onEmit('call-state');
+          Socket.getInstance().onEmit('all-state');
         }
       } else if (adminId === 1) {
         if (teamId === -1 && !search?.trim()) {
@@ -84,9 +91,9 @@ function* getUserInfoProcess(action: ReturnType<typeof requestGetUserInfo>) {
           yield put(successGetFilterUserInfo(payload));
         }
 
-        if (url === '/main') {
-          Socket.getInstance().onEmit('call-state');
-        }
+        // if (url === '/main') {
+        //   Socket.getInstance().onEmit('all-state');
+        // }
       }
     }
   } catch (error) {
@@ -142,7 +149,7 @@ function* updateUserProcess(action: ReturnType<typeof requestUpdateUser>) {
     ziboxspk,
   } = action.payload;
   try {
-    const response = yield call(
+    yield call(
       API.updateUser,
       user_id,
       branch_id,
@@ -191,7 +198,7 @@ function* resetPasswordProcess(
 ) {
   try {
     const { id } = action.payload;
-    const response = yield call(API.resetPassword, id);
+    yield call(API.resetPassword, id);
     yield put(successResetPassword());
     alert('초기 비밀번호는 0000 입니다.');
   } catch (error) {
@@ -211,6 +218,48 @@ function* updateZiboxVolumeProcess(
   } catch (error) {
     console.log(error);
     yield put(failureZiboxVolume(error));
+  }
+}
+
+function* changeMonitProcess(action: ReturnType<typeof changeMonitStatus>) {
+  try {
+    const { number, status, user_id } = action.payload as {
+      status: number;
+      number: string;
+      user_id: number;
+    };
+
+    const response = yield call(
+      API.changeStatus,
+      'zibox',
+      number,
+      'monitoring_status',
+      status,
+      user_id,
+    );
+
+    console.log(JSON.stringify(response));
+    yield put(setMonitStatus(status));
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+function* disconnectForceProcess(action: ReturnType<typeof disconnectForce>) {
+  try {
+    const { number } = action.payload;
+    console.log(number);
+
+    const response = yield call(API.disconnectForce, number);
+    const { data } = response;
+
+    if (data.success) {
+      yield call(API.changeStatus, 'reset', number, 'reset_status');
+    } else {
+      alert('연결 끊기 실패');
+    }
+  } catch (error) {
+    console.log(error);
   }
 }
 
@@ -235,7 +284,15 @@ function* watchResetPassword() {
 }
 
 function* watchUpdateZiboxVolume() {
-  yield takeLatest(REQUEST_ZIBOX_VOLUME , updateZiboxVolumeProcess);
+  yield takeLatest(REQUEST_ZIBOX_VOLUME, updateZiboxVolumeProcess);
+}
+
+function* watchChangeMonit() {
+  yield takeLatest(CHANGE_MONIT_STATUS, changeMonitProcess);
+}
+
+function* watchDisconnectForce() {
+  yield takeLatest(DISCONNECT_FORCE, disconnectForceProcess);
 }
 
 function* userSaga() {
@@ -246,6 +303,8 @@ function* userSaga() {
     fork(watchDeleteUser),
     fork(watchResetPassword),
     fork(watchUpdateZiboxVolume),
+    fork(watchChangeMonit),
+    fork(watchDisconnectForce),
   ]);
 }
 

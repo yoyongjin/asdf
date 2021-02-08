@@ -54,7 +54,7 @@ function useZibox() {
   }, []);
 
   const setVolume = useCallback((type: number, gauge: number) => {
-    Zibox.getInstance().monVolume(type, gauge);
+    // Zibox.getInstance().monVolume(type, gauge);
   }, []);
 
   const setEvent = useCallback(() => {

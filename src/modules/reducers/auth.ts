@@ -1,8 +1,10 @@
 import { createReducer } from 'typesafe-actions';
-import produce from 'immer';
+import produce, { enableES5 } from 'immer';
 
 import { AuthAction, AuthType } from 'types/auth';
 import * as actions from 'modules/actions/auth';
+
+enableES5();
 
 // 상태
 const initialState: AuthType = {
@@ -32,6 +34,7 @@ const initialState: AuthType = {
     login_at: 0,
     created_at: '',
   },
+  socket: 0,
 };
 
 // 리듀서
@@ -97,6 +100,11 @@ const authReducer = createReducer<AuthType, AuthAction>(initialState, {
     return produce(state, (draft) => {
       draft.request.logout.fetch = false;
       draft.request.logout.error = action.payload;
+    });
+  },
+  [actions.SET_INIT_SOCKET]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.socket = action.payload;
     });
   },
 });

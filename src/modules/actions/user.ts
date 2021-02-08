@@ -8,8 +8,7 @@ import {
   ConsultantInfoType,
   deleteUserType,
   UserInfo,
-  callStateType,
-  monitoringStateType,
+  StatusType,
 } from 'modules/types/user';
 
 export const REQUEST_GET_USER_INFO = 'REQUEST_GET_USER_INFO';
@@ -43,7 +42,11 @@ export const UPDATE_CONSULTANT = 'UPDATE_CONSULTANT';
 export const GET_CALL_STATUS = 'GET_CALL_STATUS';
 export const SET_CONSULTANT_STATUS = 'SET_CONSULTANT_STATUS';
 export const CHANGE_STATUS = 'CHANGE_STATUS';
+export const SAVE_STATUS = 'SAVE_STATUS';
+export const RESET_STATUS = 'RESET_STATUS'
 export const CHANGE_MONIT_STATUS = 'CHANGE_MONIT_STATUS';
+export const SET_MONIT_STATUS = 'SET_MONIT_STATUS';
+export const DISCONNECT_FORCE = 'DISCONNECT_FORCE';
 
 export const requestGetUserInfo = createAction(
   REQUEST_GET_USER_INFO,
@@ -79,7 +82,27 @@ export const requestDeleteUser = createAction(
 )<deleteUserType>();
 export const successDeleteUser = createAction(SUCCESS_DELETE_USER)();
 export const failureDeleteUser = createAction(FAILURE_DELETE_USER)<string>();
-export const changeStatus = createAction(CHANGE_STATUS)<monitoringStateType>();
+export const changeStatus = createAction(CHANGE_STATUS)<{
+  data: {
+    number: string;
+    tmr?: number;
+    ats?: number;
+    connection?: number;
+    monitoring?: number;
+    record?: number;
+    zibox_ip?: string;
+    zibox_mac?: string;
+    pc_ip?: string;
+    call?: string;
+    time?: number;
+    monit_user?: number;
+  };
+  type: string;
+}>();
+export const saveStatus = createAction(SAVE_STATUS)<{
+  [key: string]: string;
+}>();
+export const resetStatus = createAction(RESET_STATUS)<StatusType>();
 export const requestResetPassword = createAction(REQUEST_RESET_PASSWORD)<{
   id: number;
 }>();
@@ -97,7 +120,6 @@ export const resetFilteredUser = createAction(RESET_FILTERED_USER)();
 export const resetFilteredConsultant = createAction(
   RESET_FILTERED_CONSULTANT,
 )();
-export const changeMonitStatus = createAction(CHANGE_MONIT_STATUS)<boolean>();
 export const requestZiboxVolume = createAction(REQUEST_ZIBOX_VOLUME)<{
   id: number;
   ziboxmic: number;
@@ -109,3 +131,10 @@ export const successZiboxVolume = createAction(SUCCESS_ZIBOX_VOLUME)<{
   ziboxspk: number;
 }>();
 export const failureZiboxVolume = createAction(FAILURE_ZIBOX_VOLUME)<string>();
+export const changeMonitStatus = createAction(CHANGE_MONIT_STATUS)<{
+  status: number;
+  number: string;
+  user_id: number;
+}>();
+export const setMonitStatus = createAction(SET_MONIT_STATUS)<number>();
+export const disconnectForce = createAction(DISCONNECT_FORCE)<{number: string}>();

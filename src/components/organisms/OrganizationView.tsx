@@ -60,8 +60,7 @@ function OrganizationView() {
   const buttonType = {
     title: '',
     onClick: onClickAddTempBranch,
-    bgImage: insertBranchImage,
-    bgHoverImage: insertBranchHoverImage,
+
     type: 'organization',
   };
 
@@ -90,7 +89,6 @@ function OrganizationView() {
   const branchKeys = Object.getOwnPropertyNames(branchInfo).reverse();
   const branchValues = Object.values(branchInfo).reverse();
 
-  Logger.log('Lendering OrganizationView');
   return (
     <StyledWrapper>
       <StyledTitle>

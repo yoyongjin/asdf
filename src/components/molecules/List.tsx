@@ -31,7 +31,7 @@ const StyledContent = styled.li`
   background-color: ${COLORS.dark_gray5};
 
   &:hover {
-    background-color: ${company === COMPANY_MAP.DBLIFE
+    background-color: ${company === COMPANY_MAP.DBLIFE || company === COMPANY_MAP.LINA
       ? COLORS.light_green
       : COLORS.light_blue3};
     cursor: pointer;

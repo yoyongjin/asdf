@@ -16,6 +16,8 @@ const StyledWrapper = styled.div<StyledProps>`
   /* Display */
   height: 100%;
   border-bottom: 0.05rem solid ${(props) => props.bdBottomColor};
+  border-bottom: 0.05rem solid
+    ${company === COMPANY_MAP.LINA ? COLORS.blue : COLORS.light_blue};
 `;
 
 const StyledLeft = styled.span`
@@ -43,6 +45,7 @@ const StyledButton = styled.div`
   padding-right: 7px;
   position: relative;
   top: 10%;
+  top: ${company === COMPANY_MAP.LINA ? 5 : 12}%;
 `;
 
 const StyledExplanation = styled.div`
@@ -131,7 +134,9 @@ function Title({
           <Text
             fontSize={fontSize ? fontSize : 1.12}
             fontWeight={800}
-            fontColor={color}
+            fontColor={
+              company === COMPANY_MAP.LINA ? COLORS.blue : COLORS.light_blue2
+            }
             fontFamily={'NanumGothic'}
           >
             {children}
@@ -143,7 +148,7 @@ function Title({
               <Button
                 width={7.3}
                 height={1.5}
-                // bgColor={COLORS.green}
+                bgColor={COLORS.dark_blue}
                 image={buttonType.bgImage}
                 onClick={buttonType!.onClick}
               >
@@ -277,11 +282,13 @@ function Title({
             <StyledPageSpace />
             <Button
               image={
-                company === COMPANY_MAP.DBLIFE ? prevPageIcon : zmsPrevPageIcon
+                company === COMPANY_MAP.DBLIFE || company === COMPANY_MAP.LINA
+                  ? prevPageIcon
+                  : zmsPrevPageIcon
               }
               width={1.3}
               height={1.3}
-              bgColor={'inherit'}
+              bgColor={COLORS.white}
               borderRadius={0}
               onClick={() =>
                 pageType.onClickPrevPage(pageType.curPage, pageType.count)
@@ -290,11 +297,13 @@ function Title({
             <StyledButtonSpace />
             <Button
               image={
-                company === COMPANY_MAP.DBLIFE ? nextPageIcon : zmsNextPageIcon
+                company === COMPANY_MAP.DBLIFE || company === COMPANY_MAP.LINA
+                  ? nextPageIcon
+                  : zmsNextPageIcon
               }
               width={1.3}
               height={1.3}
-              bgColor={'inherit'}
+              bgColor={COLORS.white}
               borderRadius={0}
               onClick={() =>
                 pageType.onClickNextPage(pageType.curPage, pageType.count, 5)

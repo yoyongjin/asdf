@@ -1,10 +1,10 @@
 import axios from 'axios';
 
-import { apiServer } from 'utils/constants';
+import { apiServer, celeringServer } from 'utils/constants';
 
 export const instance = axios.create({
   baseURL: apiServer,
-  timeout: 1000,
+  timeout: 5000,
   withCredentials: true,
 });
 
@@ -132,3 +132,23 @@ export const updateZiboxVolume = (id: number, mic: number, spk: number) =>
     ziboxmic: mic,
     ziboxspk: spk,
   });
+
+export const changeStatus = (
+  route: string,
+  number: string,
+  type: string,
+  status?: number,
+  userId?: number,
+) =>
+  instance.post(`api/state/${route}`, {
+    number,
+    type,
+    status,
+    user_id: userId,
+  });
+
+export const disconnectForce = (number: string) => {
+  return axios.post(`${celeringServer}/v1/auth/logout`, {
+    number,
+  });
+};

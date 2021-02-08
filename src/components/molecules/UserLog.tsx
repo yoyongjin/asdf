@@ -68,7 +68,7 @@ function UserLog({
         <StyledText>
           <Text
             fontColor={
-              company === COMPANY_MAP.DBLIFE ? COLORS.green : COLORS.light_blue2
+              company === COMPANY_MAP.DBLIFE ? COLORS.green : company === COMPANY_MAP.LINA ? COLORS.blue : COLORS.light_blue2
             }
             fontSize={0.75}
             fontWeight={700}
@@ -76,7 +76,7 @@ function UserLog({
         </StyledText>
       </StyledLoginTime>
       <StyledLogout>
-        <Button bgColor={'inherit'} width={5} onClick={onClickLogout}>
+        <Button bgColor={ company === COMPANY_MAP.LINA ? COLORS.blue : COLORS.dark_blue2} width={5} onClick={onClickLogout}>
           <Text fontColor={COLORS.white} fontSize={0.81} fontWeight={700}>
             로그아웃
           </Text>

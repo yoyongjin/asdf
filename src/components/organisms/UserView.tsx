@@ -76,8 +76,6 @@ const userListOption = [
   { id: 15, data: 15 },
 ];
 
-let branch = -1;
-let team = -1;
 let currentPage = 0;
 
 function UserView({ location }: UserViewProps) {
@@ -139,9 +137,9 @@ function UserView({ location }: UserViewProps) {
 
   const buttonInfo = useMemo(() => {
     return {
-      title: '',
-      bgImage: addUserImage,
-      bgHoverImage: addUserHoverImage,
+      title: '+ 사용자 등록',
+      // bgImage: addUserImage,
+      // bgHoverImage: addUserHoverImage,
       type: 'user',
       onClick: onClickVisible,
     };
@@ -304,7 +302,6 @@ function UserView({ location }: UserViewProps) {
     onChangeCurrentPage,
   ]);
 
-  Logger.log('Lendering UserView');
   return (
     <>
       <StyledWrapper>

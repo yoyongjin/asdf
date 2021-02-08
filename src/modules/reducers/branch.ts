@@ -1,8 +1,10 @@
 import { createReducer } from 'typesafe-actions';
-import produce from 'immer';
+import produce, { enableES5 } from 'immer';
 
 import * as types from 'modules/actions/branch';
 import { BranchAction, BranchType } from 'modules/types/branch';
+
+enableES5();
 
 const initialState: BranchType<string> = {
   branch: {

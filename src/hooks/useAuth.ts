@@ -10,6 +10,7 @@ import {
 import { RootState } from 'modules/reducers';
 
 function useAuth() {
+  const initSocket = useSelector((state: RootState) => state.auth.socket);
   const loginInfo = useSelector((state: RootState) => state.auth.loginInfo); // 로그인 정보
 
   const dispatch = useDispatch();
@@ -47,6 +48,7 @@ function useAuth() {
   );
 
   return {
+    initSocket,
     loginInfo,
     onCheckLogin,
     onClickLogin,

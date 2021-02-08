@@ -15,6 +15,8 @@ const StyledWrapper = styled.div`
   text-align: center;
   border-right: 1px solid
     ${company === COMPANY_MAP.DBLIFE ? COLORS.green : COLORS.light_blue};
+  border-right: 1px solid
+    ${company === COMPANY_MAP.LINA ? COLORS.blue : COLORS.light_blue};
 
   /* Other */
   overflow: auto;
@@ -185,6 +187,8 @@ function Organization({
                     borderColor={
                       company === COMPANY_MAP.DBLIFE
                         ? COLORS.green
+                        : company === COMPANY_MAP.LINA
+                        ? COLORS.blue
                         : COLORS.light_blue
                     }
                     textAlign={1}

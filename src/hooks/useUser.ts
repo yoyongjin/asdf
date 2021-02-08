@@ -9,6 +9,7 @@ import {
   requestResetPassword,
   resetFilteredUser,
   resetFilteredConsultant,
+  disconnectForce,
 } from 'modules/actions/user';
 import { RootState } from 'modules/reducers';
 import { LIMIT, PAGE } from 'utils/constants';
@@ -36,6 +37,7 @@ function useUser() {
       search = '',
       url?: string,
       adminId?: number,
+      loginId?: number,
     ) => {
       const payload = {
         branchId,
@@ -45,6 +47,7 @@ function useUser() {
         search,
         url: url!,
         adminId,
+        loginId,
       };
       dispatch(requestGetUserInfo(payload));
     },
@@ -147,6 +150,13 @@ function useUser() {
     [dispatch],
   );
 
+  const onClickDisconnect = useCallback((number: string) => {
+    const payload = {
+      number,
+    };
+    dispatch(disconnectForce(payload));
+  }, [dispatch]);
+
   return {
     userInfo,
     consultantInfo,
@@ -158,6 +168,7 @@ function useUser() {
     onClickUpdateUser,
     onClickDeleteUser,
     onClickResetPassword,
+    onClickDisconnect,
   };
 }
 
