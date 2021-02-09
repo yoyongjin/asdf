@@ -9,7 +9,7 @@ export const TOKEN_NAME = '4d751c5adb209285c49f2140e1cfb01c';
 export const DOMAIN = '.celering.io';
 export const COMPANY_MAP = {
   DBLIFE: 'DBLIFE',
-  LINA : 'LINA',
+  LINA: 'LINA',
 };
 export const CONSULTANT_BOX_WIDTH = 200; //상담사 박스 너비
 
@@ -55,4 +55,37 @@ export const PHONE_TYPE = {
   PHONE_DISCONNECTION_02: '비정상 접속 종료',
   PHONE_DISCONNECTION_03: '법인폰이 끊어졌을 때',
   PHONE_RECONNECTION: '재연결',
+};
+
+export const SOCKET_EVENT_TYPE = {
+  INITIALIZE: 'initialize'
+}
+
+export const COMPANY_TYPE = {
+  DBLIFE: 'DBLIFE',
+  LINA: 'LINA',
+};
+
+export const API_FETCH_TYPE = {
+  SUCCESS: 'success',
+  FAILURE: 'fail',
+};
+
+export const ROUTER_TYPE = {
+  LOGIN: '/auth/login',
+  MONIT: '/main',
+}
+
+export default {
+  NODE_ENV: process.env.NODE_ENV,
+  API_SERVER: process.env.REACT_APP_API_SERVER,
+  SOCKET_SERVER: process.env.REACT_APP_SOCKET_SERVER,
+  CELERING_SERVER: process.env.REACT_APP_CELERING_SERVER,
+  COMPANY: process.env.REACT_APP_COMPANY,
+  ZIBOX_PORT: process.env.REACT_APP_ZIBOX_PORT,
+  ZIBOX_MODE: process.env.REACT_APP_ZIBOX_MODE,
+  LIMIT: 30,
+  PAGE: 1,
+  COOKIE_DOMAIN: '.celering.io',
+  COOKIE_NAME: '4d751c5adb209285c49f2140e1cfb01c',
 };

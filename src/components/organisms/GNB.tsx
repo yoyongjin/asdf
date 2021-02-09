@@ -5,7 +5,7 @@ import { Location } from 'history';
 import { Image, Link } from 'components/atoms';
 import { LinkSelector, UserLog } from 'components/molecules';
 import { COLORS } from 'utils/color';
-import { LoginInfoType } from 'types/auth';
+import { SuccessLogin } from 'types/auth';
 
 import { company, COMPANY_MAP } from 'utils/constants';
 
@@ -111,7 +111,7 @@ interface StyledLogoProps {
 }
 
 interface GNBProps extends StyledProps, StyledLogoProps {
-  loginInfo: LoginInfoType;
+  loginInfo: SuccessLogin;
   loginTimeImg: string;
   logoImg: string;
   location: Location;

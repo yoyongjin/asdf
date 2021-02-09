@@ -14,12 +14,13 @@ function useZibox() {
     async (id: number, ziboxIp: string, ziboxmic: number, ziboxspk: number) => {
       user_id = id;
       try {
-        const response = await Zibox.getInstance().connect(
-          ziboxIp,
-          ziboxmic,
-          ziboxspk,
-        );
-        return response;
+        // const response = await Zibox.getInstance().connect(
+        //   ziboxIp,
+        //   ziboxmic,
+        //   ziboxspk,
+        // );
+        // return response;
+        return true;
       } catch (error) {
         console.log(error);
         return false;
@@ -29,7 +30,7 @@ function useZibox() {
   );
 
   const startMonitoring = useCallback((number: string, id: number) => {
-    Zibox.getInstance().monStart();
+    // Zibox.getInstance().monStart();
     console.log('Start monitoring');
     Socket.getInstance().onEmit('monitoring', {
       monitoring_state: 'y',
@@ -40,9 +41,9 @@ function useZibox() {
 
   const stopMonitoring = useCallback(async (number: string) => {
     try {
-      await Zibox.getInstance().monStop();
+      // await Zibox.getInstance().monStop();
       console.log('Stop monitoring');
-      Zibox.getInstance().disconnect();
+      // Zibox.getInstance().disconnect();
       Socket.getInstance().onEmit('monitoring', {
         monitoring_state: 'n',
         number,
@@ -58,33 +59,33 @@ function useZibox() {
   }, []);
 
   const setEvent = useCallback(() => {
-    Zibox.getInstance().setEventListener(
-      (cmd: string, response: { status: string; data: any; type: string }) => {
-        if (!response) return;
-        const { status, data, type } = response;
+    // Zibox.getInstance().setEventListener(
+    //   (cmd: string, response: { status: string; data: any; type: string }) => {
+    //     if (!response) return;
+    //     const { status, data, type } = response;
 
-        if (status === 'y') {
-          switch (type) {
-            case 'vol_info':
-              if (
-                typeof data.mic === 'string' &&
-                typeof data.spk === 'string'
-              ) {
-                const param = {
-                  id: user_id,
-                  ziboxmic: data.mic,
-                  ziboxspk: data.spk,
-                };
-                dispatch(requestZiboxVolume(param));
-              }
+    //     if (status === 'y') {
+    //       switch (type) {
+    //         case 'vol_info':
+    //           if (
+    //             typeof data.mic === 'string' &&
+    //             typeof data.spk === 'string'
+    //           ) {
+    //             const param = {
+    //               id: user_id,
+    //               ziboxmic: data.mic,
+    //               ziboxspk: data.spk,
+    //             };
+    //             dispatch(requestZiboxVolume(param));
+    //           }
 
-              break;
-            default:
-              break;
-          }
-        }
-      },
-    );
+    //           break;
+    //         default:
+    //           break;
+    //       }
+    //     }
+    //   },
+    // );
   }, [dispatch]);
 
   return {

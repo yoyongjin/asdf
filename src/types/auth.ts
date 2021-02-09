@@ -7,7 +7,7 @@ export type AuthAction = ActionType<typeof actions>;
 
 export interface AuthType {
   request: RequestType;
-  loginInfo: LoginInfoType;
+  loginInfo: SuccessLogin;
   socket: number;
 }
 
@@ -17,7 +17,7 @@ export interface RequestType {
   checkLogin: common.FetchType;
 }
 
-export interface LoginType extends common.RouterType {
+export interface RequestLogin extends common.RouterType {
   id: string;
   password: string;
 }
@@ -34,7 +34,7 @@ export interface LoginType extends common.RouterType {
  * login_at: 마지막 로그인한 시간
  * created_at: 회원가입 날짜
  */
-export interface LoginInfoType {
+export interface SuccessLogin {
   id: number;
   admin_id: number;
   branch_id: number;

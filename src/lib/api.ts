@@ -8,14 +8,33 @@ export const instance = axios.create({
   withCredentials: true,
 });
 
-// auth
+/**
+ * @description 헤더 설정
+ * @param token 토큰
+ */
+export const setHeader = (token: string) => {
+  instance.defaults.headers.common['token'] = token;
+}
+
+/**
+ * @description 로그인
+ * @param id 아이디
+ * @param password 비밀번호
+ */
 export const login = (id: string, password: string) =>
   instance.post('/api/auth/login', {
     user_name: id,
     user_pass: password,
-  }); // 로그인
-export const logout = () => instance.post('/api/auth/logout'); // 로그아웃
-export const checkLogin = () => instance.post('/api/auth/auto_login'); // 자동 로그인
+  });
+/**
+ * @description 로그아웃
+ */
+export const logout = () => instance.post('/api/auth/logout');
+/**
+ * @description 자동 로그인
+ */
+export const checkLogin = () => instance.post('/api/auth/auto_login');
+
 export const getConsultantInfo = (payload: {
   branch_id: number;
   team_id: number;

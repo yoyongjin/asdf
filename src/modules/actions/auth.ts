@@ -1,6 +1,6 @@
 import { createAction } from 'typesafe-actions';
 
-import { LoginType, LoginInfoType } from 'types/auth';
+import { RequestLogin, SuccessLogin } from 'types/auth';
 import { RouterType } from 'modules/types/common';
 
 // 액션 타입
@@ -16,15 +16,15 @@ export const FAILURE_LOGOUT = 'FAILURE_LOGOUT';
 export const SET_INIT_SOCKET = 'SET_INIT_SOCKET';
 
 // 액션 생성 함수
-export const requestLogin = createAction(REQUEST_LOGIN)<LoginType>();
-export const successLogin = createAction(SUCCESS_LOGIN)<LoginInfoType>();
+export const requestLogin = createAction(REQUEST_LOGIN)<RequestLogin>();
+export const successLogin = createAction(SUCCESS_LOGIN)<SuccessLogin>();
 export const failureLogin = createAction(FAILURE_LOGIN)<string>();
-export const requestCheckLogin = createAction(REQUEST_CHECK_LOGIN)<
-  RouterType
->();
-export const successCheckLogin = createAction(SUCCESS_CHECK_LOGIN)<
-  LoginInfoType
->();
+export const requestCheckLogin = createAction(
+  REQUEST_CHECK_LOGIN,
+)<RouterType>();
+export const successCheckLogin = createAction(
+  SUCCESS_CHECK_LOGIN,
+)<SuccessLogin>();
 export const failureCheckLogin = createAction(FAILURE_CHECK_LOGIN)<string>();
 export const requestLogout = createAction(REQUEST_LOGOUT)<RouterType>();
 export const successLogout = createAction(SUCCESS_LOGOUT)();

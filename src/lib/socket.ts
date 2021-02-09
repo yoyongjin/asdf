@@ -1,5 +1,7 @@
 import io from 'socket.io-client';
 
+import Logger from 'utils/log';
+
 class Socket {
   private address?: string;
   private socket!: SocketIOClient.Socket;
@@ -18,6 +20,18 @@ class Socket {
     return Socket.instance;
   }
 
+  /**
+   * @description 소켓 연결하기
+   * @param url 소켓 주소
+   */
+  create(url: string): Socket {
+    if (!url) return this;
+
+    this.socket = io.connect(url);
+
+    return this;
+  }
+
   url(address: string): Socket {
     if (!address) return this;
 
@@ -28,38 +42,41 @@ class Socket {
   }
 
   onMessageInit(callback: (parameters: any) => void) {
-    this.socket.on('initialize', (message: {status: string, type: string}) => {
-      console.log('initialize');
-      console.log(message);
-      const { status } = message;
+    this.socket.on(
+      'initialize',
+      (message: { status: string; type: string }) => {
+        console.log('initialize');
+        console.log(message);
+        const { status } = message;
 
-      if(!Number(status)){
-        // 연결 실패 시
-        callback(false)
-      }else {
-        // 연결 성공 시
-        callback(true)
-      }
-      // const data = JSON.parse(message);
+        if (!Number(status)) {
+          // 연결 실패 시
+          callback(false);
+        } else {
+          // 연결 성공 시
+          callback(true);
+        }
+        // const data = JSON.parse(message);
 
-      // let parseData = {};
+        // let parseData = {};
 
-      // for (let key in data) {
-      //   let parseValue = JSON.parse(data[key]);
-      //   parseData = {
-      //     ...parseData,
-      //     [key]: parseValue,
-      //   };
-      // }
+        // for (let key in data) {
+        //   let parseValue = JSON.parse(data[key]);
+        //   parseData = {
+        //     ...parseData,
+        //     [key]: parseValue,
+        //   };
+        // }
 
-      // callback(parseData);
-    });
+        // callback(parseData);
+      },
+    );
   }
 
   onMessageMonitoring(callback: (parameters: any) => void) {
     this.socket.on('monitoring', (message: string) => {
       console.log('monitoring');
-      console.log(message)
+      console.log(message);
       // const data = JSON.parse(message);
       // const { status } = data;
       // if (status === 'Y') {
@@ -87,7 +104,7 @@ class Socket {
 
   onMessageAllCallStates(callback: (parameters: any) => void) {
     // 상담원 콜 상태 전부 가져오기
-    console.log(this.socket)
+    console.log(this.socket);
     this.socket.on('all-state', (message: string) => {
       console.log('all-state');
       // console.log(message)
@@ -104,7 +121,7 @@ class Socket {
       console.log(message);
       const data = JSON.parse(message);
       const { status } = data;
-      
+
       if (status === 'Y') {
         callback(data);
       } else {
@@ -115,7 +132,7 @@ class Socket {
 
   onEmit(type: string, data?: any) {
     try {
-      console.log('emit', type, data);
+      Logger.log(`Emit Socket ${type}`, data);
       this.socket.emit(type, data!);
     } catch (error) {
       console.log(error);

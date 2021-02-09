@@ -1,5 +1,4 @@
 import { all, call, fork, put, takeLatest } from 'redux-saga/effects';
-import Cookies from 'js-cookie';
 
 import {
   requestLogin,
@@ -16,11 +15,18 @@ import {
   failureLogout,
 } from 'modules/actions/auth';
 import * as API from 'lib/api';
-import MonitorOcx from 'lib/monitorOcx';
-// import Socket from 'lib/socket';
+// import MonitorOcx from 'lib/monitorOcx';
+import Socket from 'lib/socket';
 // import Zibox from 'lib/zibox';
-import { socketServer, TOKEN_NAME } from 'utils/constants';
+// import Zibox from 'lib/zibox';
+import constants, {
+  API_FETCH_TYPE,
+  ROUTER_TYPE,
+  SOCKET_EVENT_TYPE,
+} from 'utils/constants';
+import Cookie from 'utils/cookie';
 import Logger from 'utils/log';
+import Communicator from 'lib/communicator';
 
 function* loginProcess(action: ReturnType<typeof requestLogin>) {
   const { id, password, history } = action.payload;
@@ -28,24 +34,27 @@ function* loginProcess(action: ReturnType<typeof requestLogin>) {
   try {
     const response = yield call(API.login, id, password);
     const { status, data } = response.data;
+    Logger.log('Login Data => ', data);
 
-    if (status === 'success') {
+    if (status === API_FETCH_TYPE.SUCCESS) {
       const { user, token } = data;
-      MonitorOcx.getInstance().connect(user.id);
-      Logger.log('Login data => ', user);
-
-      Cookies.set(TOKEN_NAME, token, {
-        expires: 1000 * 24 * 60 * 60,
-      });
-      API.instance.defaults.headers.common['token'] = token;
+      // MonitorOcx.getInstance().connect(user.id);
+      // Zibox.getInstance().connect(options);
+      Communicator.create();
+      Socket.getInstance()
+        .url(constants.SOCKET_SERVER!)
+        .onEmit(SOCKET_EVENT_TYPE.INITIALIZE, { user_id: user.id });
+      Cookie.setCookie(constants.COOKIE_NAME, token);
+      API.setHeader(token);
 
       yield put(successLogin(user));
 
-      history!.push('/main');
+      history!.push(ROUTER_TYPE.MONIT);
     }
   } catch (error) {
-    Logger.log('Login failure', error);
+    Logger.log('Login Failure', error);
     yield put(failureLogin(error.message));
+
     if (error.message.indexOf('400') > -1) {
       alert('아이디와 비밀번호를 확인해주세요.');
     } else if (error.message.indexOf('403') > -1) {
@@ -55,32 +64,32 @@ function* loginProcess(action: ReturnType<typeof requestLogin>) {
 }
 
 function* checkLoginProcess(action: ReturnType<typeof requestCheckLogin>) {
-  API.instance.defaults.headers.common['token'] = Cookies.get(TOKEN_NAME);
   const { history } = action.payload;
+
+  const token = Cookie.getCookie(constants.COOKIE_NAME) as string;
+  API.setHeader(token);
 
   try {
     const response = yield call(API.checkLogin);
     const { status, data } = response.data;
+    Logger.log('Check Login Data => ', data);
 
-    if (status === 'success') {
+    if (status === API_FETCH_TYPE.SUCCESS) {
       const { user, token } = data;
-      MonitorOcx.getInstance().connect(user.id);
+      // MonitorOcx.getInstance().connect(user.id);
 
-      Logger.log('Login data => ', user);
-
-      Cookies.set(TOKEN_NAME, token, {
-        expires: 1000 * 24 * 60 * 60,
-      });
-      API.instance.defaults.headers.common['token'] = token;
+      Communicator.create();
+      Cookie.setCookie(constants.COOKIE_NAME, token);
+      API.setHeader(token);
 
       yield put(successCheckLogin(user));
 
       history!.push(history!.location.pathname);
     }
   } catch (error) {
-    Logger.log('Check login failure', error);
+    Logger.log('Check Login Failure', error);
     yield put(failureCheckLogin(error.message));
-    history!.push('/auth/login');
+    history!.push(ROUTER_TYPE.LOGIN);
   }
 }
 
@@ -90,21 +99,21 @@ function* logoutProcess(action: ReturnType<typeof requestLogout>) {
   try {
     const response = yield call(API.logout);
     const { status, data } = response.data;
+    Logger.log('Logout Data => ', data);
 
     if (status === 'success') {
       const { data: isSuccess } = data;
-      Logger.log('Logout data => ', isSuccess);
 
-      MonitorOcx.getInstance().disconnect();
+      // MonitorOcx.getInstance().disconnect();
 
-      Cookies.remove(TOKEN_NAME);
+      Cookie.removeCookie(constants.COOKIE_NAME);
       yield put(successLogout());
 
-      history!.push('/auth/login');
+      history!.push(ROUTER_TYPE.LOGIN);
       // window.location.reload();
     }
   } catch (error) {
-    Logger.log('Logout failure', error);
+    Logger.log('Logout Failure', error);
     yield put(failureLogout(error.message));
   }
 }
