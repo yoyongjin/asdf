@@ -1,5 +1,7 @@
 import { all, call, fork, put, takeLatest } from 'redux-saga/effects';
 
+import * as API from 'lib/api';
+import Communicator from 'lib/communicator';
 import {
   requestLogin,
   REQUEST_LOGIN,
@@ -14,19 +16,9 @@ import {
   successLogout,
   failureLogout,
 } from 'modules/actions/auth';
-import * as API from 'lib/api';
-// import MonitorOcx from 'lib/monitorOcx';
-import Socket from 'lib/socket';
-// import Zibox from 'lib/zibox';
-// import Zibox from 'lib/zibox';
-import constants, {
-  API_FETCH_TYPE,
-  ROUTER_TYPE,
-  SOCKET_EVENT_TYPE,
-} from 'utils/constants';
+import constants, { API_FETCH_TYPE, ROUTER_TYPE } from 'utils/constants';
 import Cookie from 'utils/cookie';
 import Logger from 'utils/log';
-import Communicator from 'lib/communicator';
 
 function* loginProcess(action: ReturnType<typeof requestLogin>) {
   const { id, password, history } = action.payload;
@@ -38,12 +30,7 @@ function* loginProcess(action: ReturnType<typeof requestLogin>) {
 
     if (status === API_FETCH_TYPE.SUCCESS) {
       const { user, token } = data;
-      // MonitorOcx.getInstance().connect(user.id);
-      // Zibox.getInstance().connect(options);
-      Communicator.create();
-      Socket.getInstance()
-        .url(constants.SOCKET_SERVER!)
-        .onEmit(SOCKET_EVENT_TYPE.INITIALIZE, { user_id: user.id });
+      Communicator.getInstance().connectSocket(user.id);
       Cookie.setCookie(constants.COOKIE_NAME, token);
       API.setHeader(token);
 
@@ -66,8 +53,8 @@ function* loginProcess(action: ReturnType<typeof requestLogin>) {
 function* checkLoginProcess(action: ReturnType<typeof requestCheckLogin>) {
   const { history } = action.payload;
 
-  const token = Cookie.getCookie(constants.COOKIE_NAME) as string;
-  API.setHeader(token);
+  const preToken = Cookie.getCookie(constants.COOKIE_NAME) as string;
+  API.setHeader(preToken);
 
   try {
     const response = yield call(API.checkLogin);
@@ -75,12 +62,10 @@ function* checkLoginProcess(action: ReturnType<typeof requestCheckLogin>) {
     Logger.log('Check Login Data => ', data);
 
     if (status === API_FETCH_TYPE.SUCCESS) {
-      const { user, token } = data;
-      // MonitorOcx.getInstance().connect(user.id);
-
-      Communicator.create();
-      Cookie.setCookie(constants.COOKIE_NAME, token);
-      API.setHeader(token);
+      const { user, token: newToken } = data;
+      Communicator.getInstance().connectSocket(user.id);
+      Cookie.setCookie(constants.COOKIE_NAME, newToken);
+      API.setHeader(newToken);
 
       yield put(successCheckLogin(user));
 
@@ -90,6 +75,7 @@ function* checkLoginProcess(action: ReturnType<typeof requestCheckLogin>) {
     Logger.log('Check Login Failure', error);
     yield put(failureCheckLogin(error.message));
     history!.push(ROUTER_TYPE.LOGIN);
+    Cookie.removeCookie(constants.COOKIE_NAME);
   }
 }
 
@@ -102,15 +88,12 @@ function* logoutProcess(action: ReturnType<typeof requestLogout>) {
     Logger.log('Logout Data => ', data);
 
     if (status === 'success') {
-      const { data: isSuccess } = data;
-
+      if (data) {
+        Cookie.removeCookie(constants.COOKIE_NAME);
+        yield put(successLogout());
+        history!.push(ROUTER_TYPE.LOGIN);
+      }
       // MonitorOcx.getInstance().disconnect();
-
-      Cookie.removeCookie(constants.COOKIE_NAME);
-      yield put(successLogout());
-
-      history!.push(ROUTER_TYPE.LOGIN);
-      // window.location.reload();
     }
   } catch (error) {
     Logger.log('Logout Failure', error);

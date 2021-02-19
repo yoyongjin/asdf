@@ -1,34 +1,21 @@
-import React, { useEffect } from 'react';
-
-import { LinaLoginTemplate } from 'components/templates';
-import useOcx from 'hooks/useOcx';
+import React from 'react';
 
 import { Image } from 'components/atoms';
-import { DBLoginTemplateProps, LoginTemplate } from 'components/templates';
-
-import { company, COMPANY_MAP } from 'utils/constants';
+import {
+  DBLoginTemplateProps,
+  LinaLoginTemplate,
+  LoginTemplate,
+} from 'components/templates';
+import constants, { COMPANY_TYPE } from 'utils/constants';
 
 import dblifeLogo from 'images/logo/db-logo-login@3x.png';
 import ziboxLogo from 'images/logo/zibox-sn@3x.png';
 import zmsLogo from 'images/zms/main-visual.png';
 
 function AuthPage() {
-  const { createOcx, connectServerOcx, beforeUnload } = useOcx();
-
-  useEffect(() => {
-    // (window as any).ZiBoxMonitor.SocketClose();
-  }, []);
-
-  useEffect(() => {
-    // createOcx().then(() => {
-    //   connectServerOcx();
-    //   beforeUnload();
-    // });
-  }, [createOcx, connectServerOcx, beforeUnload]);
-
   return (
     <div>
-      {company === COMPANY_MAP.DBLIFE ? (
+      {constants.COMPANY === COMPANY_TYPE.DBLIFE ? (
         <DBLoginTemplateProps
           mainLogo={
             <Image
@@ -42,7 +29,7 @@ function AuthPage() {
             <Image alt={'ZiBox Logo'} src={ziboxLogo} height={3.63} width={9} />
           }
         />
-      ) : company === COMPANY_MAP.LINA ? (
+      ) : constants.COMPANY === COMPANY_TYPE.LINA ? (
         <LinaLoginTemplate />
       ) : (
         <LoginTemplate
@@ -59,7 +46,5 @@ function AuthPage() {
     </div>
   );
 }
-
-interface AuthPageProps {}
 
 export default AuthPage;

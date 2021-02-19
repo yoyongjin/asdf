@@ -13,7 +13,7 @@ export const FAILURE_CHECK_LOGIN = 'FAILURE_CHECK_LOGIN';
 export const REQUEST_LOGOUT = 'REQUEST_LOGOUT';
 export const SUCCESS_LOGOUT = 'SUCCESS_LOGOUT';
 export const FAILURE_LOGOUT = 'FAILURE_LOGOUT';
-export const SET_INIT_SOCKET = 'SET_INIT_SOCKET';
+export const SET_SOCKET_STATUS = 'SET_SOCKET_STATUS';
 
 // 액션 생성 함수
 export const requestLogin = createAction(REQUEST_LOGIN)<RequestLogin>();
@@ -29,4 +29,8 @@ export const failureCheckLogin = createAction(FAILURE_CHECK_LOGIN)<string>();
 export const requestLogout = createAction(REQUEST_LOGOUT)<RouterType>();
 export const successLogout = createAction(SUCCESS_LOGOUT)();
 export const failureLogout = createAction(FAILURE_LOGOUT)<string>();
+export const setSocketStatus = createAction(SET_SOCKET_STATUS)<number>();
+
+// 삭제 예정
+export const SET_INIT_SOCKET = 'SET_INIT_SOCKET';
 export const setInitSocket = createAction(SET_INIT_SOCKET)<number>();

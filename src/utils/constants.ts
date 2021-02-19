@@ -1,3 +1,5 @@
+import Utils from 'utils/new_utils';
+
 export const apiServer = process.env.REACT_APP_API_SERVER;
 export const socketServer = process.env.REACT_APP_SOCKET_SERVER;
 export const company = process.env.REACT_APP_COMPANY as String;
@@ -58,12 +60,7 @@ export const PHONE_TYPE = {
 };
 
 export const SOCKET_EVENT_TYPE = {
-  INITIALIZE: 'initialize'
-}
-
-export const COMPANY_TYPE = {
-  DBLIFE: 'DBLIFE',
-  LINA: 'LINA',
+  INITIALIZE: 'initialize',
 };
 
 export const API_FETCH_TYPE = {
@@ -74,7 +71,17 @@ export const API_FETCH_TYPE = {
 export const ROUTER_TYPE = {
   LOGIN: '/auth/login',
   MONIT: '/main',
-}
+};
+
+export const COMPANY_TYPE = {
+  DBLIFE: 'dblife',
+  LINA: 'lina',
+};
+
+export const TRANSPORT_TYPE = {
+  MQTT: 'mqtt',
+  OCX: 'ocx',
+};
 
 export default {
   NODE_ENV: process.env.NODE_ENV,
@@ -83,7 +90,7 @@ export default {
   CELERING_SERVER: process.env.REACT_APP_CELERING_SERVER,
   COMPANY: process.env.REACT_APP_COMPANY,
   ZIBOX_PORT: process.env.REACT_APP_ZIBOX_PORT,
-  ZIBOX_MODE: process.env.REACT_APP_ZIBOX_MODE,
+  TRANSPORT: Utils.checkBrowser() || process.env.REACT_APP_MODE,
   LIMIT: 30,
   PAGE: 1,
   COOKIE_DOMAIN: '.celering.io',

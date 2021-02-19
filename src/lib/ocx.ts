@@ -1,35 +1,65 @@
-import { Zibox, OCXConntectOption } from 'types/zibox';
+import { ConnectOption, Socket } from 'types/socket';
+import { Zibox } from 'types/zibox';
 import Logger from 'utils/log';
 
-class OCX implements Zibox {
-  private socket!: any;
+class OCX implements Zibox, Socket {
+  private socket: any;
 
   /**
-   * @description ocx 객체 생성하기
+   * @description 소켓 연결하기
+   * @param options 연결 옵션
    */
-  create() {
-    Logger.log('[OCX] Create Zibox');
+  async connect(options: ConnectOption) {
+    Logger.log('[OCX] Connect OCX', JSON.stringify(options));
     return new Promise((resolve, reject) => {
-      this.socket = (window as any).ZiBoxMonitor;
-      console.log(this.socket);
+      this.socket.SocketCreate(options.url, options.key);
       resolve(true);
     });
   }
 
   /**
-   * @description ocx 소켓 연결하기
-   * @param options ocx 연결 옵션
+   * @description 객체 생성하기
    */
-  async connect(options: OCXConntectOption) {
-    Logger.log('[OCX] Connect Zibox');
-    try {
-      this.socket.SocketCreate(options.address, options.key);
-      return true;
-    } catch (error) {
-      console.log(error);
-      return false;
-    }
+  create() {
+    Logger.log('[OCX] Create OCX');
+    this.socket = (window as any).ZiBoxMonitor;
+    return true;
   }
+
+  /**
+   * @description 소켓 연결 끊기
+   */
+  disconnect() {
+    Logger.log('[OCX] Disconnect OCX');
+    try {
+      this.socket.SocketClose();
+      this.socket = null;
+      // this.number = '';
+      // this.user = 0;
+    } catch (error) {
+      Logger.log('[OCX] Disconnect OCX ERROR', error);
+    }
+    // return this.number;
+  }
+
+  /**
+   * -3 서버를 찾을 수 없음
+   * -2 비정상 종료
+   * -1 사용자 종료
+   * 0  연결 실패
+   * 1  연결 성공
+   */
+  onConnectEventHandler(callback: (parameters: number) => void) {
+    Logger.log('[OCX] Register Connect Event');
+    this.socket.DevConnect = (message: string) => {
+      Logger.log(`[OCX] DevConnect`, message);
+      callback(Number(message));
+    };
+  }
+
+  onMonitorEventHandler() {}
+
+  onChangeStatusEventHandler() {}
 }
 
 export default OCX;

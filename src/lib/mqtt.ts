@@ -5,50 +5,45 @@ class MQTT implements Zibox {
   private zibox: any;
 
   /**
-   * @description zibox 객체 생성하기
-   */
-  create() {
-    Logger.log('[MQTT] Create Zibox');
-    return new Promise((resolve, reject) => {
-      this.zibox = new (window as any).Zibox();
-      resolve(true);
-    });
-  }
-
-  /**
    * @description 지박스 연결하기
    * @param options 연결 옵션
    */
   async connect(options: MQTTConnectOption) {
-    Logger.log('[MQTT] Connect ZiBox');
-    try {
-      await this.zibox.connect(options.ip);
-      this.zibox.ftpOff();
+    // Logger.log('[MQTT] Connect ZiBox');
+    // try {
+    //   await this.zibox.connect(options.ip);
+    //   this.zibox.ftpOff();
+    //   await new Promise((resolve) => setTimeout(resolve, 500));
+    //   this.zibox.monIP('127.0.0.1');
+    //   await new Promise((resolve) => setTimeout(resolve, 500));
+    //   this.zibox.monOn();
+    //   if (options.mic_vol && options.spk_vol) {
+    //     this.setVolume(options.mic_vol, options.spk_vol);
+    //   }
+    //   this.getVolume();
+    //   return true;
+    // } catch (error) {
+    //   console.log(error);
+    //   return false;
+    // }
+  }
 
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      this.zibox.monIP('127.0.0.1');
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      this.zibox.monOn();
+  /**
+   * @description zibox 객체 생성하기
+   */
+  create() {
+    Logger.log('[MQTT] Create Zibox');
+    this.zibox = new (window as any).Zibox();
 
-      if (options.mic_vol && options.spk_vol) {
-        this.setVolume(options.mic_vol, options.spk_vol);
-      }
-
-      this.getVolume();
-
-      return true;
-    } catch (error) {
-      console.log(error);
-      return false;
-    }
+    return true;
   }
 
   /**
    * @description 볼륨 정보 가져오기
    */
   getVolume() {
-    Logger.log('[MQTT] Get Volume');
-    this.zibox.disitalVolumeInfo();
+    // Logger.log('[MQTT] Get Volume');
+    // this.zibox.disitalVolumeInfo();
   }
 
   /**
@@ -57,9 +52,9 @@ class MQTT implements Zibox {
    * @param spk 스피커 볼륨 값
    */
   setVolume(mic: number, spk: number) {
-    Logger.log('[MQTT] Set Volume');
-    this.zibox.micVolume(mic);
-    this.zibox.spkVolume(spk);
+    // Logger.log('[MQTT] Set Volume', { mic, spk });
+    // this.zibox.micVolume(mic);
+    // this.zibox.spkVolume(spk);
   }
 }
 

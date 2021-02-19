@@ -43,7 +43,6 @@ export interface StatusType {
 
 export interface RequestType {
   getUser: common.FetchType;
-  getConsultant: common.FetchType;
   insertUser: common.FetchType;
   updateUser: common.FetchType;
   deleteUser: common.FetchType;

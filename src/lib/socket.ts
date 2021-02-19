@@ -1,11 +1,14 @@
 import io from 'socket.io-client';
+import { DynamicMapType } from 'types/common';
 
+import { ConnectOption, Socket as WebSocket } from 'types/socket';
+import { ConsultantCallStatus, CallStatus } from 'types/user';
+import { SOCKET_EVENT_TYPE } from 'utils/constants';
 import Logger from 'utils/log';
 
-class Socket {
-  private address?: string;
-  private socket!: SocketIOClient.Socket;
+class Socket implements WebSocket {
   private static instance: Socket;
+  private socket!: SocketIOClient.Socket;
 
   constructor() {
     if (Socket.instance) return Socket.instance;
@@ -21,24 +24,74 @@ class Socket {
   }
 
   /**
-   * @description 소켓 연결하기
-   * @param url 소켓 주소
+   * @description 연결하기
+   * @param options 연결 옵션
    */
-  create(url: string): Socket {
-    if (!url) return this;
+  connect(options: ConnectOption): Socket {
+    Logger.log('[WEB SOCKET] Connect', options);
+    if (!options.url) return this;
 
-    this.socket = io.connect(url);
-
+    this.socket = io.connect(options.url);
     return this;
   }
 
-  url(address: string): Socket {
-    if (!address) return this;
+  disconnect() {
+    alert('disconnect socket');
+    this.onEmit('disconnect');
+  }
 
-    this.address = address;
-    this.socket = io.connect(this.address);
+  /**
+   * @description 이벤트 발신
+   * @param name 이벤트명
+   * @param data 전송 데이터
+   */
+  onEmit(name: string, data?: any) {
+    try {
+      Logger.log(`[WEB SOCKET] Emit Message ${name}`, data);
+      this.socket.emit(name, data!);
+    } catch (error) {
+      Logger.log(error);
+    }
+  }
 
-    return this;
+  onConnectEventHandler(callback: (parameters: ConsultantCallStatus) => void) {
+    Logger.log('[WEB SOCKET] Register Connect Event');
+    this.socket.on(SOCKET_EVENT_TYPE.INITIALIZE, (message: string) => {
+      Logger.log(`[WEB SOCKET] ${SOCKET_EVENT_TYPE.INITIALIZE}`, message);
+      const data: DynamicMapType = JSON.parse(message);
+
+      let parseData: ConsultantCallStatus = {};
+
+      for (const key in data) {
+        const value: CallStatus = JSON.parse(data[key]);
+        value.time = Number(value.time);
+        parseData = {
+          ...parseData,
+          [key]: value,
+        };
+      }
+
+      callback(parseData);
+    });
+  }
+
+  onMonitorEventHandler() {}
+
+  onChangeStatusEventHandler(callback: (parameters: ConsultantCallStatus) => void) {
+    Logger.log('[WEB SOCKET] Register Change Status Event');
+    // 상담원, 법인폰, 지박스 상태 변경 시
+    // 전체 데이터도 여기로 전달
+    this.socket.on('state', (message: string) => {
+      Logger.log(`[WEB SOCKET] state`, message);
+      const data = JSON.parse(message);
+      const { status } = data;
+
+      // if (status === 'Y') {
+      //   callback(data);
+      // } else {
+      //   callback('Type ERROR');
+      // }
+    });
   }
 
   onMessageInit(callback: (parameters: any) => void) {
@@ -128,15 +181,6 @@ class Socket {
         callback('Type ERROR');
       }
     });
-  }
-
-  onEmit(type: string, data?: any) {
-    try {
-      Logger.log(`Emit Socket ${type}`, data);
-      this.socket.emit(type, data!);
-    } catch (error) {
-      console.log(error);
-    }
   }
 }
 

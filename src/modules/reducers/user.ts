@@ -13,10 +13,6 @@ const initialState: UserType = {
       fetch: false,
       error: '',
     },
-    getConsultant: {
-      fetch: false,
-      error: '',
-    },
     insertUser: {
       fetch: false,
       error: '',

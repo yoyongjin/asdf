@@ -8,7 +8,7 @@ export type AuthAction = ActionType<typeof actions>;
 export interface AuthType {
   request: RequestType;
   loginInfo: SuccessLogin;
-  socket: number;
+  socketConnectionStatus: number;
 }
 
 export interface RequestType {
@@ -23,26 +23,26 @@ export interface RequestLogin extends common.RouterType {
 }
 
 /**
- * id: unique id
  * admin_id: 관리자 권한 (0 - 상담원, 1 - 일반 관리자, 2 - 슈퍼 관리자)
  * branch_id: 해당 관리자의 지점 id
  * branch_name: 지점명
- * team_id: 해당 관리자의 팀 id
+ * created_at: 회원가입 날짜
+ * id: unique id
+ * login_at: 마지막 로그인한 시간
  * name: 이름
  * number: 전화번호
+ * team_id: 해당 관리자의 팀 id
  * zibox_ip: zibox ip
- * login_at: 마지막 로그인한 시간
- * created_at: 회원가입 날짜
  */
 export interface SuccessLogin {
-  id: number;
   admin_id: number;
   branch_id: number;
   branch_name?: string;
-  team_id: string;
+  created_at: string;
+  id: number;
+  login_at: number;
   name: string;
   number: string;
+  team_id: string;
   ziboxip: string;
-  login_at: number;
-  created_at: string;
 }

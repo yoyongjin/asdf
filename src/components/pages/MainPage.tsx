@@ -7,31 +7,33 @@ import useAuth from 'hooks/useAuth';
 import useOcx from 'hooks/useOcx';
 import { COLORS } from 'utils/color';
 
-import dblifeLogo from 'images/db-logo-cont@3x.png';
+// import dblifeLogo from 'images/db-logo-cont@3x.png';
 import useZibox from 'hooks/useZibox';
 import linaLogo from 'images/ln-logo-moni@3x.png';
 import loginTimeImage from 'images/bg-login-time@3x.png';
 import zmsLogo from 'images/zms/sub-gnb-logo.png';
 
-import { company, COMPANY_MAP } from 'utils/constants';
+import constants, { company, COMPANY_MAP, COMPANY_TYPE } from 'utils/constants';
 import useSocket from 'hooks/useSocket';
+import useCommunicator from 'hooks/useCommunicator';
 
 function MainPage({ history, location }: MainPageProps) {
   const { loginInfo, onCheckLogin, onClickLogout } = useAuth();
-  const {
-    getAllCallStatus,
-    getChangeStatus,
-    getInitCallStatus,
-    getUserInfo,
-  } = useSocket();
-  const { setEvent } = useZibox();
-  const {
-    createOcx,
-    beforeUnload,
-    connectServerOcx,
-    getAllStateOcx,
-    getMonitoringStateOcx,
-  } = useOcx();
+  const { registerEventHandler } = useCommunicator();
+  // const {
+  //   getAllCallStatus,
+  //   getChangeStatus,
+  //   getInitCallStatus,
+  //   getUserInfo,
+  // } = useSocket();
+  // const { setEvent } = useZibox();
+  // const {
+  //   createOcx,
+  //   beforeUnload,
+  //   connectServerOcx,
+  //   getAllStateOcx,
+  //   getMonitoringStateOcx,
+  // } = useOcx();
 
   const bgColor = useMemo(() => {
     if (location.pathname === '/main') {
@@ -43,39 +45,15 @@ function MainPage({ history, location }: MainPageProps) {
 
   useEffect(() => {
     if (!loginInfo.id) {
-      // 로그인이 되있지 않을 경우
-      createOcx().then(() => {
-        connectServerOcx();
-      });
       onCheckLogin(history);
     }
-  }, [loginInfo.id, history, createOcx, connectServerOcx, onCheckLogin]);
+  }, [loginInfo.id, history, onCheckLogin]);
 
   useEffect(() => {
     if (loginInfo.id) {
-      // 로그인이 된 후 리스너 등록
-      // getAllCallStatus();
-      // getChangeStatus();
-      // getInitCallStatus();
-      // getUserInfo(loginInfo.branch_id, loginInfo.admin_id);
-      // setEvent();
-      // getAllStateOcx(loginInfo.branch_id, loginInfo.admin_id);
-      // getMonitoringStateOcx();
-      // beforeUnload();
+      registerEventHandler();
     }
-  }, [
-    loginInfo.id,
-    loginInfo.admin_id,
-    loginInfo.branch_id,
-    getAllCallStatus,
-    getChangeStatus,
-    getInitCallStatus,
-    getUserInfo,
-    setEvent,
-    getAllStateOcx,
-    getMonitoringStateOcx,
-    beforeUnload,
-  ]);
+  }, [loginInfo.id, registerEventHandler]);
 
   return (
     <MainTemplate
