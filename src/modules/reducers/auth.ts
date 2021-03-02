@@ -1,10 +1,8 @@
 import { createReducer } from 'typesafe-actions';
-import produce, { enableES5 } from 'immer';
+import produce from 'immer';
 
 import { AuthAction, AuthType } from 'types/auth';
 import * as actions from 'modules/actions/auth';
-
-enableES5();
 
 // 상태
 const initialState: AuthType = {

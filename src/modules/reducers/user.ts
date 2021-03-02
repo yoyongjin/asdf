@@ -1,5 +1,6 @@
+import _ from 'lodash';
+import produce from 'immer';
 import { createReducer } from 'typesafe-actions';
-import produce, { enableES5 } from 'immer';
 
 import { ConsultantInfoType, UserAction, UserType } from 'modules/types/user';
 import * as types from 'modules/actions/user';
