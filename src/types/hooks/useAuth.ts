@@ -1,0 +1,1 @@
+export type onClickLogout = (history: History) => void;

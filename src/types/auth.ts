@@ -9,6 +9,7 @@ export interface AuthType {
   request: RequestType;
   loginInfo: SuccessLogin;
   socketConnectionStatus: number;
+  tappingStatus: boolean;
 }
 
 export interface RequestType {

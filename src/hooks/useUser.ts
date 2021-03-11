@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
-  requestGetUserInfo,
+  requestGetUsers,
   requestAddUser,
   requestUpdateUser,
   requestDeleteUser,
@@ -28,7 +28,7 @@ function useUser() {
 
   const dispatch = useDispatch();
 
-  const getUsersInfo = useCallback(
+  const getUsers = useCallback(
     (
       branchId = -1,
       teamId = -1,
@@ -49,7 +49,7 @@ function useUser() {
         adminId,
         loginId,
       };
-      dispatch(requestGetUserInfo(payload));
+      dispatch(requestGetUsers(payload));
     },
     [dispatch],
   );
@@ -162,7 +162,7 @@ function useUser() {
     consultantInfo,
     filterUserInfo,
     filterConsultantInfo,
-    getUsersInfo,
+    getUsers,
     resetFilteredList,
     onClickInsertUser,
     onClickUpdateUser,

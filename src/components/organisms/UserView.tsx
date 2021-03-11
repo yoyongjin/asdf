@@ -92,7 +92,7 @@ function UserView({ location }: UserViewProps) {
   const {
     userInfo,
     filterUserInfo,
-    getUsersInfo,
+    getUsers,
     resetFilteredList,
     onClickInsertUser,
     onClickUpdateUser,
@@ -160,7 +160,7 @@ function UserView({ location }: UserViewProps) {
     onChangePageFirst();
   }, [form.search, onChangePageFirst]);
 
-  const getUsers = useCallback(
+  const getUsers2 = useCallback(
     (
       branchId: number,
       teamId: number,
@@ -171,9 +171,9 @@ function UserView({ location }: UserViewProps) {
       adminId: number,
     ) => {
       // 서버로부터 데이터 요청
-      getUsersInfo(branchId, teamId, count, page, search, path, adminId);
+      getUsers(branchId, teamId, count, page, search, path, adminId);
     },
-    [getUsersInfo],
+    [getUsers],
   );
 
   const getUserInfo = useCallback(
@@ -208,7 +208,7 @@ function UserView({ location }: UserViewProps) {
         return;
       }
 
-      getUsers(
+      getUsers2(
         form.branch,
         form.team,
         form.userListCount,
@@ -240,7 +240,7 @@ function UserView({ location }: UserViewProps) {
         return;
       }
 
-      getUsers(
+      getUsers2(
         loginInfo.branch_id,
         form.team,
         form.userListCount,
@@ -262,7 +262,7 @@ function UserView({ location }: UserViewProps) {
     page,
     filterUserInfo.length,
     location.pathname,
-    getUsers,
+    getUsers2,
     resetFilteredList,
   ]);
 

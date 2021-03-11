@@ -2,11 +2,14 @@ import _ from 'lodash';
 import produce from 'immer';
 import { createReducer } from 'typesafe-actions';
 
-import { ConsultantInfoType, UserAction, UserType } from 'modules/types/user';
+import { ConsultantInfoType, UserInfoType } from 'modules/types/user';
 import * as types from 'modules/actions/user';
 import { getDiffTime } from 'utils/utils';
-
-enableES5();
+import Logger from 'utils/log';
+import { CALL_STATUS, MONITORING_STATUS, USER_TYPE } from 'utils/constants';
+import { UserInfo } from 'types/user';
+import Utils from 'utils/new_utils';
+import { UserAction, UserType } from 'types/user';
 
 const initialState: UserType = {
   request: {
@@ -42,73 +45,76 @@ const initialState: UserType = {
     numberOfUsers: 0,
   },
   status: {},
-  monit: {
-    tapping: false,
-    pc_ip: '',
-  },
+  // monit: {
+  //   tapping: false,
+  //   pc_ip: '',
+  // },
 };
 
 const userReducer = createReducer<UserType, UserAction>(initialState, {
-  [types.REQUEST_GET_USER_INFO]: (state, action) => {
+  [types.REQUEST_GET_USERS]: (state, action) => {
     return produce(state, (draft) => {
       draft.request.getUser.fetch = true;
       draft.request.getUser.error = '';
     });
   },
-  [types.SUCCESS_GET_USER_INFO]: (state, action) => {
+  [types.SUCCESS_GET_USERS]: (state, action) => {
     const { users, count, url, loginId } = action.payload;
-    const consultant = users.filter((user) => {
-      return user.admin_id === 0;
+    const consultants = users.filter((user) => {
+      return user.admin_id === USER_TYPE.CONSULTANT;
     });
+
     return produce(state, (draft) => {
       draft.request.getUser.fetch = false;
       draft.request.getUser.error = '';
+
       if (url === '/main') {
-        let temp = consultant.map((user) => {
-          let value = state.status[user.number];
-          let newUser: ConsultantInfoType = Object.assign({}, user);
-          if (value && value.call) {
-            const { call, connection, number, time } = value.call;
-            if (number === user.number) {
-              newUser.call_time = time;
-              newUser.call_status = call;
-              newUser.phone_status = connection;
-            }
-          }
+        let temp = consultants.map((user) => {
+          const value = state.status[user.number];
+          console.log(value);
+          let newUser = Object.assign({}, user);
+          // if (value && value.call) {
+          //   const { call, connection, number, time } = value.call;
+          //   if (number === user.number) {
+          //     newUser.call_time = time;
+          //     newUser.call_status = call;
+          //     newUser.phone_status = connection;
+          //   }
+          // }
 
-          if (value && value.consultant) {
-            const { number, tmr } = value.consultant;
-            if (number === user.number) {
-              newUser.consultant_status = tmr;
-            }
-          }
+          // if (value && value.consultant) {
+          //   const { number, tmr } = value.consultant;
+          //   if (number === user.number) {
+          //     newUser.consultant_status = tmr;
+          //   }
+          // }
 
-          if (value && value.zibox) {
-            const {
-              ats,
-              connection,
-              monitoring,
-              number,
-              pc_ip,
-              record,
-              zibox_ip,
-              zibox_mac,
-              monit_user,
-            } = value.zibox;
-            if (number === user.number) {
-              newUser.zibox_status = connection;
-              newUser.ats_status = ats;
-              newUser.record_status = record;
-              newUser.monit_status = monitoring;
-              newUser.zibox_ip = zibox_ip;
-              newUser.zibox_mac = zibox_mac;
-              newUser.pc_ip = pc_ip;
-              newUser.monit_user = monit_user;
-              // if (loginId === monit_user) {
-              //   draft.monit.tapping = true;
-              // }
-            }
-          }
+          // if (value && value.zibox) {
+          //   const {
+          //     ats,
+          //     connection,
+          //     monitoring,
+          //     number,
+          //     pc_ip,
+          //     record,
+          //     zibox_ip,
+          //     zibox_mac,
+          //     monit_user,
+          //   } = value.zibox;
+          //   if (number === user.number) {
+          //     newUser.zibox_status = connection;
+          //     newUser.ats_status = ats;
+          //     newUser.record_status = record;
+          //     newUser.monit_status = monitoring;
+          //     newUser.zibox_ip = zibox_ip;
+          //     newUser.zibox_mac = zibox_mac;
+          //     newUser.pc_ip = pc_ip;
+          //     newUser.monit_user = monit_user;
+          //     // if (loginId === monit_user) {
+          //     //   draft.monit.tapping = true;
+          //     // }
+          //   }
+          // }
 
           return newUser;
         });
@@ -140,117 +146,88 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
       }
     });
   },
-  [types.SUCCESS_GET_FILTER_USER_INFO]: (state, action) => {
+  [types.SUCCESS_GET_FILTER_USERS]: (state, action) => {
     const { users, count, url, loginId } = action.payload;
-    const consultant = users.filter((user) => {
+    const consultants = users.filter((user) => {
       return user.admin_id === 0;
     });
     return produce(state, (draft) => {
       draft.request.getUser.fetch = false;
       draft.request.getUser.error = '';
       if (url === '/main') {
-        let temp = consultant.map((user) => {
+        let temp = consultants.map((user) => {
           let value = state.status[user.number];
           let newUser: ConsultantInfoType = Object.assign({}, user);
-          if (value && value.call) {
-            const { call, connection, number, time } = value.call;
-            if (number === user.number) {
-              newUser.call_time = time;
-              newUser.call_status = call;
-              newUser.phone_status = connection;
-            }
-          }
+          // if (value && value.call) {
+          //   const { call, connection, number, time } = value.call;
+          //   if (number === user.number) {
+          //     newUser.call_time = time;
+          //     newUser.call_status = call;
+          //     newUser.phone_status = connection;
+          //   }
+          // }
 
-          if (value && value.consultant) {
-            const { number, tmr } = value.consultant;
-            if (number === user.number) {
-              newUser.consultant_status = tmr;
-            }
-          }
+          // if (value && value.consultant) {
+          //   const { number, tmr } = value.consultant;
+          //   if (number === user.number) {
+          //     newUser.consultant_status = tmr;
+          //   }
+          // }
 
-          if (value && value.zibox) {
-            const {
-              ats,
-              connection,
-              monitoring,
-              number,
-              pc_ip,
-              record,
-              zibox_ip,
-              zibox_mac,
-              monit_user,
-            } = value.zibox;
-            if (number === user.number) {
-              newUser.zibox_status = connection;
-              newUser.ats_status = ats;
-              newUser.record_status = record;
-              newUser.monit_status = monitoring;
-              newUser.zibox_ip = zibox_ip;
-              newUser.zibox_mac = zibox_mac;
-              newUser.pc_ip = pc_ip;
-              newUser.monit_user = monit_user;
-              // if (loginId === monit_user) {
-              //   draft.monit.tapping = true;
-              // }
-            }
-          }
+          // if (value && value.zibox) {
+          //   const {
+          //     ats,
+          //     connection,
+          //     monitoring,
+          //     number,
+          //     pc_ip,
+          //     record,
+          //     zibox_ip,
+          //     zibox_mac,
+          //     monit_user,
+          //   } = value.zibox;
+          //   if (number === user.number) {
+          //     newUser.zibox_status = connection;
+          //     newUser.ats_status = ats;
+          //     newUser.record_status = record;
+          //     newUser.monit_status = monitoring;
+          //     newUser.zibox_ip = zibox_ip;
+          //     newUser.zibox_mac = zibox_mac;
+          //     newUser.pc_ip = pc_ip;
+          //     newUser.monit_user = monit_user;
+          //     // if (loginId === monit_user) {
+          //     //   draft.monit.tapping = true;
+          //     // }
+          //   }
+          // }
 
           return newUser;
         });
-        draft.filterUserList.consultants = temp.sort((r1, r2) => {
-          if (r1.branch_id === r2.branch_id) {
-            // id가 같으면 team_name순 정렬 (레벨값 우선 정렬)
-            if (r1.team_name && r2.team_name && r1.team_name !== r2.team_name) {
-              return r1.team_name < r2.team_name
-                ? -1
-                : r1.team_name > r2.team_name
-                ? 1
-                : 0;
-            }
+        // draft.filterUserList.consultants = temp.sort((r1, r2) => {
+        //   if (r1.branch_id === r2.branch_id) {
+        //     // id가 같으면 team_name순 정렬 (레벨값 우선 정렬)
+        //     if (r1.team_name && r2.team_name && r1.team_name !== r2.team_name) {
+        //       return r1.team_name < r2.team_name
+        //         ? -1
+        //         : r1.team_name > r2.team_name
+        //         ? 1
+        //         : 0;
+        //     }
 
-            return r1.name < r2.name ? -1 : r1.name > r2.name ? 1 : 0;
-          }
-          return r1.branch_id - r2.branch_id;
-        });
+        //     return r1.name < r2.name ? -1 : r1.name > r2.name ? 1 : 0;
+        //   }
+        //   return r1.branch_id - r2.branch_id;
+        // });
       } else if (url === '/main/manage/user') {
         draft.filterUserList.users = users.sort((r1, r2) => r2.id - r1.id); // 등록 순서로 정렬
         draft.filterUserList.numberOfUsers = count;
       }
     });
   },
-  [types.FAILURE_GET_USER_INFO]: (state, action) => {
+  [types.FAILURE_GET_USERS]: (state, action) => {
     return produce(state, (draft) => {
       draft.request.getUser.fetch = false;
       draft.request.getUser.error = action.payload;
-    });
-  },
-  [types.RUN_TIMER]: (state, action) => {
-    return produce(state, (draft) => {
-      state.userList.consultants.map((consultant, i) => {
-        if (
-          consultant.consultant_status === 1 &&
-          consultant.call_status !== 'call_idle' &&
-          consultant.call_time
-        ) {
-          draft.userList.consultants[i].diff = getDiffTime(
-            consultant.call_time,
-          );
-        }
-      });
-
-      if (state.filterUserList.consultants.length > 0) {
-        state.filterUserList.consultants.map((consultant, i) => {
-          if (
-            consultant.consultant_status === 1 &&
-            consultant.call_status !== 'call_idle' &&
-            consultant.call_time
-          ) {
-            draft.filterUserList.consultants[i].diff = getDiffTime(
-              consultant.call_time,
-            );
-          }
-        });
-      }
     });
   },
   [types.REQUEST_ADD_USER]: (state, action) => {
@@ -290,6 +267,7 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
     });
   },
   [types.GET_CALL_STATUS]: (state, action) => {
+    // 삭제 예정
     const newUserList = state.userList.consultants.map((user) => {
       let map = action.payload[user.number];
       if (typeof map === 'string') {
@@ -298,7 +276,7 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
       if (map && map.number === user.number) {
         const { status, number, time, monitoring_state, user_id } = map;
         let newUser = Object.assign({}, user);
-        newUser.call_time = Number(time);
+        newUser.call_start_time = Number(time);
         newUser.call_type = status;
         if (monitoring_state) {
           if (monitoring_state === 'y') {
@@ -326,7 +304,7 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
       if (map && map.number === user.number) {
         const { status, number, time, monitoring_state, user_id } = map;
         let newUser = Object.assign({}, user);
-        newUser.call_time = Number(time);
+        newUser.call_start_time = Number(time);
         newUser.call_type = status;
         if (monitoring_state) {
           if (monitoring_state === 'y') {
@@ -355,6 +333,7 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
     });
   },
   [types.INSERT_USER]: (state, action) => {
+    // 삭제 예정
     const {
       admin_id,
       branch_name,
@@ -422,21 +401,21 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
         ) as ConsultantInfoType[];
         cons.push(value);
 
-        draft.userList.consultants = cons.sort((r1, r2) => {
-          if (r1.branch_id === r2.branch_id) {
-            // id가 같으면 team_name순 정렬 (레벨값 우선 정렬)
-            if (r1.team_name !== r2.team_name) {
-              return r1.team_name! < r2.team_name!
-                ? -1
-                : r1.team_name! > r2.team_name!
-                ? 1
-                : 0;
-            }
+        // draft.userList.consultants = cons.sort((r1, r2) => {
+        //   if (r1.branch_id === r2.branch_id) {
+        //     // id가 같으면 team_name순 정렬 (레벨값 우선 정렬)
+        //     if (r1.team_name !== r2.team_name) {
+        //       return r1.team_name! < r2.team_name!
+        //         ? -1
+        //         : r1.team_name! > r2.team_name!
+        //         ? 1
+        //         : 0;
+        //     }
 
-            return r1.name < r2.name ? -1 : r1.name > r2.name ? 1 : 0;
-          }
-          return r1.branch_id - r2.branch_id;
-        });
+        //     return r1.name < r2.name ? -1 : r1.name > r2.name ? 1 : 0;
+        //   }
+        //   return r1.branch_id - r2.branch_id;
+        // });
 
         // draft.userList.consultants.push(value);
       } else if (admin_id === 1) {
@@ -467,6 +446,7 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
     });
   },
   [types.UPDATE_USER]: (state, action) => {
+    // 삭제 예정
     const {
       admin_id,
       branch_name,
@@ -791,7 +771,7 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
               break;
             case 'callevent':
               draft.userList.consultants[i].call_status = call;
-              draft.userList.consultants[i].call_time = time;
+              draft.userList.consultants[i].call_start_time = time;
               break;
             case 'phoneevent':
               draft.userList.consultants[i].phone_status = connection;
@@ -831,7 +811,7 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
               break;
             case 'callevent':
               draft.filterUserList.consultants[i].call_status = call;
-              draft.filterUserList.consultants[i].call_time = time;
+              draft.filterUserList.consultants[i].call_start_time = time;
               break;
             case 'phoneevent':
               draft.userList.consultants[i].phone_status = connection;
@@ -885,7 +865,9 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
           ].monit_user = action.payload.zibox!.monit_user;
           // draft.monit.tapping = false;
           draft.userList.consultants[i].call_status = action.payload.call!.call;
-          draft.userList.consultants[i].call_time = action.payload.call!.time;
+          draft.userList.consultants[
+            i
+          ].call_start_time = action.payload.call!.time;
           draft.userList.consultants[
             i
           ].phone_status = action.payload.call!.connection;
@@ -915,7 +897,7 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
           ].call_status = action.payload.call!.call;
           draft.filterUserList.consultants[
             i
-          ].call_time = action.payload.call!.time;
+          ].call_start_time = action.payload.call!.time;
           draft.filterUserList.consultants[
             i
           ].phone_status = action.payload.call!.connection;
@@ -929,11 +911,11 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
       switch (action.payload) {
         case 0:
           // 감청 종료
-          draft.monit.tapping = false;
+          // draft.monit.tapping = false;
           break;
         case 1:
           // 감청 시작
-          draft.monit.tapping = true;
+          // draft.monit.tapping = true;
           break;
         case 2:
           // 버퍼링 시작
@@ -943,7 +925,7 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
           break;
         case 4:
           // 타임아웃
-          draft.monit.tapping = false;
+          // draft.monit.tapping = false;
           break;
         default:
           break;
@@ -964,7 +946,302 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
   [types.CHANGE_MONIT_STATUS]: (state, action) => {
     return produce(state, (draft) => {
       // 고쳐야함
-      draft.monit.pc_ip = action.payload.number;
+      // draft.monit.pc_ip = action.payload.number;
+    });
+  },
+  [types.SET_USER_STATUS]: (state, action) => {
+    Logger.log('SET_USER_STATUS', action.payload);
+
+    const consultantStatus = _.cloneDeep(action.payload);
+
+    const newUserList = state.userList.consultants.map((user) => {
+      const status = consultantStatus[user.number];
+      if (status && status.number === user.number) {
+        const { number, time, type, monitoring_state, user_id } = status;
+
+        const newUser = _.cloneDeep(user);
+        newUser.call_start_time = Number(time);
+        newUser.call_type = type;
+
+        if (monitoring_state) {
+          if (monitoring_state === MONITORING_STATUS.YES) {
+            newUser.monitoring = true;
+          } else if (monitoring_state === MONITORING_STATUS.NO) {
+            newUser.monitoring = false;
+          }
+        }
+
+        if (user_id) {
+          newUser.user_id = user_id;
+        }
+
+        return newUser;
+      } else {
+        return user;
+      }
+    });
+
+    const newFilteredUserList = state.filterUserList.consultants.map((user) => {
+      const status = consultantStatus[user.number];
+
+      if (status && status.number === user.number) {
+        const { type, number, time, monitoring_state, user_id } = status;
+
+        const newUser = _.cloneDeep(user);
+        newUser.call_start_time = Number(time);
+        newUser.call_type = type;
+
+        if (monitoring_state) {
+          if (monitoring_state === MONITORING_STATUS.YES) {
+            newUser.monitoring = true;
+          } else if (monitoring_state === MONITORING_STATUS.NO) {
+            newUser.monitoring = false;
+          }
+        }
+
+        if (user_id) {
+          newUser.user_id = user_id;
+        }
+
+        return newUser;
+      } else {
+        return user;
+      }
+    });
+
+    return produce(state, (draft) => {
+      draft.userList.consultants = newUserList;
+
+      if (state.filterUserList.consultants.length > 0) {
+        draft.filterUserList.consultants = newFilteredUserList;
+      }
+    });
+  },
+  [types.ADD_USER]: (state, action) => {
+    Logger.log('ADD_USER', action.payload);
+    const branchId = action.payload.branch_id;
+    const newUser = _.cloneDeep(action.payload.userInfo);
+
+    return produce(state, (draft) => {
+      if (newUser.branch_id !== branchId) {
+        // 추가된 유저의 지점과 현재 로그인된 관리자의 지점이 다른 경우
+        return;
+      }
+
+      if (newUser.admin_id === USER_TYPE.CONSULTANT) {
+        // 추가한 유저 정보가 상담원인 경우
+        if (state.userList.users.length > 4) {
+          // 페이지가 넘어갈 경우
+          draft.userList.users.unshift(newUser);
+          draft.userList.users.pop();
+        } else {
+          draft.userList.users.unshift(newUser);
+        }
+
+        if (state.filterUserList.users.length > 0) {
+          // 필터링한 정보를 보고 있을 경우
+          if (
+            state.filterUserList.users[0].branch_id === newUser.branch_id ||
+            state.filterUserList.users[0].team_id === newUser.team_id
+          ) {
+            // 보고있는 지점과 팀에 넣은 경우
+            if (state.filterUserList.users.length > 4) {
+              draft.filterUserList.users.unshift(newUser);
+              draft.filterUserList.users.pop();
+            } else {
+              draft.filterUserList.users.unshift(newUser);
+            }
+          }
+        }
+
+        const cons = _.cloneDeep(state.userList.consultants);
+        cons.push(newUser);
+
+        draft.userList.consultants = cons.sort((r1, r2) => {
+          if (r1.branch_id === r2.branch_id) {
+            // id가 같으면 team_name순 정렬 (레벨값 우선 정렬)
+            if (r1.team_name !== r2.team_name) {
+              return r1.team_name! < r2.team_name!
+                ? -1
+                : r1.team_name! > r2.team_name!
+                ? 1
+                : 0;
+            }
+
+            return r1.name < r2.name ? -1 : r1.name > r2.name ? 1 : 0;
+          }
+          return r1.branch_id - r2.branch_id;
+        });
+
+        // draft.userList.consultants.push(value);
+      } else if (newUser.admin_id === 1) {
+        // 관리자일 경우
+        if (state.userList.users.length > 4) {
+          draft.userList.users.unshift(newUser);
+          draft.userList.users.pop();
+        } else {
+          draft.userList.users.unshift(newUser);
+        }
+
+        if (state.filterUserList.users.length > 0) {
+          if (
+            state.filterUserList.users[0].branch_id === newUser.branch_id &&
+            state.filterUserList.users[0].team_id === newUser.team_id
+          ) {
+            if (state.filterUserList.users.length > 4) {
+              draft.filterUserList.users.unshift(newUser);
+              draft.filterUserList.users.pop();
+            } else {
+              draft.filterUserList.users.unshift(newUser);
+            }
+          }
+        }
+      }
+
+      draft.userList.numberOfUsers += 1;
+    });
+  },
+  [types.MODIFY_USER]: (state, action) => {
+    Logger.log('MODIFY_USER', action.payload);
+    const branchId = action.payload.branch_id;
+    const newUser = _.cloneDeep(action.payload.userInfo);
+
+    return produce(state, (draft) => {
+      if (newUser.branch_id !== branchId) return;
+      if (newUser.admin_id === USER_TYPE.CONSULTANT) {
+        // 상담원 수정 시
+        if (draft.userList.users.length > 0) {
+          let index = draft.userList.users.findIndex((values) => {
+            return values.id === newUser.id;
+          });
+
+          if (index > -1) {
+            draft.userList.users[index] = newUser;
+          }
+        }
+
+        if (draft.userList.consultants.length > 0) {
+          let index = draft.userList.consultants.findIndex((values) => {
+            return values.id === newUser.id;
+          });
+
+          if (index > -1) {
+            draft.userList.consultants[index] = newUser;
+          }
+        }
+
+        if (draft.filterUserList.users.length > 0) {
+          let index = draft.filterUserList.users.findIndex((values) => {
+            return values.id === newUser.id;
+          });
+
+          if (index > -1) {
+            draft.filterUserList.users[index] = newUser;
+          }
+        }
+
+        if (draft.filterUserList.consultants.length > 0) {
+          let index = draft.filterUserList.consultants.findIndex((values) => {
+            return values.id === newUser.id;
+          });
+          if (index > -1) {
+            draft.filterUserList.consultants[index] = newUser;
+          }
+        }
+      } else if (newUser.admin_id === USER_TYPE.ADMIN) {
+        if (draft.userList.users.length > 0) {
+          let index = draft.userList.users.findIndex((values) => {
+            return values.id === newUser.id;
+          });
+
+          if (index > -1) {
+            draft.userList.users[index] = newUser;
+          }
+        }
+
+        if (draft.userList.consultants.length > 0) {
+          draft.userList.consultants = draft.userList.consultants.filter(
+            (values) => {
+              return values.id !== newUser.id;
+            },
+          );
+        }
+
+        if (draft.filterUserList.users.length > 0) {
+          let index = draft.filterUserList.users.findIndex((values) => {
+            return values.id === newUser.id;
+          });
+
+          if (index > -1) {
+            draft.filterUserList.users[index] = newUser;
+          }
+        }
+
+        if (draft.filterUserList.consultants.length > 0) {
+          draft.filterUserList.consultants = draft.filterUserList.consultants.filter(
+            (values) => {
+              return values.id !== newUser.id;
+            },
+          );
+        }
+      }
+    });
+  },
+  [types.SET_CALCULATED_CALL_TIME]: (state, action) => {
+    // 상담원만 필터링
+    const consultants = state.userList.consultants.filter((userInfo) => {
+      return userInfo.admin_id === USER_TYPE.CONSULTANT;
+    });
+
+    return produce(state, (draft) => {
+      consultants.map((consultantInfo, i) => {
+        if (
+          consultantInfo.call_type === CALL_STATUS.CALL_OFFHOOK &&
+          consultantInfo.call_start_time
+        ) {
+          draft.userList.consultants[i].calling_time = Utils.getDiffTime(
+            consultantInfo.call_start_time,
+          );
+        }
+      });
+
+      if (state.filterUserList.consultants.length > 0) {
+        state.filterUserList.consultants.map((consultant, i) => {
+          if (
+            consultant.call_type === CALL_STATUS.CALL_OFFHOOK &&
+            consultant.call_start_time
+          ) {
+            draft.filterUserList.consultants[i].calling_time = getDiffTime(
+              consultant.call_start_time,
+            );
+          }
+        });
+      }
+      // state.userList.consultants.map((consultant, i) => {
+      //   if (
+      //     consultant.consultant_status === 1 &&
+      //     consultant.call_status !== 'call_idle' &&
+      //     consultant.call_time
+      //   ) {
+      //     draft.userList.consultants[i].calling_time = getDiffTime(
+      //       consultant.call_time,
+      //     );
+      //   }
+      // });
+
+      // if (state.filterUserList.consultants.length > 0) {
+      //   state.filterUserList.consultants.map((consultant, i) => {
+      //     if (
+      //       consultant.consultant_status === 1 &&
+      //       consultant.call_status !== 'call_idle' &&
+      //       consultant.call_time
+      //     ) {
+      //       draft.filterUserList.consultants[i].calling_time = getDiffTime(
+      //         consultant.call_time,
+      //       );
+      //     }
+      //   });
+      // }
     });
   },
 });

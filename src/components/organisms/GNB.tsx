@@ -7,34 +7,22 @@ import { LinkSelector, UserLog } from 'components/molecules';
 import { COLORS } from 'utils/color';
 import { SuccessLogin } from 'types/auth';
 
-import { company, COMPANY_MAP } from 'utils/constants';
+import constants, { COMPANY_TYPE } from 'utils/constants';
 
-const StyledWrapper = styled.div<StyledProps>`
+const StyledWrapper = styled.div`
   /* Display */
   display: flex;
   height: 100%;
   width: 100%;
 
   /* Color */
-  background-color: ${(props) => {
-    if (company === COMPANY_MAP.LINA) {
-      return COLORS.blue;
-    }
-
-    return props.bgColor;
-  }};
+  background-color: ${(props) => props.theme.color.gnb};
 `;
 
-const StyledLogo = styled.div<StyledLogoProps>`
+const StyledLogo = styled.div`
   /* Position */
-  margin-left: ${(props) => {
-    if (company === COMPANY_MAP.LINA) {
-      return 26;
-    }
-
-    return props.marginLeft;
-  }}px;
-  margin-top: ${company === COMPANY_MAP.LINA ? 10 : 0}px;
+  margin-left: 26px;
+  margin-top: ${constants.COMPANY === COMPANY_TYPE.LINA ? 10 : 0}px;
 `;
 
 const StyledLink = styled.div`
@@ -55,33 +43,19 @@ const StyledUserLog = styled.div`
   float: right;
 `;
 
-function GNB({
-  bgColor,
-  marginLeft,
-  loginInfo,
-  location,
-  loginTimeImg,
-  logoImg,
-  onClickLogout,
-}: GNBProps) {
+function GNB({ loginInfo, location, logoImage, onClickLogout }: GNBProps) {
   return (
-    <StyledWrapper bgColor={bgColor}>
-      <StyledLogo marginLeft={marginLeft}>
+    <StyledWrapper>
+      <StyledLogo>
         <Link path="/main">
           <Image
-            alt={'DB life logo'}
-            src={logoImg}
-            width={
-              company === COMPANY_MAP.DBLIFE
-                ? 8.69
-                : company === COMPANY_MAP.LINA
-                ? 8.38
-                : 8.25
-            }
+            alt={'logo'}
+            src={logoImage}
+            width={8.38}
             height={
-              company === COMPANY_MAP.DBLIFE
+              constants.COMPANY === COMPANY_TYPE.DBLIFE
                 ? 3.25
-                : company === COMPANY_MAP.LINA
+                : constants.COMPANY === COMPANY_TYPE.LINA
                 ? 2.1
                 : 3.875
             }
@@ -95,7 +69,6 @@ function GNB({
         <UserLog
           loginTime={loginInfo.login_at}
           userName={loginInfo.name}
-          loginTimeImage={loginTimeImg}
           onClickLogout={onClickLogout}
         />
       </StyledUserLog>
@@ -103,24 +76,15 @@ function GNB({
   );
 }
 
-interface StyledProps {
-  bgColor: string;
-}
-interface StyledLogoProps {
-  marginLeft: number;
-}
-
-interface GNBProps extends StyledProps, StyledLogoProps {
+interface GNBProps {
   loginInfo: SuccessLogin;
-  loginTimeImg: string;
-  logoImg: string;
+  logoImage: string;
   location: Location;
   onClickLogout: () => void;
 }
 
 GNB.defaultProps = {
   bgColor: COLORS.dark_blue2,
-  marginLeft: 0,
 };
 
 export default React.memo(GNB);

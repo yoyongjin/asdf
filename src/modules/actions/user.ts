@@ -2,7 +2,6 @@ import { createAction } from 'typesafe-actions';
 
 import {
   getRequestType,
-  SuccessUserType,
   UserInfoType,
   UpdateUserInfoType,
   ConsultantInfoType,
@@ -10,11 +9,12 @@ import {
   UserInfo,
   StatusType,
 } from 'modules/types/user';
+import { ChangeUser, ConsultantStatusByNumber, SuccessGetUsers } from 'types/user';
 
-export const REQUEST_GET_USER_INFO = 'REQUEST_GET_USER_INFO';
-export const SUCCESS_GET_USER_INFO = 'SUCCESS_GET_USER_INFO';
-export const SUCCESS_GET_FILTER_USER_INFO = 'SUCCESS_GET_FILTER_USER_INFO';
-export const FAILURE_GET_USER_INFO = 'FAILURE_GET_USER_INFO';
+export const REQUEST_GET_USERS = 'REQUEST_GET_USERS';
+export const SUCCESS_GET_USERS = 'SUCCESS_GET_USERS';
+export const SUCCESS_GET_FILTER_USERS = 'SUCCESS_GET_FILTER_USERS';
+export const FAILURE_GET_USERS = 'FAILURE_GET_USERS';
 export const REQUEST_ADD_USER = 'REQUEST_ADD_USER';
 export const SUCCESS_ADD_USER = 'SUCCESS_ADD_USER';
 export const FAILRUE_ADD_USER = 'FAILRUE_ADD_USER';
@@ -33,32 +33,35 @@ export const REQUEST_ZIBOX_VOLUME = 'UPDATE_ZIBOX_VOLUME';
 export const SUCCESS_ZIBOX_VOLUME = 'SUCCESS_ZIBOX_VOLUME';
 export const FAILURE_ZIBOX_VOLUME = 'FAILURE_ZIBOX_VOLUME';
 
-export const RUN_TIMER = 'RUN_TIMER';
 export const INSERT_USER = 'INSERT_USER';
 export const UPDATE_USER = 'UPDATE_USER';
 export const DELETE_USER = 'DELETE_USER';
 export const INSERT_CONSULTANT = 'INSERT_CONSULTANT';
 export const UPDATE_CONSULTANT = 'UPDATE_CONSULTANT';
-export const GET_CALL_STATUS = 'GET_CALL_STATUS';
 export const SET_CONSULTANT_STATUS = 'SET_CONSULTANT_STATUS';
 export const CHANGE_STATUS = 'CHANGE_STATUS';
 export const SAVE_STATUS = 'SAVE_STATUS';
-export const RESET_STATUS = 'RESET_STATUS'
+export const RESET_STATUS = 'RESET_STATUS';
 export const CHANGE_MONIT_STATUS = 'CHANGE_MONIT_STATUS';
 export const SET_MONIT_STATUS = 'SET_MONIT_STATUS';
 export const DISCONNECT_FORCE = 'DISCONNECT_FORCE';
 
-export const requestGetUserInfo = createAction(
-  REQUEST_GET_USER_INFO,
+// new
+export const SET_USER_STATUS = 'SET_USER_STATUS';
+export const ADD_USER = 'ADD_USER';
+export const MODIFY_USER = 'MODIFY_USER';
+export const SET_CALCULATED_CALL_TIME = 'SET_CALCULATED_CALL_TIME';
+
+export const requestGetUsers = createAction(
+  REQUEST_GET_USERS,
 )<getRequestType>();
-export const successGetUserInfo = createAction(
-  SUCCESS_GET_USER_INFO,
-)<SuccessUserType>();
-export const successGetFilterUserInfo = createAction(
-  SUCCESS_GET_FILTER_USER_INFO,
-)<SuccessUserType>();
-export const failureGetUserInfo = createAction(FAILURE_GET_USER_INFO)<string>();
-export const runTimer = createAction(RUN_TIMER)();
+export const successGetUsers = createAction(
+  SUCCESS_GET_USERS,
+)<SuccessGetUsers>();
+export const successGetFilterUsers = createAction(
+  SUCCESS_GET_FILTER_USERS,
+)<SuccessGetUsers>();
+export const failureGetUsers = createAction(FAILURE_GET_USERS)<string>();
 export const requestAddUser = createAction(REQUEST_ADD_USER)<UserInfoType>();
 export const successAddUser = createAction(SUCCESS_ADD_USER)();
 export const failureAddUser = createAction(FAILRUE_ADD_USER)<string>();
@@ -67,7 +70,6 @@ export const requestUpdateUser = createAction(
 )<UpdateUserInfoType>();
 export const successUpdateUser = createAction(SUCCESS_UPDATE_USER)();
 export const failureUpdateUser = createAction(FAILURE_UPDATE_USER)<string>();
-export const getCallStatus = createAction(GET_CALL_STATUS)<any>();
 export const insertUser = createAction(INSERT_USER)<{
   data: UserInfo;
   branch_id: number;
@@ -137,4 +139,20 @@ export const changeMonitStatus = createAction(CHANGE_MONIT_STATUS)<{
   user_id: number;
 }>();
 export const setMonitStatus = createAction(SET_MONIT_STATUS)<number>();
-export const disconnectForce = createAction(DISCONNECT_FORCE)<{number: string}>();
+export const disconnectForce = createAction(DISCONNECT_FORCE)<{
+  number: string;
+}>();
+
+// new
+export const setUserStatus = createAction(
+  SET_USER_STATUS,
+)<ConsultantStatusByNumber>();
+export const addUser = createAction(ADD_USER)<ChangeUser>();
+export const modifyUser = createAction(MODIFY_USER)<ChangeUser>();
+export const setCalculatedCallTime = createAction(SET_CALCULATED_CALL_TIME)();
+
+// 삭제 예정
+export const GET_CALL_STATUS = 'GET_CALL_STATUS';
+export const getCallStatus = createAction(GET_CALL_STATUS)<any>();
+export const RUN_TIMER = 'RUN_TIMER';
+export const runTimer = createAction(RUN_TIMER)();

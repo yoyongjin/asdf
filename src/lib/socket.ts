@@ -1,9 +1,9 @@
+import { isCompositeComponent } from 'react-dom/test-utils';
 import io from 'socket.io-client';
-import { DynamicMapType } from 'types/common';
+import { DynamicMapType, ResponseType } from 'types/common';
 
 import { ConnectOption, Socket as WebSocket } from 'types/socket';
-import { ConsultantCallStatus, CallStatus } from 'types/user';
-import { SOCKET_EVENT_TYPE } from 'utils/constants';
+import { SOCKET_EVENT_TYPE, SOCKET_RESPONSE_STATUS } from 'utils/constants';
 import Logger from 'utils/log';
 
 class Socket implements WebSocket {
@@ -54,43 +54,47 @@ class Socket implements WebSocket {
     }
   }
 
-  onConnectEventHandler(callback: (parameters: ConsultantCallStatus) => void) {
+  onConnectEventHandler(callback: (parameters: number) => void) {
     Logger.log('[WEB SOCKET] Register Connect Event');
     this.socket.on(SOCKET_EVENT_TYPE.INITIALIZE, (message: string) => {
       Logger.log(`[WEB SOCKET] ${SOCKET_EVENT_TYPE.INITIALIZE}`, message);
-      const data: DynamicMapType = JSON.parse(message);
+      const { status, data, type } = JSON.parse(message) as ResponseType;
 
-      let parseData: ConsultantCallStatus = {};
-
-      for (const key in data) {
-        const value: CallStatus = JSON.parse(data[key]);
-        value.time = Number(value.time);
-        parseData = {
-          ...parseData,
-          [key]: value,
-        };
+      if (status === 'Y') {
+        switch (type) {
+          case 'init':
+            callback(data);
+            break;
+          default:
+            break;
+        }
       }
-
-      callback(parseData);
     });
   }
 
-  onMonitorEventHandler() {}
-
-  onChangeStatusEventHandler(callback: (parameters: ConsultantCallStatus) => void) {
-    Logger.log('[WEB SOCKET] Register Change Status Event');
-    // 상담원, 법인폰, 지박스 상태 변경 시
-    // 전체 데이터도 여기로 전달
-    this.socket.on('state', (message: string) => {
-      Logger.log(`[WEB SOCKET] state`, message);
-      const data = JSON.parse(message);
-      const { status } = data;
-
+  onMonitorEventHandler() {
+    this.socket.on(SOCKET_EVENT_TYPE.MONITORING, (message: string) => {
+      Logger.log(`[WEB SOCKET] ${SOCKET_EVENT_TYPE.MONITORING}`, message);
+      // const data = JSON.parse(message);
+      // const { status } = data;
       // if (status === 'Y') {
       //   callback(data);
       // } else {
-      //   callback('Type ERROR');
+      //   callback('error');
       // }
+    });
+  }
+
+  onChangeStatusEventHandler(callback: (type: string, data: any) => void) {
+    Logger.log('[WEB SOCKET] Register Change Status Event');
+    this.socket.on(SOCKET_EVENT_TYPE.STATE, (message: string) => {
+      // 상태에 관련된 모든 데이터 응답 리스너
+      Logger.log(`[WEB SOCKET] ${SOCKET_EVENT_TYPE.STATE}`, message);
+      const { status, data, type } = JSON.parse(message) as ResponseType;
+
+      if (status === SOCKET_RESPONSE_STATUS.YES) {
+        callback(type, data);
+      }
     });
   }
 

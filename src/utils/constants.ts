@@ -15,13 +15,6 @@ export const COMPANY_MAP = {
 };
 export const CONSULTANT_BOX_WIDTH = 200; //상담사 박스 너비
 
-export const CALL_TYPE = {
-  CALL_IDLE: 'call_idle',
-  CALL_OFFHOOK: 'call_offhook',
-  CALL_CONNECT: 'call_connect',
-  CALL_INCOMMING: 'call_incomming',
-};
-
 export const ZIBOX_TYPE = {
   ZIBOX_LOAD: 'LOAD',
   ZIBOX_CONNECTION: '연결',
@@ -59,29 +52,59 @@ export const PHONE_TYPE = {
   PHONE_RECONNECTION: '재연결',
 };
 
-export const SOCKET_EVENT_TYPE = {
-  INITIALIZE: 'initialize',
-};
+export enum SOCKET_EVENT_TYPE {
+  INITIALIZE = 'initialize',
+  STATE = 'state',
+  MONITORING = 'monitoring'
+}
 
-export const API_FETCH_TYPE = {
-  SUCCESS: 'success',
-  FAILURE: 'fail',
-};
+export enum ROUTER_TYPE {
+  LOGIN = '/auth/login',
+  MONIT = '/main',
+}
 
-export const ROUTER_TYPE = {
-  LOGIN: '/auth/login',
-  MONIT: '/main',
-};
+export enum COMPANY_TYPE {
+  DBLIFE = 'dblife',
+  LINA = 'lina',
+}
 
-export const COMPANY_TYPE = {
-  DBLIFE: 'dblife',
-  LINA: 'lina',
-};
+export enum ZIBOX_TRANSPORT {
+  MQTT = 'mqtt',
+  OCX = 'ocx',
+}
 
-export const TRANSPORT_TYPE = {
-  MQTT: 'mqtt',
-  OCX: 'ocx',
-};
+export enum API_FETCH {
+  SUCCESS = 'success',
+  FAILURE = 'fail',
+}
+
+export enum SOCKET_CONNECTION {
+  SUCCESS = 1,
+  FAILURE = 0,
+}
+
+export enum MONITORING_STATUS {
+  YES = 'y',
+  NO = 'n',
+}
+
+export enum SOCKET_RESPONSE_STATUS {
+  YES = 'Y',
+  NO = 'N',
+}
+
+export enum CALL_STATUS {
+  CALL_IDLE = 'call_idle',
+  CALL_OFFHOOK = 'call_offhook',
+  CALL_CONNECT = 'call_connect',
+  CALL_INCOMMING = 'call_incomming',
+}
+
+export enum USER_TYPE {
+  CONSULTANT = 0,
+  ADMIN = 1,
+  SUPER_ADMIN = 2,
+}
 
 export default {
   NODE_ENV: process.env.NODE_ENV,

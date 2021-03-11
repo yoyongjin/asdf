@@ -15,9 +15,7 @@ import { company, COMPANY_MAP } from 'utils/constants';
 const StyledWrapper = styled.div<StyledProps>`
   /* Display */
   height: 100%;
-  border-bottom: 0.05rem solid ${(props) => props.bdBottomColor};
-  border-bottom: 0.05rem solid
-    ${company === COMPANY_MAP.LINA ? COLORS.blue : COLORS.light_blue};
+  border-bottom: 0.05rem solid ${(props) => props.theme.color.sub};
 `;
 
 const StyledLeft = styled.span`
@@ -131,14 +129,7 @@ function Title({
     <StyledWrapper bdBottomColor={bdBottomColor}>
       <StyledLeft>
         <StyleTitle>
-          <Text
-            fontSize={fontSize ? fontSize : 1.12}
-            fontWeight={800}
-            fontColor={
-              company === COMPANY_MAP.LINA ? COLORS.blue : COLORS.light_blue2
-            }
-            fontFamily={'NanumGothic'}
-          >
+          <Text fontSize={1.12} fontWeight={800} fontFamily="NanumGothic">
             {children}
           </Text>
         </StyleTitle>
@@ -146,7 +137,7 @@ function Title({
           buttonType!.type === 'organization' && adminType !== 2 ? null : (
             <StyledButton>
               <Button
-                width={7.3}
+                width={7}
                 height={1.5}
                 bgColor={COLORS.dark_blue}
                 image={buttonType.bgImage}
@@ -156,7 +147,7 @@ function Title({
                   fontSize={0.85}
                   fontWeight={800}
                   fontColor={COLORS.white}
-                  fontFamily={'NanumGothic'}
+                  fontFamily="NanumGothic"
                 >
                   {buttonType!.title}
                 </Text>

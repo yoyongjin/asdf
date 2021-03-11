@@ -6,7 +6,7 @@ import { Modal } from 'components/atoms';
 import { Consultant, Title, UserInfo } from 'components/molecules';
 import { COLORS } from 'utils/color';
 import { TeamInfo, BranchInfo } from 'modules/types/branch';
-import { ConsultantInfoType } from 'modules/types/user';
+import { ConsultantInfoType } from 'types/user';
 import useUser from 'hooks/useUser';
 import useMonitoring from 'hooks/useMonitoring';
 import useBranch from 'hooks/useBranch';
@@ -14,9 +14,13 @@ import useInputForm from 'hooks/useInputForm';
 import useAuth from 'hooks/useAuth';
 import useVisible from 'hooks/useVisible';
 import useZibox from 'hooks/useZibox';
-import useOcx from 'hooks/useOcx';
 
-import { company, COMPANY_MAP, CONSULTANT_BOX_WIDTH } from 'utils/constants';
+import {
+  company,
+  COMPANY_MAP,
+  CONSULTANT_BOX_WIDTH,
+  SOCKET_CONNECTION,
+} from 'utils/constants';
 
 const AREAMAGIN = 27; //상담사 박스 영역 마진
 const BOXMAGIN = 5; //상담사 박스 마진
@@ -69,11 +73,9 @@ let team = -1; // 임시 팀 번호
 let request = false;
 
 function Monitoring({ location }: MonitoringProps) {
-  // const [monit, setMonit] = useState<boolean>(false); // 현재 로그인한 유저의 감청 여부 상태
-  // const [tapping, setTapping] = useState<Boolean>(false); // 내가 감청 중인지 아닌지 여부
   const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
   const [tempConsultInfo, setTempConsultInfo] = useState<ConsultantInfoType>();
-  const { initSocket, loginInfo } = useAuth();
+  const { loginInfo, socketConnection } = useAuth();
   const { branchList, teamList, getBranchList, getTeamList } = useBranch();
   const { form, onChangeSelect, setKeyValue, onChangeInput } = useInputForm({
     branch: -1,
@@ -81,19 +83,18 @@ function Monitoring({ location }: MonitoringProps) {
     left: 1.5,
     right: 1.5,
   });
-  const { monit, setMonit, onRunTimer, onRemoveTimer } = useMonitoring();
+  const { tapping, changeTapping } = useMonitoring();
   const {
     consultantInfo,
     filterConsultantInfo,
-    getUsersInfo,
+    getUsers,
     resetFilteredList,
     onClickUpdateUser,
     onClickDisconnect,
   } = useUser();
   const { visible, onClickVisible } = useVisible();
-  const { initZibox, startMonitoring, stopMonitoring, setVolume } = useZibox();
-  const { startMonitoringOcx, stopMonitoringOcx } = useOcx();
-  
+  const { connectZibox, startTapping, stopTapping, setVolume } = useZibox();
+
   const volumeInfo = useMemo(() => {
     return {
       left_vol: form.left,
@@ -103,10 +104,19 @@ function Monitoring({ location }: MonitoringProps) {
 
   const selectInfo = useMemo(() => {
     return {
-      color: company === COMPANY_MAP.DBLIFE ? COLORS.green : COMPANY_MAP.LINA ? COLORS.blue : COLORS.light_blue,
+      color:
+        company === COMPANY_MAP.DBLIFE
+          ? COLORS.green
+          : COMPANY_MAP.LINA
+          ? COLORS.blue
+          : COLORS.light_blue,
       borderRadius: 0,
       borderColor:
-        company === COMPANY_MAP.DBLIFE ? COLORS.green : COMPANY_MAP.LINA ? COLORS.blue : COLORS.light_blue,
+        company === COMPANY_MAP.DBLIFE
+          ? COLORS.green
+          : COMPANY_MAP.LINA
+          ? COLORS.blue
+          : COLORS.light_blue,
       data1: branchList as Array<BranchInfo>,
       data2: teamList as Array<TeamInfo>,
       height: 1.75,
@@ -122,7 +132,7 @@ function Monitoring({ location }: MonitoringProps) {
     [setTempConsultInfo, onClickVisible],
   );
 
-  const getUsers = useCallback(
+  const getUsers2 = useCallback(
     (
       branchId: number,
       teamId: number,
@@ -132,9 +142,9 @@ function Monitoring({ location }: MonitoringProps) {
       adminId?: number,
       loginId?: number,
     ) => {
-      getUsersInfo(branchId, teamId, count, page, '', path, adminId, loginId);
+      getUsers(branchId, teamId, count, page, '', path, adminId, loginId);
     },
-    [getUsersInfo],
+    [getUsers],
   );
 
   const consultantView = useCallback(
@@ -147,41 +157,41 @@ function Monitoring({ location }: MonitoringProps) {
             key={`${loginInfo.admin_id}-${form.branch}-${form.team}-consultant-${consultant.id}`}
             consultInfo={consultant}
             loginId={loginInfo.id}
-            monit={monit.tapping}
             getConsultantInfo={getConsultantInfo}
-            setMonit={setMonit}
-            initZibox={initZibox}
-            startMonitoring={startMonitoring}
-            stopMonitoring={stopMonitoring}
+            connectZibox={connectZibox}
+            changeTapping={changeTapping}
+            tapping={tapping}
+            startTapping={startTapping}
+            stopTapping={stopTapping}
           />
         </StyledConsultant>
       );
     },
     [
       getConsultantInfo,
-      initZibox,
       loginInfo.id,
-      startMonitoring,
-      stopMonitoring,
-      setMonit,
-      monit,
       loginInfo.admin_id,
       form.branch,
       form.team,
+      tapping,
+      changeTapping,
+      connectZibox,
+      startTapping,
+      stopTapping,
     ],
   );
 
   useEffect(() => {
-    if (monit) {
+    if (tapping) {
       setVolume(0, form.left);
     }
-  }, [monit, form.left, setVolume]);
+  }, [tapping, form.left, setVolume]);
 
   useEffect(() => {
-    if (monit) {
+    if (tapping) {
       setVolume(1, form.right);
     }
-  }, [monit, form.right, setVolume]);
+  }, [tapping, form.right, setVolume]);
 
   useEffect(() => {
     let index: number = consultantInfo.findIndex((consultant, i) => {
@@ -193,7 +203,9 @@ function Monitoring({ location }: MonitoringProps) {
   }, [tempConsultInfo, consultantInfo]);
 
   useEffect(() => {
-    if (loginInfo.admin_id === 2 && initSocket === 1) {
+    if (socketConnection !== SOCKET_CONNECTION.SUCCESS) return;
+
+    if (loginInfo.admin_id === 2) {
       // 슈퍼 관리자
       if (form.branch === -1 && filterConsultantInfo.length > 0) {
         // 필터링된 유저 리스트에서 전체 지점명을 볼 경우 필터링된 유저 리스트 초기화
@@ -209,7 +221,7 @@ function Monitoring({ location }: MonitoringProps) {
 
         if (form.branch !== branch || form.team !== team || !request) {
           // 지점명 또는 팀명 선택이 변경될 경우
-          getUsers(
+          getUsers2(
             form.branch,
             form.team,
             2000,
@@ -225,7 +237,7 @@ function Monitoring({ location }: MonitoringProps) {
       }
 
       // 첫 상담원 정보 가져올 때
-      getUsers(
+      getUsers2(
         form.branch,
         form.team,
         2000,
@@ -237,7 +249,7 @@ function Monitoring({ location }: MonitoringProps) {
       branch = form.branch;
       team = form.team;
       request = true;
-    } else if (loginInfo.admin_id === 1 && initSocket === 1) {
+    } else if (loginInfo.admin_id === 1) {
       // 일반 관리자
       if (form.team === -1 && filterConsultantInfo.length > 0) {
         // 필터링된 유저 리스트에서 전체 지점명을 볼 경우 필터링된 유저 리스트 초기화
@@ -252,7 +264,7 @@ function Monitoring({ location }: MonitoringProps) {
 
         if (form.team !== team || !request) {
           // 지점 또는 팀 선택이 변경될 경우
-          getUsers(
+          getUsers2(
             loginInfo.branch_id,
             form.team,
             2000,
@@ -267,7 +279,7 @@ function Monitoring({ location }: MonitoringProps) {
       }
 
       // 첫 상담원 정보 가져올 때
-      getUsers(
+      getUsers2(
         loginInfo.branch_id,
         form.team,
         2000,
@@ -279,7 +291,7 @@ function Monitoring({ location }: MonitoringProps) {
       team = form.team;
     }
   }, [
-    initSocket,
+    socketConnection,
     loginInfo.id,
     loginInfo.admin_id,
     loginInfo.branch_id,
@@ -288,7 +300,7 @@ function Monitoring({ location }: MonitoringProps) {
     consultantInfo.length,
     filterConsultantInfo.length,
     location.pathname,
-    getUsers,
+    getUsers2,
     resetFilteredList,
   ]);
 
@@ -313,16 +325,6 @@ function Monitoring({ location }: MonitoringProps) {
     // 지점명 변경 시 팀 id 초기화
     setKeyValue('team', -1);
   }, [form.branch, setKeyValue]);
-
-  useEffect(() => {
-    if (loginInfo.id) {
-      // 통화시간을 실시간으로 보여주기 위해 타이머 실행
-      onRunTimer();
-    }
-    return () => {
-      onRemoveTimer();
-    };
-  }, [loginInfo.id, onRunTimer, onRemoveTimer]);
 
   useEffect((): any => {
     window.addEventListener('resize', handleWindowResize);

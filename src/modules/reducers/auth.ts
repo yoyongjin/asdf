@@ -33,6 +33,7 @@ const initialState: AuthType = {
     created_at: '',
   },
   socketConnectionStatus: 0,
+  tappingStatus: false,
 };
 
 // 리듀서
@@ -100,15 +101,16 @@ const authReducer = createReducer<AuthType, AuthAction>(initialState, {
       draft.request.logout.error = action.payload;
     });
   },
-  // [actions.SET_INIT_SOCKET]: (state, action) => {
-  //   return produce(state, (draft) => {
-  //     draft.socket = action.payload;
-  //   });
-  // },
   [actions.SET_SOCKET_STATUS]: (state, action) => {
     return produce(state, (draft) => {
       const status = action.payload;
       draft.socketConnectionStatus = status;
+    });
+  },
+  [actions.SET_TAPPING_STATUS]: (state, action) => {
+    return produce(state, (draft) => {
+      const status = action.payload;
+      draft.tappingStatus = status;
     });
   },
 });

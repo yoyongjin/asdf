@@ -49,6 +49,7 @@ const StyledInput = styled.input<StyledInputProps>`
   /* Text */
   font-size: ${(props) => props.fontSize}rem;
   font-weight: ${(props) => props.fontWeight};
+  font-family: ${(props) => props.fontFamily};
   text-align: ${(props) => {
     if (props.textAlign === 1) {
       return 'left';
@@ -58,6 +59,11 @@ const StyledInput = styled.input<StyledInputProps>`
       return 'right';
     }
   }};
+  font-stretch: normal;
+  line-height: 0.86;
+  letter-spacing: normal;
+  box-sizing: border-box;
+
 
   /* Color */
   border-color: ${(props) => props.borderColor};

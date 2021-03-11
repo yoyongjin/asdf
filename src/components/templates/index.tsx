@@ -1,6 +1,6 @@
 import LinaLoginTemplate from './LinaLoginTemplate';
-import DBLoginTemplateProps from './DBLoginTemplateProps';
+import LoginTemplateV2 from './LoginTemplateV2';
 import MainTemplate from './MainTemplate';
 import LoginTemplate from './LoginTemplate';
 
-export { LinaLoginTemplate, DBLoginTemplateProps, MainTemplate, LoginTemplate };
+export { LinaLoginTemplate, LoginTemplateV2, MainTemplate, LoginTemplate };

@@ -2,32 +2,33 @@ import React from 'react';
 import styled from 'styled-components';
 
 import MainRouter from 'MainRouter';
-import { COLORS } from 'utils/color';
 import { Text } from 'components/atoms';
+import { Colors } from 'utils/color';
 
 const StyledWrapper = styled.div`
   /* Display */
   display: flex;
-  justify-content: center;
   height: 100vh;
+  justify-content: center;
   max-width: 140rem;
   min-width: 70rem;
   width: 100vw;
 
   /* Color */
-  background-color: ${COLORS.dark_blue3};
+  background-color: ${(props) => props.theme.color.login};
 `;
 
 const StyledContent = styled.div`
   /* Display */
+  align-items: center;
   display: flex;
   flex-direction: column;
-  align-items: center;
   height: 100%;
   width: 50.06rem;
 `;
 
-const StyledMainLogo = styled.div`
+const StyledMainImage = styled.div`
+  /* Display */
   width: 100%;
 `;
 
@@ -47,20 +48,20 @@ function LoginTemplate({ mainLogo }: LoginTemplateProps) {
   return (
     <StyledWrapper>
       <StyledContent>
-        <StyledMainLogo>{mainLogo}</StyledMainLogo>
+        <StyledMainImage>{mainLogo}</StyledMainImage>
         <StyledLoginForm>
           <MainRouter />
         </StyledLoginForm>
-        <StyledIRLinkCorp>
+        {/* <StyledIRLinkCorp>
           <Text
-            fontColor={COLORS.gray}
+            fontColor={Colors.white1}
             fontFamily={'FranklinGothic-Cond'}
             fontSize={0.75}
             fontWeight={500}
           >
             ⓒ IR-Link Corp.
           </Text>
-        </StyledIRLinkCorp>
+        </StyledIRLinkCorp> */}
       </StyledContent>
     </StyledWrapper>
   );

@@ -26,7 +26,7 @@ const StyledButton = styled.button<ButtonProps>`
   }}
 
   /* Color */
-  background-color: ${(props) => props.bgColor};
+  background-color: ${(props) => props.bgColor || props.theme.color.button};
 
   &:hover {
     cursor: pointer;
@@ -80,7 +80,7 @@ interface ButtonProps extends StyledButtonProps {
 }
 
 Button.defaultProps = {
-  bgColor: COLORS.white,
+  // bgColor: COLORS.white,
   borderRadius: 1,
   fontColor: COLORS.white,
   fontSize: 1,

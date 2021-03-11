@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { Button, Image, Text } from 'components/atoms';
 import { getHourMinSecV1 } from 'utils/utils';
 import { COLORS } from 'utils/color';
-import { ConsultantInfoType } from 'modules/types/user';
-import { CALL_TYPE } from 'utils/constants';
+import { ConsultantInfoType } from 'types/user';
+import { CALL_STATUS } from 'utils/constants';
 
 import callingIcon from 'images/icon-mnt-red@2x.png';
 import workingIcon from 'images/icon-mnt-blue@2x.png';
@@ -20,6 +20,9 @@ import zmsOthertappingIcon from 'images/zms/bt-mnt-listen-ing.png';
 import zmsTappingStopIcon from 'images/zms/bt-mnt-listen-fin-nor.png';
 
 import { company, COMPANY_MAP, CONSULTANT_BOX_WIDTH } from 'utils/constants';
+
+import { connectZibox, startTapping, stopTapping } from 'hooks/useZibox';
+import { changeTapping } from 'hooks/useMonitoring';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -49,32 +52,30 @@ const StyledUserInfo = styled.div`
 const StyledTapping = styled.div``;
 
 function Consultant({
+  connectZibox,
+  startTapping,
+  stopTapping,
+  changeTapping,
+  tapping,
   consultInfo,
-  monit,
   loginId,
   getConsultantInfo,
-  initZibox,
-  setMonit,
-  startMonitoring,
-  stopMonitoring,
-  startMonitoringOcx,
-  stopMonitoringOcx,
 }: ConsultantProps) {
   useEffect(() => {
     if (
-      consultInfo.call_type !== 'call_offhook' &&
-      monit &&
+      consultInfo.call_type !== CALL_STATUS.CALL_OFFHOOK &&
+      tapping &&
       loginId === consultInfo.user_id
     ) {
       // 감청 중 해당 상담원이 통화 종료 했을 때 감청 종료 명령 날려주는 부분
-      stopMonitoring(consultInfo.number);
-      setMonit(false);
+      stopTapping(consultInfo.number);
+      changeTapping(false);
     }
 
     // if (
     //   monit &&
     //   loginId === consultInfo.monit_user &&
-    //   consultInfo.call_status === CALL_TYPE.CALL_IDLE
+    //   consultInfo.call_status === CALL_STATUS.CALL_IDLE
     // ) {
     //   // 감청 중 상담원이 통화 종료 했을 때 감청 종료 명령 날려주는 부분
     //   stopMonitoringOcx();
@@ -84,18 +85,103 @@ function Consultant({
     consultInfo.number,
     consultInfo.user_id,
     loginId,
-    monit,
-    setMonit,
-    stopMonitoring,
     consultInfo.call_status,
     consultInfo.monit_user,
-    stopMonitoringOcx,
+    stopTapping,
+    changeTapping,
+    tapping,
   ]);
+
+  const handleTapping = useCallback(
+    async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      if (consultInfo.monitoring) {
+        // 감청 중인 경우
+        if (consultInfo.user_id === loginId) {
+          // 로그인한 유저가 감청하고 있는 대상일 경우
+          stopTapping(consultInfo.number);
+          setTimeout(() => {
+            changeTapping(false);
+          }, 500);
+        }
+        return;
+      }
+
+      try {
+        const isSuccess = await connectZibox(
+          consultInfo.id,
+          consultInfo.ziboxip,
+          consultInfo.ziboxmic,
+          consultInfo.ziboxspk,
+        );
+        if (isSuccess) {
+          setTimeout(() => {
+            startTapping(consultInfo.number, loginId);
+          }, 500);
+          changeTapping(true);
+        } else {
+          alert('ZiBox 연결에 실패하였습니다.');
+        }
+      } catch (error) {
+        console.log(error);
+        // if (!consultInfo.pc_ip) return;
+        // if (monit && loginId !== consultInfo.monit_user) return;
+
+        // console.log('현재 나의 감청 상태');
+        // console.log(monit);
+
+        // if (monit) {
+        //   stopMonitoringOcx();
+        // } else {
+        //   startMonitoringOcx(
+        //     consultInfo.pc_ip!,
+        //     consultInfo.number,
+        //     loginId,
+        //   );
+      }
+    },
+    [
+      consultInfo.id,
+      consultInfo.ziboxip,
+      consultInfo.ziboxmic,
+      consultInfo.ziboxspk,
+      consultInfo.monitoring,
+      consultInfo.number,
+      consultInfo.user_id,
+      loginId,
+      connectZibox,
+      startTapping,
+      stopTapping,
+      changeTapping,
+    ],
+  );
 
   return (
     <StyledWrapper>
       <StyledCallStatusArea>
-        <Text
+        {consultInfo.call_type !== CALL_STATUS.CALL_OFFHOOK ? (
+          <>
+          <Text fontColor={COLORS.dark_gray1} fontWeight={700} fontSize={0.87}>
+            대기중
+          </Text>
+          <Text fontColor={COLORS.red} fontWeight={700} fontSize={0.87}>
+              {consultInfo.calling_time
+                ? getHourMinSecV1(consultInfo.calling_time)
+                : '00:00:00'}
+            </Text>
+            </>
+        ) : (
+          <>
+            <Text fontColor={COLORS.red} fontWeight={700} fontSize={0.87}>
+              통화중
+            </Text>
+            <Text fontColor={COLORS.red} fontWeight={700} fontSize={0.87}>
+              {consultInfo.calling_time
+                ? getHourMinSecV1(consultInfo.calling_time)
+                : '00:00:00'}
+            </Text>
+          </>
+        )}
+        {/* <Text
           fontColor={
             consultInfo.consultant_status === 1
               ? COLORS.red
@@ -108,11 +194,11 @@ function Consultant({
         >
           <>
             {consultInfo.consultant_status === 1
-              ? consultInfo.call_status === CALL_TYPE.CALL_OFFHOOK
+              ? consultInfo.call_status === CALL_STATUS.CALL_OFFHOOK
                 ? '연결중'
-                : consultInfo.call_status === CALL_TYPE.CALL_INCOMMING
+                : consultInfo.call_status === CALL_STATUS.CALL_INCOMMING
                 ? '연결중'
-                : consultInfo.call_status === CALL_TYPE.CALL_CONNECT
+                : consultInfo.call_status === CALL_STATUS.CALL_CONNECT
                 ? '통화중'
                 : ''
               : consultInfo.consultant_status === 2
@@ -125,27 +211,27 @@ function Consultant({
               ? '로그아웃'
               : '대기중'}
             {`(${consultInfo.consultant_status}/${
-              consultInfo.call_status === CALL_TYPE.CALL_OFFHOOK
+              consultInfo.call_status === CALL_STATUS.CALL_OFFHOOK
                 ? 1
-                : consultInfo.call_status === CALL_TYPE.CALL_CONNECT
+                : consultInfo.call_status === CALL_STATUS.CALL_CONNECT
                 ? 2
-                : consultInfo.call_status === CALL_TYPE.CALL_INCOMMING
+                : consultInfo.call_status === CALL_STATUS.CALL_INCOMMING
                 ? 4
-                : consultInfo.call_status === CALL_TYPE.CALL_IDLE
+                : consultInfo.call_status === CALL_STATUS.CALL_IDLE
                 ? 0
                 : consultInfo.call_status
             })`}
           </>
-        </Text>
+        </Text> */}
         {consultInfo.consultant_status === 1 &&
-        consultInfo.call_status !== CALL_TYPE.CALL_IDLE ? (
+        consultInfo.call_status !== CALL_STATUS.CALL_IDLE ? (
           <Text fontColor={COLORS.red} fontWeight={700} fontSize={0.87}>
-            {consultInfo.diff ? getHourMinSecV1(consultInfo.diff) : '00:00:00'}
+            {consultInfo.calling_time ? getHourMinSecV1(consultInfo.calling_time) : '00:00:00'}
           </Text>
         ) : null}
       </StyledCallStatusArea>
       <StyledCallImage>
-        {consultInfo.call_type !== 'call_offhook' ? (
+        {consultInfo.call_type !== CALL_STATUS.CALL_OFFHOOK ? (
           <Image
             src={waitingIcon}
             alt={'Waiting consultant'}
@@ -167,7 +253,7 @@ function Consultant({
             height={4}
           />
         )}
-        <Image
+        {/* <Image
           src={
             consultInfo.consultant_status === 1
               ? callingIcon
@@ -178,7 +264,7 @@ function Consultant({
           alt={'status consultant'}
           width={4}
           height={4}
-        />
+        /> */}
       </StyledCallImage>
       <StyledUserInfo>
         <Text
@@ -197,10 +283,10 @@ function Consultant({
         >{`${consultInfo.branch_name} ${consultInfo.team_name}`}</Text>
       </StyledUserInfo>
       <StyledTapping>
-        {consultInfo.call_type === 'call_offhook' ? (
-          monit && !consultInfo.monitoring ? null : (
+        {consultInfo.call_type === CALL_STATUS.CALL_OFFHOOK ? (
+          tapping && !consultInfo.monitoring ? null : (
             // {consultInfo.consultant_status === 1 &&
-            // consultInfo.call_status !== CALL_TYPE.CALL_IDLE &&
+            // consultInfo.call_status !== CALL_STATUS.CALL_IDLE &&
             // consultInfo.zibox_status === 1 ? (
             //  monit && consultInfo.monit_status !== 1 ? null : (
             // 통화중일 경우 + 지박스가 연결 되었을 경우
@@ -241,52 +327,7 @@ function Consultant({
                 //     tappingStartIcon : zmsTappingStartIcon
               }
               borderRadius={0.81}
-              onClick={async (e) => {
-                if (consultInfo.monitoring) {
-                  // 감청 중인 경우
-                  if (consultInfo.user_id === loginId) {
-                    // 로그인한 유저가 감청하고 있는 대상일 경우
-                    stopMonitoring(consultInfo.number);
-                    setTimeout(() => {
-                      setMonit(false);
-                    }, 500);
-                  }
-                  return;
-                }
-
-                try {
-                  const isSuccess = await initZibox(
-                    consultInfo.id,
-                    consultInfo.ziboxip,
-                    consultInfo.ziboxmic,
-                    consultInfo.ziboxspk,
-                  );
-                  if (isSuccess) {
-                    setTimeout(() => {
-                      startMonitoring(consultInfo.number, loginId);
-                    }, 500);
-                    setMonit(true);
-                  } else {
-                    alert('ZiBox 연결에 실패하였습니다.');
-                  }
-                } catch (error) {
-                  console.log(error);
-                  // if (!consultInfo.pc_ip) return;
-                  // if (monit && loginId !== consultInfo.monit_user) return;
-
-                  // console.log('현재 나의 감청 상태');
-                  // console.log(monit);
-
-                  // if (monit) {
-                  //   stopMonitoringOcx();
-                  // } else {
-                  //   startMonitoringOcx(
-                  //     consultInfo.pc_ip!,
-                  //     consultInfo.number,
-                  //     loginId,
-                  //   );
-                }
-              }}
+              onClick={handleTapping}
             >
               <Text
                 fontColor={
@@ -314,27 +355,14 @@ function Consultant({
 }
 
 interface ConsultantProps {
+  connectZibox: connectZibox;
+  changeTapping: changeTapping;
+  startTapping: startTapping;
+  stopTapping: stopTapping;
+  tapping: boolean;
   consultInfo: ConsultantInfoType;
   loginId: number;
-  monit: boolean;
   getConsultantInfo: (data: ConsultantInfoType) => void;
-  initZibox: (
-    id: number,
-    ziboxIp: string,
-    ziboxMic: number,
-    ziboxSpk: number,
-  ) => Promise<boolean>;
-  setMonit: React.Dispatch<React.SetStateAction<boolean>>;
-  startMonitoring: (number: string, id: number) => void;
-  stopMonitoring: (number: string) => void;
-  startMonitoringOcx?: (
-    ip: string,
-    number: string,
-    userId: number,
-    port?: number,
-    mode?: number,
-  ) => void;
-  stopMonitoringOcx?: () => void;
 }
 
 Consultant.defaultProps = {};

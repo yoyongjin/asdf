@@ -1,8 +1,8 @@
 import Socket from 'lib/socket';
 import MQTT from 'lib/mqtt';
 import OCX from 'lib/ocx';
-import { MQTTConnectOption } from 'types/zibox';
-import constants, { SOCKET_EVENT_TYPE, TRANSPORT_TYPE } from 'utils/constants';
+import { MQTTConnectOption, OCXTappingOption } from 'types/zibox';
+import constants, { SOCKET_EVENT_TYPE, ZIBOX_TRANSPORT } from 'utils/constants';
 import Logger from 'utils/log';
 
 class Communicator {
@@ -65,6 +65,18 @@ class Communicator {
     await (Communicator.controller as MQTT).connect(options);
   }
 
+  startTappingZibox(options?: OCXTappingOption) {
+    if (Communicator.controller instanceof MQTT) {
+      Communicator.controller.startTapping();
+    } else if (Communicator.controller instanceof OCX) {
+      Communicator.controller.startTapping(options!);
+    }
+  }
+
+  stopTappingZibox() {
+    Communicator.controller.stopTapping();
+  }
+
   /**
    * @description 소켓 객체 가져오기
    */
@@ -78,6 +90,10 @@ class Communicator {
     return instance;
   }
 
+  emitMessage(name: string, data: any) {
+    this.getSocketInstance().onEmit(name, data);
+  }
+
   disconnectAll() {
     this.getSocketInstance().disconnect();
   }
@@ -86,10 +102,10 @@ class Communicator {
    * @description MQTT / OCX 모드 확인
    */
   private static checkMode() {
-    if (Communicator.transport === TRANSPORT_TYPE.MQTT) {
+    if (Communicator.transport === ZIBOX_TRANSPORT.MQTT) {
       Communicator.controller = new MQTT();
       Communicator.socket = new Socket();
-    } else if (Communicator.transport === TRANSPORT_TYPE.OCX) {
+    } else if (Communicator.transport === ZIBOX_TRANSPORT.OCX) {
       Communicator.controller = new OCX();
     }
   }

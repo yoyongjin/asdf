@@ -67,7 +67,7 @@ const StyledSubLogo = styled.div`
   top: 50%;
 `;
 
-function DBLoginTemplate({ mainLogo, subLogo }: DBLoginTemplateProps) {
+function LoginTemplateV2({ mainLogo, subLogo }: LoginTemplateV2Props) {
   return (
     <StyledWrapper>
       <StyledTitle />
@@ -86,9 +86,9 @@ function DBLoginTemplate({ mainLogo, subLogo }: DBLoginTemplateProps) {
   );
 }
 
-interface DBLoginTemplateProps {
+interface LoginTemplateV2Props {
   mainLogo: React.ReactChild;
   subLogo: React.ReactChild;
 }
 
-export default DBLoginTemplate;
+export default LoginTemplateV2;

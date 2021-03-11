@@ -16,19 +16,21 @@ import {
   successLogout,
   failureLogout,
 } from 'modules/actions/auth';
-import constants, { API_FETCH_TYPE, ROUTER_TYPE } from 'utils/constants';
+import constants, { API_FETCH, ROUTER_TYPE } from 'utils/constants';
 import Cookie from 'utils/cookie';
 import Logger from 'utils/log';
+import { ResponseType } from 'types/common';
 
 function* loginProcess(action: ReturnType<typeof requestLogin>) {
   const { id, password, history } = action.payload;
 
   try {
     const response = yield call(API.login, id, password);
-    const { status, data } = response.data;
+    console.log(response)
+    const { status, data } = response.data as ResponseType;
     Logger.log('Login Data => ', data);
 
-    if (status === API_FETCH_TYPE.SUCCESS) {
+    if (status === API_FETCH.SUCCESS) {
       const { user, token } = data;
       Communicator.getInstance().connectSocket(user.id);
       Cookie.setCookie(constants.COOKIE_NAME, token);
@@ -61,7 +63,7 @@ function* checkLoginProcess(action: ReturnType<typeof requestCheckLogin>) {
     const { status, data } = response.data;
     Logger.log('Check Login Data => ', data);
 
-    if (status === API_FETCH_TYPE.SUCCESS) {
+    if (status === API_FETCH.SUCCESS) {
       const { user, token: newToken } = data;
       Communicator.getInstance().connectSocket(user.id);
       Cookie.setCookie(constants.COOKIE_NAME, newToken);

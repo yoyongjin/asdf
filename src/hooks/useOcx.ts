@@ -18,7 +18,7 @@ import { RootState } from 'modules/reducers';
 function useOcx() {
   const dispatch = useDispatch();
 
-  const monit = useSelector((state: RootState) => state.user.monit.tapping);
+  // const monit = useSelector((state: RootState) => state.user.monit.tapping);
 
   const createOcx = useCallback(async () => {
     return await MonitorOcx.getInstance().url(socketServer!);
@@ -144,7 +144,7 @@ function useOcx() {
   }, [dispatch]);
 
   return {
-    monit,
+    // monit,
     createOcx,
     connectServerOcx,
     getAllStateOcx,

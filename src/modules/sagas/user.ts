@@ -1,17 +1,17 @@
 import { all, call, fork, put, takeLatest } from 'redux-saga/effects';
 
 import {
-  requestGetUserInfo,
-  REQUEST_GET_USER_INFO,
-  successGetUserInfo,
-  failureGetUserInfo,
+  requestGetUsers,
+  REQUEST_GET_USERS,
+  successGetUsers,
+  failureGetUsers,
   requestAddUser,
   REQUEST_ADD_USER,
   requestUpdateUser,
   REQUEST_UPDATE_USER,
   requestDeleteUser,
   REQUEST_DELETE_USER,
-  successGetFilterUserInfo,
+  successGetFilterUsers,
   requestResetPassword,
   REQUEST_RESET_PASSWORD,
   successAddUser,
@@ -36,7 +36,7 @@ import * as API from 'lib/api';
 import Socket from 'lib/socket';
 import Logger from 'utils/log';
 
-function* getUserInfoProcess(action: ReturnType<typeof requestGetUserInfo>) {
+function* getUsersProcess(action: ReturnType<typeof requestGetUsers>) {
   const {
     branchId,
     teamId,
@@ -60,7 +60,7 @@ function* getUserInfoProcess(action: ReturnType<typeof requestGetUserInfo>) {
     const { status, data } = response.data;
 
     if (status === 'success') {
-      Logger.log('Get consultant data => ', data);
+      Logger.log('Consultant Data => ', data);
       const { users, max_count } = data;
 
       const payload = {
@@ -73,36 +73,36 @@ function* getUserInfoProcess(action: ReturnType<typeof requestGetUserInfo>) {
       if (adminId === 2) {
         if (branchId === -1 && teamId === -1 && !search?.trim()) {
           // 전체 지점
-          yield put(successGetUserInfo(payload));
+          yield put(successGetUsers(payload));
         } else {
           // 필터링된 유저
-          yield put(successGetFilterUserInfo(payload));
+          yield put(successGetFilterUsers(payload));
         }
 
         if (url === '/main') {
-          Socket.getInstance().onEmit('all-state');
+          Socket.getInstance().onEmit('state');
         }
       } else if (adminId === 1) {
         if (teamId === -1 && !search?.trim()) {
           // 전체 지점
-          yield put(successGetUserInfo(payload));
+          yield put(successGetUsers(payload));
         } else {
           // 필터링된 유저
-          yield put(successGetFilterUserInfo(payload));
+          yield put(successGetFilterUsers(payload));
         }
 
-        // if (url === '/main') {
-        //   Socket.getInstance().onEmit('all-state');
-        // }
+        if (url === '/main') {
+          Socket.getInstance().onEmit('state');
+        }
       }
     }
   } catch (error) {
     console.log(error);
-    yield put(failureGetUserInfo(error.message));
+    yield put(failureGetUsers(error.message));
   }
 }
 
-function* insertUserProcess(action: ReturnType<typeof requestAddUser>) {
+function* addUserProcess(action: ReturnType<typeof requestAddUser>) {
   const {
     branch_id,
     team_id,
@@ -130,11 +130,11 @@ function* insertUserProcess(action: ReturnType<typeof requestAddUser>) {
   } catch (error) {
     console.log(error);
     yield put(failureAddUser(error.message));
-    alert('동일한 전화번호나 아이디가 존재합니다.');
+    alert('동일한 전화번호, 아이디, 지박스 IP가 존재합니다.');
   }
 }
 
-function* updateUserProcess(action: ReturnType<typeof requestUpdateUser>) {
+function* modifyUserProcess(action: ReturnType<typeof requestUpdateUser>) {
   const {
     user_id,
     branch_id,
@@ -167,10 +167,11 @@ function* updateUserProcess(action: ReturnType<typeof requestUpdateUser>) {
   } catch (error) {
     console.log(error);
     yield put(failureUpdateUser(error));
+    alert('동일한 전화번호, 아이디, 지박스 IP가 존재합니다.');
   }
 }
 
-function* deleteUserProcess(action: ReturnType<typeof requestDeleteUser>) {
+function* removeUserProcess(action: ReturnType<typeof requestDeleteUser>) {
   try {
     const { id, branchId, teamId, page, adminId } = action.payload;
 
@@ -184,7 +185,7 @@ function* deleteUserProcess(action: ReturnType<typeof requestDeleteUser>) {
         page,
         url: '/main/manage/user',
       };
-      yield put(requestGetUserInfo(payload));
+      yield put(requestGetUsers(payload));
       yield put(successDeleteUser());
     }
   } catch (error) {
@@ -263,20 +264,20 @@ function* disconnectForceProcess(action: ReturnType<typeof disconnectForce>) {
   }
 }
 
-function* watchGetUserInfo() {
-  yield takeLatest(REQUEST_GET_USER_INFO, getUserInfoProcess);
+function* watchGetUsers() {
+  yield takeLatest(REQUEST_GET_USERS, getUsersProcess);
 }
 
-function* watchInsertUser() {
-  yield takeLatest(REQUEST_ADD_USER, insertUserProcess);
+function* watchAddUser() {
+  yield takeLatest(REQUEST_ADD_USER, addUserProcess);
 }
 
-function* watchUpdateUser() {
-  yield takeLatest(REQUEST_UPDATE_USER, updateUserProcess);
+function* watchModifyUser() {
+  yield takeLatest(REQUEST_UPDATE_USER, modifyUserProcess);
 }
 
-function* watchDeleteUser() {
-  yield takeLatest(REQUEST_DELETE_USER, deleteUserProcess);
+function* watchRemoveUser() {
+  yield takeLatest(REQUEST_DELETE_USER, removeUserProcess);
 }
 
 function* watchResetPassword() {
@@ -297,10 +298,10 @@ function* watchDisconnectForce() {
 
 function* userSaga() {
   yield all([
-    fork(watchGetUserInfo),
-    fork(watchInsertUser),
-    fork(watchUpdateUser),
-    fork(watchDeleteUser),
+    fork(watchGetUsers),
+    fork(watchAddUser),
+    fork(watchModifyUser),
+    fork(watchRemoveUser),
     fork(watchResetPassword),
     fork(watchUpdateZiboxVolume),
     fork(watchChangeMonit),

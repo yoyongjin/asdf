@@ -1,41 +1,33 @@
 import { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { runTimer } from 'modules/actions/user';
+import useInterval from 'hooks/useInterval';
+import { setCalculatedCallTime } from 'modules/actions/user';
 import { RootState } from 'modules/reducers';
-import { changeMonitStatus } from 'modules/actions/user';
+import { setTappingStatus } from 'modules/actions/auth';
 
-let interval: number | null = null;
+// let interval: any = null;
 function useMonitoring() {
-  const monit = useSelector((state: RootState) => state.user.monit); // 전체 유저 정보
+  const tapping = useSelector((state: RootState) => state.auth.tappingStatus); // 전체 유저 정보
   const dispatch = useDispatch();
 
-  const onRunTimer = useCallback(() => {
-    if (interval) return;
-
-    interval = setInterval(() => {
-      dispatch(runTimer());
-    }, 1000);
-  }, [dispatch]);
-
-  const onRemoveTimer = useCallback(() => {
-    clearInterval(interval!);
-    interval = null;
-  }, []);
-
-  const setMonit = useCallback(
-    (status) => {
-      dispatch(changeMonitStatus(status));
+  const changeTapping = useCallback(
+    (status: boolean) => {
+      dispatch(setTappingStatus(status));
     },
     [dispatch],
   );
 
+  useInterval(() => {
+    dispatch(setCalculatedCallTime());
+  }, 1000);
+
   return {
-    monit,
-    setMonit,
-    onRunTimer,
-    onRemoveTimer,
+    tapping,
+    changeTapping,
   };
 }
+
+export type changeTapping = (status: boolean) => void;
 
 export default useMonitoring;

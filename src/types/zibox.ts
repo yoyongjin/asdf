@@ -3,6 +3,8 @@ export interface Zibox {
   create(): boolean;
   // setVolume?(mic: number, spk: number): void;
   // getVolume?(): void;
+  startTapping(options?: OCXTappingOption): void;
+  stopTapping(): void;
 }
 
 export interface MQTTConnectOption {
@@ -18,4 +20,15 @@ export interface MQTTConnectOption {
    * @description 지박스 스피커 볼륨
    */
   spk_vol?: number;
+}
+
+export interface OCXTappingOption {
+  /**
+   * @description 감청 대상의 pc IP
+   */
+  ip: string;
+  /**
+   * @description 감청 모드
+   */
+  mode: number;
 }

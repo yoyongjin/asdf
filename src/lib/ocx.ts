@@ -1,5 +1,6 @@
 import { ConnectOption, Socket } from 'types/socket';
-import { Zibox } from 'types/zibox';
+import { OCXTappingOption, Zibox } from 'types/zibox';
+import constants from 'utils/constants';
 import Logger from 'utils/log';
 
 class OCX implements Zibox, Socket {
@@ -43,6 +44,23 @@ class OCX implements Zibox, Socket {
   }
 
   /**
+   * @description 감청 시작
+   */
+  public startTapping(options: OCXTappingOption) {
+    const port = constants.ZIBOX_PORT;
+    Logger.log('[OCX] Start Tapping');
+    this.socket.StartMonitor(options.ip, port, options.mode);
+  }
+
+  /**
+   * @description 감청 종료
+   */
+  public async stopTapping() {
+    Logger.log('[OCX] Stop Tapping');
+    this.socket.stopMonitor();
+  }
+
+  /**
    * -3 서버를 찾을 수 없음
    * -2 비정상 종료
    * -1 사용자 종료
@@ -59,7 +77,36 @@ class OCX implements Zibox, Socket {
 
   onMonitorEventHandler() {}
 
-  onChangeStatusEventHandler() {}
+  onChangeStatusEventHandler() {
+    console.log('Register Status Event');
+    this.socket.DevPeerStatus = (message: string) => {
+      console.log('@@@@@ DevPeerStatus Event Response @@@@@');
+      console.log(message);
+
+      const data = JSON.parse(message);
+      const { status } = data;
+
+      if (status === 'Y') {
+        // callback(data);
+      } else {
+        // callback('Type ERROR');
+      }
+    };
+  }
+
+  /**
+   * @description 이벤트 발신
+   * @param name 이벤트명
+   * @param data 전송 데이터
+   */
+  onEmit(name: string, data?: any) {
+    try {
+      Logger.log(`[OCX] Emit Message ${name}`, data);
+      this.socket.emit(name, data!);
+    } catch (error) {
+      Logger.log(error);
+    }
+  }
 }
 
 export default OCX;

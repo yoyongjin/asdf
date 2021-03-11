@@ -2,10 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { Button, Image, Text } from 'components/atoms';
-import { COLORS } from 'utils/color';
+import { Colors } from 'utils/color';
 import { getYYYYMMDD, getHourMinSecV2 } from 'utils/utils';
 
-import { company, COMPANY_MAP } from 'utils/constants';
+import informationImage from 'images/bg-login-time@3x.png';
+
+import constants, { COMPANY_TYPE } from 'utils/constants';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -43,41 +45,30 @@ const StyledText = styled.span`
   transform: translate(-50%, -50%);
 `;
 
-function UserLog({
-  loginTime,
-  userName,
-  loginTimeImage,
-  onClickLogout,
-}: UserLogProps) {
+function UserLog({ loginTime, userName, onClickLogout }: UserLogProps) {
   return (
     <StyledWrapper>
       <StyledUser>
-        <Text
-          fontColor={COLORS.white}
-          fontSize={0.81}
-          fontWeight={700}
-        >{`${userName} 님`}</Text>
+        <Text fontColor={Colors.white} fontSize={0.81} fontWeight={700}>
+          {`${userName} 님`}
+        </Text>
       </StyledUser>
       <StyledLoginTime>
         <Image
-          alt={'Login time background image'}
-          src={loginTimeImage}
+          alt={'login_time'}
+          src={informationImage}
           width={11.88}
           height={1.43}
         />
         <StyledText>
-          <Text
-            fontColor={
-              company === COMPANY_MAP.DBLIFE ? COLORS.green : company === COMPANY_MAP.LINA ? COLORS.blue : COLORS.light_blue2
-            }
-            fontSize={0.75}
-            fontWeight={700}
-          >{`${getYYYYMMDD(loginTime)} ${getHourMinSecV2(loginTime)}`}</Text>
+          <Text fontSize={0.75} fontWeight={700}>
+            {`${getYYYYMMDD(loginTime)} ${getHourMinSecV2(loginTime)}`}
+          </Text>
         </StyledText>
       </StyledLoginTime>
       <StyledLogout>
-        <Button bgColor={ company === COMPANY_MAP.LINA ? COLORS.blue : COLORS.dark_blue2} width={5} onClick={onClickLogout}>
-          <Text fontColor={COLORS.white} fontSize={0.81} fontWeight={700}>
+        <Button bgColor="inherit" width={5} onClick={onClickLogout}>
+          <Text fontColor={Colors.white} fontSize={0.81} fontWeight={700}>
             로그아웃
           </Text>
         </Button>
@@ -89,7 +80,6 @@ function UserLog({
 interface UserLogProps {
   loginTime: number;
   userName: string;
-  loginTimeImage: string;
   onClickLogout: () => void;
 }
 
