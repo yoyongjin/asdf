@@ -34,6 +34,7 @@ const initialState: AuthType = {
   },
   socketConnectionStatus: 0,
   tappingStatus: false,
+  serverTime: 0,
 };
 
 // 리듀서
@@ -111,6 +112,12 @@ const authReducer = createReducer<AuthType, AuthAction>(initialState, {
     return produce(state, (draft) => {
       const status = action.payload;
       draft.tappingStatus = status;
+    });
+  },
+  [actions.SET_SERVER_TIME]: (state, action) => {
+    return produce(state, (draft) => {
+      const timestamp = action.payload;
+      draft.serverTime = timestamp;
     });
   },
 });

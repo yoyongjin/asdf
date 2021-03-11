@@ -67,11 +67,13 @@ class OCX implements Zibox, Socket {
    * 0  연결 실패
    * 1  연결 성공
    */
-  onConnectEventHandler(callback: (parameters: number) => void) {
+  onConnectEventHandler(
+    callback: (connection: number, timestamp: number) => void,
+  ) {
     Logger.log('[OCX] Register Connect Event');
     this.socket.DevConnect = (message: string) => {
       Logger.log(`[OCX] DevConnect`, message);
-      callback(Number(message));
+      callback(1, 1);
     };
   }
 

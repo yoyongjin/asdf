@@ -1,6 +1,6 @@
-import { isCompositeComponent } from 'react-dom/test-utils';
+import _ from 'lodash';
 import io from 'socket.io-client';
-import { DynamicMapType, ResponseType } from 'types/common';
+import { ResponseType } from 'types/common';
 
 import { ConnectOption, Socket as WebSocket } from 'types/socket';
 import { SOCKET_EVENT_TYPE, SOCKET_RESPONSE_STATUS } from 'utils/constants';
@@ -54,7 +54,7 @@ class Socket implements WebSocket {
     }
   }
 
-  onConnectEventHandler(callback: (parameters: number) => void) {
+  onConnectEventHandler(callback: (connection: number, timestamp: number) => void) {
     Logger.log('[WEB SOCKET] Register Connect Event');
     this.socket.on(SOCKET_EVENT_TYPE.INITIALIZE, (message: string) => {
       Logger.log(`[WEB SOCKET] ${SOCKET_EVENT_TYPE.INITIALIZE}`, message);
@@ -63,7 +63,8 @@ class Socket implements WebSocket {
       if (status === 'Y') {
         switch (type) {
           case 'init':
-            callback(data);
+            const _data = _.cloneDeep(data)
+            callback(_data.connection, _data.timestamp);
             break;
           default:
             break;

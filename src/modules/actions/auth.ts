@@ -15,6 +15,7 @@ export const SUCCESS_LOGOUT = 'SUCCESS_LOGOUT';
 export const FAILURE_LOGOUT = 'FAILURE_LOGOUT';
 export const SET_SOCKET_STATUS = 'SET_SOCKET_STATUS';
 export const SET_TAPPING_STATUS = 'SET_TAPPING_STATUS';
+export const SET_SERVER_TIME = 'SET_SERVER_TIME';
 
 // 액션 생성 함수
 export const requestLogin = createAction(REQUEST_LOGIN)<RequestLogin>();
@@ -32,6 +33,7 @@ export const successLogout = createAction(SUCCESS_LOGOUT)();
 export const failureLogout = createAction(FAILURE_LOGOUT)<string>();
 export const setSocketStatus = createAction(SET_SOCKET_STATUS)<number>();
 export const setTappingStatus = createAction(SET_TAPPING_STATUS)<boolean>();
+export const setServerTime = createAction(SET_SERVER_TIME)<number>();
 
 // 삭제 예정
 export const SET_INIT_SOCKET = 'SET_INIT_SOCKET';

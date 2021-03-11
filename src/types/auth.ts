@@ -10,6 +10,7 @@ export interface AuthType {
   loginInfo: SuccessLogin;
   socketConnectionStatus: number;
   tappingStatus: boolean;
+  serverTime: number;
 }
 
 export interface RequestType {

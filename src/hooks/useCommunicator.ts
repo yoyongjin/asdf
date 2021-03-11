@@ -4,7 +4,7 @@ import { useCallback } from 'react';
 import Communicator from 'lib/communicator';
 import OCX from 'lib/ocx';
 import Socket from 'lib/socket';
-import { setSocketStatus } from 'modules/actions/auth';
+import { setServerTime, setSocketStatus } from 'modules/actions/auth';
 import {
   addUser,
   deleteUser,
@@ -28,9 +28,9 @@ function useCommunicator() {
   const registerEventHandler = useCallback(
     (branchId: number, adminId: number) => {
       const socket = Communicator.getInstance().getSocketInstance();
-      socket.onConnectEventHandler((response: any) => {
-        console.log("@@@@@@@@@@@@@@@@@@@", response)
-        dispatch(setSocketStatus(response));
+      socket.onConnectEventHandler((connection: number, timestamp: number) => {
+        dispatch(setSocketStatus(connection));
+        dispatch(setServerTime(timestamp));
       });
 
       socket.onChangeStatusEventHandler((type: string, data: any) => {
