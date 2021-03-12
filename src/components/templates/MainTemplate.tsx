@@ -28,14 +28,14 @@ const StyledContent = styled.div<StyledProps>`
   height: calc(100% - 3.88rem);
 
   /* Color */
-  background-color: ${(props) => props.bgColor};
+  background-color: ${(props) => props.backgroundColor};
 `;
 
-function MainTemplate({ gnb, bgColor }: MainTemplateProps) {
+function MainTemplate({ gnb, backgroundColor }: MainTemplateProps) {
   return (
     <StyledWrapper>
       <StyledGnb>{gnb}</StyledGnb>
-      <StyledContent bgColor={bgColor}>
+      <StyledContent backgroundColor={backgroundColor}>
         <MainRouter />
       </StyledContent>
     </StyledWrapper>
@@ -43,7 +43,7 @@ function MainTemplate({ gnb, bgColor }: MainTemplateProps) {
 }
 
 interface StyledProps {
-  bgColor: string;
+  backgroundColor: string;
 }
 
 interface MainTemplateProps extends StyledProps {
@@ -51,7 +51,7 @@ interface MainTemplateProps extends StyledProps {
 }
 
 MainTemplate.defaultProps = {
-  bgColor: COLORS.white,
+  backgroundColor: COLORS.white,
 };
 
 export default MainTemplate;

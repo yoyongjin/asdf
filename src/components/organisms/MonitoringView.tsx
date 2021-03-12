@@ -22,8 +22,8 @@ import {
   SOCKET_CONNECTION,
 } from 'utils/constants';
 
-const AREAMAGIN = 27; //상담사 박스 영역 마진
-const BOXMAGIN = 5; //상담사 박스 마진
+const AREA_MAGIN = 27; //상담사 박스 영역 마진
+const BOX_MAGIN = 5; //상담사 박스 마진
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -42,6 +42,7 @@ const StyledConsultantAreaWrap = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 5px;
+
   /* Other */
   overflow: auto;
 `;
@@ -60,7 +61,7 @@ const StyledConsultant = styled.span`
   padding-left: 5px;
   padding-right: 5px; */
 
-  margin: 7px ${BOXMAGIN}px 8px;
+  margin: 7px ${BOX_MAGIN}px 8px;
 `;
 
 const adminList = [
@@ -340,9 +341,9 @@ function Monitoring({ location }: MonitoringProps) {
   const calculateMaxWidth = (): number => {
     return (
       Math.floor(
-        (windowWidth - 2 * AREAMAGIN) / (CONSULTANT_BOX_WIDTH + 2 * BOXMAGIN),
+        (windowWidth - 2 * AREA_MAGIN) / (CONSULTANT_BOX_WIDTH + 2 * BOX_MAGIN),
       ) *
-      (CONSULTANT_BOX_WIDTH + 2 * BOXMAGIN)
+      (CONSULTANT_BOX_WIDTH + 2 * BOX_MAGIN)
     );
   };
 
