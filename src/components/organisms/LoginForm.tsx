@@ -35,26 +35,9 @@ const StyledLogin = styled.div`
   padding-top: 12px;
 `;
 
-const formList: Array<FormListType> = [
-  {
-    id: 0,
-    name: 'id',
-    type: 'text',
-  },
-  {
-    id: 1,
-    name: 'password',
-    type: 'password',
-  },
-];
-
 function LoginForm({ history }: LoginFormProps) {
-  const refId = useRef<HTMLInputElement>(
-    null,
-  ) as React.MutableRefObject<HTMLInputElement>;
-  const refPassword = useRef<HTMLInputElement>(
-    null,
-  ) as React.MutableRefObject<HTMLInputElement>;
+  const idInput = useRef<HTMLInputElement>() as React.MutableRefObject<HTMLInputElement>;
+  const passwordInput = useRef<HTMLInputElement>() as React.MutableRefObject<HTMLInputElement>;
   const { onClickLogin } = useAuth();
   const { form, onChangeInput } = useInputForm({
     id: '',
@@ -62,31 +45,36 @@ function LoginForm({ history }: LoginFormProps) {
   });
 
   const onKeyEvent = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>, name: string, value: string) => {
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.keyCode === 13) {
+        // enter
+        const { name, value } = e.currentTarget;
+
         if (!value || value.trim() === '') return;
 
-        if (name.indexOf('id') > -1) {
-          refPassword!.current.focus();
-        } else if (name.indexOf('password') > -1) {
-          const id = form.id.trim();
-          const password = form.password.trim();
-          if (!id || !password) {
-            alert('아이디와 패스워드를 정확히 입력해주세요.');
-            return;
-          }
-          onClickLogin(id, password, history);
+        switch (name) {
+          case 'id':
+            passwordInput.current!.focus();
+            break;
+          case 'password':
+            const id = form.id;
+            const password = form.password;
+
+            if (!id || !password) {
+              alert('아이디와 패스워드를 정확히 입력해주세요.');
+              return;
+            }
+
+            onClickLogin(id, password, history);
         }
       }
     },
-    [refPassword, form.id, form.password, history, onClickLogin],
+    [form.id, form.password, history, passwordInput, onClickLogin],
   );
 
   useEffect(() => {
-    if (refId) {
-      refId.current.focus();
-    }
-  }, [refId]);
+    idInput.current!.focus();
+  }, [idInput]);
 
   return (
     <StyledWrapper>
@@ -103,50 +91,43 @@ function LoginForm({ history }: LoginFormProps) {
           </Text>
         </StyledTitle>
       ) : null}
-      {formList.map((values, i) => {
-        return (
-          <StyledInput key={`styled-loginform-${i}`}>
-            <Input
-              key={`loginform-${i}`}
-              innerRef={
-                values.id === 0 ? refId : values.id === 1 ? refPassword : null
-              }
-              name={values.name}
-              placeholder={
-                values.id === 0
-                  ? '아이디를 입력하세요.'
-                  : values.id === 1
-                  ? '비밀번호를 입력하세요.'
-                  : ''
-              }
-              type={values.type}
-              value={
-                values.id === 0 ? form.id : values.id === 1 ? form.password : ''
-              }
-              fontFamily="NanumBarunGothic"
-              fontSize={0.88}
-              height={2}
-              phColor={
-                constants.COMPANY === COMPANY_TYPE.DBLIFE
-                  ? Colors.green1
-                  : Colors.blue6
-              }
-              width={15}
-              onChange={onChangeInput}
-              onKeyDown={(e) => {
-                let value = '';
-                if (values.id === 0) {
-                  value = form.id.trim();
-                } else if (values.id === 1) {
-                  value = form.password.trim();
-                }
-                if (!value) return;
-                onKeyEvent(e, values.name, value);
-              }}
-            />
-          </StyledInput>
-        );
-      })}
+      <StyledInput>
+        <Input
+          innerRef={idInput}
+          name="id"
+          placeholder="아이디를 입력하세요."
+          value={form.id}
+          fontFamily="NanumBarunGothic"
+          fontSize={0.88}
+          phColor={
+            constants.COMPANY === COMPANY_TYPE.DBLIFE
+              ? Colors.green1
+              : Colors.blue6
+          }
+          width={15}
+          onChange={onChangeInput}
+          onKeyDown={onKeyEvent}
+        />
+      </StyledInput>
+      <StyledInput>
+        <Input
+          innerRef={passwordInput}
+          name="password"
+          placeholder="비밀번호를 입력하세요."
+          value={form.password}
+          type="password"
+          fontFamily="NanumBarunGothic"
+          fontSize={0.88}
+          phColor={
+            constants.COMPANY === COMPANY_TYPE.DBLIFE
+              ? Colors.green1
+              : Colors.blue6
+          }
+          width={15}
+          onChange={onChangeInput}
+          onKeyDown={onKeyEvent}
+        />
+      </StyledInput>
       <StyledLogin>
         <Button
           height={2}
@@ -160,12 +141,6 @@ function LoginForm({ history }: LoginFormProps) {
       </StyledLogin>
     </StyledWrapper>
   );
-}
-
-interface FormListType {
-  id: number;
-  name: string;
-  type: string;
 }
 
 interface LoginFormProps extends RouteComponentProps {}

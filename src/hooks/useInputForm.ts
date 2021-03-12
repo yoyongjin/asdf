@@ -1,3 +1,4 @@
+import { produce } from 'immer';
 import { useState, useCallback } from 'react';
 
 function useInputForm<T>(initialForm: T) {
@@ -5,7 +6,12 @@ function useInputForm<T>(initialForm: T) {
   const onChangeInput = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target;
-      setForm((form) => ({ ...form, [name]: value }));
+
+      setForm((form) => {
+        return produce(form, (draft) => {
+          (draft as any)[name] = value;
+        });
+      });
     },
     [],
   );
@@ -18,13 +24,21 @@ function useInputForm<T>(initialForm: T) {
       }
       const { name, value } = e.target;
 
-      setForm((form) => ({ ...form, [name]: Number(value) }));
+      setForm((form) => {
+        return produce(form, (draft) => {
+          (draft as any)[name] = Number(value);
+        });
+      });
     },
     [],
   );
 
   const setKeyValue = useCallback((name: string, value: string | number) => {
-    setForm((form) => ({ ...form, [name]: value }));
+    setForm((form) => {
+      return produce(form, (draft) => {
+        (draft as any)[name] = value;
+      });
+    });
   }, []);
 
   const initValue = useCallback((data: T) => {
