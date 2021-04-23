@@ -3,7 +3,7 @@ export interface Zibox {
   create(): boolean;
   // setVolume?(mic: number, spk: number): void;
   // getVolume?(): void;
-  startTapping(options?: OCXTappingOption): void;
+  startTapping(options?: OCXTappingOption | PacketTappingOption): void;
   stopTapping(): void;
 }
 
@@ -31,4 +31,15 @@ export interface OCXTappingOption {
    * @description 감청 모드
    */
   mode: number;
+}
+
+export interface PacketTappingOption {
+  /**
+   * @description 전화번호
+   */
+  key: string;
+  /**
+   * @description 지박스 ip
+   */
+  ip: string;
 }

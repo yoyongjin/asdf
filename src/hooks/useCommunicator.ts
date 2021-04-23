@@ -4,7 +4,11 @@ import { useCallback } from 'react';
 import Communicator from 'lib/communicator';
 import MQTT from 'lib/mqtt';
 import OCX from 'lib/ocx';
-import { setServerTime, setSocketStatus } from 'modules/actions/auth';
+import {
+  setServerTime,
+  setSocketStatus,
+  setTappingData,
+} from 'modules/actions/auth';
 import {
   addUser,
   deleteUser,
@@ -23,8 +27,14 @@ import {
   ZiboxStatus,
 } from 'types/user';
 import Logger from 'utils/log';
-import { ZIBOX_EVENT_TYPE, RESPONSE_STATUS_V2 } from 'utils/constants';
+import {
+  ZIBOX_EVENT_TYPE,
+  RESPONSE_STATUS_V2,
+  ZIBOX_MONIT_STATUS,
+  SOCKET_EVENT_TYPE,
+} from 'utils/constants';
 import { RootState } from 'modules/reducers';
+import Player from 'lib/player';
 
 function useCommunicator() {
   const tappingTargetId = useSelector(
@@ -33,11 +43,15 @@ function useCommunicator() {
   const tappingTargetNumber = useSelector(
     (state: RootState) => state.auth.tappingTarget.number,
   ); // 로그인 정보
+  const tappingTargetIP = useSelector(
+    (state: RootState) => state.auth.tappingTarget.ip,
+  ); // 로그인 정보
   const dispatch = useDispatch();
 
   const registerEventHandler = useCallback(
     (branchId: number, adminId: number) => {
       const socket = Communicator.getInstance().getSocketInstance();
+
       socket.onConnectEventHandler((connection: number, timestamp: number) => {
         dispatch(setSocketStatus(connection));
         dispatch(setServerTime(timestamp));
@@ -64,13 +78,17 @@ function useCommunicator() {
             break;
           case 'call':
             // 콜 변경 시 상태 전달
-            const callStatus = JSON.parse(data) as CallStatus;
+            const callStatus = JSON.parse(data).call as CallStatus;
+
+            if (!callStatus) return;
 
             dispatch(changeCallStatus(callStatus));
             break;
           case 'monitoring':
             // 감청 변경 시 상태 전달
-            const monitStatus = JSON.parse(data) as ZiboxStatus;
+            const monitStatus = JSON.parse(data).zibox as ZiboxStatus;
+
+            // if (!monitStatus) return;
 
             dispatch(changeZiboxStatus(monitStatus));
             break;
@@ -128,12 +146,11 @@ function useCommunicator() {
               break;
             case ZIBOX_EVENT_TYPE.MONITORING_INFO:
               if (data.data === 'start') {
-                alert(tappingTargetNumber)
-                socket.onEmit('monitoring', {
-                  monitoring_state: RESPONSE_STATUS_V2.YES,
-                  number: tappingTargetNumber,
-                  user_id: tappingTargetId,
-                });
+                // socket.onEmit('monitoring', {
+                //   monitoring_state: RESPONSE_STATUS_V2.YES,
+                //   number: tappingTargetNumber,
+                //   user_id: tappingTargetId,
+                // });
               } else if (data.data === 'stop') {
                 // Socket.getInstance().onEmit('monitoring', {
                 //   monitoring_state: 'n',
@@ -150,13 +167,46 @@ function useCommunicator() {
         });
       }
 
+      if (zibox instanceof Player) {
+        zibox.onChangeAllEventHandler((event: string, data: any) => {
+          Logger.log('onChangeAllEventHandler', { event, data });
+
+          switch (event) {
+            case 'connect':
+              break;
+            case 'initialize':
+              break;
+            case 'dataRelay':
+              console.log(data.status);
+              if (data.status === RESPONSE_STATUS_V2.NO) {
+                const payload = {
+                  status: 0,
+                };
+                dispatch(setTappingData(payload));
+              } else if (data.status === RESPONSE_STATUS_V2.YES) {
+                if (data.data.data === 'start') {
+                  const payload = {
+                    status: 2,
+                  };
+                  dispatch(setTappingData(payload));
+                } else if (data.data.data === 'stop') {
+                  const payload = {
+                    status: 0,
+                  };
+                  dispatch(setTappingData(payload));
+                }
+              }
+          }
+        });
+      }
+
       window.addEventListener('beforeunload', (e) => {
         if (socket instanceof OCX) {
           Communicator.getInstance().disconnectAll();
         }
       });
     },
-    [dispatch, tappingTargetId, tappingTargetNumber],
+    [dispatch],
   );
 
   return {

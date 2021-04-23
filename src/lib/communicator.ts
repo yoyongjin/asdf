@@ -1,14 +1,20 @@
 import Socket from 'lib/socket';
 import MQTT from 'lib/mqtt';
 import OCX from 'lib/ocx';
-import { MQTTConnectOption, OCXTappingOption } from 'types/zibox';
+import {
+  MQTTConnectOption,
+  OCXTappingOption,
+  PacketTappingOption,
+} from 'types/zibox';
 import constants, { SOCKET_EVENT_TYPE, ZIBOX_TRANSPORT } from 'utils/constants';
 import Logger from 'utils/log';
+import Player from './player';
+import _ from 'lodash';
 
 class Communicator {
   private static transport = constants.TRANSPORT as string;
   private static instance: Communicator;
-  private static controller: MQTT | OCX;
+  private static controller: MQTT | OCX | Player;
   private static socket: Socket | undefined;
 
   contructor() {
@@ -65,11 +71,15 @@ class Communicator {
     await (Communicator.controller as MQTT).connect(options);
   }
 
-  startTappingZibox(options?: OCXTappingOption) {
+  startTappingZibox(options?: OCXTappingOption | PacketTappingOption) {
     if (Communicator.controller instanceof MQTT) {
       Communicator.controller.startTapping();
     } else if (Communicator.controller instanceof OCX) {
-      Communicator.controller.startTapping(options!);
+      const option = _.cloneDeep(options) as OCXTappingOption;
+      Communicator.controller.startTapping(option);
+    } else if (Communicator.controller instanceof Player) {
+      const option = _.cloneDeep(options) as PacketTappingOption;
+      Communicator.controller.startTapping(option);
     }
   }
 
@@ -94,7 +104,7 @@ class Communicator {
    * @description 소켓 객체 가져오기
    */
   getZiboxInstance() {
-    let instance: MQTT | OCX = Communicator.controller;
+    let instance: MQTT | OCX | Player = Communicator.controller;
 
     return instance;
   }
@@ -107,6 +117,10 @@ class Communicator {
     this.getSocketInstance().disconnect();
   }
 
+  getMode() {
+    return Communicator.transport;
+  }
+
   /**
    * @description MQTT / OCX 모드 확인
    */
@@ -116,6 +130,9 @@ class Communicator {
       Communicator.socket = new Socket();
     } else if (Communicator.transport === ZIBOX_TRANSPORT.OCX) {
       Communicator.controller = new OCX();
+    } else if (Communicator.transport === ZIBOX_TRANSPORT.PACKET) {
+      Communicator.controller = new Player();
+      Communicator.socket = new Socket();
     }
   }
 }

@@ -21,6 +21,13 @@ export interface TappingTarget {
   number: string;
 }
 
+export interface TappingData {
+  status: number;
+  id?: number;
+  ip?: string;
+  number?: string;
+}
+
 export interface RequestType {
   login: common.FetchType;
   logout: common.FetchType;

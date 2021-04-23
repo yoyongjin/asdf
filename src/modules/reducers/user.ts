@@ -1030,7 +1030,7 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
   },
   [types.CHANGE_ZIBOX_STATUS]: (state, action) => {
     const ziboxStatus = _.cloneDeep(action.payload);
-    Logger.log('CHANGE_CALL_STATUS', action.payload);
+    Logger.log('CHANGE_ZIBOX_STATUS', ziboxStatus);
 
     const newUserList = state.userList.consultants.map((consultant) => {
       const {

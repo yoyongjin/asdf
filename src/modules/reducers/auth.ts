@@ -3,6 +3,7 @@ import produce from 'immer';
 
 import { AuthAction, AuthType } from 'types/auth';
 import * as actions from 'modules/actions/auth';
+import _ from 'lodash';
 
 // 상태
 const initialState: AuthType = {
@@ -114,15 +115,14 @@ const authReducer = createReducer<AuthType, AuthAction>(initialState, {
       draft.socketConnectionStatus = status;
     });
   },
-  [actions.SET_TAPPING_USER]:(state, action) => {
-    return produce(state, draft => {
-
-    })
-  },
-  [actions.SET_TAPPING_STATUS]: (state, action) => {
+  [actions.SET_TAPPING_DATA]: (state, action) => {
     return produce(state, (draft) => {
-      const status = action.payload;
-      draft.tappingStatus = status;
+      const targetData = _.cloneDeep(action.payload);
+
+      draft.tappingStatus = targetData.status;
+      draft.tappingTarget.id = targetData.id!;
+      draft.tappingTarget.ip = targetData.ip!;
+      draft.tappingTarget.number = targetData.number!;
     });
   },
   [actions.SET_SERVER_TIME]: (state, action) => {

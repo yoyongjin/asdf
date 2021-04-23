@@ -90,7 +90,7 @@ class Socket implements WebSocket {
     Logger.log('[WEB SOCKET] Register Change Status Event');
     this.socket.on(SOCKET_EVENT_TYPE.STATE, (message: string) => {
       // 상태에 관련된 모든 데이터 응답 리스너
-      Logger.log(`[WEB SOCKET] ${SOCKET_EVENT_TYPE.STATE}`, message);
+      // Logger.log(`[WEB SOCKET] ${SOCKET_EVENT_TYPE.STATE}`, message);
       const { status, data, type } = JSON.parse(message) as ResponseType;
 
       if (status === SOCKET_RESPONSE_STATUS.YES) {

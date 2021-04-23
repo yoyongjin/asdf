@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import Communicator from 'lib/communicator';
 import { SOCKET_EVENT_TYPE, ZIBOX_MONIT_STATUS } from 'utils/constants';
 import Logger from 'utils/log';
-import { OCXTappingOption } from 'types/zibox';
+import { OCXTappingOption, PacketTappingOption } from 'types/zibox';
 
 // 지박스 명령 관련된 훅
 function useZibox() {
@@ -32,8 +32,17 @@ function useZibox() {
     [],
   );
 
+  const requestTapping = useCallback((number: string, id: number) => {
+    const data = {
+      monitoring_state: ZIBOX_MONIT_STATUS.REQUEST,
+      number,
+      user_id: -1,
+    };
+    Communicator.getInstance().emitMessage(SOCKET_EVENT_TYPE.MONITORING, data);
+  }, []);
+
   const startTapping = useCallback(
-    (number: string, id: number, options?: OCXTappingOption) => {
+    (number: string, id: number, options?: OCXTappingOption | PacketTappingOption) => {
       Communicator.getInstance().startTappingZibox(options!);
       const data = {
         monitoring_state: ZIBOX_MONIT_STATUS.ENABLE,
@@ -64,6 +73,7 @@ function useZibox() {
 
   return {
     connectZibox,
+    requestTapping,
     setVolume,
     startTapping,
     stopTapping,
@@ -73,7 +83,7 @@ function useZibox() {
 export type startTapping = (
   number: string,
   id: number,
-  options?: OCXTappingOption,
+  options?: OCXTappingOption | PacketTappingOption,
 ) => void;
 export type stopTapping = (number: string) => void;
 export type connectZibox = (
@@ -83,5 +93,6 @@ export type connectZibox = (
   target_id: number,
   number: string,
 ) => Promise<Boolean>;
+export type requestTapping = (number: string, id: number) => void;
 
 export default useZibox;

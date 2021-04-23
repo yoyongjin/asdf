@@ -71,6 +71,7 @@ export enum COMPANY_TYPE {
 export enum ZIBOX_TRANSPORT {
   MQTT = 'mqtt',
   OCX = 'ocx',
+  PACKET = 'packet',
 }
 
 export enum API_FETCH {
@@ -108,6 +109,7 @@ export enum CALL_STATUS_V2 {
 }
 
 export enum ZIBOX_MONIT_STATUS {
+  REQUEST = -2,
   ERROR = -1,
   DISABLE = 0,
   ENABLE = 1,
@@ -122,7 +124,7 @@ export enum USER_TYPE {
 export enum ZIBOX_EVENT_TYPE {
   CONNECTION_INFO = 'connection_info',
   VOLUME_INFO = 'vol_info',
-  MONITORING_INFO = 'mon_info'
+  MONITORING_INFO = 'mon_info',
 }
 
 export default {
@@ -132,8 +134,8 @@ export default {
   CELERING_SERVER: process.env.REACT_APP_CELERING_SERVER,
   COMPANY: process.env.REACT_APP_COMPANY,
   ZIBOX_PORT: process.env.REACT_APP_ZIBOX_PORT,
-  TRANSPORT: process.env.REACT_APP_MODE?.split('_')[0],
-  TRANSPORT_VERSION: process.env.REACT_APP_MODE?.split('_')[1],
+  TRANSPORT: process.env.REACT_APP_MODE,
+  ZIBOX_SERVER: process.env.REACT_APP_ZIBOX_SERVER,
   LIMIT: 30,
   PAGE: 1,
   COOKIE_DOMAIN: '.celering.io',

@@ -4,19 +4,29 @@ import { useSelector, useDispatch } from 'react-redux';
 import useInterval from 'hooks/useInterval';
 import { setCalculatedCallTime } from 'modules/actions/user';
 import { RootState } from 'modules/reducers';
-import { setTappingStatus } from 'modules/actions/auth';
+import { setTappingData } from 'modules/actions/auth';
 
 function useMonitoring() {
-  const tappingStatus = useSelector((state: RootState) => state.auth.tappingStatus);
-  const tappingTarget = useSelector((state: RootState) => state.auth.tappingTarget);
+  const tappingStatus = useSelector(
+    (state: RootState) => state.auth.tappingStatus,
+  );
+  const tappingTarget = useSelector(
+    (state: RootState) => state.auth.tappingTarget,
+  );
   const serverTime = useSelector((state: RootState) => state.auth.serverTime);
   const localTime = useSelector((state: RootState) => state.auth.localTime);
 
   const dispatch = useDispatch();
 
-  const changeTapping = useCallback(
-    (status: number) => {
-      dispatch(setTappingStatus(status));
+  const changeTappingData = useCallback(
+    (status: number, ip?: string, id?: number, number?: string) => {
+      const data = {
+        status,
+        ip,
+        id,
+        number,
+      };
+      dispatch(setTappingData(data));
     },
     [dispatch],
   );
@@ -32,10 +42,15 @@ function useMonitoring() {
   return {
     tappingStatus,
     tappingTarget,
-    changeTapping,
+    changeTappingData,
   };
 }
 
-export type changeTapping = (status: number) => void;
+export type changeTappingData = (
+  status: number,
+  ip: string,
+  id: number,
+  number: string,
+) => void;
 
 export default useMonitoring;

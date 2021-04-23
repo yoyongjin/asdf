@@ -21,7 +21,10 @@ import constants, {
   COMPANY_TYPE,
   CONSULTANT_BOX_WIDTH,
   SOCKET_CONNECTION,
+  SOCKET_EVENT_TYPE,
+  ZIBOX_MONIT_STATUS,
 } from 'utils/constants';
+import Communicator from 'lib/communicator';
 
 const AREA_MAGIN = 27; //상담사 박스 영역 마진
 const BOX_MAGIN = 5; //상담사 박스 마진
@@ -85,7 +88,7 @@ function Monitoring({ location }: MonitoringProps) {
     left: 1.5,
     right: 1.5,
   });
-  const { tappingStatus, changeTapping, tappingTarget } = useMonitoring();
+  const { tappingStatus, changeTappingData, tappingTarget } = useMonitoring();
   const {
     consultantInfo,
     filterConsultantInfo,
@@ -95,7 +98,13 @@ function Monitoring({ location }: MonitoringProps) {
     onClickDisconnect,
   } = useUser();
   const { visible, onClickVisible } = useVisible();
-  const { connectZibox, startTapping, stopTapping, setVolume } = useZibox();
+  const {
+    connectZibox,
+    requestTapping,
+    startTapping,
+    stopTapping,
+    setVolume,
+  } = useZibox();
 
   const volumeInfo = useMemo(() => {
     return {
@@ -146,8 +155,9 @@ function Monitoring({ location }: MonitoringProps) {
             loginId={loginInfo.id}
             getConsultantInfo={getConsultantInfo}
             connectZibox={connectZibox}
-            changeTapping={changeTapping}
+            changeTappingData={changeTappingData}
             tappingStatus={tappingStatus}
+            requestTapping={requestTapping}
             startTapping={startTapping}
             stopTapping={stopTapping}
           />
@@ -161,12 +171,35 @@ function Monitoring({ location }: MonitoringProps) {
       form.branch,
       form.team,
       tappingStatus,
-      changeTapping,
+      requestTapping,
+      changeTappingData,
       connectZibox,
       startTapping,
       stopTapping,
     ],
   );
+
+  useEffect(() => {
+    if (tappingStatus === 0) {
+      if (tappingTarget.id !== -1) {
+        const data = {
+          monitoring_state: ZIBOX_MONIT_STATUS.DISABLE,
+          number: tappingTarget.number,
+          user_id: -1,
+        };
+        Communicator.getInstance().emitMessage(
+          SOCKET_EVENT_TYPE.MONITORING,
+          data,
+        );
+        changeTappingData(0, '', -1, '');
+      }
+    }
+  }, [
+    changeTappingData,
+    tappingStatus,
+    tappingTarget.id,
+    tappingTarget.number,
+  ]);
 
   useEffect(() => {
     if (tappingStatus === 2) {
