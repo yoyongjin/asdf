@@ -93,13 +93,14 @@ function OrganizationView() {
     <StyledWrapper>
       <StyledTitle>
         <Title
-          buttonType={company === COMPANY_MAP.DBLIFE ? buttonType : zmsButtonType}
+          buttonType={
+            company === COMPANY_MAP.DBLIFE ? buttonType : zmsButtonType
+          }
           explanType={explanType}
           pageType={pageType()}
           adminType={loginInfo.admin_id}
-          color={company === COMPANY_MAP.DBLIFE ? COLORS.green : COLORS.light_blue2}
-          bdBottomColor={
-            company === COMPANY_MAP.DBLIFE ? COLORS.green : COLORS.light_blue
+          color={
+            company === COMPANY_MAP.DBLIFE ? COLORS.green : COLORS.light_blue2
           }
         >
           조직 관리

@@ -32,9 +32,15 @@ const initialState: AuthType = {
     login_at: 0,
     created_at: '',
   },
+  tappingTarget: {
+    id: -1,
+    ip: '',
+    number: '',
+  },
   socketConnectionStatus: 0,
-  tappingStatus: false,
+  tappingStatus: 0,
   serverTime: 0,
+  localTime: 0,
 };
 
 // 리듀서
@@ -108,6 +114,11 @@ const authReducer = createReducer<AuthType, AuthAction>(initialState, {
       draft.socketConnectionStatus = status;
     });
   },
+  [actions.SET_TAPPING_USER]:(state, action) => {
+    return produce(state, draft => {
+
+    })
+  },
   [actions.SET_TAPPING_STATUS]: (state, action) => {
     return produce(state, (draft) => {
       const status = action.payload;
@@ -118,6 +129,7 @@ const authReducer = createReducer<AuthType, AuthAction>(initialState, {
     return produce(state, (draft) => {
       const timestamp = action.payload;
       draft.serverTime = timestamp;
+      draft.localTime = new Date().getTime();
     });
   },
 });

@@ -55,7 +55,7 @@ export const PHONE_TYPE = {
 export enum SOCKET_EVENT_TYPE {
   INITIALIZE = 'initialize',
   STATE = 'state',
-  MONITORING = 'monitoring'
+  MONITORING = 'monitoring',
 }
 
 export enum ROUTER_TYPE {
@@ -83,7 +83,7 @@ export enum SOCKET_CONNECTION {
   FAILURE = 0,
 }
 
-export enum MONITORING_STATUS {
+export enum RESPONSE_STATUS_V2 {
   YES = 'y',
   NO = 'n',
 }
@@ -100,10 +100,29 @@ export enum CALL_STATUS {
   CALL_INCOMMING = 'call_incomming',
 }
 
+export enum CALL_STATUS_V2 {
+  IDLE = 0,
+  OFFHOOK = 1,
+  CONNECT = 2,
+  INCOMMING = 4,
+}
+
+export enum ZIBOX_MONIT_STATUS {
+  ERROR = -1,
+  DISABLE = 0,
+  ENABLE = 1,
+}
+
 export enum USER_TYPE {
   CONSULTANT = 0,
   ADMIN = 1,
   SUPER_ADMIN = 2,
+}
+
+export enum ZIBOX_EVENT_TYPE {
+  CONNECTION_INFO = 'connection_info',
+  VOLUME_INFO = 'vol_info',
+  MONITORING_INFO = 'mon_info'
 }
 
 export default {
@@ -113,7 +132,8 @@ export default {
   CELERING_SERVER: process.env.REACT_APP_CELERING_SERVER,
   COMPANY: process.env.REACT_APP_COMPANY,
   ZIBOX_PORT: process.env.REACT_APP_ZIBOX_PORT,
-  TRANSPORT: Utils.checkBrowser() || process.env.REACT_APP_MODE,
+  TRANSPORT: process.env.REACT_APP_MODE?.split('_')[0],
+  TRANSPORT_VERSION: process.env.REACT_APP_MODE?.split('_')[1],
   LIMIT: 30,
   PAGE: 1,
   COOKIE_DOMAIN: '.celering.io',

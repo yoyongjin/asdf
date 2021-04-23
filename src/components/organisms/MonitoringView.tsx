@@ -4,7 +4,7 @@ import { RouteComponentProps } from 'react-router-dom';
 
 import { Modal } from 'components/atoms';
 import { Consultant, Title, UserInfo } from 'components/molecules';
-import { COLORS } from 'utils/color';
+import { Colors, COLORS } from 'utils/color';
 import { TeamInfo, BranchInfo } from 'modules/types/branch';
 import { ConsultantInfoType } from 'types/user';
 import useUser from 'hooks/useUser';
@@ -15,9 +15,10 @@ import useAuth from 'hooks/useAuth';
 import useVisible from 'hooks/useVisible';
 import useZibox from 'hooks/useZibox';
 
-import {
+import constants, {
   company,
   COMPANY_MAP,
+  COMPANY_TYPE,
   CONSULTANT_BOX_WIDTH,
   SOCKET_CONNECTION,
 } from 'utils/constants';
@@ -84,7 +85,7 @@ function Monitoring({ location }: MonitoringProps) {
     left: 1.5,
     right: 1.5,
   });
-  const { tapping, changeTapping } = useMonitoring();
+  const { tappingStatus, changeTapping, tappingTarget } = useMonitoring();
   const {
     consultantInfo,
     filterConsultantInfo,
@@ -103,25 +104,10 @@ function Monitoring({ location }: MonitoringProps) {
     };
   }, [form.left, form.right]);
 
-  const selectInfo = useMemo(() => {
+  const selectData = useMemo(() => {
     return {
-      color:
-        company === COMPANY_MAP.DBLIFE
-          ? COLORS.green
-          : COMPANY_MAP.LINA
-          ? COLORS.blue
-          : COLORS.light_blue,
-      borderRadius: 0,
-      borderColor:
-        company === COMPANY_MAP.DBLIFE
-          ? COLORS.green
-          : COMPANY_MAP.LINA
-          ? COLORS.blue
-          : COLORS.light_blue,
-      data1: branchList as Array<BranchInfo>,
-      data2: teamList as Array<TeamInfo>,
-      height: 1.75,
-      width: 7.5,
+      data1: branchList!,
+      data2: teamList!,
     };
   }, [branchList, teamList]);
 
@@ -161,7 +147,7 @@ function Monitoring({ location }: MonitoringProps) {
             getConsultantInfo={getConsultantInfo}
             connectZibox={connectZibox}
             changeTapping={changeTapping}
-            tapping={tapping}
+            tappingStatus={tappingStatus}
             startTapping={startTapping}
             stopTapping={stopTapping}
           />
@@ -174,7 +160,7 @@ function Monitoring({ location }: MonitoringProps) {
       loginInfo.admin_id,
       form.branch,
       form.team,
-      tapping,
+      tappingStatus,
       changeTapping,
       connectZibox,
       startTapping,
@@ -183,16 +169,16 @@ function Monitoring({ location }: MonitoringProps) {
   );
 
   useEffect(() => {
-    if (tapping) {
+    if (tappingStatus === 2) {
       setVolume(0, form.left);
     }
-  }, [tapping, form.left, setVolume]);
+  }, [tappingStatus, form.left, setVolume]);
 
   useEffect(() => {
-    if (tapping) {
+    if (tappingStatus === 2) {
       setVolume(1, form.right);
     }
-  }, [tapping, form.right, setVolume]);
+  }, [tappingStatus, form.right, setVolume]);
 
   useEffect(() => {
     let index: number = consultantInfo.findIndex((consultant, i) => {
@@ -352,21 +338,16 @@ function Monitoring({ location }: MonitoringProps) {
       <StyledWrapper>
         <StyledTitle>
           <Title
-            selectType={selectInfo}
-            volumeType={volumeInfo}
-            onChangeSelect={onChangeSelect}
-            onChangeInput={onChangeInput}
-            setVolume={setVolume}
             branch={
               loginInfo.admin_id === 1 ? loginInfo.branch_id : form.branch
             }
+            isSelect
+            onChangeInput={onChangeInput}
+            onChangeSelect={onChangeSelect}
+            selectData={selectData}
+            setVolume={setVolume}
             team={form.team}
-            color={
-              company === COMPANY_MAP.DBLIFE ? COLORS.green : COLORS.light_blue2
-            }
-            bdBottomColor={
-              company === COMPANY_MAP.DBLIFE ? COLORS.green : COLORS.light_blue
-            }
+            volumeType={volumeInfo}
           >
             상담원 모니터링
           </Title>

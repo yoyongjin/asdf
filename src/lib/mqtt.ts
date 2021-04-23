@@ -1,4 +1,6 @@
+import { ResponseType } from 'types/common';
 import { Zibox, MQTTConnectOption } from 'types/zibox';
+import { RESPONSE_STATUS_V2 } from 'utils/constants';
 import Logger from 'utils/log';
 
 class MQTT implements Zibox {
@@ -73,6 +75,24 @@ class MQTT implements Zibox {
     Logger.log('[MQTT] Set Volume', { mic, spk });
     this.zibox.micVolume(mic);
     this.zibox.spkVolume(spk);
+  }
+
+  onChangeAllStatusEventHandler(callback: (type: string, data: any) => void) {
+    Logger.log('[MQTT] Register All Status Event');
+    this.zibox.onCommandEventListener = (
+      cmd: string,
+      response: ResponseType,
+    ) => {
+      Logger.log(`[MQTT] onCommandEventListener`, { cmd, response });
+
+      if(typeof response !== 'object') return;
+
+      const { type, status, data } = response;
+
+      if (status === RESPONSE_STATUS_V2.YES) {
+        callback(type, data);
+      }
+    };
   }
 }
 

@@ -6,28 +6,36 @@ import { setCalculatedCallTime } from 'modules/actions/user';
 import { RootState } from 'modules/reducers';
 import { setTappingStatus } from 'modules/actions/auth';
 
-// let interval: any = null;
 function useMonitoring() {
-  const tapping = useSelector((state: RootState) => state.auth.tappingStatus); // 전체 유저 정보
+  const tappingStatus = useSelector((state: RootState) => state.auth.tappingStatus);
+  const tappingTarget = useSelector((state: RootState) => state.auth.tappingTarget);
+  const serverTime = useSelector((state: RootState) => state.auth.serverTime);
+  const localTime = useSelector((state: RootState) => state.auth.localTime);
+
   const dispatch = useDispatch();
 
   const changeTapping = useCallback(
-    (status: boolean) => {
+    (status: number) => {
       dispatch(setTappingStatus(status));
     },
     [dispatch],
   );
 
   useInterval(() => {
-    dispatch(setCalculatedCallTime());
+    const payload = {
+      server_time: serverTime,
+      local_time: localTime,
+    };
+    dispatch(setCalculatedCallTime(payload));
   }, 1000);
 
   return {
-    tapping,
+    tappingStatus,
+    tappingTarget,
     changeTapping,
   };
 }
 
-export type changeTapping = (status: boolean) => void;
+export type changeTapping = (status: number) => void;
 
 export default useMonitoring;

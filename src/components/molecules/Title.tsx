@@ -1,9 +1,10 @@
+import _ from 'lodash';
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
 
 import { Button, Select, Text, Input } from 'components/atoms';
 import { SearchBar, PageCount } from 'components/molecules';
-import { COLORS } from 'utils/color';
+import { Colors, COLORS } from 'utils/color';
 import { getMaxPage } from 'utils/utils';
 import prevPageIcon from 'images/bt-page-pre.png';
 import nextPageIcon from 'images/bt-page-next.png';
@@ -12,7 +13,7 @@ import zmsNextPageIcon from 'images/zms/bt-page-next.png';
 
 import { company, COMPANY_MAP } from 'utils/constants';
 
-const StyledWrapper = styled.div<StyledProps>`
+const StyledWrapper = styled.div`
   /* Display */
   height: 100%;
   border-bottom: 0.05rem solid ${(props) => props.theme.color.sub};
@@ -78,16 +79,15 @@ const StyledButtonSpace = styled.span`
 `;
 
 function Title({
-  bdBottomColor,
+  isSelect,
+  selectData,
+  selectOption,
   buttonType,
   explanType,
-  userListOption,
-  selectType,
   pageType,
   isSearch,
   volumeType,
   children,
-  fontSize,
   color,
   branch,
   team,
@@ -97,36 +97,38 @@ function Title({
   onChangeSelect,
   onChangeInput,
   onClickSearch,
-  setVolume,
+  userCountOption,
 }: TitleProps) {
   const branchList = useMemo(() => {
-    if (selectType) {
-      let temp1 = selectType!.data1 as Array<BranchInfo>;
-      return temp1.map((value) => {
-        let data = {
-          id: value.id,
-          data: value.branch_name,
+    if (selectData) {
+      return selectData.data1.map((data) => {
+        return {
+          id: data.id,
+          data: data.branch_name,
         };
-        return data;
       });
     }
-  }, [selectType]);
+  }, [selectData]);
 
   const teamList = useMemo(() => {
-    if (selectType) {
-      let temp2 = selectType!.data2 as Array<TeamInfo>;
-      return temp2.map((value) => {
-        let data = {
-          id: value.id,
-          data: value.team_name,
+    if (selectData) {
+      return selectData.data2!.map((data) => {
+        return {
+          id: data.id,
+          data: data.team_name,
         };
-        return data;
       });
     }
-  }, [selectType]);
+  }, [selectData]);
+
+  const userCountList = useMemo(() => {
+    if (selectData) {
+      return selectData.data3;
+    }
+  }, [selectData]);
 
   return (
-    <StyledWrapper bdBottomColor={bdBottomColor}>
+    <StyledWrapper>
       <StyledLeft>
         <StyleTitle>
           <Text fontSize={1.12} fontWeight={800} fontFamily="NanumGothic">
@@ -168,9 +170,7 @@ function Title({
           <>
             <StyledVolume>
               <StyledValue>
-                <Text fontColor={color} fontWeight={600}>
-                  고객
-                </Text>
+                <Text fontWeight={600}>고객</Text>
               </StyledValue>
               <Input
                 customStyle={`float:right;`}
@@ -186,9 +186,7 @@ function Title({
             </StyledVolume>
             <StyledVolume>
               <StyledValue>
-                <Text fontColor={color} fontWeight={600}>
-                  상담원
-                </Text>
+                <Text fontWeight={600}>상담원</Text>
               </StyledValue>
               <Input
                 customStyle={`float:right;`}
@@ -204,55 +202,62 @@ function Title({
             </StyledVolume>
           </>
         ) : null}
-        {userListOption ? (
-          <StyledSelect>
-            <Select
-              // defaultValue={}
-              name={'userListCount'}
-              options={userListOption.data}
-              width={userListOption.width || 7.5}
-              height={userListOption.height || 1.7}
-              borderColor={userListOption.borderColor}
-              borderRadius={userListOption.borderRadius}
-              fontColor={userListOption.color}
-              paddingLeft={userListOption.paddingLeft}
-              onChange={(e) => onChangeSelect!(e)}
-            />
-          </StyledSelect>
+        {isSelect ? (
+          selectData!.data1.length > 0 ? (
+            <StyledSelect>
+              <Select
+                defaultValue={branch}
+                name={'branch'}
+                options={branchList}
+                width={selectOption ? selectOption!.width : 7.5}
+                height={selectOption ? selectOption.height : 1.7}
+                borderRadius={selectOption ? selectOption!.borderRadius : 0}
+                paddingLeft={selectOption ? selectOption!.paddingLeft : 0}
+                fontColor={selectOption ? selectOption!.fontColor : ''}
+                borderColor={selectOption ? selectOption!.borderColor : ''}
+                onChange={(e) => onChangeSelect!(e)}
+              />
+            </StyledSelect>
+          ) : null
         ) : null}
-        {selectType && selectType.data1!.length > 0 ? (
-          <StyledSelect>
-            <Select
-              defaultValue={branch}
-              // defaultOption={'지점명'}
-              name={'branch'}
-              options={branchList}
-              width={selectType.width || 7.5}
-              height={selectType.height || 1.7}
-              borderColor={selectType.borderColor}
-              borderRadius={selectType.borderRadius}
-              fontColor={selectType.color}
-              paddingLeft={selectType.paddingLeft}
-              onChange={(e) => onChangeSelect!(e)}
-            />
-          </StyledSelect>
+        {isSelect ? (
+          selectData!.data2.length > 0 ? (
+            <StyledSelect>
+              <Select
+                defaultValue={team}
+                name={'team'}
+                options={teamList}
+                width={selectOption ? selectOption!.width : 7.5}
+                height={selectOption ? selectOption.height : 1.7}
+                borderRadius={selectOption ? selectOption!.borderRadius : 0}
+                paddingLeft={selectOption ? selectOption!.paddingLeft : 0}
+                fontColor={selectOption ? selectOption!.fontColor : ''}
+                borderColor={selectOption ? selectOption!.borderColor : ''}
+                onChange={(e) => onChangeSelect!(e, branch)}
+              />
+            </StyledSelect>
+          ) : null
         ) : null}
-        {selectType && selectType.data2! ? (
-          <StyledSelect>
-            <Select
-              defaultValue={team}
-              // defaultOption={team_name || '팀명'}
-              name={'team'}
-              options={teamList}
-              width={selectType.width || 7.5}
-              height={selectType.height || 1.7}
-              borderColor={selectType.borderColor}
-              borderRadius={selectType.borderRadius}
-              fontColor={selectType.color}
-              paddingLeft={selectType.paddingLeft}
-              onChange={(e) => onChangeSelect!(e, branch)}
-            />
-          </StyledSelect>
+        {isSelect ? (
+          selectData!.data3 && selectData!.data3.length > 0 ? (
+            <StyledSelect>
+              <Select
+                name={'userListCount'}
+                options={userCountList}
+                width={userCountOption ? userCountOption!.width : 7.5}
+                height={userCountOption ? userCountOption.height : 1.7}
+                borderRadius={
+                  userCountOption ? userCountOption!.borderRadius : 0
+                }
+                paddingLeft={userCountOption ? userCountOption!.paddingLeft : 0}
+                fontColor={userCountOption ? userCountOption!.fontColor : ''}
+                borderColor={
+                  userCountOption ? userCountOption!.borderColor : ''
+                }
+                onChange={(e) => onChangeSelect!(e)}
+              />
+            </StyledSelect>
+          ) : null
         ) : null}
         {isSearch ? (
           <StyledSearch>
@@ -330,28 +335,6 @@ interface buttonType {
 interface explanType {
   title: string;
 }
-
-interface userListOptionType {
-  color?: string;
-  borderRadius?: number;
-  borderColor?: string;
-  data?: any[];
-  width: number;
-  height: number;
-  paddingLeft?: number;
-}
-
-interface selectType {
-  color?: string;
-  borderRadius?: number;
-  borderColor?: string;
-  data1: Array<BranchInfo>;
-  data2?: Array<TeamInfo>;
-  width: number;
-  height: number;
-  paddingLeft?: number;
-}
-
 interface pageType {
   curPage: number;
   count: number;
@@ -369,20 +352,28 @@ interface volumeType {
   right_vol: number;
 }
 
-interface SelectDataType {
-  id: number;
-  data: string;
+interface selectData {
+  data1: Array<BranchInfo>;
+  data2: Array<TeamInfo>;
+  data3?: Array<{ data: number }>;
 }
 
-interface StyledProps {
-  bdBottomColor?: string;
+interface selectOption {
+  borderRadius?: number;
+  height?: number;
+  paddingLeft?: number;
+  width?: number;
+  fontColor?: string;
+  borderColor?: string;
 }
 
-interface TitleProps extends StyledProps {
+interface TitleProps {
+  isSelect: boolean;
+  selectData?: selectData;
+  selectOption?: selectOption;
+  userCountOption?: selectOption;
   buttonType?: buttonType;
   explanType?: explanType;
-  userListOption?: userListOptionType;
-  selectType?: selectType;
   pageType?: pageType;
   volumeType?: volumeType;
   isSearch?: boolean;
@@ -404,7 +395,7 @@ interface TitleProps extends StyledProps {
 }
 
 Title.defaultProps = {
-  bdBottomColor: COLORS.light_blue,
+  isSelect: false,
 };
 
 export default React.memo(Title);

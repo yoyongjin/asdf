@@ -90,6 +90,15 @@ class Communicator {
     return instance;
   }
 
+  /**
+   * @description 소켓 객체 가져오기
+   */
+  getZiboxInstance() {
+    let instance: MQTT | OCX = Communicator.controller;
+
+    return instance;
+  }
+
   emitMessage(name: string, data: any) {
     this.getSocketInstance().onEmit(name, data);
   }

@@ -9,7 +9,14 @@ import {
   UserInfo,
   StatusType,
 } from 'modules/types/user';
-import { ChangeUser, ConsultantStatusByNumber, SuccessGetUsers } from 'types/user';
+import {
+  CallStatus,
+  ChangeUser,
+  ConsultantAllStatusByNumber,
+  SuccessGetUsers,
+  ZiboxStatus,
+  TimeData,
+} from 'types/user';
 
 export const REQUEST_GET_USERS = 'REQUEST_GET_USERS';
 export const SUCCESS_GET_USERS = 'SUCCESS_GET_USERS';
@@ -48,6 +55,8 @@ export const DISCONNECT_FORCE = 'DISCONNECT_FORCE';
 
 // new
 export const SET_USER_STATUS = 'SET_USER_STATUS';
+export const CHANGE_CALL_STATUS = 'CHANGE_CALL_STATUS';
+export const CHANGE_ZIBOX_STATUS = 'CHANGE_ZIBOX_STATUS';
 export const ADD_USER = 'ADD_USER';
 export const MODIFY_USER = 'MODIFY_USER';
 export const SET_CALCULATED_CALL_TIME = 'SET_CALCULATED_CALL_TIME';
@@ -146,10 +155,16 @@ export const disconnectForce = createAction(DISCONNECT_FORCE)<{
 // new
 export const setUserStatus = createAction(
   SET_USER_STATUS,
-)<ConsultantStatusByNumber>();
+)<ConsultantAllStatusByNumber>();
 export const addUser = createAction(ADD_USER)<ChangeUser>();
 export const modifyUser = createAction(MODIFY_USER)<ChangeUser>();
-export const setCalculatedCallTime = createAction(SET_CALCULATED_CALL_TIME)();
+export const setCalculatedCallTime = createAction(
+  SET_CALCULATED_CALL_TIME,
+)<TimeData>();
+export const changeCallStatus = createAction(CHANGE_CALL_STATUS)<CallStatus>();
+export const changeZiboxStatus = createAction(
+  CHANGE_ZIBOX_STATUS,
+)<ZiboxStatus>();
 
 // 삭제 예정
 export const GET_CALL_STATUS = 'GET_CALL_STATUS';

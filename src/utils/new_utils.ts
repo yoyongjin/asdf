@@ -19,6 +19,22 @@ class Utils {
 
     return diff;
   }
+
+  static getLocalDiffTime(
+    standardTimestamp: number,
+    localTimestamp: number,
+    serverTimestamp: number,
+  ) {
+    const currentTimestamp: number = new Date().getTime();
+    const differenceRealTimestamp = currentTimestamp - standardTimestamp;
+    const differenceLocalAndServerTimestamp = localTimestamp - serverTimestamp;
+
+    const result: number =
+      Math.floor(differenceRealTimestamp / 1000) -
+      Math.floor(differenceLocalAndServerTimestamp / 1000);
+
+    return result;
+  }
 }
 
 export default Utils;

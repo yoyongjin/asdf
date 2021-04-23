@@ -18,8 +18,8 @@ const StyledSelect = styled.select<SelectProps>`
   font-size: 0.87rem;
 
   /* Color */
-  border-color: ${(props) => props.borderColor};
-  color: ${(props) => props.fontColor};
+  border-color: ${(props) => props.borderColor || props.theme.color.main};
+  color: ${(props) => props.fontColor || props.theme.color.main};
   background-color: ${(props) => props.bgColor};
 
   /* Other */
@@ -62,10 +62,10 @@ function Select({
 }
 
 interface StyledSelectProps extends StyledOptionProps {
-  borderColor: string;
+  borderColor?: string;
   borderRadius: number;
   borderWidth: number;
-  fontColor: string;
+  fontColor?: string;
   height: number;
   paddingLeft: number;
   width: number;
@@ -85,10 +85,8 @@ interface SelectProps extends StyledSelectProps {
 }
 
 Select.defaultProps = {
-  borderColor: COLORS.black,
   borderRadius: 1,
   borderWidth: 1,
-  fontColor: COLORS.black,
   height: 2,
   optionFontColor: COLORS.black,
   paddingLeft: 6,

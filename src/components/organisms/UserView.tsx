@@ -5,7 +5,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { Modal } from 'components/atoms';
 import { Title, TablePagination, UserInfo } from 'components/molecules';
 import { Table } from 'components/organisms';
-import { COLORS } from 'utils/color';
+import { Colors, COLORS } from 'utils/color';
 import { TeamInfo, BranchInfo } from 'modules/types/branch';
 import useUser from 'hooks/useUser';
 import usePage from 'hooks/usePage';
@@ -70,7 +70,7 @@ const tableTitle = [
   { title: '', width: 10 },
 ];
 
-const userListOption = [
+const userCountData = [
   { id: 5, data: 5 },
   { id: 10, data: 10 },
   { id: 15, data: 15 },
@@ -115,9 +115,39 @@ function UserView({ location }: UserViewProps) {
       color: COLORS.dark_gray1,
       borderRadius: 1,
       borderColor: COLORS.dark_gray4,
-      data: userListOption,
+      data: userCountData,
       width: 4,
       height: 1.5,
+      paddingLeft: 16,
+    };
+  }, []);
+
+  const selectData = useMemo(() => {
+    return {
+      data1: branchList!,
+      data2: teamList!,
+      data3: userCountData,
+    };
+  }, [branchList, teamList]);
+
+  const selectOption = useMemo(() => {
+    return {
+      borderColor: Colors.gray7,
+      borderRadius: 1,
+      fontColor: Colors.gray4,
+      height: 1.5,
+      width: 9.3,
+      paddingLeft: 16,
+    };
+  }, []);
+
+  const userCountOption = useMemo(() => {
+    return {
+      borderRadius: 1,
+      borderColor: Colors.gray7,
+      fontColor: Colors.gray4,
+      height: 1.5,
+      width: 4,
       paddingLeft: 16,
     };
   }, []);
@@ -307,24 +337,22 @@ function UserView({ location }: UserViewProps) {
       <StyledWrapper>
         <StyledTitle>
           <Title
-            buttonType={company === COMPANY_MAP.DBLIFE ? buttonInfo : zmsButtonInfo}
-            userListOption={userListOptionInfo}
-            selectType={selectInfo}
-            isSearch
+            buttonType={
+              company === COMPANY_MAP.DBLIFE ? buttonInfo : zmsButtonInfo
+            }
             branch={
               loginInfo.admin_id === 1 ? loginInfo.branch_id : form.branch
             }
-            team={form.team}
-            search={form.search}
+            isSearch
+            isSelect
             onChange={onChangeInput}
             onChangeSelect={onChangeSelect}
             onClickSearch={onClickSearch}
-            color={
-              company === COMPANY_MAP.DBLIFE ? COLORS.green : COLORS.light_blue2
-            }
-            bdBottomColor={
-              company === COMPANY_MAP.DBLIFE ? COLORS.green : COLORS.light_blue
-            }
+            search={form.search}
+            selectData={selectData}
+            selectOption={selectOption}
+            team={form.team}
+            userCountOption={userCountOption}
           >
             사용자 관리
           </Title>

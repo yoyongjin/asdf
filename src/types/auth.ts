@@ -9,8 +9,16 @@ export interface AuthType {
   request: RequestType;
   loginInfo: SuccessLogin;
   socketConnectionStatus: number;
-  tappingStatus: boolean;
+  tappingStatus: number;
   serverTime: number;
+  localTime: number;
+  tappingTarget: TappingTarget;
+}
+
+export interface TappingTarget {
+  id: number;
+  ip: string;
+  number: string;
 }
 
 export interface RequestType {

@@ -9,7 +9,7 @@ export interface UserType {
   request: RequestType;
   userList: UsersData;
   filterUserList: UsersData;
-  status: ConsultantStatusByNumber;
+  status: ConsultantAllStatusByNumber;
 }
 
 export interface RequestType {
@@ -22,47 +22,11 @@ export interface RequestType {
 
 export interface UsersData {
   users: Array<UserInfo>;
-  consultants: Array<ConsultantInfoType>;
+  consultants: Array<ConsultantInfo>;
   numberOfUsers: number;
 }
 
-export interface ConsultantStatusByNumber {
-  [number: string]: ConsultantStatus;
-}
-
-export interface ConsultantStatus {
-  number: string;
-  time: number;
-  type: string;
-  monitoring_state?: string;
-  user_id?: number;
-}
-
-export interface ConsultantStatus_v2 {
-  call?: {
-    call: string;
-    connection: number;
-    number: string;
-    time: number;
-  };
-  consultant?: {
-    number: string;
-    tmr: number;
-  };
-  zibox?: {
-    ats: number;
-    connection: number;
-    monitoring: number;
-    number: string;
-    pc_ip: string;
-    record: number;
-    zibox_ip: string;
-    zibox_mac: string;
-    monit_user: number;
-  };
-}
-
-export interface UserInfo {
+export interface UserInfo extends ConsultantAllStatus {
   id: number;
   branch_id: number;
   branch_name: string;
@@ -76,6 +40,50 @@ export interface UserInfo {
   ziboxip: string;
   ziboxmic: number;
   ziboxspk: number;
+}
+
+export interface ConsultantInfo extends UserInfo {
+  calling_time?: number;
+}
+
+export interface ConsultantAllStatusByNumber {
+  [number: string]: ConsultantAllStatus;
+}
+
+export interface ConsultantAllStatus {
+  call?: CallStatus;
+  consultant?: ConsultantStatus;
+  phone?: PhoneStatus;
+  zibox?: ZiboxStatus;
+  number: string;
+}
+
+export interface CallStatus {
+  number?: string;
+  status: number;
+  time: number;
+}
+
+export interface ConsultantStatus {
+  number?: string;
+  status: number;
+}
+
+export interface PhoneStatus {
+  connection: number;
+  number?: string;
+}
+
+export interface ZiboxStatus {
+  ats: number;
+  connection: number;
+  monitoring: number;
+  monit_user: number;
+  number: string;
+  pc_ip: string;
+  record: number;
+  zibox_mac: string;
+  zibox_ip: string;
 }
 
 export interface ConsultantInfoType extends UserInfo {
@@ -92,6 +100,7 @@ export interface ConsultantInfoType extends UserInfo {
   zibox_ip?: string;
   zibox_mac?: string;
   monit_user?: number;
+  status?: ConsultantStatus;
   // 밑에는 삭제 예정
   monitoring?: boolean;
   call_type?: string;
@@ -108,4 +117,9 @@ export interface SuccessGetUsers {
   count: number;
   url: string;
   loginId: number;
+}
+
+export interface TimeData {
+  server_time: number;
+  local_time: number;
 }
