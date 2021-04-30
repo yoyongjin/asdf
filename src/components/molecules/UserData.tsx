@@ -334,7 +334,7 @@ function UserData({
               ) : null}
             </StyledStatus>
 
-            <Button
+            {/* <Button
               width={8}
               height={1.63}
               bgColor={COLORS.red}
@@ -348,7 +348,7 @@ function UserData({
               >
                 연결 끊기
               </Text>
-            </Button>
+            </Button> */}
           </>
         ) : null}
       </StyledContent>
