@@ -203,21 +203,21 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
 
           return newUser;
         });
-        // draft.filterUserList.consultants = temp.sort((r1, r2) => {
-        //   if (r1.branch_id === r2.branch_id) {
-        //     // id가 같으면 team_name순 정렬 (레벨값 우선 정렬)
-        //     if (r1.team_name && r2.team_name && r1.team_name !== r2.team_name) {
-        //       return r1.team_name < r2.team_name
-        //         ? -1
-        //         : r1.team_name > r2.team_name
-        //         ? 1
-        //         : 0;
-        //     }
+        draft.filterUserList.consultants = consultants.sort((r1, r2) => {
+          if (r1.branch_id === r2.branch_id) {
+            // id가 같으면 team_name순 정렬 (레벨값 우선 정렬)
+            if (r1.team_name && r2.team_name && r1.team_name !== r2.team_name) {
+              return r1.team_name < r2.team_name
+                ? -1
+                : r1.team_name > r2.team_name
+                ? 1
+                : 0;
+            }
 
-        //     return r1.name < r2.name ? -1 : r1.name > r2.name ? 1 : 0;
-        //   }
-        //   return r1.branch_id - r2.branch_id;
-        // });
+            return r1.name < r2.name ? -1 : r1.name > r2.name ? 1 : 0;
+          }
+          return r1.branch_id - r2.branch_id;
+        });
       } else if (url === '/main/manage/user') {
         draft.filterUserList.users = users.sort((r1, r2) => r2.id - r1.id); // 등록 순서로 정렬
         draft.filterUserList.numberOfUsers = count;
