@@ -70,8 +70,7 @@ function* checkLoginProcess(action: ReturnType<typeof requestCheckLogin>) {
       API.setHeader(newToken);
 
       yield put(successCheckLogin(user));
-
-      history!.push(history!.location.pathname);
+      history!.push('/main');
     }
   } catch (error) {
     Logger.log('Check Login Failure', error);
