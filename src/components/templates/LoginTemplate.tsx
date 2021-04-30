@@ -2,8 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 
 import MainRouter from 'MainRouter';
-import { Text } from 'components/atoms';
-import { Colors } from 'utils/color';
 
 const StyledWrapper = styled.div`
   /* Display */

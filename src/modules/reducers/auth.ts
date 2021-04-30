@@ -120,9 +120,12 @@ const authReducer = createReducer<AuthType, AuthAction>(initialState, {
       const targetData = _.cloneDeep(action.payload);
 
       draft.tappingStatus = targetData.status;
-      draft.tappingTarget.id = targetData.id!;
-      draft.tappingTarget.ip = targetData.ip!;
-      draft.tappingTarget.number = targetData.number!;
+
+      if(targetData.id) {
+        draft.tappingTarget.id = targetData.id!;
+        draft.tappingTarget.ip = targetData.ip!;
+        draft.tappingTarget.number = targetData.number!;
+      }
     });
   },
   [actions.SET_SERVER_TIME]: (state, action) => {

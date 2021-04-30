@@ -989,7 +989,7 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
   },
   [types.CHANGE_CALL_STATUS]: (state, action) => {
     const callStatus = _.cloneDeep(action.payload);
-    Logger.log('CHANGE_CALL_STATUS', action.payload);
+    Logger.log('CHANGE_CALL_STATUS', callStatus);
 
     const newUserList = state.userList.consultants.map((consultant) => {
       const { status, time, number } = callStatus;
@@ -1089,6 +1089,144 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
           newConsultant.zibox.record = record;
           newConsultant.zibox.zibox_ip = zibox_ip;
           newConsultant.zibox.zibox_mac = zibox_mac;
+        }
+
+        return newConsultant;
+      },
+    );
+
+    return produce(state, (draft) => {
+      draft.userList.consultants = newUserList;
+      if (state.filterUserList.consultants.length > 0) {
+        draft.filterUserList.consultants = newFilteredUserList;
+      }
+    });
+  },
+  [types.CHANGE_CONSULTANT_STATUS]: (state, action) => {
+    const consultantStatus = _.cloneDeep(action.payload);
+    Logger.log('CHANGE_CONSULTANT_STATUS', consultantStatus);
+
+    const newUserList = state.userList.consultants.map((consultant) => {
+      const { status, number } = consultantStatus;
+
+      if (number !== consultant.number) return consultant;
+
+      const newUser = _.cloneDeep(consultant);
+
+      if (newUser.consultant) {
+        newUser.consultant.status = status;
+      }
+      return newUser;
+    });
+
+    const newFilteredUserList = state.filterUserList.consultants.map(
+      (consultant) => {
+        const { status, number } = consultantStatus;
+
+        if (number !== consultant.number) return consultant;
+
+        const newUser = _.cloneDeep(consultant);
+
+        if (newUser.consultant) {
+          newUser.consultant.status = status;
+        }
+        return newUser;
+      },
+    );
+
+    return produce(state, (draft) => {
+      draft.userList.consultants = newUserList;
+      if (state.filterUserList.consultants.length > 0) {
+        draft.filterUserList.consultants = newFilteredUserList;
+      }
+    });
+  },
+  [types.CHANGE_PHONE_STATUS]: (state, action) => {
+    const phoneStatus = _.cloneDeep(action.payload);
+    Logger.log('CHANGE_PHONE_STATUS', phoneStatus);
+
+    const newUserList = state.userList.consultants.map((consultant) => {
+      const { number, connection } = phoneStatus;
+
+      if (number !== consultant.number) return consultant;
+
+      const newUser = _.cloneDeep(consultant);
+
+      if (newUser.phone) {
+        newUser.phone.connection = connection;
+      }
+      return newUser;
+    });
+
+    const newFilteredUserList = state.filterUserList.consultants.map(
+      (consultant) => {
+        const { number, connection } = phoneStatus;
+
+        if (number !== consultant.number) return consultant;
+
+        const newUser = _.cloneDeep(consultant);
+
+        if (newUser.phone) {
+          newUser.phone.connection = connection;
+        }
+        return newUser;
+      },
+    );
+
+    return produce(state, (draft) => {
+      draft.userList.consultants = newUserList;
+      if (state.filterUserList.consultants.length > 0) {
+        draft.filterUserList.consultants = newFilteredUserList;
+      }
+    });
+  },
+  [types.CHANGE_ALL_RESET_STATUS]: (state, action) => {
+    const { number, consultant, call, phone, zibox } = action.payload;
+
+    const newUserList = state.userList.consultants.map((consultantData) => {
+      if (number !== consultantData.number) return consultantData;
+
+      const newConsultant = _.cloneDeep(consultantData);
+
+      if (newConsultant.zibox) {
+        newConsultant.zibox = zibox;
+      }
+
+      if (newConsultant.call) {
+        newConsultant.call = call;
+      }
+
+      if (newConsultant.consultant) {
+        newConsultant.consultant = consultant;
+      }
+
+      if (newConsultant.phone) {
+        newConsultant.phone = phone;
+      }
+
+      return newConsultant;
+    });
+
+    const newFilteredUserList = state.filterUserList.consultants.map(
+      (consultantData) => {
+        if (number !== consultantData.number) return consultantData;
+
+        const newConsultant = _.cloneDeep(consultantData);
+
+        if (newConsultant.zibox) {
+          newConsultant.zibox = zibox;
+        }
+
+        if (newConsultant.call) {
+          newConsultant.call = call;
+        }
+
+        if (newConsultant.consultant) {
+          newConsultant.consultant = consultant;
+        }
+
+        if (newConsultant.phone) {
+          newConsultant.phone = phone;
         }
 
         return newConsultant;

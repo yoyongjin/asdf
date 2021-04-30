@@ -19,8 +19,8 @@ const StyledButton = styled.button<ButtonProps>`
       return css<StyledButtonProps>`
         background-image: url(${(props) => props.image});
         background-repeat: no-repeat;
-        background-size: ${(props) => props.width}rem
-          ${(props) => props.height}rem;
+        background-size: ${(props) => props.imageWidth}px
+          ${(props) => props.imageHeight}px;
       `;
     }
   }}
@@ -70,6 +70,8 @@ interface StyledButtonProps {
   readonly hoverImg?: string;
   readonly image?: string;
   readonly width: number;
+  readonly imageWidth?: number;
+  readonly imageHeight?: number;
 }
 
 interface ButtonProps extends StyledButtonProps {

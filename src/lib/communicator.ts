@@ -73,18 +73,27 @@ class Communicator {
 
   startTappingZibox(options?: OCXTappingOption | PacketTappingOption) {
     if (Communicator.controller instanceof MQTT) {
-      Communicator.controller.startTapping();
+      return Communicator.controller.startTapping();
     } else if (Communicator.controller instanceof OCX) {
       const option = _.cloneDeep(options) as OCXTappingOption;
-      Communicator.controller.startTapping(option);
+      return Communicator.controller.startTapping(option);
     } else if (Communicator.controller instanceof Player) {
       const option = _.cloneDeep(options) as PacketTappingOption;
-      Communicator.controller.startTapping(option);
+      return Communicator.controller.startTapping(option);
     }
   }
 
   stopTappingZibox() {
-    Communicator.controller.stopTapping();
+    return Communicator.controller.stopTapping();
+  }
+
+  setTappingVolume(type: number, gauge: number) {
+    if (Communicator.controller instanceof MQTT) {
+      Communicator.controller.setTappingVolume(type, gauge);
+    } else if (Communicator.controller instanceof OCX) {
+    } else if (Communicator.controller instanceof Player) {
+      Communicator.controller.setTappingVolume(type, gauge);
+    }
   }
 
   /**

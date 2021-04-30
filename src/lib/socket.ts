@@ -17,6 +17,7 @@ class Socket implements WebSocket {
 
   static getInstance(): Socket {
     if (!Socket.instance) {
+      alert("test")
       Socket.instance = new Socket();
     }
 
@@ -31,7 +32,9 @@ class Socket implements WebSocket {
     Logger.log('[WEB SOCKET] Connect', options);
     if (!options.url) return this;
 
-    this.socket = io.connect(options.url);
+    this.socket = io.connect(options.url, {
+      transports : ['websocket'],
+    });
     return this;
   }
 

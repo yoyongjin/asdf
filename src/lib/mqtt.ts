@@ -66,6 +66,16 @@ class MQTT implements Zibox {
     this.zibox.disitalVolumeInfo();
   }
 
+  setTappingVolume(type: number, gauge: number) {
+    if (type === 1) {
+      // 왼쪽 볼륨
+      this.zibox.leftMonVolume(gauge);
+    } else if (type === 2) {
+      // 오른쪽 볼륨
+      this.zibox.rightMonVolume(gauge);
+    }
+  }
+
   /**
    * @description 볼륨 설정하기
    * @param mic 마이크 볼륨 값
@@ -85,7 +95,7 @@ class MQTT implements Zibox {
     ) => {
       Logger.log(`[MQTT] onCommandEventListener`, { cmd, response });
 
-      if(typeof response !== 'object') return;
+      if (typeof response !== 'object') return;
 
       const { type, status, data } = response;
 

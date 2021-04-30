@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { Text, Input } from 'components/atoms';
-import { COLORS } from 'utils/color';
+import { Colors, COLORS } from 'utils/color';
 
 const StyledWrapper = styled.div`
   padding-bottom: 20px;
@@ -34,10 +34,11 @@ function TextInput({
   step,
   min,
   max,
+  textColor,
 }: TextInputProps) {
   return (
     <StyledWrapper>
-      <Text fontSize={fontSize} fontWeight={textWeight}>
+      <Text fontSize={fontSize} fontWeight={textWeight} fontColor={textColor}>
         {textValue}
       </Text>
       <StyledBlank padRight={padRight} />
@@ -93,7 +94,7 @@ TextInput.defaultProps = {
   inputWidth: 7,
   inputRadius: 0,
   inputPh: '',
-  textColor: COLORS.dark_gray6,
+  textColor: Colors.gray9,
   textWeight: 600,
   type: 'input',
   fontSize: 1,

@@ -8,10 +8,10 @@ import { Colors, COLORS } from 'utils/color';
 import { getMaxPage } from 'utils/utils';
 import prevPageIcon from 'images/bt-page-pre.png';
 import nextPageIcon from 'images/bt-page-next.png';
-import zmsPrevPageIcon from 'images/zms/bt-page-pre.png';
-import zmsNextPageIcon from 'images/zms/bt-page-next.png';
+import defaultPrevPageIcon from 'images/zms/bt-page-pre.png';
+import defaultNextPageIcon from 'images/zms/bt-page-next.png';
 
-import { company, COMPANY_MAP } from 'utils/constants';
+import constants, { company, COMPANY_MAP, COMPANY_TYPE } from 'utils/constants';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -43,7 +43,7 @@ const StyledButton = styled.div`
   padding-left: 9.5px;
   padding-right: 7px;
   position: relative;
-  top: 10%;
+  /* top: 10%; */
   top: ${company === COMPANY_MAP.LINA ? 5 : 12}%;
 `;
 
@@ -74,8 +74,8 @@ const StyledPageSpace = styled.span`
 `;
 
 const StyledButtonSpace = styled.span`
-  padding-left: 0.5px;
-  padding-right: 0.5px;
+  padding-left: 0.7px;
+  padding-right: 0.7px;
 `;
 
 function Title({
@@ -141,6 +141,8 @@ function Title({
               <Button
                 width={7}
                 height={1.5}
+                // imageWidth={118}
+                // imageHeight={25}
                 bgColor={COLORS.dark_blue}
                 image={buttonType.bgImage}
                 onClick={buttonType!.onClick}
@@ -278,12 +280,15 @@ function Title({
             <StyledPageSpace />
             <Button
               image={
-                company === COMPANY_MAP.DBLIFE || company === COMPANY_MAP.LINA
+                constants.COMPANY === COMPANY_TYPE.DBLIFE ||
+                constants.COMPANY === COMPANY_TYPE.LINA
                   ? prevPageIcon
-                  : zmsPrevPageIcon
+                  : defaultPrevPageIcon
               }
-              width={1.3}
-              height={1.3}
+              width={1.5}
+              height={1.5}
+              imageWidth={24}
+              imageHeight={24}
               bgColor={COLORS.white}
               borderRadius={0}
               onClick={() =>
@@ -293,13 +298,16 @@ function Title({
             <StyledButtonSpace />
             <Button
               image={
-                company === COMPANY_MAP.DBLIFE || company === COMPANY_MAP.LINA
+                constants.COMPANY === COMPANY_TYPE.DBLIFE ||
+                constants.COMPANY === COMPANY_TYPE.LINA
                   ? nextPageIcon
-                  : zmsNextPageIcon
+                  : defaultNextPageIcon
               }
-              width={1.3}
-              height={1.3}
-              bgColor={COLORS.white}
+              width={1.5}
+              height={1.5}
+              imageWidth={24}
+              imageHeight={24}
+              bgColor={Colors.white}
               borderRadius={0}
               onClick={() =>
                 pageType.onClickNextPage(pageType.curPage, pageType.count, 5)

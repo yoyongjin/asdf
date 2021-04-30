@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useCallback } from 'react';
 
 import Communicator from 'lib/communicator';
@@ -17,6 +17,9 @@ import {
   modifyUser,
   changeCallStatus,
   changeZiboxStatus,
+  changeConsultantStatus,
+  changeAllResetStatus,
+  changePhoneStatus,
 } from 'modules/actions/user';
 import {
   ConsultantAllStatusByNumber,
@@ -25,6 +28,8 @@ import {
   UserInfo,
   CallStatus,
   ZiboxStatus,
+  ConsultantStatus,
+  PhoneStatus,
 } from 'types/user';
 import Logger from 'utils/log';
 import {
@@ -33,19 +38,10 @@ import {
   ZIBOX_MONIT_STATUS,
   SOCKET_EVENT_TYPE,
 } from 'utils/constants';
-import { RootState } from 'modules/reducers';
+
 import Player from 'lib/player';
 
 function useCommunicator() {
-  const tappingTargetId = useSelector(
-    (state: RootState) => state.auth.tappingTarget.id,
-  ); // 로그인 정보
-  const tappingTargetNumber = useSelector(
-    (state: RootState) => state.auth.tappingTarget.number,
-  ); // 로그인 정보
-  const tappingTargetIP = useSelector(
-    (state: RootState) => state.auth.tappingTarget.ip,
-  ); // 로그인 정보
   const dispatch = useDispatch();
 
   const registerEventHandler = useCallback(
@@ -78,19 +74,32 @@ function useCommunicator() {
             break;
           case 'call':
             // 콜 변경 시 상태 전달
-            const callStatus = JSON.parse(data).call as CallStatus;
-
-            if (!callStatus) return;
+            const callStatus = JSON.parse(data) as CallStatus;
 
             dispatch(changeCallStatus(callStatus));
             break;
+          case 'zibox':
           case 'monitoring':
-            // 감청 변경 시 상태 전달
-            const monitStatus = JSON.parse(data).zibox as ZiboxStatus;
+            // 지박스 상태 전달
+            const ziboxStatus = JSON.parse(data) as ZiboxStatus;
 
-            // if (!monitStatus) return;
+            dispatch(changeZiboxStatus(ziboxStatus));
+            break;
+          case 'consultant':
+            // 상담원 상태 전달
+            const consultantStatus = JSON.parse(data) as ConsultantStatus;
 
-            dispatch(changeZiboxStatus(monitStatus));
+            dispatch(changeConsultantStatus(consultantStatus));
+            break;
+          case 'phone':
+            // 상담원 상태 전달
+            const phoneStatus = JSON.parse(data) as PhoneStatus;
+
+            dispatch(changePhoneStatus(phoneStatus));
+            break;
+          case 'reset':
+            const allStatus = JSON.parse(data) as ConsultantAllStatus;
+            dispatch(changeAllResetStatus(allStatus));
             break;
           case 'signup':
             // 회원 추가 시 회원 정보 전달
@@ -112,9 +121,9 @@ function useCommunicator() {
           case 'delete':
             dispatch(deleteUser(data));
             break;
-          case 'reset':
-            dispatch(resetStatus(data));
-            break;
+          // case 'reset':
+          //   dispatch(resetStatus(data));
+          //   break;
           default:
             break;
         }
@@ -177,7 +186,28 @@ function useCommunicator() {
             case 'initialize':
               break;
             case 'dataRelay':
-              console.log(data.status);
+              if (data.type === 'disconnect') {
+                // 감청 중 상대가 연결이 끊겼을 경우(새로고침)
+                const _data = {
+                  monitoring_state: ZIBOX_MONIT_STATUS.DISABLE,
+                  number: data.number,
+                  user_id: -1,
+                };
+                Communicator.getInstance().emitMessage(
+                  SOCKET_EVENT_TYPE.MONITORING,
+                  _data,
+                );
+                const payload = {
+                  status: 0,
+                  ip: '',
+                  number: '',
+                  id: -1,
+                };
+                dispatch(setTappingData(payload));
+
+                return;
+              }
+
               if (data.status === RESPONSE_STATUS_V2.NO) {
                 const payload = {
                   status: 0,
@@ -192,6 +222,9 @@ function useCommunicator() {
                 } else if (data.data.data === 'stop') {
                   const payload = {
                     status: 0,
+                    ip: '',
+                    number: '',
+                    id: -1,
                   };
                   dispatch(setTappingData(payload));
                 }

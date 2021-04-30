@@ -6,16 +6,13 @@ import {
   Title,
   TextInput,
   TextSelect,
-  ZiboxStatus,
-  PhoneStatus,
+  ZiboxData,
+  PhoneData,
 } from 'components/molecules';
-import { COLORS } from 'utils/color';
+import { Colors, COLORS } from 'utils/color';
 import { formatPhoneNumber } from 'utils/utils';
 import useInputForm from 'hooks/useInputForm';
-import {
-  UserInfo as UserInfoType,
-  ConsultantInfoType,
-} from 'modules/types/user';
+import { ConsultantInfo, UserInfo } from 'types/user';
 import { TeamInfo, BranchInfo } from 'modules/types/branch';
 import useBranch from 'hooks/useBranch';
 
@@ -77,7 +74,7 @@ const StyledFooter = styled.div`
     ${company === COMPANY_MAP.LINA ? COLORS.blue : COLORS.light_blue};
 `;
 
-function UserInfo({
+function UserData({
   onClickVisible,
   onClickInsertUser,
   onClickUpdateUser,
@@ -88,7 +85,7 @@ function UserInfo({
   branchId,
   branchName,
   adminId,
-}: UserInfoProps) {
+}: UserDataProps) {
   const initialized = useMemo(() => {
     return {
       branch: data && data!.branch_id ? data!.branch_id : -1,
@@ -107,6 +104,7 @@ function UserInfo({
   const { form, onChangeInput, onChangeSelect, initValue } = useInputForm(
     initialized,
   );
+
   const {
     userBranchList,
     userTeamList,
@@ -173,6 +171,7 @@ function UserInfo({
   }, [isVisible, adminId, getUserTeamList, form.branch, branchId]);
 
   useEffect(() => {
+    console.log(initialized);
     initValue(initialized);
   }, [initialized, initValue]);
 
@@ -234,6 +233,7 @@ function UserInfo({
     form.team,
     form.tel,
   ]);
+
   return (
     <StyledWrapper>
       <StyledTitle>
@@ -318,15 +318,20 @@ function UserInfo({
             disabled={form.admin !== 0}
           />
         </StyledUserInfo>
-        {data && data.id ? (
+        {data && data.admin_id === 0 ? (
           <>
             <StyledStatus>
-              <StyledZibox>
-                <ZiboxStatus data={data!}></ZiboxStatus>
-              </StyledZibox>
-              <StyledPhone>
-                <PhoneStatus data={data!}></PhoneStatus>
-              </StyledPhone>
+              {data.zibox ? (
+                <StyledZibox>
+                  <ZiboxData data={data.zibox!} />
+                </StyledZibox>
+              ) : null}
+
+              {data.phone ? (
+                <StyledPhone>
+                  <PhoneData data={data.phone!} />
+                </StyledPhone>
+              ) : null}
             </StyledStatus>
 
             <Button
@@ -439,13 +444,13 @@ function UserInfo({
   );
 }
 
-interface UserInfoProps {
+interface UserDataProps {
   adminId?: number;
   branchId?: number;
   branchName?: string;
   isVisible?: boolean;
   adminList: Array<SelectDataType>;
-  data?: UserInfoType | ConsultantInfoType;
+  data?: UserInfo | ConsultantInfo;
   onClickVisible: () => void;
   onClickInsertUser?: (
     branchId: number,
@@ -478,6 +483,6 @@ interface SelectDataType {
   data: string;
 }
 
-UserInfo.defaultProps = {};
+UserData.defaultProps = {};
 
-export default React.memo(UserInfo);
+export default UserData;

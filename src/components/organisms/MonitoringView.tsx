@@ -3,10 +3,8 @@ import styled from 'styled-components';
 import { RouteComponentProps } from 'react-router-dom';
 
 import { Modal } from 'components/atoms';
-import { Consultant, Title, UserInfo } from 'components/molecules';
-import { Colors, COLORS } from 'utils/color';
-import { TeamInfo, BranchInfo } from 'modules/types/branch';
-import { ConsultantInfoType } from 'types/user';
+import { Consultant, Title, UserData } from 'components/molecules';
+import { ConsultantInfo } from 'types/user';
 import useUser from 'hooks/useUser';
 import useMonitoring from 'hooks/useMonitoring';
 import useBranch from 'hooks/useBranch';
@@ -15,16 +13,7 @@ import useAuth from 'hooks/useAuth';
 import useVisible from 'hooks/useVisible';
 import useZibox from 'hooks/useZibox';
 
-import constants, {
-  company,
-  COMPANY_MAP,
-  COMPANY_TYPE,
-  CONSULTANT_BOX_WIDTH,
-  SOCKET_CONNECTION,
-  SOCKET_EVENT_TYPE,
-  ZIBOX_MONIT_STATUS,
-} from 'utils/constants';
-import Communicator from 'lib/communicator';
+import { CONSULTANT_BOX_WIDTH, SOCKET_CONNECTION } from 'utils/constants';
 
 const AREA_MAGIN = 27; //상담사 박스 영역 마진
 const BOX_MAGIN = 5; //상담사 박스 마진
@@ -79,7 +68,7 @@ let request = false;
 
 function Monitoring({ location }: MonitoringProps) {
   const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
-  const [tempConsultInfo, setTempConsultInfo] = useState<ConsultantInfoType>();
+  const [tempConsultInfo, setTempConsultInfo] = useState<ConsultantInfo>();
   const { loginInfo, socketConnection } = useAuth();
   const { branchList, teamList, getBranchList, getTeamList } = useBranch();
   const { form, onChangeSelect, setKeyValue, onChangeInput } = useInputForm({
@@ -121,7 +110,7 @@ function Monitoring({ location }: MonitoringProps) {
   }, [branchList, teamList]);
 
   const getConsultantInfo = useCallback(
-    (consultantInfo: ConsultantInfoType) => {
+    (consultantInfo: ConsultantInfo) => {
       setTempConsultInfo(consultantInfo);
       onClickVisible();
     },
@@ -144,7 +133,7 @@ function Monitoring({ location }: MonitoringProps) {
   );
 
   const consultantView = useCallback(
-    (consultant: ConsultantInfoType) => {
+    (consultant: ConsultantInfo) => {
       return (
         <StyledConsultant
           key={`${loginInfo.admin_id}-${form.branch}-${form.team}-styled-consultant-${consultant.id}`}
@@ -180,22 +169,31 @@ function Monitoring({ location }: MonitoringProps) {
   );
 
   useEffect(() => {
+    if (!tempConsultInfo) {
+      return;
+    }
+    const consultant = consultantInfo.find((consultant) => {
+      return consultant.id === tempConsultInfo!.id;
+    });
+
+    if (
+      consultant?.zibox !== tempConsultInfo?.zibox ||
+      consultant?.phone !== tempConsultInfo?.phone
+    ) {
+      setTempConsultInfo(consultant);
+    }
+  }, [consultantInfo, tempConsultInfo]);
+
+  useEffect(() => {
     if (tappingStatus === 0) {
       if (tappingTarget.id !== -1) {
-        const data = {
-          monitoring_state: ZIBOX_MONIT_STATUS.DISABLE,
-          number: tappingTarget.number,
-          user_id: -1,
-        };
-        Communicator.getInstance().emitMessage(
-          SOCKET_EVENT_TYPE.MONITORING,
-          data,
-        );
+        stopTapping(tappingTarget.number);
         changeTappingData(0, '', -1, '');
       }
     }
   }, [
     changeTappingData,
+    stopTapping,
     tappingStatus,
     tappingTarget.id,
     tappingTarget.number,
@@ -203,24 +201,24 @@ function Monitoring({ location }: MonitoringProps) {
 
   useEffect(() => {
     if (tappingStatus === 2) {
-      setVolume(0, form.left);
+      setVolume(1, form.left);
     }
   }, [tappingStatus, form.left, setVolume]);
 
   useEffect(() => {
     if (tappingStatus === 2) {
-      setVolume(1, form.right);
+      setVolume(2, form.right);
     }
   }, [tappingStatus, form.right, setVolume]);
 
-  useEffect(() => {
-    let index: number = consultantInfo.findIndex((consultant, i) => {
-      return tempConsultInfo?.id === consultant.id;
-    });
-    if (index > -1) {
-      setTempConsultInfo(consultantInfo[index]);
-    }
-  }, [tempConsultInfo, consultantInfo]);
+  // useEffect(() => {
+  //   let index: number = consultantInfo.findIndex((consultant, i) => {
+  //     return tempConsultInfo?.id === consultant.id;
+  //   });
+  //   if (index > -1) {
+  //     setTempConsultInfo(consultantInfo[index]);
+  //   }
+  // }, [tempConsultInfo, consultantInfo]);
 
   useEffect(() => {
     if (socketConnection !== SOCKET_CONNECTION.SUCCESS) return;
@@ -416,7 +414,7 @@ function Monitoring({ location }: MonitoringProps) {
       <Modal
         isVisible={visible}
         Component={
-          <UserInfo
+          <UserData
             isVisible={visible}
             onClickVisible={onClickVisible}
             adminList={adminList}

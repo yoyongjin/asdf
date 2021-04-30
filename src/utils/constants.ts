@@ -40,7 +40,7 @@ export const ZIBOX_TYPE = {
 
 export const PHONE_TYPE = {
   PHONE_LOAD: 'LOAD',
-  OCX_CONNECTION: 'OCX만 연결',
+  OCX_CONNECTION: 'WEB만 연결',
   PHONE_CONNECTION: '법인폰만 연결',
   BOTH_CONNECTION: '전체 연결',
   PHONE_SERVER_ERROR: '연결 실패(서버 에러)',
@@ -113,6 +113,15 @@ export enum ZIBOX_MONIT_STATUS {
   ERROR = -1,
   DISABLE = 0,
   ENABLE = 1,
+}
+
+export enum CONSULTANT_STATUS {
+  LOGOUT = -1,
+  WAIT = 0,
+  CALL = 1,
+  AFTER = 2,
+  AWAY = 3,
+  REST = 4,
 }
 
 export enum USER_TYPE {

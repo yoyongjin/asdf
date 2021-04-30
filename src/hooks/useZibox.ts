@@ -1,12 +1,16 @@
 import { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 
 import Communicator from 'lib/communicator';
 import { SOCKET_EVENT_TYPE, ZIBOX_MONIT_STATUS } from 'utils/constants';
 import Logger from 'utils/log';
 import { OCXTappingOption, PacketTappingOption } from 'types/zibox';
+import { setTappingData } from 'modules/actions/auth';
 
 // 지박스 명령 관련된 훅
 function useZibox() {
+  const dispatch = useDispatch();
+
   const connectZibox = useCallback(
     async (
       ip: string,
@@ -36,38 +40,70 @@ function useZibox() {
     const data = {
       monitoring_state: ZIBOX_MONIT_STATUS.REQUEST,
       number,
-      user_id: -1,
+      user_id: id,
     };
     Communicator.getInstance().emitMessage(SOCKET_EVENT_TYPE.MONITORING, data);
   }, []);
 
-  const startTapping = useCallback(
-    (number: string, id: number, options?: OCXTappingOption | PacketTappingOption) => {
-      Communicator.getInstance().startTappingZibox(options!);
+  const stopTapping = useCallback(async (number: string) => {
+    try {
+      await Communicator.getInstance().stopTappingZibox();
       const data = {
-        monitoring_state: ZIBOX_MONIT_STATUS.ENABLE,
+        monitoring_state: ZIBOX_MONIT_STATUS.DISABLE,
         number,
-        user_id: id,
+        user_id: -1,
       };
       Communicator.getInstance().emitMessage(
         SOCKET_EVENT_TYPE.MONITORING,
         data,
       );
+    } catch (error) {
+      console.log('Stop Tapping ERROR', error);
+    }
+  }, []);
+
+  const startTapping = useCallback(
+    async (
+      number: string,
+      id: number,
+      options?: OCXTappingOption | PacketTappingOption,
+    ) => {
+      try {
+        await Communicator.getInstance().startTappingZibox(options!);
+        const data = {
+          monitoring_state: ZIBOX_MONIT_STATUS.ENABLE,
+          number,
+          user_id: id,
+        };
+        Communicator.getInstance().emitMessage(
+          SOCKET_EVENT_TYPE.MONITORING,
+          data,
+        );
+      } catch (error) {
+        console.log(error);
+        const data = {
+          monitoring_state: ZIBOX_MONIT_STATUS.DISABLE,
+          number,
+          user_id: -1,
+        };
+        Communicator.getInstance().emitMessage(
+          SOCKET_EVENT_TYPE.MONITORING,
+          data,
+        );
+        const payload = {
+          status: 0,
+          ip: '',
+          id: -1,
+          number: '',
+        };
+        dispatch(setTappingData(payload));
+      }
     },
     [],
   );
 
-  const stopTapping = useCallback((number: string) => {
-    Communicator.getInstance().stopTappingZibox();
-    const data = {
-      monitoring_state: ZIBOX_MONIT_STATUS.DISABLE,
-      number,
-      user_id: -1,
-    };
-    Communicator.getInstance().emitMessage(SOCKET_EVENT_TYPE.MONITORING, data);
-  }, []);
-
   const setVolume = useCallback((type: number, gauge: number) => {
+    Communicator.getInstance().setTappingVolume(type, gauge);
     // Zibox.getInstance().monVolume(type, gauge);
   }, []);
 

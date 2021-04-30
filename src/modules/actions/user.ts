@@ -16,6 +16,9 @@ import {
   SuccessGetUsers,
   ZiboxStatus,
   TimeData,
+  ConsultantStatus,
+  ConsultantAllStatus,
+  PhoneStatus,
 } from 'types/user';
 
 export const REQUEST_GET_USERS = 'REQUEST_GET_USERS';
@@ -57,6 +60,9 @@ export const DISCONNECT_FORCE = 'DISCONNECT_FORCE';
 export const SET_USER_STATUS = 'SET_USER_STATUS';
 export const CHANGE_CALL_STATUS = 'CHANGE_CALL_STATUS';
 export const CHANGE_ZIBOX_STATUS = 'CHANGE_ZIBOX_STATUS';
+export const CHANGE_CONSULTANT_STATUS = 'CHANGE_CONSULTANT_STATUS';
+export const CHANGE_PHONE_STATUS = 'CHANGE_PHONE_STATUS';
+export const CHANGE_ALL_RESET_STATUS = 'CHANGE_ALL_RESET_STATUS';
 export const ADD_USER = 'ADD_USER';
 export const MODIFY_USER = 'MODIFY_USER';
 export const SET_CALCULATED_CALL_TIME = 'SET_CALCULATED_CALL_TIME';
@@ -165,6 +171,15 @@ export const changeCallStatus = createAction(CHANGE_CALL_STATUS)<CallStatus>();
 export const changeZiboxStatus = createAction(
   CHANGE_ZIBOX_STATUS,
 )<ZiboxStatus>();
+export const changeConsultantStatus = createAction(
+  CHANGE_CONSULTANT_STATUS,
+)<ConsultantStatus>();
+export const changePhoneStatus = createAction(
+  CHANGE_PHONE_STATUS,
+)<PhoneStatus>();
+export const changeAllResetStatus = createAction(
+  CHANGE_ALL_RESET_STATUS,
+)<ConsultantAllStatus>();
 
 // 삭제 예정
 export const GET_CALL_STATUS = 'GET_CALL_STATUS';

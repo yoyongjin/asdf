@@ -23,14 +23,25 @@ class Player implements Zibox {
     return true;
   }
 
+  public setTappingVolume(type: number, gauge: number) {
+    console.log(type, gauge);
+    if (type === 1) {
+      // 왼쪽 볼륨
+      this.player.setLeftMonitoringVolume(gauge);
+    } else if (type === 2) {
+      // 오른쪽 볼륨
+      this.player.setRightMonitoringVolume(gauge);
+    }
+  }
+
   public startTapping(options: PacketTappingOption) {
     this.connect(options.key);
 
-    this.player.startMonitoring(options.ip);
+    return this.player.startMonitoring(options.ip);
   }
 
   public stopTapping() {
-    this.player.stopMonitoring();
+    return this.player.stopMonitoring();
   }
 
   onChangeAllEventHandler(callback: (type: string, data: string) => void) {

@@ -44,6 +44,10 @@ export interface UserInfo extends ConsultantAllStatus {
 
 export interface ConsultantInfo extends UserInfo {
   calling_time?: number;
+  call?: CallStatus;
+  consultant?: ConsultantStatus;
+  phone?: PhoneStatus;
+  zibox?: ZiboxStatus;
 }
 
 export interface ConsultantAllStatusByNumber {

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { RouteComponentProps } from 'react-router-dom';
 
 import { Modal } from 'components/atoms';
-import { Title, TablePagination, UserInfo } from 'components/molecules';
+import { Title, TablePagination, UserData } from 'components/molecules';
 import { Table } from 'components/organisms';
 import { Colors, COLORS } from 'utils/color';
 import { TeamInfo, BranchInfo } from 'modules/types/branch';
@@ -18,8 +18,8 @@ import optionIcon from 'images/bt-user-modi-nor@2x.png';
 import optionHoverIcon from 'images/bt-user-modi-over@2x.png';
 import addUserImage from 'images/bt-add-u-1-nor@3x.png';
 import addUserHoverImage from 'images/bt-add-u-1-over@3x.png';
-import zmsAddUserImage from 'images/zms/bt-add-u-1-nor@3x.png';
-import { UserInfo as UserInfoType } from 'modules/types/user';
+import zmsAddUserImage from 'images/zms/bt-add-u-1-nor.png';
+import { UserInfo } from 'types/user';
 import Logger from 'utils/log';
 
 import { company, COMPANY_MAP } from 'utils/constants';
@@ -79,7 +79,7 @@ const userCountData = [
 let currentPage = 0;
 
 function UserView({ location }: UserViewProps) {
-  const [tempUserInfo, setTempUserInfo] = useState<UserInfoType>();
+  const [tempUserInfo, setTempUserInfo] = useState<UserInfo>();
   const [search, setSearch] = useState<string>('');
   const { loginInfo } = useAuth();
   const { branchList, teamList, getBranchList, getTeamList } = useBranch();
@@ -109,18 +109,6 @@ function UserView({ location }: UserViewProps) {
     onClickPrevPage,
   } = usePage();
   const { visible, onClickVisible } = useVisible();
-
-  const userListOptionInfo = useMemo(() => {
-    return {
-      color: COLORS.dark_gray1,
-      borderRadius: 1,
-      borderColor: COLORS.dark_gray4,
-      data: userCountData,
-      width: 4,
-      height: 1.5,
-      paddingLeft: 16,
-    };
-  }, []);
 
   const selectData = useMemo(() => {
     return {
@@ -207,7 +195,7 @@ function UserView({ location }: UserViewProps) {
   );
 
   const getUserInfo = useCallback(
-    (info?: UserInfoType) => {
+    (info?: UserInfo) => {
       // 사용자 등록, 수정 눌렀을 때 타는 로직
       setTempUserInfo(info);
       onClickVisible();
@@ -412,7 +400,7 @@ function UserView({ location }: UserViewProps) {
       <Modal
         isVisible={visible}
         Component={
-          <UserInfo
+          <UserData
             adminId={loginInfo.admin_id}
             adminList={adminList}
             branchId={loginInfo.branch_id}

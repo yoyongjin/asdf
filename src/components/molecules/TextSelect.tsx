@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { Text, Select } from 'components/atoms';
-import { COLORS } from 'utils/color';
+import { Colors, COLORS } from 'utils/color';
 
 const StyledWrapper = styled.div`
   padding-bottom: 20px;
@@ -22,12 +22,13 @@ function TextSelect({
   // defaultOption,
   list,
   name,
+  textColor,
   // selected,
   onChange,
 }: TextSelectProps) {
   return (
     <StyledWrapper>
-      <Text fontSize={0.81} fontWeight={textWeight}>
+      <Text fontSize={0.81} fontWeight={textWeight} fontColor={textColor}>
         {textValue}
       </Text>
       <StyledBlank />
@@ -38,6 +39,7 @@ function TextSelect({
         options={list}
         name={name}
         defaultValue={defaultValue}
+        fontColor={textColor}
         // defaultOption={defaultOption}
         onChange={(e) => onChange(e)}
         // selected={selected}
@@ -68,7 +70,7 @@ interface SelectDataType {
 TextSelect.defaultProps = {
   selectWidth: 7,
   selectRadius: 0,
-  textColor: COLORS.dark_gray6,
+  textColor: Colors.gray9,
   textWeight: 600,
   defaultValue: '기본값',
 };
