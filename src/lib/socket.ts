@@ -17,7 +17,6 @@ class Socket implements WebSocket {
 
   static getInstance(): Socket {
     if (!Socket.instance) {
-      alert("test")
       Socket.instance = new Socket();
     }
 
@@ -33,7 +32,7 @@ class Socket implements WebSocket {
     if (!options.url) return this;
 
     this.socket = io.connect(options.url, {
-      transports : ['websocket'],
+      transports: ['websocket'],
     });
     return this;
   }
@@ -57,7 +56,9 @@ class Socket implements WebSocket {
     }
   }
 
-  onConnectEventHandler(callback: (connection: number, timestamp: number) => void) {
+  onConnectEventHandler(
+    callback: (connection: number, timestamp: number) => void,
+  ) {
     Logger.log('[WEB SOCKET] Register Connect Event');
     this.socket.on(SOCKET_EVENT_TYPE.INITIALIZE, (message: string) => {
       Logger.log(`[WEB SOCKET] ${SOCKET_EVENT_TYPE.INITIALIZE}`, message);
@@ -66,7 +67,7 @@ class Socket implements WebSocket {
       if (status === 'Y') {
         switch (type) {
           case 'init':
-            const _data = _.cloneDeep(data)
+            const _data = _.cloneDeep(data);
             callback(_data.connection, _data.timestamp);
             break;
           default:
