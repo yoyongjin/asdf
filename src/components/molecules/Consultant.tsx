@@ -293,8 +293,8 @@ function Consultant({
           );
         default:
           return (
-            <Text fontColor={Colors.red} fontWeight={700} fontSize={0.87}>
-              {''}
+            <Text fontColor={Colors.gray4} fontWeight={700} fontSize={0.87}>
+              로그아웃
             </Text>
           );
       }
