@@ -1,10 +1,13 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import useInterval from 'hooks/useInterval';
 import { setCalculatedCallTime } from 'modules/actions/user';
 import { RootState } from 'modules/reducers';
 import { setTappingData } from 'modules/actions/auth';
+
+let server_time = 0;
+let local_time = 0;
 
 function useMonitoring() {
   const tappingStatus = useSelector(
@@ -31,10 +34,15 @@ function useMonitoring() {
     [dispatch],
   );
 
+  useEffect(() => {
+    server_time = serverTime;
+    local_time = localTime;
+  }, [serverTime, localTime])
+
   useInterval(() => {
     const payload = {
-      server_time: serverTime,
-      local_time: localTime,
+      server_time,
+      local_time,
     };
     dispatch(setCalculatedCallTime(payload));
   }, 1000);

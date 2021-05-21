@@ -93,6 +93,7 @@ function* logoutProcess(action: ReturnType<typeof requestLogout>) {
         Cookie.removeCookie(constants.COOKIE_NAME);
         yield put(successLogout());
         history!.push(ROUTER_TYPE.LOGIN);
+        window.location.reload();
       }
       // MonitorOcx.getInstance().disconnect();
     }
