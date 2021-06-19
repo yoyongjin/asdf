@@ -130,6 +130,10 @@ class Communicator {
     return Communicator.transport;
   }
 
+  play(packet: any) {
+    (this.getZiboxInstance() as Player).play(packet);
+  }
+
   /**
    * @description MQTT / OCX 모드 확인
    */
@@ -140,6 +144,9 @@ class Communicator {
     } else if (Communicator.transport === ZIBOX_TRANSPORT.OCX) {
       Communicator.controller = new OCX();
     } else if (Communicator.transport === ZIBOX_TRANSPORT.PACKET) {
+      Communicator.controller = new Player();
+      Communicator.socket = new Socket();
+    } else if (Communicator.transport === ZIBOX_TRANSPORT.SERVER) {
       Communicator.controller = new Player();
       Communicator.socket = new Socket();
     }

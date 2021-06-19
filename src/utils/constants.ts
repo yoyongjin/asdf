@@ -72,6 +72,7 @@ export enum ZIBOX_TRANSPORT {
   MQTT = 'mqtt',
   OCX = 'ocx',
   PACKET = 'packet',
+  SERVER = 'server',
 }
 
 export enum API_FETCH {
@@ -109,7 +110,8 @@ export enum CALL_STATUS_V2 {
 }
 
 export enum ZIBOX_MONIT_STATUS {
-  REQUEST = -2,
+  STOP_REQUEST = -3,
+  START_REQUEST = -2,
   ERROR = -1,
   DISABLE = 0,
   ENABLE = 1,

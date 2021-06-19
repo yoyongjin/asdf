@@ -77,7 +77,12 @@ function Monitoring({ location }: MonitoringProps) {
     left: 1.5,
     right: 1.5,
   });
-  const { tappingStatus, changeTappingData, tappingTarget } = useMonitoring();
+  const {
+    tappingStatus,
+    changeTappingData,
+    changeTappingStatus,
+    tappingTarget,
+  } = useMonitoring();
   const {
     consultantInfo,
     filterConsultantInfo,
@@ -87,13 +92,8 @@ function Monitoring({ location }: MonitoringProps) {
     onClickDisconnect,
   } = useUser();
   const { visible, onClickVisible } = useVisible();
-  const {
-    connectZibox,
-    requestTapping,
-    startTapping,
-    stopTapping,
-    setVolume,
-  } = useZibox();
+  const { connectZibox, requestTapping, startTapping, stopTapping, setVolume } =
+    useZibox();
 
   const volumeInfo = useMemo(() => {
     return {
@@ -149,22 +149,26 @@ function Monitoring({ location }: MonitoringProps) {
             requestTapping={requestTapping}
             startTapping={startTapping}
             stopTapping={stopTapping}
+            changeTappingStatus={changeTappingStatus}
+            tappingTarget={tappingTarget}
           />
         </StyledConsultant>
       );
     },
     [
-      getConsultantInfo,
-      loginInfo.id,
       loginInfo.admin_id,
+      loginInfo.id,
       form.branch,
       form.team,
+      getConsultantInfo,
+      connectZibox,
+      changeTappingData,
       tappingStatus,
       requestTapping,
-      changeTappingData,
-      connectZibox,
       startTapping,
       stopTapping,
+      changeTappingStatus,
+      tappingTarget,
     ],
   );
 
@@ -184,20 +188,20 @@ function Monitoring({ location }: MonitoringProps) {
     }
   }, [consultantInfo, tempConsultInfo]);
 
-  useEffect(() => {
-    if (tappingStatus === 0) {
-      if (tappingTarget.id !== -1) {
-        stopTapping(tappingTarget.number);
-        changeTappingData(0, '', -1, '');
-      }
-    }
-  }, [
-    changeTappingData,
-    stopTapping,
-    tappingStatus,
-    tappingTarget.id,
-    tappingTarget.number,
-  ]);
+  // useEffect(() => {
+  //   if (tappingStatus === 0) {
+  //     if (tappingTarget.id !== -1) {
+  //       stopTapping(tappingTarget.number);
+  //       changeTappingData(0, '', -1, '');
+  //     }
+  //   }
+  // }, [
+  //   changeTappingData,
+  //   stopTapping,
+  //   tappingStatus,
+  //   tappingTarget.id,
+  //   tappingTarget.number,
+  // ]);
 
   useEffect(() => {
     if (tappingStatus === 2) {

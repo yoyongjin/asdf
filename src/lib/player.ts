@@ -1,8 +1,8 @@
-import { PacketTappingOption, Zibox } from 'types/zibox';
+import { PacketTappingOption, Play } from 'types/zibox';
 import constants from 'utils/constants';
 import Logger from 'utils/log';
 
-class Player implements Zibox {
+class Player implements Play {
   private player: any;
 
   /**
@@ -42,6 +42,10 @@ class Player implements Zibox {
 
   public stopTapping() {
     return this.player.stopMonitoring();
+  }
+
+  public play(packet: any) {
+    this.player.play(packet);
   }
 
   onChangeAllEventHandler(callback: (type: string, data: string) => void) {

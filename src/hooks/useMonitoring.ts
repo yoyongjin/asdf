@@ -34,10 +34,20 @@ function useMonitoring() {
     [dispatch],
   );
 
+  const changeTappingStatus = useCallback(
+    (status: number) => {
+      const data = {
+        status,
+      };
+      dispatch(setTappingData(data));
+    },
+    [dispatch],
+  );
+
   useEffect(() => {
     server_time = serverTime;
     local_time = localTime;
-  }, [serverTime, localTime])
+  }, [serverTime, localTime]);
 
   useInterval(() => {
     const payload = {
@@ -51,6 +61,7 @@ function useMonitoring() {
     tappingStatus,
     tappingTarget,
     changeTappingData,
+    changeTappingStatus,
   };
 }
 
@@ -60,5 +71,7 @@ export type changeTappingData = (
   id: number,
   number: string,
 ) => void;
+
+export type changeTappingStatus = (status: number) => void;
 
 export default useMonitoring;

@@ -7,6 +7,10 @@ export interface Zibox {
   stopTapping(): void;
 }
 
+export interface Play extends Zibox {
+  play(packet: any): void;
+}
+
 export interface MQTTConnectOption {
   /**
    * @description 지박스 ip

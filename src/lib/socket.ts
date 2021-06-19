@@ -77,9 +77,11 @@ class Socket implements WebSocket {
     });
   }
 
-  onMonitorEventHandler() {
+  onMonitorEventHandler(callback: (packet: any) => void) {
     this.socket.on(SOCKET_EVENT_TYPE.MONITORING, (message: string) => {
       Logger.log(`[WEB SOCKET] ${SOCKET_EVENT_TYPE.MONITORING}`, message);
+
+      callback(message);
       // const data = JSON.parse(message);
       // const { status } = data;
       // if (status === 'Y') {

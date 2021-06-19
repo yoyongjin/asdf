@@ -36,14 +36,24 @@ function useZibox() {
     [],
   );
 
-  const requestTapping = useCallback((number: string, id: number) => {
-    const data = {
-      monitoring_state: ZIBOX_MONIT_STATUS.REQUEST,
-      number,
-      user_id: id,
-    };
-    Communicator.getInstance().emitMessage(SOCKET_EVENT_TYPE.MONITORING, data);
-  }, []);
+  const requestTapping = useCallback(
+    (number: string, id: number, type: number, ip: string) => {
+      const data = {
+        monitoring_state:
+          type === 1
+            ? ZIBOX_MONIT_STATUS.START_REQUEST
+            : ZIBOX_MONIT_STATUS.STOP_REQUEST,
+        number,
+        user_id: id,
+        zibox_ip: ip,
+      };
+      Communicator.getInstance().emitMessage(
+        SOCKET_EVENT_TYPE.MONITORING,
+        data,
+      );
+    },
+    [],
+  );
 
   const stopTapping = useCallback(async (number: string) => {
     try {
@@ -129,6 +139,11 @@ export type connectZibox = (
   target_id: number,
   number: string,
 ) => Promise<Boolean>;
-export type requestTapping = (number: string, id: number) => void;
+export type requestTapping = (
+  number: string,
+  id: number,
+  type: number,
+  ip: string,
+) => void;
 
 export default useZibox;

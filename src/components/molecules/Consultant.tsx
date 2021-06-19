@@ -32,8 +32,9 @@ import {
   startTapping,
   stopTapping,
 } from 'hooks/useZibox';
-import { changeTappingData } from 'hooks/useMonitoring';
+import { changeTappingData, changeTappingStatus } from 'hooks/useMonitoring';
 import Communicator from 'lib/communicator';
+import { TappingTarget } from 'types/auth';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -72,43 +73,82 @@ function Consultant({
   loginId,
   getConsultantInfo,
   requestTapping,
+  changeTappingStatus,
+  tappingTarget,
 }: ConsultantProps) {
   useEffect(() => {
     if (
       consultInfo.call?.status === CALL_STATUS_V2.IDLE &&
-      tappingStatus === 2 &&
       consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.ENABLE &&
       consultInfo.zibox?.monit_user === loginId
     ) {
       // 감청하고 있는 상담원이 통화 종료 했을 때 감청 종료 명령 날려주는 부분
-      console.log(
-        '@@@@@@@@@@@@@@@@@@2엥',
-        consultInfo.call,
-        tappingStatus,
-        consultInfo.zibox,
-      );
-      stopTapping(consultInfo.number);
-      // changeTapping(1);
+      const mode = Communicator.getInstance().getMode();
+
+      if (mode === ZIBOX_TRANSPORT.SERVER) {
+        requestTapping(
+          consultInfo.number,
+          loginId,
+          consultInfo.zibox?.monit_user === -1 ? 1 : 0,
+          consultInfo.ziboxip,
+        );
+      } else {
+        stopTapping(consultInfo.number);
+      }
+
+      // 감청 대상 초기화
+      changeTappingData(0, '', -1, '');
     }
   }, [
     changeTappingData,
     consultInfo.call,
     consultInfo.number,
     consultInfo.zibox,
+    consultInfo.ziboxip,
     loginId,
+    requestTapping,
     stopTapping,
-    tappingStatus,
   ]);
+
+  useEffect(() => {
+    if (
+      consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.DISABLE &&
+      tappingStatus === 2
+    ) {
+      // 감청이 끝났을 경우
+      changeTappingData(0, '', -1, '');
+    }
+  }, [changeTappingData, consultInfo.id, consultInfo.zibox, tappingStatus]);
+
+  useEffect(() => {
+    if (
+      consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.ENABLE &&
+      consultInfo.zibox?.monit_user === loginId &&
+      tappingStatus !== 2
+    ) {
+      // 감청 중인데 state를 바꾸지 못했을 경우
+      changeTappingStatus(2);
+    }
+  }, [changeTappingStatus, consultInfo.zibox, loginId, tappingStatus]);
 
   const handleTapping = useCallback(
     async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       changeTappingData(
         1,
-        consultInfo.zibox?.zibox_ip!,
+        consultInfo.ziboxip,
         consultInfo.id,
         consultInfo.number,
       );
-      requestTapping(consultInfo.number, loginId);
+
+      // changeTappingStatus(1);
+      requestTapping(
+        consultInfo.number,
+        loginId,
+        consultInfo.zibox?.monit_user === -1 ? 1 : 0,
+        consultInfo.ziboxip,
+      );
+
+      const mode = Communicator.getInstance().getMode();
 
       if (consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.ENABLE) {
         if (consultInfo.zibox.monit_user !== loginId) {
@@ -118,11 +158,11 @@ function Consultant({
 
         // 감청 대상인 경우
         // 연결 끊기
-        stopTapping(consultInfo.number);
+        if (mode !== ZIBOX_TRANSPORT.SERVER) {
+          stopTapping(consultInfo.number);
+        }
         return;
       }
-
-      const mode = Communicator.getInstance().getMode();
 
       if (mode === ZIBOX_TRANSPORT.MQTT) {
         try {
@@ -168,43 +208,125 @@ function Consultant({
     ],
   );
 
+  // const handleButtonView = useCallback(
+  //   (consultInfo) => {
+  //     if (consultInfo.call?.status === CALL_STATUS_V2.CONNECT) {
+  //       // 통화 중인 상태
+  //       switch(tappingStatus) {
+  //         case 0:
+  //           // 내가 감청 중이 아닐 경우
+  //       }
+  //       if (
+  //         consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.START_REQUEST ||
+  //         consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.STOP_REQUEST
+  //       ) {
+  //         // 감청 관련 요청을 한 경우
+  //         return (
+  //           <Image src={loadingIcon} alt={'loading'} width={4.6} height={1.6} />
+  //         );
+  //       } else if (
+  //         consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.ENABLE
+  //       ) {
+  //         // 감청 중인 경우
+  //         if (consultInfo.zibox?.monit_user === loginId) {
+  //           // 내가 감청을 하고 있는 경우
+  //           return (
+  //             <Button
+  //               width={4.6}
+  //               height={1.6}
+  //               bgColor={'inherit'}
+  //               image={stopTappingIcon}
+  //               borderRadius={0.81}
+  //               onClick={handleTapping}
+  //             >
+  //               <Text fontColor={Colors.white} fontSize={0.81} fontWeight={800}>
+  //                 감청 종료
+  //               </Text>
+  //             </Button>
+  //           );
+  //         } else {
+  //           // 다른 사람이 감청을 하고 있는 경우
+  //           return (
+  //             <Button
+  //               width={4.6}
+  //               height={1.6}
+  //               bgColor={'inherit'}
+  //               image={tappingIcon}
+  //               borderRadius={0.81}
+  //             >
+  //               <Text fontColor={Colors.white} fontSize={0.81} fontWeight={800}>
+  //                 {''}
+  //               </Text>
+  //             </Button>
+  //           );
+  //         }
+  //       } else {
+  //         // 감청 중이 아닌 경우
+  //         return (
+  //           <Button
+  //             width={4.6}
+  //             height={1.6}
+  //             bgColor={'inherit'}
+  //             image={startTappingIcon}
+  //             borderRadius={0.81}
+  //             onClick={handleTapping}
+  //           >
+  //             <Text fontColor={Colors.white} fontSize={0.81} fontWeight={800}>
+  //               감청
+  //             </Text>
+  //           </Button>
+  //         );
+  //       }
+  //     }
+  //   },
+  //   [changeTappingStatus, handleTapping, loginId, tappingStatus],
+  // );
+
   const handleButtonView = useCallback(
     (consultInfo) => {
-      if (
-        consultInfo.call?.status === CALL_STATUS_V2.OFFHOOK ||
-        consultInfo.call?.status === CALL_STATUS_V2.INCOMMING ||
-        consultInfo.call?.status === CALL_STATUS_V2.CONNECT
-      ) {
+      if (consultInfo.call?.status === CALL_STATUS_V2.CONNECT) {
         // 통화 중인 상태
         if (tappingStatus === 0) {
           // 내가 감청 중이 아닐 경우
+
+          if (consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.ENABLE) {
+            // 다른 관리자가 감청 중인 경우
+            return (
+              <Button
+                width={4.6}
+                height={1.6}
+                bgColor={'inherit'}
+                image={tappingIcon}
+                borderRadius={0.81}
+              >
+                <Text fontColor={Colors.white} fontSize={0.81} fontWeight={800}>
+                  {''}
+                </Text>
+              </Button>
+            );
+          }
+
           return (
             <Button
               width={4.6}
               height={1.6}
               bgColor={'inherit'}
-              image={
-                consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.ENABLE
-                  ? tappingIcon
-                  : startTappingIcon
-              }
+              image={startTappingIcon}
               borderRadius={0.81}
-              onClick={
-                consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.ENABLE
-                  ? undefined
-                  : handleTapping
-              }
+              onClick={handleTapping}
             >
               <Text fontColor={Colors.white} fontSize={0.81} fontWeight={800}>
-                {consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.ENABLE
-                  ? ''
-                  : '감청'}
+                감청
               </Text>
             </Button>
           );
         } else if (tappingStatus === 1) {
           // 내가 감청 요청을 한 경우
-          if (consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.REQUEST) {
+          if (
+            consultInfo.zibox?.monitoring ===
+              ZIBOX_MONIT_STATUS.START_REQUEST ||
+            consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.STOP_REQUEST
+          ) {
             return (
               <Image
                 src={loadingIcon}
@@ -331,7 +453,7 @@ function Consultant({
         consultInfo.call?.status === CALL_STATUS_V2.INCOMMING ||
         consultInfo.call?.status === CALL_STATUS_V2.CONNECT ? (
           consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.ENABLE ? (
-            // 감청 중
+            // 감청중
             <Image
               src={monitoringIcon}
               alt={'Monitoring Status'}
@@ -339,6 +461,7 @@ function Consultant({
               height={4}
             />
           ) : (
+            // 통화중
             <Image
               src={callingIcon}
               alt={'Calling Status'}
@@ -347,6 +470,7 @@ function Consultant({
             />
           )
         ) : (
+          // 대기중
           <Image
             src={waitingIcon}
             alt={'Waiting Status'}
@@ -425,6 +549,8 @@ interface ConsultantProps {
   tappingStatus: number;
   consultInfo: ConsultantInfo;
   loginId: number;
+  changeTappingStatus: changeTappingStatus;
+  tappingTarget: TappingTarget;
   getConsultantInfo: (data: ConsultantInfo) => void;
 }
 

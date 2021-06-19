@@ -177,6 +177,10 @@ function useCommunicator() {
       }
 
       if (zibox instanceof Player) {
+        socket.onMonitorEventHandler((packet: any) => {
+          Communicator.getInstance().play(packet);
+        });
+
         zibox.onChangeAllEventHandler((event: string, data: any) => {
           Logger.log('onChangeAllEventHandler', { event, data });
 
