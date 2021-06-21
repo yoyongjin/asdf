@@ -113,9 +113,9 @@ function Consultant({
   useEffect(() => {
     if (
       consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.DISABLE &&
-      tappingStatus === 2
+      (tappingStatus === 2 || tappingStatus === 1)
     ) {
-      // 감청이 끝났을 경우
+      // 감청이 끝나거나 감청 요청에 실패한 경우
       changeTappingData(0, '', -1, '');
     }
   }, [changeTappingData, consultInfo.id, consultInfo.zibox, tappingStatus]);
@@ -283,7 +283,17 @@ function Consultant({
   // );
 
   const handleButtonView = useCallback(
-    (consultInfo) => {
+    (consultInfo: ConsultantInfo) => {
+      if (
+        // 감청 요청 상태로 변경 시
+        consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.START_REQUEST ||
+        consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.STOP_REQUEST
+      ) {
+        return (
+          <Image src={loadingIcon} alt={'loading'} width={4.6} height={1.6} />
+        );
+      }
+
       if (consultInfo.call?.status === CALL_STATUS_V2.CONNECT) {
         // 통화 중인 상태
         if (tappingStatus === 0) {
