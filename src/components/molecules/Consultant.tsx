@@ -139,8 +139,6 @@ function Consultant({
         consultInfo.id,
         consultInfo.number,
       );
-
-      // changeTappingStatus(1);
       requestTapping(
         consultInfo.number,
         loginId,
@@ -208,80 +206,6 @@ function Consultant({
     ],
   );
 
-  // const handleButtonView = useCallback(
-  //   (consultInfo) => {
-  //     if (consultInfo.call?.status === CALL_STATUS_V2.CONNECT) {
-  //       // 통화 중인 상태
-  //       switch(tappingStatus) {
-  //         case 0:
-  //           // 내가 감청 중이 아닐 경우
-  //       }
-  //       if (
-  //         consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.START_REQUEST ||
-  //         consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.STOP_REQUEST
-  //       ) {
-  //         // 감청 관련 요청을 한 경우
-  //         return (
-  //           <Image src={loadingIcon} alt={'loading'} width={4.6} height={1.6} />
-  //         );
-  //       } else if (
-  //         consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.ENABLE
-  //       ) {
-  //         // 감청 중인 경우
-  //         if (consultInfo.zibox?.monit_user === loginId) {
-  //           // 내가 감청을 하고 있는 경우
-  //           return (
-  //             <Button
-  //               width={4.6}
-  //               height={1.6}
-  //               bgColor={'inherit'}
-  //               image={stopTappingIcon}
-  //               borderRadius={0.81}
-  //               onClick={handleTapping}
-  //             >
-  //               <Text fontColor={Colors.white} fontSize={0.81} fontWeight={800}>
-  //                 감청 종료
-  //               </Text>
-  //             </Button>
-  //           );
-  //         } else {
-  //           // 다른 사람이 감청을 하고 있는 경우
-  //           return (
-  //             <Button
-  //               width={4.6}
-  //               height={1.6}
-  //               bgColor={'inherit'}
-  //               image={tappingIcon}
-  //               borderRadius={0.81}
-  //             >
-  //               <Text fontColor={Colors.white} fontSize={0.81} fontWeight={800}>
-  //                 {''}
-  //               </Text>
-  //             </Button>
-  //           );
-  //         }
-  //       } else {
-  //         // 감청 중이 아닌 경우
-  //         return (
-  //           <Button
-  //             width={4.6}
-  //             height={1.6}
-  //             bgColor={'inherit'}
-  //             image={startTappingIcon}
-  //             borderRadius={0.81}
-  //             onClick={handleTapping}
-  //           >
-  //             <Text fontColor={Colors.white} fontSize={0.81} fontWeight={800}>
-  //               감청
-  //             </Text>
-  //           </Button>
-  //         );
-  //       }
-  //     }
-  //   },
-  //   [changeTappingStatus, handleTapping, loginId, tappingStatus],
-  // );
-
   const handleButtonView = useCallback(
     (consultInfo: ConsultantInfo) => {
       if (
@@ -298,7 +222,6 @@ function Consultant({
         // 통화 중인 상태
         if (tappingStatus === 0) {
           // 내가 감청 중이 아닐 경우
-
           if (consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.ENABLE) {
             // 다른 관리자가 감청 중인 경우
             return (
@@ -316,6 +239,7 @@ function Consultant({
             );
           }
 
+          // 다른 관리자도 감청 중이 아닌 경우
           return (
             <Button
               width={4.6}
@@ -330,56 +254,50 @@ function Consultant({
               </Text>
             </Button>
           );
-        } else if (tappingStatus === 1) {
-          // 내가 감청 요청을 한 경우
-          if (
-            consultInfo.zibox?.monitoring ===
-              ZIBOX_MONIT_STATUS.START_REQUEST ||
-            consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.STOP_REQUEST
-          ) {
-            return (
-              <Image
-                src={loadingIcon}
-                alt={'loading'}
-                width={4.6}
-                height={1.6}
-              />
-            );
-          }
         } else if (tappingStatus === 2) {
           // 내가 감청을 하고 있는 경우
-          if (
-            consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.ENABLE &&
-            consultInfo.zibox?.monit_user === loginId
-          ) {
-            return (
-              <Button
-                width={4.6}
-                height={1.6}
-                bgColor={'inherit'}
-                image={
-                  consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.ENABLE &&
-                  consultInfo.zibox?.monit_user === loginId
-                    ? stopTappingIcon
-                    : tappingIcon
-                }
-                borderRadius={0.81}
-                onClick={
-                  consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.ENABLE &&
-                  consultInfo.zibox?.monit_user === loginId
-                    ? handleTapping
-                    : undefined
-                }
-              >
-                <Text fontColor={Colors.white} fontSize={0.81} fontWeight={800}>
-                  {consultInfo.zibox?.monitoring ===
-                    ZIBOX_MONIT_STATUS.ENABLE &&
-                  consultInfo.zibox?.monit_user === loginId
-                    ? '감청 종료'
-                    : ''}
-                </Text>
-              </Button>
-            );
+          if (consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.ENABLE) {
+            // 내가 감청 중인 상담원일 경우
+
+            if (consultInfo.zibox?.monit_user === loginId) {
+              return (
+                <Button
+                  width={4.6}
+                  height={1.6}
+                  bgColor={'inherit'}
+                  image={stopTappingIcon}
+                  borderRadius={0.81}
+                  onClick={handleTapping}
+                >
+                  <Text
+                    fontColor={Colors.white}
+                    fontSize={0.81}
+                    fontWeight={800}
+                  >
+                    감청 종료
+                  </Text>
+                </Button>
+              );
+            } else {
+              // 다른 관리자가 감청중인 상담원일 경우
+              return (
+                <Button
+                  width={4.6}
+                  height={1.6}
+                  bgColor={'inherit'}
+                  image={tappingIcon}
+                  borderRadius={0.81}
+                >
+                  <Text
+                    fontColor={Colors.white}
+                    fontSize={0.81}
+                    fontWeight={800}
+                  >
+                    감청 종료
+                  </Text>
+                </Button>
+              );
+            }
           }
         }
       }
@@ -509,43 +427,7 @@ function Consultant({
           {`${consultInfo.branch_name} ${consultInfo.team_name}`}
         </Text>
       </StyledUserInfo>
-      <StyledTapping>
-        {/* {consultInfo.call?.status === CALL_STATUS_V2.OFFHOOK ||
-        consultInfo.call?.status === CALL_STATUS_V2.INCOMMING ||
-        consultInfo.call?.status === CALL_STATUS_V2.CONNECT ? (
-          consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.REQUEST ? (
-            // 요청 대기 중
-            <Image src={loadingIcon} alt={'loading'} width={4.6} height={1.6} />
-          ) : tappingStatus > 0 &&
-            consultInfo.zibox?.monitoring ===
-              ZIBOX_MONIT_STATUS.DISABLE ? null : ( // 통화 중이지만 감청 중이 아닌 상담원은 버튼 제거
-            <Button
-              width={4.6}
-              height={1.6}
-              bgColor={'inherit'}
-              image={
-                consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.ENABLE &&
-                consultInfo.zibox?.monit_user === loginId
-                  ? stopTappingIcon
-                  : consultInfo.zibox?.monitoring
-                  ? tappingIcon
-                  : startTappingIcon
-              }
-              borderRadius={0.81}
-              onClick={handleTapping}
-            >
-              <Text fontColor={Colors.white} fontSize={0.81} fontWeight={800}>
-                {consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.ENABLE
-                  ? consultInfo.zibox?.monit_user === loginId
-                    ? '감청 종료'
-                    : ''
-                  : '감청'}
-              </Text>
-            </Button>
-          )
-        ) : null} */}
-        {handleButtonView(consultInfo)}
-      </StyledTapping>
+      <StyledTapping>{handleButtonView(consultInfo)}</StyledTapping>
     </StyledWrapper>
   );
 }
