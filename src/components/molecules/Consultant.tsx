@@ -95,9 +95,6 @@ function Consultant({
       } else {
         stopTapping(consultInfo.number);
       }
-
-      // 감청 대상 초기화
-      changeTappingData(0, '', -1, '');
     }
   }, [
     changeTappingData,
@@ -112,33 +109,50 @@ function Consultant({
 
   useEffect(() => {
     if (
-      consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.DISABLE &&
-      (tappingStatus === 2 || tappingStatus === 1)
-    ) {
-      // 감청이 끝나거나 감청 요청에 실패한 경우
-      changeTappingData(0, '', -1, '');
-    }
-  }, [changeTappingData, consultInfo.id, consultInfo.zibox, tappingStatus]);
-
-  useEffect(() => {
-    if (
       consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.ENABLE &&
       consultInfo.zibox?.monit_user === loginId &&
       tappingStatus !== 2
     ) {
-      // 감청 중인데 state를 바꾸지 못했을 경우
-      changeTappingStatus(2);
-    }
-  }, [changeTappingStatus, consultInfo.zibox, loginId, tappingStatus]);
-
-  const handleTapping = useCallback(
-    async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      // 감청 중인 경우
+      changeTappingData(
+        2,
+        consultInfo.ziboxip,
+        consultInfo.id,
+        consultInfo.number,
+      );
+    } else if (
+      (consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.START_REQUEST ||
+        consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.STOP_REQUEST) &&
+      consultInfo.zibox?.monit_user === loginId &&
+      tappingStatus !== 1
+    ) {
+      // 감청을 요청한 경우
       changeTappingData(
         1,
         consultInfo.ziboxip,
         consultInfo.id,
         consultInfo.number,
       );
+    } else if (
+      consultInfo.id === tappingTarget.id &&
+      consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.DISABLE
+    ) {
+      // 감청이 끝난 경우
+      changeTappingData(0, '', -1, '');
+    }
+  }, [
+    changeTappingData,
+    consultInfo.id,
+    consultInfo.number,
+    consultInfo.zibox,
+    consultInfo.ziboxip,
+    loginId,
+    tappingStatus,
+    tappingTarget.id,
+  ]);
+
+  const handleTapping = useCallback(
+    async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       requestTapping(
         consultInfo.number,
         loginId,
@@ -191,7 +205,6 @@ function Consultant({
       }
     },
     [
-      changeTappingData,
       connectZibox,
       consultInfo.id,
       consultInfo.number,
