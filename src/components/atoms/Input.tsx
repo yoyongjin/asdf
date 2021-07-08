@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components';
 import { darken, lighten } from 'polished';
 
 import deleteImage from 'images/bt-del.png';
-import { COLORS } from 'utils/color';
+import { Colors } from 'utils/color';
 
 const StyledInput = styled.input<StyledInputProps>`
   /* Initialized */
@@ -47,7 +47,7 @@ const StyledInput = styled.input<StyledInputProps>`
   }}
 
   /* Text */
-  font-size: ${(props) => props.fontSize}rem;
+  font-size: ${(props) => props.fontSize}px;
   font-weight: ${(props) => props.fontWeight};
   font-family: ${(props) => props.fontFamily};
   text-align: ${(props) => {
@@ -60,10 +60,9 @@ const StyledInput = styled.input<StyledInputProps>`
     }
   }};
   font-stretch: normal;
-  line-height: 0.86;
+  line-height: 12px;
   letter-spacing: normal;
   box-sizing: border-box;
-
 
   /* Color */
   border-color: ${(props) => props.borderColor};
@@ -71,14 +70,12 @@ const StyledInput = styled.input<StyledInputProps>`
 
   /* Other */
   :focus {
-    box-shadow: 0 0 10px ${(props) => darken(0.1, props.borderColor)};
+    box-shadow: 0 0 5px ${(props) => darken(0.1, props.borderColor)};
     outline: none !important;
   }
   ::placeholder {
     /* Display */
-    font-weight: 800;
     color: ${(props) => props.phColor};
-    font-size: 0.87rem;
   }
   ::-webkit-search-cancel-button {
     -webkit-appearance: none;
@@ -170,17 +167,17 @@ interface InputProps extends StyledInputProps {
 Input.defaultProps = {
   type: 'text',
   value: '',
-  width: 15,
-  height: 2,
-  borderColor: COLORS.light_gray3,
+  width: 20,
+  height: 15,
+  borderColor: Colors.gray3,
   borderRadius: 16,
   borderStyle: 'solid',
   borderWidth: 1,
-  fontSize: 1,
+  fontSize: 10,
   fontWeight: 'normal',
   fontFamily: 'inherit',
   textAlign: 2,
-  fontColor: COLORS.dark_gray1,
+  fontColor: Colors.gray4,
   disabled: false,
 };
 

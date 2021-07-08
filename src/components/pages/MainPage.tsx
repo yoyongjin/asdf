@@ -26,9 +26,9 @@ function MainPage({ history, location }: MainPageProps) {
 
   useEffect(() => {
     if (!loginInfo.id) {
-      onCheckLogin(history);
+      onCheckLogin();
     }
-  }, [loginInfo.id, history, onCheckLogin]);
+  }, [loginInfo.id, onCheckLogin]);
 
   useEffect(() => {
     if (loginInfo.id) {
@@ -55,7 +55,7 @@ function MainPage({ history, location }: MainPageProps) {
               ? linaLogo
               : defaultLogo
           }
-          onClickLogout={() => onClickLogout(history)}
+          onClickLogout={onClickLogout}
         />
       }
     />

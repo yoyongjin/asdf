@@ -3,8 +3,8 @@ import styled, { css } from 'styled-components';
 
 const StyledImage = styled.img<ImageProps>`
   /* Display */
-  height: ${(props) => props.height}rem;
-  width: ${(props) => props.width}rem;
+  height: ${(props) => props.height}px;
+  width: ${(props) => props.width}px;
 
   &:hover {
     ${(props) => {

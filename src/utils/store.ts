@@ -1,13 +1,21 @@
+import { createBrowserHistory } from 'history';
 import { applyMiddleware, createStore, Store, StoreEnhancer } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 import { composeWithDevTools } from 'redux-devtools-extension';
+
 import rootReducer from 'modules/reducers';
 import rootSaga from 'modules/sagas';
 import constants from './constants';
 
+const customHistory = createBrowserHistory();
+
 const rootStore = () => {
   // redux-saga 적용
-  const sagaMiddleware = createSagaMiddleware();
+  const sagaMiddleware = createSagaMiddleware({
+    context: {
+      history: customHistory,
+    },
+  });
 
   let middleware: StoreEnhancer | undefined;
 
@@ -29,3 +37,5 @@ const rootStore = () => {
 };
 
 export default rootStore;
+
+export { customHistory };

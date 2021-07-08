@@ -6,7 +6,7 @@ const StyledText = styled.span<TextProps>`
   /* Text */
   font-family: ${(props) => props.fontFamily};
   font-weight: ${(props) => props.fontWeight};
-  font-size: ${(props) => props.fontSize}rem;
+  font-size: ${(props) => props.fontSize}px;
   line-height: ${(props) => props.lineHeight};
 
   /* Color */
@@ -50,7 +50,7 @@ interface TextProps extends StyledTextProps {
 
 Text.defaultProps = {
   fontFamily: 'inherit',
-  fontSize: 1,
+  fontSize: 14,
   fontWeight: 'normal',
 };
 

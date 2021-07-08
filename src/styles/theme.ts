@@ -10,7 +10,7 @@ const defaultTheme: DefaultTheme = {
     sub: Colors.blue3,
     button: Colors.blue6,
     text: Colors.white,
-  }
+  },
 };
 
 const dblifeTheme: DefaultTheme = {

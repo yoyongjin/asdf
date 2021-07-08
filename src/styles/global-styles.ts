@@ -9,8 +9,7 @@ export const GlobalStyle = createGlobalStyle`
         margin: 0;
         padding: 0;
 
-        /* Text */
-        font-family: NanumGothic;
+        font-size: 10px;
     }
     ::-webkit-scrollbar {
         /* Display */

@@ -1,8 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import { darken, lighten } from 'polished';
 
-import { COLORS } from 'utils/color';
+import { Colors } from 'utils/color';
 
 const StyledButton = styled.button<ButtonProps>`
   /* Initialized */
@@ -10,7 +9,7 @@ const StyledButton = styled.button<ButtonProps>`
   outline: none;
 
   /* Display */
-  border-radius: ${(props) => props.borderRadius}rem;
+  border-radius: ${(props) => props.borderRadius}px;
   border-width: ${(props) => props.borderWidth}px;
   height: ${(props) => props.height}rem;
   width: ${(props) => props.width}rem;
@@ -82,9 +81,8 @@ interface ButtonProps extends StyledButtonProps {
 }
 
 Button.defaultProps = {
-  // bgColor: COLORS.white,
-  borderRadius: 1,
-  fontColor: COLORS.white,
+  borderRadius: 16,
+  fontColor: Colors.white,
   fontSize: 1,
   height: 2.3,
   width: 15,

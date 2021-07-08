@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { History } from 'history';
 
 import {
   requestLogin,
@@ -18,36 +17,23 @@ function useAuth() {
   const dispatch = useDispatch();
 
   const onClickLogin = useCallback(
-    (id: string, password: string, history: History) => {
+    (id: string, password: string) => {
       const payload = {
         id,
         password,
-        history,
       };
       dispatch(requestLogin(payload));
     },
     [dispatch],
   );
 
-  const onCheckLogin = useCallback(
-    (history: History) => {
-      const payload = {
-        history,
-      };
-      dispatch(requestCheckLogin(payload));
-    },
-    [dispatch],
-  );
+  const onCheckLogin = useCallback(() => {
+    dispatch(requestCheckLogin());
+  }, [dispatch]);
 
-  const onClickLogout = useCallback(
-    (history: History) => {
-      const payload = {
-        history,
-      };
-      dispatch(requestLogout(payload));
-    },
-    [dispatch],
-  );
+  const onClickLogout = useCallback(() => {
+    dispatch(requestLogout());
+  }, [dispatch]);
 
   return {
     socketConnection,

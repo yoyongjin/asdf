@@ -1,4 +1,11 @@
-import { all, call, fork, put, takeLatest } from 'redux-saga/effects';
+import {
+  all,
+  call,
+  fork,
+  getContext,
+  put,
+  takeLatest,
+} from 'redux-saga/effects';
 
 import * as API from 'lib/api';
 import Communicator from 'lib/communicator';
@@ -22,11 +29,12 @@ import Logger from 'utils/log';
 import { ResponseType } from 'types/common';
 
 function* loginProcess(action: ReturnType<typeof requestLogin>) {
-  const { id, password, history } = action.payload;
+  const { id, password } = action.payload;
 
+  const history = yield getContext('history');
   try {
     const response = yield call(API.login, id, password);
-    console.log(response)
+
     const { status, data } = response.data as ResponseType;
     Logger.log('Login Data => ', data);
 
@@ -53,7 +61,7 @@ function* loginProcess(action: ReturnType<typeof requestLogin>) {
 }
 
 function* checkLoginProcess(action: ReturnType<typeof requestCheckLogin>) {
-  const { history } = action.payload;
+  const history = yield getContext('history');
 
   const preToken = Cookie.getCookie(constants.COOKIE_NAME) as string;
   API.setHeader(preToken);
@@ -81,7 +89,7 @@ function* checkLoginProcess(action: ReturnType<typeof requestCheckLogin>) {
 }
 
 function* logoutProcess(action: ReturnType<typeof requestLogout>) {
-  const { history } = action.payload;
+  const history = yield getContext('history');
 
   try {
     const response = yield call(API.logout);

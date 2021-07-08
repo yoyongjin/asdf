@@ -1,31 +1,3 @@
-// export const COLORS = {
-//   white: '#ffffff',
-//   gray: '#6a6a6a',
-//   light_gray: '#e9eef3',
-//   light_gray2: '#babcc6',
-//   light_gray3: '#adb5bd',
-//   dark_gray1: '#636b7d',
-//   dark_gray2: '#474c59',
-//   dark_gray3: '#636363',
-//   dark_gray4: '#ced4da',
-//   dark_gray5: '#c2cbd4',
-//   dark_gray6: '#404757',
-//   light_green: '#a2f4cf',
-//   green: '#00854a',
-//   dark_green: '#00512d',
-//   blue: '#008bec',
-//   blue2: '#4995d2',
-//   dark_blue: '#00416e',
-//   dark_blue2: '#35383b',
-//   light_blue: '#789be3',
-//   light_blue2: '#496cd2',
-//   light_blue3: '#a3d9ff',
-//   red: '#ff0000',
-//   black: '#474747',
-//   dark_blue3: '#1f2021',
-//   dark_blue4: '#35383b',
-// };
-
 export enum Colors {
   white = '#FFFFFF',
   white1 = '#e9eef3',
@@ -37,7 +9,7 @@ export enum Colors {
   gray4 = '#636b7d',
   gray5 = '#474c59',
   gray6 = '#636363',
-  gray7= '#ced4da',
+  gray7 = '#ced4da',
   gray8 = '#c2cbd4',
   gray9 = '#404757',
   gray10 = '#474747',
@@ -68,8 +40,8 @@ export enum Colors {
 }
 
 export enum COLORS {
-  white= '#ffffff',
-  gray= '#6a6a6a',
+  white = '#ffffff',
+  gray = '#6a6a6a',
   light_gray = '#e9eef3',
   light_gray2 = '#babcc6',
   light_gray3 = '#adb5bd',

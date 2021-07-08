@@ -1,25 +1,27 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
+import { Router } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 
 import App from 'App';
 import { GlobalStyle } from 'styles/global-styles';
+import { GlobalFonts } from 'styles/global-fonts';
 import { dblifeTheme, defaultTheme, linaTheme } from 'styles/theme';
-import rootStore from 'utils/store';
+import rootStore, { customHistory } from 'utils/store';
 
 const store = rootStore();
 
 function Root() {
   return (
-    <BrowserRouter>
+    <Router history={customHistory}>
       <ThemeProvider theme={defaultTheme}>
         <GlobalStyle />
+        <GlobalFonts />
         <Provider store={store!}>
           <App />
         </Provider>
       </ThemeProvider>
-    </BrowserRouter>
+    </Router>
   );
 }
 

@@ -8,8 +8,8 @@ const StyledWrapper = styled.div`
   display: flex;
   height: 100vh;
   justify-content: center;
-  max-width: 140rem;
-  min-width: 70rem;
+  max-width: 200rem;
+  min-width: 80rem;
   width: 100vw;
 
   /* Color */
@@ -22,7 +22,7 @@ const StyledContent = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  width: 50.06rem;
+  width: 80rem;
 `;
 
 const StyledMainImage = styled.div`
@@ -31,18 +31,18 @@ const StyledMainImage = styled.div`
 `;
 
 const StyledLoginForm = styled.div`
+  /* Position */
   position: absolute;
   top: 380px;
-  /* top: 45%; */
-  /* margin-top: 384px; */
 `;
 
-const StyledIRLinkCorp = styled.div`
-  height: 0.75rem;
-  margin-top: 15.88rem;
+const StyledSubLogo = styled.div`
+  /* Position */
+  position: absolute;
+  top: 634px;
 `;
 
-function LoginTemplate({ mainLogo }: LoginTemplateProps) {
+function LoginTemplate({ mainLogo, subLogo }: LoginTemplateProps) {
   return (
     <StyledWrapper>
       <StyledContent>
@@ -50,16 +50,7 @@ function LoginTemplate({ mainLogo }: LoginTemplateProps) {
         <StyledLoginForm>
           <MainRouter />
         </StyledLoginForm>
-        {/* <StyledIRLinkCorp>
-          <Text
-            fontColor={Colors.white1}
-            fontFamily={'FranklinGothic-Cond'}
-            fontSize={0.75}
-            fontWeight={500}
-          >
-            ⓒ IR-Link Corp.
-          </Text>
-        </StyledIRLinkCorp> */}
+        <StyledSubLogo>{subLogo}</StyledSubLogo>
       </StyledContent>
     </StyledWrapper>
   );
@@ -67,6 +58,7 @@ function LoginTemplate({ mainLogo }: LoginTemplateProps) {
 
 interface LoginTemplateProps {
   mainLogo: React.ReactChild;
+  subLogo: React.ReactChild;
 }
 
 export default LoginTemplate;

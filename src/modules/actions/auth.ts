@@ -1,6 +1,11 @@
 import { createAction } from 'typesafe-actions';
 
-import { RequestLogin, SuccessLogin, TappingData, TappingTarget } from 'types/auth';
+import {
+  RequestLogin,
+  SuccessLogin,
+  TappingData,
+  TappingTarget,
+} from 'types/auth';
 import { RouterType } from 'modules/types/common';
 
 // 액션 타입
@@ -21,14 +26,11 @@ export const SET_TAPPING_DATA = 'SET_TAPPING_DATA';
 export const requestLogin = createAction(REQUEST_LOGIN)<RequestLogin>();
 export const successLogin = createAction(SUCCESS_LOGIN)<SuccessLogin>();
 export const failureLogin = createAction(FAILURE_LOGIN)<string>();
-export const requestCheckLogin = createAction(
-  REQUEST_CHECK_LOGIN,
-)<RouterType>();
-export const successCheckLogin = createAction(
-  SUCCESS_CHECK_LOGIN,
-)<SuccessLogin>();
+export const requestCheckLogin = createAction(REQUEST_CHECK_LOGIN)();
+export const successCheckLogin =
+  createAction(SUCCESS_CHECK_LOGIN)<SuccessLogin>();
 export const failureCheckLogin = createAction(FAILURE_CHECK_LOGIN)<string>();
-export const requestLogout = createAction(REQUEST_LOGOUT)<RouterType>();
+export const requestLogout = createAction(REQUEST_LOGOUT)();
 export const successLogout = createAction(SUCCESS_LOGOUT)();
 export const failureLogout = createAction(FAILURE_LOGOUT)<string>();
 export const setSocketStatus = createAction(SET_SOCKET_STATUS)<number>();
