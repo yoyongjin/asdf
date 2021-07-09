@@ -12,9 +12,11 @@ class Cookie {
     value: string,
     expires: number = 1000 * 24 * 60 * 60,
   ) {
-    Cookies.set(name, value, {
+    const response = Cookies.set(name, value, {
       expires,
     });
+
+    return response ? true : false;
   }
 
   /**
@@ -22,11 +24,13 @@ class Cookie {
    * @param name 쿠키 이름
    */
   static getCookie(name: string) {
-    return Cookies.get(name);
+    return Cookies.get(name) || '';
   }
 
   static removeCookie(name: string) {
     Cookies.remove(name);
+
+    return true;
   }
 }
 

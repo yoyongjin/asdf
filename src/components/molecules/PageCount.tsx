@@ -2,7 +2,7 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 
 import { Text } from 'components/atoms';
-import { COLORS } from 'utils/color';
+import { Colors } from 'utils/color';
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -10,8 +10,9 @@ const StyledWrapper = styled.div`
 `;
 
 const StyledCurrent = styled.div<StyledProps>`
-  border: 1px solid ${COLORS.light_gray2};
-  width: calc(41px - 5px);
+  border: 1px solid ${Colors.gray2};
+  width: calc(41px - 9px);
+  height: calc(24px - 6px);
   ${(props) => {
     if (props.textAlign === 0) {
       return css`
@@ -25,10 +26,12 @@ const StyledCurrent = styled.div<StyledProps>`
     } else if (props.textAlign === 2) {
       return css`
         text-align: right;
-        padding-right: 5px;
+        padding-right: 9px;
+        padding-top: 4px;
+        padding-bottom: 2px;
       `;
     }
-  }}
+  }};
 `;
 
 const StyledDivide = styled.div<StyledProps>`
@@ -42,17 +45,17 @@ function PageCount({ curPage, maxPage, padding, textAlign }: PageCountProps) {
   return (
     <StyledWrapper>
       <StyledCurrent textAlign={textAlign}>
-        <Text fontSize={0.87} fontWeight={700} fontColor={COLORS.dark_gray1}>
+        <Text fontColor={Colors.gray6} fontFamily="NanumBarunGothic">
           {curPage}
         </Text>
       </StyledCurrent>
       <StyledDivide padding={padding}>
-        <Text fontSize={0.87} fontWeight={700} fontColor={COLORS.dark_gray1}>
+        <Text fontColor={Colors.gray6} fontFamily="NanumBarunGothic">
           /
         </Text>
       </StyledDivide>
       <StyledMax>
-        <Text fontSize={0.87} fontWeight={700} fontColor={COLORS.dark_gray1}>
+        <Text fontColor={Colors.gray6} fontFamily="NanumBarunGothic">
           {maxPage}
         </Text>
       </StyledMax>

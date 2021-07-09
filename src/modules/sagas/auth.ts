@@ -1,3 +1,4 @@
+import { History } from 'history';
 import {
   all,
   call,
@@ -7,7 +8,8 @@ import {
   takeLatest,
 } from 'redux-saga/effects';
 
-import * as API from 'lib/api';
+import ZMSAuth from 'lib/api/zms/auth';
+import ZMSMain from 'lib/api/zms/main';
 import Communicator from 'lib/communicator';
 import {
   requestLogin,
@@ -23,90 +25,115 @@ import {
   successLogout,
   failureLogout,
 } from 'modules/actions/auth';
-import constants, { API_FETCH, ROUTER_TYPE } from 'utils/constants';
-import Cookie from 'utils/cookie';
-import Logger from 'utils/log';
-import { ResponseType } from 'types/common';
+import { ResponseSuccessData, ResponseFailureData } from 'types/common';
+import { API_FETCH, ROUTER_TYPE } from 'utils/constants';
 
 function* loginProcess(action: ReturnType<typeof requestLogin>) {
   const { id, password } = action.payload;
+  const history: History = yield getContext('history');
 
-  const history = yield getContext('history');
   try {
-    const response = yield call(API.login, id, password);
+    const response: ResponseSuccessData | ResponseFailureData = yield call(
+      ZMSAuth.login,
+      id,
+      password,
+    );
 
-    const { status, data } = response.data as ResponseType;
-    Logger.log('Login Data => ', data);
-
-    if (status === API_FETCH.SUCCESS) {
+    if (response.status === API_FETCH.SUCCESS) {
+      const { data } = response as ResponseSuccessData;
       const { user, token } = data;
+
+      // 소켓 연결
       Communicator.getInstance().connectSocket(user.id);
-      Cookie.setCookie(constants.COOKIE_NAME, token);
-      API.setHeader(token);
+
+      // 쿠키 설정
+      ZMSMain.setAccessToken(token);
 
       yield put(successLogin(user));
 
-      history!.push(ROUTER_TYPE.MONIT);
-    }
-  } catch (error) {
-    Logger.log('Login Failure', error);
-    yield put(failureLogin(error.message));
+      history.push(ROUTER_TYPE.MONIT);
 
-    if (error.message.indexOf('400') > -1) {
-      alert('아이디와 비밀번호를 확인해주세요.');
-    } else if (error.message.indexOf('403') > -1) {
-      alert('이미 로그인 중입니다.');
+      return;
     }
+
+    const { error_msg } = response as ResponseFailureData;
+    yield put(failureLogin(error_msg));
+
+    alert(error_msg);
+  } catch (error) {
+    yield put(failureLogin(error.message));
   }
 }
 
 function* checkLoginProcess(action: ReturnType<typeof requestCheckLogin>) {
-  const history = yield getContext('history');
-
-  const preToken = Cookie.getCookie(constants.COOKIE_NAME) as string;
-  API.setHeader(preToken);
+  const history: History = yield getContext('history');
 
   try {
-    const response = yield call(API.checkLogin);
-    const { status, data } = response.data;
-    Logger.log('Check Login Data => ', data);
+    const response: ResponseSuccessData | ResponseFailureData = yield call(
+      ZMSAuth.autoLogin,
+    );
 
-    if (status === API_FETCH.SUCCESS) {
-      const { user, token: newToken } = data;
+    if (response.status === API_FETCH.SUCCESS) {
+      const { data } = response as ResponseSuccessData;
+      const { user, token } = data;
+
+      // 소켓 연결
       Communicator.getInstance().connectSocket(user.id);
-      Cookie.setCookie(constants.COOKIE_NAME, newToken);
-      API.setHeader(newToken);
+
+      // 쿠키 설정
+      ZMSMain.setAccessToken(token);
 
       yield put(successCheckLogin(user));
-      history!.push('/main');
+
+      history!.push(ROUTER_TYPE.MONIT);
+
+      return;
     }
+
+    const { error_msg } = response as ResponseFailureData;
+    yield put(failureCheckLogin(error_msg));
+
+    alert(error_msg);
+
+    history.push(ROUTER_TYPE.LOGIN);
   } catch (error) {
-    Logger.log('Check Login Failure', error);
     yield put(failureCheckLogin(error.message));
-    history!.push(ROUTER_TYPE.LOGIN);
-    Cookie.removeCookie(constants.COOKIE_NAME);
+    history.push(ROUTER_TYPE.LOGIN);
+    ZMSMain.removeAccessToken();
   }
 }
 
 function* logoutProcess(action: ReturnType<typeof requestLogout>) {
-  const history = yield getContext('history');
+  const history: History = yield getContext('history');
 
   try {
-    const response = yield call(API.logout);
-    const { status, data } = response.data;
-    Logger.log('Logout Data => ', data);
+    const response: ResponseSuccessData | ResponseFailureData = yield call(
+      ZMSAuth.logout,
+    );
 
-    if (status === 'success') {
+    if (response.status === API_FETCH.SUCCESS) {
+      const { data } = response as ResponseSuccessData;
+
       if (data) {
-        Cookie.removeCookie(constants.COOKIE_NAME);
         yield put(successLogout());
-        history!.push(ROUTER_TYPE.LOGIN);
+
+        // 쿠키 제거
+        ZMSMain.removeAccessToken();
+
+        history.push(ROUTER_TYPE.LOGIN);
+
+        // 데이터를 비우기 위해 강제 새로고침 (개선 요망)
         window.location.reload();
       }
-      // MonitorOcx.getInstance().disconnect();
+
+      return;
     }
+
+    const { error_msg } = response as ResponseFailureData;
+    yield put(failureCheckLogin(error_msg));
+
+    alert(error_msg);
   } catch (error) {
-    Logger.log('Logout Failure', error);
     yield put(failureLogout(error.message));
   }
 }

@@ -12,7 +12,7 @@ import dblifeLogo from 'images/db-logo-cont@3x.png';
 import linaLogo from 'images/ln-logo-moni.png';
 import defaultLogo from 'images/zms/sub-gnb-logo.png';
 
-function MainPage({ history, location }: MainPageProps) {
+function MainPage({ location }: MainPageProps) {
   const { loginInfo, onCheckLogin, onClickLogout } = useAuth();
   const { registerEventHandler } = useCommunicator();
 

@@ -5,7 +5,7 @@ import { Location } from 'history';
 import { Image, Link } from 'components/atoms';
 import { LinkSelector, UserLog } from 'components/molecules';
 import { COLORS } from 'utils/color';
-import { SuccessLogin } from 'types/auth';
+import { LoginData } from 'types/auth';
 
 import constants, { COMPANY_TYPE } from 'utils/constants';
 
@@ -21,8 +21,12 @@ const StyledWrapper = styled.div`
 
 const StyledLogo = styled.div`
   /* Position */
-  margin-left: 26px;
+  margin-left: ${constants.COMPANY === COMPANY_TYPE.LINA ||
+  constants.COMPANY === COMPANY_TYPE.DBLIFE
+    ? 26
+    : 0}px;
   margin-top: ${constants.COMPANY === COMPANY_TYPE.LINA ? 10 : 0}px;
+  margin-right: 33px;
 `;
 
 const StyledLink = styled.div`
@@ -38,6 +42,7 @@ const StyledLink = styled.div`
 const StyledUserLog = styled.div`
   /* Position */
   margin-right: 25px;
+
   /* Display */
   flex-grow: 2;
   float: right;
@@ -51,13 +56,19 @@ function GNB({ loginInfo, location, logoImage, onClickLogout }: GNBProps) {
           <Image
             alt={'logo'}
             src={logoImage}
-            width={8.38}
+            width={
+              constants.COMPANY === COMPANY_TYPE.DBLIFE
+                ? 139
+                : constants.COMPANY === COMPANY_TYPE.LINA
+                ? 134
+                : 132
+            }
             height={
               constants.COMPANY === COMPANY_TYPE.DBLIFE
-                ? 3.25
+                ? 52
                 : constants.COMPANY === COMPANY_TYPE.LINA
-                ? 2.1
-                : 3.875
+                ? 34
+                : 62
             }
           />
         </Link>
@@ -77,7 +88,7 @@ function GNB({ loginInfo, location, logoImage, onClickLogout }: GNBProps) {
 }
 
 interface GNBProps {
-  loginInfo: SuccessLogin;
+  loginInfo: LoginData;
   logoImage: string;
   location: Location;
   onClickLogout: () => void;

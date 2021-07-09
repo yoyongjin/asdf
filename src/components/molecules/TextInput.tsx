@@ -30,10 +30,6 @@ function TextInput({
   image,
   fontSize,
   fontWeight,
-  disabled,
-  step,
-  min,
-  max,
   textColor,
 }: TextInputProps) {
   return (
@@ -55,10 +51,6 @@ function TextInput({
         logoImg={image}
         fontSize={fontSize}
         fontWeight={fontWeight}
-        disabled={disabled}
-        step={step}
-        min={min}
-        max={max}
       ></Input>
     </StyledWrapper>
   );

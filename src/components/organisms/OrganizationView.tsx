@@ -1,18 +1,14 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 
 import { Organization, Title } from 'components/molecules';
+import useAuth from 'hooks/useAuth';
 import useBranch from 'hooks/useBranch';
 import usePage from 'hooks/usePage';
-import useAuth from 'hooks/useAuth';
+import constants, { COMPANY_TYPE, USER_TYPE } from 'utils/constants';
 
-import insertBranchImage from 'images/bt-add-g-1-nor@3x.png';
-import insertBranchHoverImage from 'images/bt-add-g-1-over.png';
-import zmsInsertBranchImage from 'images/zms/bt-add-g-1-nor.png';
-import Logger from 'utils/log';
-import { COLORS } from 'utils/color';
-
-import { company, COMPANY_MAP } from 'utils/constants';
+import DB_addBranchImage from 'images/bt-add-g-1-nor.png';
+import addBranchImage from 'images/zms/bt-add-g-1-nor.png';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -22,7 +18,7 @@ const StyledWrapper = styled.div`
 
 const StyledTitle = styled.div`
   /* Display */
-  height: 3.75rem;
+  height: 6rem;
 `;
 
 const StyledOrganizationArea = styled.div`
@@ -57,34 +53,34 @@ function OrganizationView() {
     }
   }, [loginInfo, getBranchInfo]);
 
-  const buttonType = {
-    title: '',
-    onClick: onClickAddTempBranch,
+  const buttonData = useMemo(() => {
+    return {
+      count: 1,
+      info: [
+        {
+          image:
+            constants.COMPANY === COMPANY_TYPE.DBLIFE
+              ? DB_addBranchImage
+              : addBranchImage,
+          click: onClickAddTempBranch,
+        },
+      ],
+      hidden: loginInfo.admin_id !== USER_TYPE.SUPER_ADMIN ? true : false,
+    };
+  }, [loginInfo.admin_id, onClickAddTempBranch]);
 
-    type: 'organization',
-  };
-
-  const zmsButtonType = {
-    title: '',
-    onClick: onClickAddTempBranch,
-    bgImage: zmsInsertBranchImage,
-    bgHoverImage: zmsInsertBranchImage,
-    type: 'organization',
-  };
-
-  const explanType = {
+  const explanData = {
     title: '※ 팀추가 : 팀명 입력 후 엔터',
   };
 
-  const pageType = useCallback(() => {
-    const type = {
-      curPage: page,
-      count: countBranch,
-      onClickNextPage: onClickNextPage,
-      onClickPrevPage: onClickPrevPage,
+  const pageData = useMemo(() => {
+    return {
+      max: countBranch,
+      cur: page,
+      click_next: onClickNextPage,
+      click_prev: onClickPrevPage,
     };
-    return type;
-  }, [countBranch, page, onClickPrevPage, onClickNextPage]);
+  }, [countBranch, onClickNextPage, onClickPrevPage, page]);
 
   const branchKeys = Object.getOwnPropertyNames(branchInfo).reverse();
   const branchValues = Object.values(branchInfo).reverse();
@@ -93,15 +89,12 @@ function OrganizationView() {
     <StyledWrapper>
       <StyledTitle>
         <Title
-          buttonType={
-            company === COMPANY_MAP.DBLIFE ? buttonType : zmsButtonType
-          }
-          explanType={explanType}
-          pageType={pageType()}
-          adminType={loginInfo.admin_id}
-          color={
-            company === COMPANY_MAP.DBLIFE ? COLORS.green : COLORS.light_blue2
-          }
+          isButton
+          isExplan
+          isPage
+          buttonData={buttonData}
+          explanData={explanData}
+          pageData={pageData}
         >
           조직 관리
         </Title>

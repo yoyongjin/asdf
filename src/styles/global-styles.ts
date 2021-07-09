@@ -10,6 +10,12 @@ export const GlobalStyle = createGlobalStyle`
         padding: 0;
 
         font-size: 10px;
+        font-family: 'NanumGothic';
+
+        input, button {
+            border: none;
+            outline: none;
+        }
     }
     ::-webkit-scrollbar {
         /* Display */

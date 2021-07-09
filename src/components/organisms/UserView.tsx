@@ -5,7 +5,6 @@ import { RouteComponentProps } from 'react-router-dom';
 import { Modal } from 'components/atoms';
 import { Title, TablePagination, UserData } from 'components/molecules';
 import { Table } from 'components/organisms';
-import { Colors, COLORS } from 'utils/color';
 import { TeamInfo, BranchInfo } from 'modules/types/branch';
 import useUser from 'hooks/useUser';
 import usePage from 'hooks/usePage';
@@ -13,16 +12,14 @@ import useVisible from 'hooks/useVisible';
 import useBranch from 'hooks/useBranch';
 import useInputForm from 'hooks/useInputForm';
 import useAuth from 'hooks/useAuth';
+import { UserInfo } from 'types/user';
+import { Colors, COLORS } from 'utils/color';
+import constants, { COMPANY_TYPE } from 'utils/constants';
 
 import optionIcon from 'images/bt-user-modi-nor@2x.png';
 import optionHoverIcon from 'images/bt-user-modi-over@2x.png';
-import addUserImage from 'images/bt-add-u-1-nor@3x.png';
-import addUserHoverImage from 'images/bt-add-u-1-over@3x.png';
-import zmsAddUserImage from 'images/zms/bt-add-u-1-nor.png';
-import { UserInfo } from 'types/user';
-import Logger from 'utils/log';
-
-import { company, COMPANY_MAP } from 'utils/constants';
+import DB_addUserImage from 'images/bt-add-u-1-nor.png';
+import addUserImage from 'images/zms/bt-add-u-1-nor.png';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -32,13 +29,12 @@ const StyledWrapper = styled.div`
 
 const StyledTitle = styled.div`
   /* Display */
-  height: 3.75rem;
+  height: 6rem;
   width: 100%;
 `;
 
 const StyledUserListArea = styled.div`
   /* Display */
-  /* height: calc(100% - 3.75rem); */
   height: 100%;
   width: 100%;
 `;
@@ -112,33 +108,95 @@ function UserView({ location }: UserViewProps) {
 
   const selectData = useMemo(() => {
     return {
-      data1: branchList!,
-      data2: teamList!,
-      data3: userCountData,
+      count: 3,
+      data: [userCountData, branchList, teamList],
+      style: [
+        {
+          width: 50,
+          height: 25,
+          borderRadius: 12.5,
+          borderColor: Colors.gray7,
+          fontColor: Colors.gray4,
+        },
+        {
+          width: 150,
+          height: 25,
+          borderRadius: 12.5,
+          borderColor: Colors.gray7,
+          fontColor: Colors.gray4,
+          paddingLeft: 16,
+        },
+        {
+          width: 150,
+          height: 25,
+          borderRadius: 12.5,
+          borderColor: Colors.gray7,
+          fontColor: Colors.gray4,
+          paddingLeft: 16,
+        },
+      ],
+      info: [
+        {
+          id: form.userListCount,
+          name: 'user',
+          click: onChangeSelect,
+        },
+        {
+          id: loginInfo.admin_id === 1 ? loginInfo.branch_id : form.branch,
+          name: 'branch',
+          click: onChangeSelect,
+        },
+        {
+          id: form.team,
+          name: 'team',
+          click: onChangeSelect,
+        },
+      ],
     };
-  }, [branchList, teamList]);
+  }, [
+    branchList,
+    form.branch,
+    form.team,
+    form.userListCount,
+    loginInfo.admin_id,
+    loginInfo.branch_id,
+    onChangeSelect,
+    teamList,
+  ]);
 
-  const selectOption = useMemo(() => {
+  const buttonData = useMemo(() => {
     return {
-      borderColor: Colors.gray7,
-      borderRadius: 1,
-      fontColor: Colors.gray4,
-      height: 1.5,
-      width: 9.3,
-      paddingLeft: 16,
+      count: 1,
+      info: [
+        {
+          image:
+            constants.COMPANY === COMPANY_TYPE.DBLIFE
+              ? DB_addUserImage
+              : addUserImage,
+          click: onClickVisible,
+        },
+      ],
+      hidden: false,
     };
-  }, []);
+  }, [onClickVisible]);
 
-  const userCountOption = useMemo(() => {
+  const onClickSearch = useCallback(() => {
+    setSearch(form.search);
+    onChangePageFirst();
+  }, [form.search, onChangePageFirst]);
+
+  const searchData = useMemo(() => {
     return {
-      borderRadius: 1,
-      borderColor: Colors.gray7,
-      fontColor: Colors.gray4,
-      height: 1.5,
-      width: 4,
-      paddingLeft: 16,
+      count: 1,
+      data: [form.search],
+      info: [
+        {
+          change: onChangeInput,
+          click: onClickSearch,
+        },
+      ],
     };
-  }, []);
+  }, [form.search, onChangeInput, onClickSearch]);
 
   const selectInfo = useMemo(() => {
     return {
@@ -152,31 +210,6 @@ function UserView({ location }: UserViewProps) {
       paddingLeft: 16,
     };
   }, [branchList, teamList]);
-
-  const buttonInfo = useMemo(() => {
-    return {
-      title: '+ 사용자 등록',
-      // bgImage: addUserImage,
-      // bgHoverImage: addUserHoverImage,
-      type: 'user',
-      onClick: onClickVisible,
-    };
-  }, [onClickVisible]);
-
-  const zmsButtonInfo = useMemo(() => {
-    return {
-      title: '',
-      bgImage: zmsAddUserImage,
-      bgHoverImage: zmsAddUserImage,
-      type: 'user',
-      onClick: onClickVisible,
-    };
-  }, [onClickVisible]);
-
-  const onClickSearch = useCallback(() => {
-    setSearch(form.search);
-    onChangePageFirst();
-  }, [form.search, onChangePageFirst]);
 
   const getUsers2 = useCallback(
     (
@@ -325,22 +358,12 @@ function UserView({ location }: UserViewProps) {
       <StyledWrapper>
         <StyledTitle>
           <Title
-            buttonType={
-              company === COMPANY_MAP.DBLIFE ? buttonInfo : zmsButtonInfo
-            }
-            branch={
-              loginInfo.admin_id === 1 ? loginInfo.branch_id : form.branch
-            }
+            isButton
             isSearch
             isSelect
-            onChange={onChangeInput}
-            onChangeSelect={onChangeSelect}
-            onClickSearch={onClickSearch}
-            search={form.search}
+            buttonData={buttonData}
+            searchData={searchData}
             selectData={selectData}
-            selectOption={selectOption}
-            team={form.team}
-            userCountOption={userCountOption}
           >
             사용자 관리
           </Title>
@@ -352,7 +375,7 @@ function UserView({ location }: UserViewProps) {
               adminList={adminList}
               branchId={loginInfo.branch_id}
               branchList={selectInfo.data1}
-              branchName={loginInfo.branch_name}
+              branchName={loginInfo.branch_name!}
               page={page}
               tableTitle={tableTitle}
               teamId={form.team}
@@ -404,7 +427,7 @@ function UserView({ location }: UserViewProps) {
             adminId={loginInfo.admin_id}
             adminList={adminList}
             branchId={loginInfo.branch_id}
-            branchName={loginInfo.branch_name}
+            branchName={loginInfo.branch_name!}
             data={tempUserInfo}
             isVisible={visible}
             onClickVisible={getUserInfo}

@@ -1,13 +1,11 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
-import { Button, Image, Text } from 'components/atoms';
+import { Image, Text } from 'components/atoms';
 import { Colors } from 'utils/color';
 import { getYYYYMMDD, getHourMinSecV2 } from 'utils/utils';
 
-import informationImage from 'images/bg-login-time@3x.png';
-
-import constants, { COMPANY_TYPE } from 'utils/constants';
+import timestampImage from 'images/bg-login-time@3x.png';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -18,19 +16,9 @@ const StyledWrapper = styled.div`
   justify-content: flex-end;
 `;
 
-const StyledUser = styled.span`
-  /* Display */
-  padding-right: 14px;
-`;
-
 const StyledLoginTime = styled.span`
   /* Position */
   position: relative;
-`;
-
-const StyledLogout = styled.span`
-  /* Display */
-  padding-left: 16px;
 `;
 
 const StyledText = styled.span`
@@ -40,41 +28,59 @@ const StyledText = styled.span`
 
   /* Position */
   position: absolute;
-  top: 55%;
-  left: 70%;
-  transform: translate(-50%, -50%);
+  top: 6px;
+  left: 34px;
+`;
+
+const StyledCommonWhiteSpace = styled.span<StyledCommonWhiteSpaceProps>`
+  ${(props) => {
+    if (props.type === 'left') {
+      return css<StyledCommonWhiteSpaceProps>`
+        padding-left: ${(props) => props.pixel}px;
+      `;
+    }
+
+    if (props.type === 'right') {
+      return css<StyledCommonWhiteSpaceProps>`
+        padding-right: ${(props) => props.pixel}px;
+      `;
+    }
+  }}
 `;
 
 function UserLog({ loginTime, userName, onClickLogout }: UserLogProps) {
   return (
     <StyledWrapper>
-      <StyledUser>
-        <Text fontColor={Colors.white} fontSize={0.81} fontWeight={700}>
+      <StyledCommonWhiteSpace pixel={14} type="right">
+        <Text fontColor={Colors.white} fontWeight={700}>
           {`${userName} 님`}
         </Text>
-      </StyledUser>
+      </StyledCommonWhiteSpace>
       <StyledLoginTime>
         <Image
           alt={'login_time'}
-          src={informationImage}
-          width={11.88}
-          height={1.43}
+          src={timestampImage}
+          width={190}
+          height={23}
         />
         <StyledText>
-          <Text fontSize={0.75} fontWeight={700}>
+          <Text fontColor={Colors.green1} fontSize={12} fontWeight={700}>
             {`${getYYYYMMDD(loginTime)} ${getHourMinSecV2(loginTime)}`}
           </Text>
         </StyledText>
       </StyledLoginTime>
-      <StyledLogout>
-        <Button bgColor="inherit" width={5} onClick={onClickLogout}>
-          <Text fontColor={Colors.white} fontSize={0.81} fontWeight={700}>
-            로그아웃
-          </Text>
-        </Button>
-      </StyledLogout>
+      <StyledCommonWhiteSpace pixel={21} type="left">
+        <Text fontColor={Colors.white} fontWeight={700} onClick={onClickLogout}>
+          로그아웃
+        </Text>
+      </StyledCommonWhiteSpace>
     </StyledWrapper>
   );
+}
+
+interface StyledCommonWhiteSpaceProps {
+  pixel: number;
+  type: string;
 }
 
 interface UserLogProps {

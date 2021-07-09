@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import styled from 'styled-components';
 
 import { Button, Input, Text } from 'components/atoms';
-import { COLORS } from 'utils/color';
+import { Colors, COLORS } from 'utils/color';
 
 import searchIcon from 'images/icon-search.png';
 
@@ -49,7 +49,6 @@ function SearchBar({
           borderColor={borderColor}
           borderWidth={borderWidth}
           textAlign={1}
-          fontSize={0.87}
           logoImg={searchIcon}
           onChange={onChange}
           onKeyDown={onKeyPress}
@@ -62,7 +61,11 @@ function SearchBar({
           bgColor={buttonColor}
           onClick={onClickSearch}
         >
-          <Text fontSize={0.87} fontColor={COLORS.white} fontWeight={800}>
+          <Text
+            fontColor={Colors.white}
+            fontFamily="NanumBarunGothic"
+            fontWeight={700}
+          >
             검색
           </Text>
         </Button>
@@ -85,12 +88,12 @@ interface SearchBarProps {
 }
 
 SearchBar.defaultProps = {
-  inputWidth: 10.6,
-  inputHeight: 1.5,
-  buttonWidth: 4.3,
-  buttonHeight: 1.6,
-  buttonColor: COLORS.dark_gray1,
-  borderColor: COLORS.dark_gray4,
+  inputWidth: 17,
+  inputHeight: 2.5,
+  buttonWidth: 7,
+  buttonHeight: 2.6,
+  buttonColor: Colors.gray4,
+  borderColor: Colors.gray7,
   borderWidth: 1,
 };
 

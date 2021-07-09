@@ -17,7 +17,7 @@ export const getYYYYMMDD = (timestamp: number, delim = '.'): string => {
   let month = date.getMonth() + 1 + '';
   let _date = date.getDate() + '';
 
-  let fullDate = `${year}${delim}${pad(month)}${delim}${pad(_date)}`;
+  let fullDate = `${year}${delim}${pad(month)}${delim}${pad(_date)}.`;
 
   return fullDate;
 };
@@ -40,7 +40,7 @@ export const getHourMinSecV2 = (timestamp: number, delim = ':'): string => {
   let min = date.getMinutes() + '';
   let sec = date.getSeconds() + '';
 
-  let fullTime = `${pad(hour)}${delim}${pad(min)}${delim}${pad(sec)}`;
+  let fullTime = `${pad(hour)} ${delim} ${pad(min)} ${delim} ${pad(sec)}`;
   return fullTime;
 };
 

@@ -1,7 +1,3 @@
-export interface DynamicMapType {
-  [key: string]: any;
-}
-
 export interface ResponseType {
   type: string;
   data: any;
@@ -11,4 +7,15 @@ export interface ResponseType {
 export interface FetchType {
   fetch: boolean;
   error: string;
+}
+
+export interface ResponseSuccessData {
+  status: string;
+  data: any;
+}
+
+export interface ResponseFailureData {
+  status: string;
+  result_code: number;
+  error_msg: string;
 }

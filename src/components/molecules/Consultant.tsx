@@ -2,66 +2,60 @@ import React, { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { Button, Image, Text } from 'components/atoms';
-import { getHourMinSecV1 } from 'utils/utils';
-import { Colors, COLORS } from 'utils/color';
-import { ConsultantInfo, CallStatus, ConsultantStatus } from 'types/user';
-import {
-  CALL_STATUS_V2,
-  CONSULTANT_STATUS,
-  ZIBOX_TRANSPORT,
-} from 'utils/constants';
-
-import monitoringIcon from 'images/icon-mnt-red@2x.png';
-// import workingIcon from 'images/icon-mnt-blue@2x.png';
-import waitingIcon from 'images/icon-mnt-grey@2x.png';
-import callingIcon from 'images/icon-mnt-blue@2x.png';
-// import tappingStartIcon from 'images/bt-mnt-listen-nor.png';
-// import tappingStartOverIcon from 'images/bt-mnt-listen-over.png';
-// import OthertappingIcon from 'images/bt-mnt-listen-ing.png';
-// import tappingStopIcon from 'images/bt-mnt-listen-fin-nor.png';
-import startTappingIcon from 'images/zms/bt-mnt-listen-nor.png';
-import tappingIcon from 'images/zms/bt-mnt-listen-ing.png';
-import stopTappingIcon from 'images/zms/bt-mnt-listen-fin-nor.png';
-import loadingIcon from 'images/loading.svg';
-
-import { CONSULTANT_BOX_WIDTH, ZIBOX_MONIT_STATUS } from 'utils/constants';
-
+import { changeTappingData, changeTappingStatus } from 'hooks/useMonitoring';
 import {
   connectZibox,
   requestTapping,
   startTapping,
   stopTapping,
 } from 'hooks/useZibox';
-import { changeTappingData, changeTappingStatus } from 'hooks/useMonitoring';
 import Communicator from 'lib/communicator';
 import { TappingTarget } from 'types/auth';
+import { ConsultantInfo } from 'types/user';
+import { Colors } from 'utils/color';
+import {
+  CALL_STATUS_V2,
+  CONSULTANT_STATUS,
+  ZIBOX_TRANSPORT,
+  ZIBOX_MONIT_STATUS,
+} from 'utils/constants';
+import { getHourMinSecV1 } from 'utils/utils';
+
+import monitoringIcon from 'images/icon-mnt-red@2x.png';
+import waitingIcon from 'images/icon-mnt-grey@2x.png';
+import callingIcon from 'images/icon-mnt-blue@2x.png';
+import startTappingIcon from 'images/zms/bt-mnt-listen-nor.png';
+import tappingIcon from 'images/zms/bt-mnt-listen-ing.png';
+import stopTappingIcon from 'images/zms/bt-mnt-listen-fin-nor.png';
+import loadingIcon from 'images/loading.svg';
 
 const StyledWrapper = styled.div`
   /* Display */
-  width: ${CONSULTANT_BOX_WIDTH}px;
-  height: 15rem;
+  width: 200px;
+  height: 240px;
   text-align: center;
 
   /* Color */
-  background-color: ${COLORS.white};
+  background-color: ${Colors.white};
 `;
 
 const StyledCallStatusArea = styled.div`
   /* Display */
   display: flex;
   justify-content: space-between;
-  padding: 1rem;
+  padding: 17px 17px 22px 16px;
 `;
-
-const StyledCallImage = styled.div``;
 
 const StyledUserInfo = styled.div`
   display: flex;
   flex-direction: column;
-  padding-top: 20px;
+  padding-top: 15px;
 `;
 
-const StyledTapping = styled.div``;
+const StyledWhiteSpace = styled.div<StyledWhiteSpaceProps>`
+  padding-top: ${(props) => props.pixel}px;
+  padding-bottom: ${(props) => props.pixel}px; ;
+`;
 
 function Consultant({
   connectZibox,
@@ -239,13 +233,13 @@ function Consultant({
             // 다른 관리자가 감청 중인 경우
             return (
               <Button
-                width={4.6}
-                height={1.6}
+                width={7.5}
+                height={2.6}
                 bgColor={'inherit'}
                 image={tappingIcon}
                 borderRadius={0.81}
               >
-                <Text fontColor={Colors.white} fontSize={0.81} fontWeight={800}>
+                <Text fontColor={Colors.white} fontSize={13} fontWeight={800}>
                   {''}
                 </Text>
               </Button>
@@ -255,14 +249,13 @@ function Consultant({
           // 다른 관리자도 감청 중이 아닌 경우
           return (
             <Button
-              width={4.6}
-              height={1.6}
+              width={7.5}
+              height={2.6}
               bgColor={'inherit'}
               image={startTappingIcon}
-              borderRadius={0.81}
               onClick={handleTapping}
             >
-              <Text fontColor={Colors.white} fontSize={0.81} fontWeight={800}>
+              <Text fontColor={Colors.white} fontSize={13} fontWeight={800}>
                 감청
               </Text>
             </Button>
@@ -275,18 +268,14 @@ function Consultant({
             if (consultInfo.zibox?.monit_user === loginId) {
               return (
                 <Button
-                  width={4.6}
-                  height={1.6}
+                  width={7.5}
+                  height={2.6}
                   bgColor={'inherit'}
                   image={stopTappingIcon}
                   borderRadius={0.81}
                   onClick={handleTapping}
                 >
-                  <Text
-                    fontColor={Colors.white}
-                    fontSize={0.81}
-                    fontWeight={800}
-                  >
+                  <Text fontColor={Colors.white} fontSize={13} fontWeight={800}>
                     감청 종료
                   </Text>
                 </Button>
@@ -295,17 +284,13 @@ function Consultant({
               // 다른 관리자가 감청중인 상담원일 경우
               return (
                 <Button
-                  width={4.6}
-                  height={1.6}
+                  width={7.5}
+                  height={2.6}
                   bgColor={'inherit'}
                   image={tappingIcon}
                   borderRadius={0.81}
                 >
-                  <Text
-                    fontColor={Colors.white}
-                    fontSize={0.81}
-                    fontWeight={800}
-                  >
+                  <Text fontColor={Colors.white} fontSize={13} fontWeight={800}>
                     감청 종료
                   </Text>
                 </Button>
@@ -323,7 +308,7 @@ function Consultant({
       switch (callStatus) {
         case CALL_STATUS_V2.IDLE:
           return (
-            <Text fontColor={Colors.gray4} fontWeight={700} fontSize={0.87}>
+            <Text fontColor={Colors.gray4} fontWeight={700}>
               {consultantStatus === CONSULTANT_STATUS.LOGOUT
                 ? '로그아웃'
                 : consultantStatus === CONSULTANT_STATUS.AFTER
@@ -338,25 +323,25 @@ function Consultant({
 
         case CALL_STATUS_V2.OFFHOOK:
           return (
-            <Text fontColor={Colors.blue1} fontWeight={700} fontSize={0.87}>
+            <Text fontColor={Colors.blue1} fontWeight={700}>
               발신중
             </Text>
           );
         case CALL_STATUS_V2.CONNECT:
           return (
-            <Text fontColor={Colors.red} fontWeight={700} fontSize={0.87}>
+            <Text fontColor={Colors.red} fontWeight={700}>
               통화중
             </Text>
           );
         case CALL_STATUS_V2.INCOMMING:
           return (
-            <Text fontColor={Colors.blue1} fontWeight={700} fontSize={0.87}>
+            <Text fontColor={Colors.blue1} fontWeight={700}>
               수신중
             </Text>
           );
         default:
           return (
-            <Text fontColor={Colors.gray4} fontWeight={700} fontSize={0.87}>
+            <Text fontColor={Colors.gray4} fontWeight={700}>
               로그아웃
             </Text>
           );
@@ -382,14 +367,13 @@ function Consultant({
               : Colors.gray4
           }
           fontWeight={700}
-          fontSize={0.87}
         >
           {consultInfo.calling_time
             ? getHourMinSecV1(consultInfo.calling_time)
             : '00:00:00'}
         </Text>
       </StyledCallStatusArea>
-      <StyledCallImage>
+      <div>
         {consultInfo.call?.status === CALL_STATUS_V2.OFFHOOK ||
         consultInfo.call?.status === CALL_STATUS_V2.INCOMMING ||
         consultInfo.call?.status === CALL_STATUS_V2.CONNECT ? (
@@ -398,16 +382,16 @@ function Consultant({
             <Image
               src={monitoringIcon}
               alt={'Monitoring Status'}
-              width={4}
-              height={4}
+              width={64}
+              height={64}
             />
           ) : (
             // 통화중
             <Image
               src={callingIcon}
               alt={'Calling Status'}
-              width={4}
-              height={4}
+              width={64}
+              height={64}
             />
           )
         ) : (
@@ -415,15 +399,15 @@ function Consultant({
           <Image
             src={waitingIcon}
             alt={'Waiting Status'}
-            width={4}
-            height={4}
+            width={64}
+            height={64}
           />
         )}
-      </StyledCallImage>
+      </div>
       <StyledUserInfo>
         <Text
-          fontSize={1.1}
-          fontColor={COLORS.dark_gray2}
+          fontColor={Colors.gray5}
+          fontSize={18}
           fontWeight={700}
           onClick={() => {
             getConsultantInfo(consultInfo);
@@ -431,16 +415,13 @@ function Consultant({
         >
           {`${consultInfo.name} 님`}
         </Text>
-        <Text
-          fontSize={0.75}
-          fontColor={COLORS.dark_gray1}
-          fontWeight={700}
-          lineHeight={2.75}
-        >
-          {`${consultInfo.branch_name} ${consultInfo.team_name}`}
+        <StyledWhiteSpace pixel={5} />
+        <Text fontColor={Colors.gray4} fontSize={12} fontWeight={700}>
+          {`${consultInfo.branch_name}지점 ${consultInfo.team_name}팀`}
         </Text>
       </StyledUserInfo>
-      <StyledTapping>{handleButtonView(consultInfo)}</StyledTapping>
+      <StyledWhiteSpace pixel={6} />
+      {handleButtonView(consultInfo)}
     </StyledWrapper>
   );
 }
@@ -457,6 +438,10 @@ interface ConsultantProps {
   changeTappingStatus: changeTappingStatus;
   tappingTarget: TappingTarget;
   getConsultantInfo: (data: ConsultantInfo) => void;
+}
+
+interface StyledWhiteSpaceProps {
+  pixel: number;
 }
 
 Consultant.defaultProps = {};

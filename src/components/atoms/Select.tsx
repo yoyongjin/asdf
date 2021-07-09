@@ -10,12 +10,12 @@ const StyledSelect = styled.select<SelectProps>`
 
   /* Display */
   border-width: ${(props) => props.borderWidth}px;
-  border-radius: ${(props) => props.borderRadius}rem;
-  height: ${(props) => props.height}rem;
-  width: ${(props) => props.width}rem;
+  border-radius: ${(props) => props.borderRadius}px;
+  height: ${(props) => props.height}px;
+  width: ${(props) => props.width}px;
 
   /* Text */
-  font-size: 0.87rem;
+  font-size: 14px;
 
   /* Color */
   border-color: ${(props) => props.borderColor || props.theme.color.main};
@@ -77,20 +77,19 @@ interface StyledOptionProps {
 }
 
 interface SelectProps extends StyledSelectProps {
-  defaultOption?: string;
   defaultValue?: number;
   name: string;
-  options?: Array<any>;
+  options?: Array<{ id: number; data: string }>;
   onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
 Select.defaultProps = {
-  borderRadius: 1,
+  borderRadius: 6,
   borderWidth: 1,
-  height: 2,
+  height: 30,
   optionFontColor: COLORS.black,
   paddingLeft: 6,
-  width: 10,
+  width: 100,
   bgColor: COLORS.white,
 };
 

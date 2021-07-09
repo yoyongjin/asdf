@@ -14,37 +14,37 @@ export const instance = axios.create({
  */
 export const setHeader = (token: string) => {
   instance.defaults.headers.common['token'] = token;
-}
+};
 
 /**
  * @description 로그인
  * @param id 아이디
  * @param password 비밀번호
  */
-export const login = (id: string, password: string) =>
-  instance.post('/api/auth/login', {
-    user_name: id,
-    user_pass: password,
-  });
+// export const login = (id: string, password: string) =>
+//   instance.post('/api/auth/login', {
+//     user_name: id,
+//     user_pass: password,
+//   });
 /**
  * @description 로그아웃
  */
-export const logout = () => instance.post('/api/auth/logout');
+// export const logout = () => instance.post('/api/auth/logout');
 /**
  * @description 자동 로그인
  */
-export const checkLogin = () => instance.post('/api/auth/auto_login');
+// export const checkLogin = () => instance.post('/api/auth/auto-login');
 
-export const getConsultantInfo = (payload: {
-  branch_id: number;
-  team_id: number;
-  limit: number;
-  page: number;
-  search_name: string;
-}) =>
-  instance.get('/api/auth', {
-    params: payload,
-  }); // 상담원 정보 가져오기
+// export const getConsultantInfo = (payload: {
+//   branch_id: number;
+//   team_id: number;
+//   limit: number;
+//   page: number;
+//   search_name: string;
+// }) =>
+//   instance.get('/api/auth', {
+//     params: payload,
+//   }); // 상담원 정보 가져오기
 export const resetPassword = (id: number) =>
   instance.patch('api/auth/password', {
     user_id: id,

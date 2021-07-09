@@ -101,9 +101,8 @@ function UserData({
     };
   }, [data]);
 
-  const { form, onChangeInput, onChangeSelect, initValue } = useInputForm(
-    initialized,
-  );
+  const { form, onChangeInput, onChangeSelect, initValue } =
+    useInputForm(initialized);
 
   const {
     userBranchList,
@@ -237,7 +236,7 @@ function UserData({
   return (
     <StyledWrapper>
       <StyledTitle>
-        <Title fontSize={1.13}>사용자 정보</Title>
+        <Title>사용자 정보</Title>
       </StyledTitle>
       <StyledContent>
         <StyledUserInfo>

@@ -1,38 +1,36 @@
-import _ from 'lodash';
-import React, { useMemo } from 'react';
-import styled from 'styled-components';
+import React from 'react';
+import styled, { css } from 'styled-components';
 
-import { Button, Select, Text, Input } from 'components/atoms';
+import { Button, Select, Text } from 'components/atoms';
 import { SearchBar, PageCount } from 'components/molecules';
-import { Colors, COLORS } from 'utils/color';
+import { Colors } from 'utils/color';
+import constants, { COMPANY_TYPE } from 'utils/constants';
 import { getMaxPage } from 'utils/utils';
-import prevPageIcon from 'images/bt-page-pre.png';
-import nextPageIcon from 'images/bt-page-next.png';
-import defaultPrevPageIcon from 'images/zms/bt-page-pre.png';
-import defaultNextPageIcon from 'images/zms/bt-page-next.png';
 
-import constants, { company, COMPANY_MAP, COMPANY_TYPE } from 'utils/constants';
+import DB_prevPageIcon from 'images/bt-page-pre.png';
+import DB_nextPageIcon from 'images/bt-page-next.png';
+import prevPageIcon from 'images/zms/bt-page-pre.png';
+import nextPageIcon from 'images/zms/bt-page-next.png';
+import TextRange from './TextRange';
+import Utils from 'utils/new_utils';
 
 const StyledWrapper = styled.div`
   /* Display */
   height: 100%;
-  border-bottom: 0.05rem solid ${(props) => props.theme.color.sub};
+  border-bottom: 1px solid ${(props) => props.theme.color.sub};
 `;
 
-const StyledLeft = styled.span`
-  height: calc(100% - 13px);
+const StyledBorderPostion = styled.span<StyledBorderPostionProps>`
   display: flex;
   align-items: flex-end;
-  float: left;
-  padding-bottom: 13px;
-`;
+  float: ${(props) => props.float};
+  padding-bottom: ${(props) => props.pixel}px;
 
-const StyledRight = styled.div`
-  height: calc(100% - 4px);
-  display: flex;
-  align-items: flex-end;
-  float: right;
-  padding-bottom: 4px;
+  ${(props) => {
+    return css`
+      height: calc(100% - ${props.pixel + 'px'});
+    `;
+  }}
 `;
 
 const StyleTitle = styled.div`
@@ -43,8 +41,7 @@ const StyledButton = styled.div`
   padding-left: 9.5px;
   padding-right: 7px;
   position: relative;
-  /* top: 10%; */
-  top: ${company === COMPANY_MAP.LINA ? 5 : 12}%;
+  top: 3px;
 `;
 
 const StyledExplanation = styled.div`
@@ -64,10 +61,6 @@ const StyledVolume = styled.div`
   display: flex;
 `;
 
-const StyledValue = styled.div`
-  align-self: center;
-`;
-
 const StyledPageSpace = styled.span`
   padding-left: 10px;
   padding-right: 10px;
@@ -79,202 +72,141 @@ const StyledButtonSpace = styled.span`
 `;
 
 function Title({
-  isSelect,
-  selectData,
-  selectOption,
-  buttonType,
-  explanType,
-  pageType,
-  isSearch,
-  volumeType,
+  buttonData,
   children,
-  color,
-  branch,
-  team,
-  search,
-  adminType,
-  onChange,
-  onChangeSelect,
-  onChangeInput,
-  onClickSearch,
-  userCountOption,
+  explanData,
+  isButton,
+  isExplan,
+  isPage,
+  isSelect,
+  isSearch,
+  isVolume,
+  searchData,
+  selectData,
+  volumeData,
+  pageData,
 }: TitleProps) {
-  const branchList = useMemo(() => {
-    if (selectData) {
-      return selectData.data1.map((data) => {
-        return {
-          id: data.id,
-          data: data.branch_name,
-        };
-      });
-    }
-  }, [selectData]);
-
-  const teamList = useMemo(() => {
-    if (selectData) {
-      return selectData.data2!.map((data) => {
-        return {
-          id: data.id,
-          data: data.team_name,
-        };
-      });
-    }
-  }, [selectData]);
-
-  const userCountList = useMemo(() => {
-    if (selectData) {
-      return selectData.data3;
-    }
-  }, [selectData]);
-
   return (
     <StyledWrapper>
-      <StyledLeft>
+      <StyledBorderPostion pixel={13} float="left">
         <StyleTitle>
-          <Text fontSize={1.12} fontWeight={800} fontFamily="NanumGothic">
+          <Text fontSize={18} fontWeight={800}>
             {children}
           </Text>
         </StyleTitle>
-        {buttonType ? (
-          buttonType!.type === 'organization' && adminType !== 2 ? null : (
-            <StyledButton>
-              <Button
-                width={7}
-                height={1.5}
-                // imageWidth={118}
-                // imageHeight={25}
-                bgColor={COLORS.dark_blue}
-                image={buttonType.bgImage}
-                onClick={buttonType!.onClick}
-              >
-                <Text
-                  fontSize={0.85}
-                  fontWeight={800}
-                  fontColor={COLORS.white}
-                  fontFamily="NanumGothic"
-                >
-                  {buttonType!.title}
-                </Text>
-              </Button>
-            </StyledButton>
-          )
+        {isButton ? (
+          <>
+            {[...Array(buttonData!.count)].map((values, index) => {
+              const info = buttonData!.info[index];
+              const hidden = buttonData!.hidden;
+
+              if (hidden) {
+                return null;
+              }
+
+              return (
+                <>
+                  <StyledButton>
+                    <Button
+                      bgColor={Colors.navy1}
+                      height={2.5}
+                      image={info.image}
+                      width={11.8}
+                      onClick={info.click}
+                    />
+                  </StyledButton>
+                </>
+              );
+            })}
+          </>
         ) : null}
-        {explanType ? (
+        {isExplan ? (
           <StyledExplanation>
-            <Text fontColor={COLORS.dark_gray3} fontSize={0.87}>
-              {explanType.title}
+            <Text fontColor={Colors.gray6} fontFamily="NanumBarunGothic">
+              {explanData!.title}
             </Text>
           </StyledExplanation>
         ) : null}
-      </StyledLeft>
-      <StyledRight>
-        {volumeType ? (
+      </StyledBorderPostion>
+      <StyledBorderPostion pixel={4} float="right">
+        {isVolume ? (
           <>
-            <StyledVolume>
-              <StyledValue>
-                <Text fontWeight={600}>고객</Text>
-              </StyledValue>
-              <Input
-                customStyle={`float:right;`}
-                type={'range'}
-                name={'left'}
-                min={0}
-                max={3}
-                value={String(volumeType.left_vol)}
-                step={0.1}
-                width={7}
-                onChange={(e) => onChangeInput!(e)}
-              />
-            </StyledVolume>
-            <StyledVolume>
-              <StyledValue>
-                <Text fontWeight={600}>상담원</Text>
-              </StyledValue>
-              <Input
-                customStyle={`float:right;`}
-                type={'range'}
-                name={'right'}
-                min={0}
-                max={3}
-                value={String(volumeType.right_vol)}
-                step={0.1}
-                width={7}
-                onChange={(e) => onChangeInput!(e)}
-              />
-            </StyledVolume>
+            {[...Array(volumeData!.count)].map((values, index) => {
+              const info = volumeData!.info[index];
+              const data = volumeData!.data[index];
+              const style = volumeData!.style![index];
+
+              return (
+                <>
+                  <StyledVolume>
+                    <TextRange
+                      rangeMax={info.max}
+                      rangeMin={info.min}
+                      rangeName={info.name}
+                      rangeStep={info.step}
+                      rangeValue={String(data)}
+                      textColor={style.textColor!}
+                      textFamily={style.textFamily!}
+                      textSize={style.textSize!}
+                      textWeight={style.textWeight!}
+                      textValue={info.text}
+                      onChangeRange={info.change}
+                    />
+                  </StyledVolume>
+                </>
+              );
+            })}
           </>
         ) : null}
         {isSelect ? (
-          selectData!.data1.length > 0 ? (
-            <StyledSelect>
-              <Select
-                defaultValue={branch}
-                name={'branch'}
-                options={branchList}
-                width={selectOption ? selectOption!.width : 7.5}
-                height={selectOption ? selectOption.height : 1.7}
-                borderRadius={selectOption ? selectOption!.borderRadius : 0}
-                paddingLeft={selectOption ? selectOption!.paddingLeft : 0}
-                fontColor={selectOption ? selectOption!.fontColor : ''}
-                borderColor={selectOption ? selectOption!.borderColor : ''}
-                onChange={(e) => onChangeSelect!(e)}
-              />
-            </StyledSelect>
-          ) : null
-        ) : null}
-        {isSelect ? (
-          selectData!.data2.length > 0 ? (
-            <StyledSelect>
-              <Select
-                defaultValue={team}
-                name={'team'}
-                options={teamList}
-                width={selectOption ? selectOption!.width : 7.5}
-                height={selectOption ? selectOption.height : 1.7}
-                borderRadius={selectOption ? selectOption!.borderRadius : 0}
-                paddingLeft={selectOption ? selectOption!.paddingLeft : 0}
-                fontColor={selectOption ? selectOption!.fontColor : ''}
-                borderColor={selectOption ? selectOption!.borderColor : ''}
-                onChange={(e) => onChangeSelect!(e, branch)}
-              />
-            </StyledSelect>
-          ) : null
-        ) : null}
-        {isSelect ? (
-          selectData!.data3 && selectData!.data3.length > 0 ? (
-            <StyledSelect>
-              <Select
-                name={'userListCount'}
-                options={userCountList}
-                width={userCountOption ? userCountOption!.width : 7.5}
-                height={userCountOption ? userCountOption.height : 1.7}
-                borderRadius={
-                  userCountOption ? userCountOption!.borderRadius : 0
-                }
-                paddingLeft={userCountOption ? userCountOption!.paddingLeft : 0}
-                fontColor={userCountOption ? userCountOption!.fontColor : ''}
-                borderColor={
-                  userCountOption ? userCountOption!.borderColor : ''
-                }
-                onChange={(e) => onChangeSelect!(e)}
-              />
-            </StyledSelect>
-          ) : null
+          <>
+            {[...Array(selectData!.count)].map((values, index) => {
+              const info = selectData!.info[index];
+              const data = selectData!.data[index];
+              const style = selectData!.style![index];
+
+              return (
+                <StyledSelect>
+                  <Select
+                    borderColor={style.borderColor}
+                    borderRadius={style.borderRadius}
+                    defaultValue={info.id}
+                    fontColor={style.fontColor}
+                    height={style.height}
+                    name={info.name}
+                    options={data}
+                    paddingLeft={style.paddingLeft}
+                    width={style.width}
+                    onChange={info.click}
+                  />
+                </StyledSelect>
+              );
+            })}
+          </>
         ) : null}
         {isSearch ? (
-          <StyledSearch>
-            <SearchBar
-              search={search!}
-              onChange={onChange}
-              onClickSearch={onClickSearch}
-            />
-          </StyledSearch>
+          <>
+            {[...Array(searchData!.count)].map((values, index) => {
+              const info = searchData!.info[index];
+              const data = searchData!.data[index];
+
+              return (
+                <StyledSearch>
+                  <SearchBar
+                    search={data}
+                    onChange={info.change}
+                    onClickSearch={info.click}
+                  />
+                </StyledSearch>
+              );
+            })}
+          </>
         ) : null}
-        {pageType ? (
+        {isPage ? (
           <>
             <PageCount
-              curPage={pageType.curPage}
-              maxPage={getMaxPage(pageType.count, 5)}
+              curPage={pageData!.cur}
+              maxPage={Utils.getMaxPage(pageData!.max, 5)}
               textAlign={2}
             />
             <StyledPageSpace />
@@ -282,72 +214,52 @@ function Title({
               image={
                 constants.COMPANY === COMPANY_TYPE.DBLIFE ||
                 constants.COMPANY === COMPANY_TYPE.LINA
-                  ? prevPageIcon
-                  : defaultPrevPageIcon
+                  ? DB_prevPageIcon
+                  : prevPageIcon
               }
-              width={1.5}
-              height={1.5}
+              width={2.4}
+              height={2.4}
               imageWidth={24}
               imageHeight={24}
-              bgColor={COLORS.white}
+              bgColor={Colors.white}
               borderRadius={0}
-              onClick={() =>
-                pageType.onClickPrevPage(pageType.curPage, pageType.count)
-              }
+              onClick={() => pageData?.click_prev(pageData.cur, pageData.max)}
             />
             <StyledButtonSpace />
             <Button
               image={
                 constants.COMPANY === COMPANY_TYPE.DBLIFE ||
                 constants.COMPANY === COMPANY_TYPE.LINA
-                  ? nextPageIcon
-                  : defaultNextPageIcon
+                  ? DB_nextPageIcon
+                  : nextPageIcon
               }
-              width={1.5}
-              height={1.5}
+              width={2.4}
+              height={2.4}
               imageWidth={24}
               imageHeight={24}
               bgColor={Colors.white}
               borderRadius={0}
               onClick={() =>
-                pageType.onClickNextPage(pageType.curPage, pageType.count, 5)
+                pageData?.click_next(pageData.cur, pageData.max, 5)
               }
             />
           </>
         ) : null}
-      </StyledRight>
+      </StyledBorderPostion>
     </StyledWrapper>
   );
 }
 
-interface BranchInfo {
-  branch_name: string;
-  created_at: string;
-  id: number;
+interface StyledBorderPostionProps {
+  pixel: number;
+  float: string;
 }
 
-export interface TeamInfo {
-  branch_id: number;
-  id: number;
-  team_name: string;
-}
-
-interface buttonType {
-  title: string;
-  bgImage?: string;
-  bgHoverImage?: string;
-  type: string;
-  onClick?: () => void;
-}
-
-interface explanType {
-  title: string;
-}
-interface pageType {
-  curPage: number;
-  count: number;
-  onClickPrevPage: (cur: number, total: number, isStart?: boolean) => void;
-  onClickNextPage: (
+interface PageData {
+  max: number;
+  cur: number;
+  click_prev: (cur: number, total: number, isStart?: boolean) => void;
+  click_next: (
     cur: number,
     total: number,
     divide: number,
@@ -355,55 +267,100 @@ interface pageType {
   ) => void;
 }
 
-interface volumeType {
-  left_vol: number;
-  right_vol: number;
+interface SearchOption {
+  click: () => void;
+  change: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-interface selectData {
-  data1: Array<BranchInfo>;
-  data2: Array<TeamInfo>;
-  data3?: Array<{ data: number }>;
+interface SearchData {
+  count: number;
+  data: Array<string>;
+  info: Array<SearchOption>;
 }
 
-interface selectOption {
-  borderRadius?: number;
-  height?: number;
-  paddingLeft?: number;
+interface VolumeOption {
+  max: number;
+  min: number;
+  name: string;
+  step: number;
+  text: string;
+  change: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+interface VolumnCustomStyle {
+  textColor?: string;
+  textFamily?: string;
+  textSize?: number;
+  textWeight?: number;
+}
+
+interface VolumeData {
+  count: number;
+  info: Array<VolumeOption>;
+  data: Array<number>;
+  style?: Array<VolumnCustomStyle>;
+}
+
+interface ExplanData {
+  title: string;
+}
+
+interface ButtonOption {
+  image: string;
+  click: () => void;
+}
+
+interface ButtonData {
+  count: number;
+  info: Array<ButtonOption>;
+  hidden: boolean;
+}
+
+interface SelectOption {
+  id: number;
+  name: string;
+  click: (e: React.ChangeEvent<HTMLSelectElement>, data?: number) => void;
+}
+
+interface SelectCustomStyle {
   width?: number;
+  height?: number;
+  borderRadius?: number;
+  paddingLeft?: number;
   fontColor?: string;
   borderColor?: string;
 }
 
+interface SelectData {
+  count: number;
+  data: Array<any>;
+  style?: Array<SelectCustomStyle>;
+  info: Array<SelectOption>;
+}
+
 interface TitleProps {
-  isSelect: boolean;
-  selectData?: selectData;
-  selectOption?: selectOption;
-  userCountOption?: selectOption;
-  buttonType?: buttonType;
-  explanType?: explanType;
-  pageType?: pageType;
-  volumeType?: volumeType;
-  isSearch?: boolean;
+  buttonData?: ButtonData;
   children: string;
-  fontSize?: number;
-  color?: string;
-  branch?: number;
-  team?: number;
-  search?: string;
-  adminType?: number;
-  onChangeInput?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onChangeSelect?: (
-    e: React.ChangeEvent<HTMLSelectElement>,
-    data?: number,
-  ) => void;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onClickSearch?: () => void;
-  setVolume?: (type: number, gauge: number) => void;
+  explanData?: ExplanData;
+  isButton: boolean;
+  isExplan: boolean;
+  isPage: boolean;
+  isSearch: boolean;
+  isSelect: boolean;
+  isVolume: boolean;
+  pageData?: PageData;
+  searchData?: SearchData;
+  selectData?: SelectData;
+  volumeData?: VolumeData;
 }
 
 Title.defaultProps = {
+  isButton: false,
+  isExplan: false,
+  isPage: false,
+  isSearch: false,
   isSelect: false,
+  isVolume: false,
 };
 
 export default React.memo(Title);

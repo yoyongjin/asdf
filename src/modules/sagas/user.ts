@@ -33,34 +33,28 @@ import {
   DISCONNECT_FORCE,
 } from 'modules/actions/user';
 import * as API from 'lib/api';
+import ZMSUser from 'lib/api/zms/user';
 import Socket from 'lib/socket';
 import Logger from 'utils/log';
+import { ResponseFailureData, ResponseSuccessData } from 'types/common';
+import { API_FETCH } from 'utils/constants';
 
 function* getUsersProcess(action: ReturnType<typeof requestGetUsers>) {
-  const {
-    branchId,
-    teamId,
-    limit,
-    page,
-    search,
-    url,
-    adminId,
-    loginId,
-  } = action.payload;
-  const payload = {
-    branch_id: branchId,
-    team_id: teamId,
-    limit,
-    page,
-    search_name: search!,
-  };
+  const { branchId, teamId, limit, page, search, url, adminId, loginId } =
+    action.payload;
 
   try {
-    const response = yield call(API.getConsultantInfo, payload);
-    const { status, data } = response.data;
+    const response: ResponseSuccessData | ResponseFailureData = yield call(
+      ZMSUser.getConsultData,
+      branchId,
+      teamId,
+      limit,
+      page,
+      search!,
+    );
 
-    if (status === 'success') {
-      Logger.log('Consultant Data => ', data);
+    if (response.status === API_FETCH.SUCCESS) {
+      const { data } = response as ResponseSuccessData;
       const { users, max_count } = data;
 
       const payload = {
@@ -95,9 +89,15 @@ function* getUsersProcess(action: ReturnType<typeof requestGetUsers>) {
           Socket.getInstance().onEmit('state');
         }
       }
+
+      return;
     }
+
+    const { error_msg } = response as ResponseFailureData;
+    yield put(failureGetUsers(error_msg));
+
+    alert(error_msg);
   } catch (error) {
-    console.log(error);
     yield put(failureGetUsers(error.message));
   }
 }

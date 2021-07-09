@@ -23,15 +23,16 @@ const initialState: AuthType = {
   },
   loginInfo: {
     id: 0,
-    admin_id: 0,
     branch_id: 0,
+    team_id: 0,
     branch_name: '',
-    team_id: '',
+    team_name: '',
+    admin_id: 0,
     name: '',
-    number: '',
-    ziboxip: '',
+    user_name: '',
     login_at: 0,
-    created_at: '',
+    is_init_password: false,
+    is_expired_password: false,
   },
   tappingTarget: {
     id: -1,
@@ -109,6 +110,9 @@ const authReducer = createReducer<AuthType, AuthAction>(initialState, {
       draft.request.logout.error = action.payload;
     });
   },
+  /**
+   * @description 수정 예정
+   */
   [actions.SET_SOCKET_STATUS]: (state, action) => {
     return produce(state, (draft) => {
       const status = action.payload;
@@ -121,7 +125,7 @@ const authReducer = createReducer<AuthType, AuthAction>(initialState, {
 
       draft.tappingStatus = targetData.status;
 
-      if(targetData.id) {
+      if (targetData.id) {
         draft.tappingTarget.id = targetData.id!;
         draft.tappingTarget.ip = targetData.ip!;
         draft.tappingTarget.number = targetData.number!;

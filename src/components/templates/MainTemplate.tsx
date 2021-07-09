@@ -9,14 +9,14 @@ const StyledWrapper = styled.div`
   height: 100vh;
   max-height: 1200rem;
   min-height: 100vh;
-  max-width: 140rem;
-  min-width: 70rem;
+  max-width: 200rem;
+  min-width: 80rem;
   width: 100vw;
 `;
 
 const StyledGnb = styled.div`
   /* Display */
-  height: 3.88rem;
+  height: 6.2rem;
 `;
 
 const StyledContent = styled.div<StyledProps>`

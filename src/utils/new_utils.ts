@@ -35,6 +35,18 @@ class Utils {
 
     return result;
   }
+
+  static getMaxPage = (count: number, divide: number) => {
+    let maxPage = count / divide;
+    if (maxPage === 0) {
+      maxPage += 1;
+    }
+    if (!Number.isInteger(maxPage)) {
+      maxPage = Math.floor(maxPage) + 1;
+    }
+
+    return maxPage;
+  };
 }
 
 export default Utils;

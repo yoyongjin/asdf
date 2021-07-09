@@ -12,6 +12,7 @@ import TablePagination from './TablePagination';
 import TableProperty from './TableProperty';
 import TextInput from './TextInput';
 import TextSelect from './TextSelect';
+import TextRange from './TextRange';
 import Title from './Title';
 import UserData from './UserData';
 import UserLog from './UserLog';
@@ -30,6 +31,7 @@ export {
   TableProperty,
   TextInput,
   TextSelect,
+  TextRange,
   Title,
   UserData,
   UserLog,

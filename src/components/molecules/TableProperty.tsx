@@ -95,7 +95,7 @@ function TableProperty({
                   ? '관리자'
                   : ''
                 : key === 'number'
-                ? formatPhoneNumber(infoValueList[i])
+                ? formatPhoneNumber(infoValueList[i] || '')
                 : infoValueList[i]}
             </Text>
           </StyledWrapper>

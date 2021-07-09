@@ -26,12 +26,12 @@ const StyledWrapper = styled.div`
 
 const StyledTitle = styled.div`
   /* Display */
-  height: 3.75rem;
+  height: 6rem;
 `;
 
 const StyledConsultantAreaWrap = styled.div`
   /* Display */
-  height: calc(100% - 3.75rem - 10px);
+  height: calc(100% - 6rem - 10px);
   display: flex;
   justify-content: center;
   margin-top: 5px;
@@ -49,11 +49,6 @@ const StyledConsultantArea = styled.div`
 
 const StyledConsultant = styled.span`
   /* Display */
-  /* padding-top: 7px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px; */
-
   margin: 7px ${BOX_MAGIN}px 8px;
 `;
 
@@ -95,19 +90,79 @@ function Monitoring({ location }: MonitoringProps) {
   const { connectZibox, requestTapping, startTapping, stopTapping, setVolume } =
     useZibox();
 
-  const volumeInfo = useMemo(() => {
-    return {
-      left_vol: form.left,
-      right_vol: form.right,
-    };
-  }, [form.left, form.right]);
-
   const selectData = useMemo(() => {
     return {
-      data1: branchList!,
-      data2: teamList!,
+      count: 2,
+      data: [branchList, teamList],
+      info: [
+        {
+          id: loginInfo.admin_id === 1 ? loginInfo.branch_id : form.branch,
+          name: 'branch',
+          click: onChangeSelect,
+        },
+        {
+          id: form.team,
+          name: 'team',
+          click: onChangeSelect,
+        },
+      ],
+      style: [
+        {
+          width: 120,
+          height: 28,
+          borderRadius: 0,
+        },
+        {
+          width: 120,
+          height: 28,
+          borderRadius: 0,
+        },
+      ],
     };
-  }, [branchList, teamList]);
+  }, [
+    branchList,
+    form.branch,
+    form.team,
+    loginInfo.admin_id,
+    loginInfo.branch_id,
+    onChangeSelect,
+    teamList,
+  ]);
+
+  const volumeData = useMemo(() => {
+    return {
+      count: 2,
+      data: [Number(form.left), Number(form.right)],
+      info: [
+        {
+          name: 'left',
+          step: 0.1,
+          min: 0,
+          max: 3,
+          text: '고객',
+          change: onChangeInput,
+        },
+        {
+          name: 'right',
+          step: 0.1,
+          min: 0,
+          max: 3,
+          text: '상담원',
+          change: onChangeInput,
+        },
+      ],
+      style: [
+        {
+          textWeight: 700,
+          textFamily: 'NanumBarunGothic',
+        },
+        {
+          textWeight: 700,
+          textFamily: 'NanumBarunGothic',
+        },
+      ],
+    };
+  }, [form.left, form.right, onChangeInput]);
 
   const getConsultantInfo = useCallback(
     (consultantInfo: ConsultantInfo) => {
@@ -188,21 +243,6 @@ function Monitoring({ location }: MonitoringProps) {
     }
   }, [consultantInfo, tempConsultInfo]);
 
-  // useEffect(() => {
-  //   if (tappingStatus === 0) {
-  //     if (tappingTarget.id !== -1) {
-  //       stopTapping(tappingTarget.number);
-  //       changeTappingData(0, '', -1, '');
-  //     }
-  //   }
-  // }, [
-  //   changeTappingData,
-  //   stopTapping,
-  //   tappingStatus,
-  //   tappingTarget.id,
-  //   tappingTarget.number,
-  // ]);
-
   useEffect(() => {
     if (tappingStatus === 2) {
       setVolume(1, form.left);
@@ -214,15 +254,6 @@ function Monitoring({ location }: MonitoringProps) {
       setVolume(2, form.right);
     }
   }, [tappingStatus, form.right, setVolume]);
-
-  // useEffect(() => {
-  //   let index: number = consultantInfo.findIndex((consultant, i) => {
-  //     return tempConsultInfo?.id === consultant.id;
-  //   });
-  //   if (index > -1) {
-  //     setTempConsultInfo(consultantInfo[index]);
-  //   }
-  // }, [tempConsultInfo, consultantInfo]);
 
   useEffect(() => {
     if (socketConnection !== SOCKET_CONNECTION.SUCCESS) return;
@@ -373,16 +404,10 @@ function Monitoring({ location }: MonitoringProps) {
       <StyledWrapper>
         <StyledTitle>
           <Title
-            branch={
-              loginInfo.admin_id === 1 ? loginInfo.branch_id : form.branch
-            }
             isSelect
-            onChangeInput={onChangeInput}
-            onChangeSelect={onChangeSelect}
+            isVolume
             selectData={selectData}
-            setVolume={setVolume}
-            team={form.team}
-            volumeType={volumeInfo}
+            volumeData={volumeData}
           >
             상담원 모니터링
           </Title>
@@ -426,7 +451,7 @@ function Monitoring({ location }: MonitoringProps) {
             data={tempConsultInfo}
             adminId={loginInfo.admin_id}
             branchId={loginInfo.branch_id}
-            branchName={loginInfo.branch_name}
+            branchName={loginInfo.branch_name!}
             onClickDisconnect={onClickDisconnect}
           />
         }
