@@ -8,15 +8,15 @@ import {
   TextSelect,
   ZiboxData,
   PhoneData,
+  TextRange,
 } from 'components/molecules';
-import { Colors, COLORS } from 'utils/color';
-import { formatPhoneNumber } from 'utils/utils';
-import useInputForm from 'hooks/useInputForm';
-import { ConsultantInfo, UserInfo } from 'types/user';
-import { TeamInfo, BranchInfo } from 'modules/types/branch';
 import useBranch from 'hooks/useBranch';
-
-import { company, COMPANY_MAP } from 'utils/constants';
+import useInputForm from 'hooks/useInputForm';
+import { TeamInfo, BranchInfo } from 'modules/types/branch';
+import { ConsultantInfo, UserInfo } from 'types/user';
+import { Colors } from 'utils/color';
+import constants, { COMPANY_TYPE } from 'utils/constants';
+import { formatPhoneNumber } from 'utils/utils';
 
 const StyledWrapper = styled.div`
   width: 100%;
@@ -46,7 +46,7 @@ const StyledUserInfo = styled.div`
   align-content: flex-start;
   /* align-content: space-around; */
   border-bottom: 0.05rem solid
-    ${company === COMPANY_MAP.DBLIFE ? COLORS.green : COLORS.light_blue};
+    ${constants.COMPANY === COMPANY_TYPE.DBLIFE ? Colors.green1 : Colors.blue3};
   padding-top: 1rem;
   padding-bottom: 1rem;
 `;
@@ -71,7 +71,7 @@ const StyledFooter = styled.div`
   height: 10%;
   padding-top: 1rem;
   border-top: 0.05rem solid
-    ${company === COMPANY_MAP.LINA ? COLORS.blue : COLORS.light_blue};
+    ${constants.COMPANY === COMPANY_TYPE.LINA ? Colors.blue1 : Colors.blue3};
 `;
 
 function UserData({
@@ -242,18 +242,20 @@ function UserData({
         <StyledUserInfo>
           <TextSelect
             defaultValue={form.branch}
-            // defaultOption={'지점명'}
             textValue={'지점명'}
             name={'branch'}
             list={branch}
+            selectWidth={108}
+            selectHeight={26}
             onChange={(e) => onChangeSelect(e)}
           />
           <TextSelect
             defaultValue={form.team}
-            // defaultOption={team_name || '팀명'}
             textValue={'팀명'}
             name={'team'}
             list={team}
+            selectWidth={108}
+            selectHeight={26}
             onChange={(e) =>
               onChangeSelect(e, adminId === 1 ? branchId : form.branch)
             }
@@ -264,57 +266,79 @@ function UserData({
             name={'admin'}
             list={adminList}
             onChange={onChangeSelect}
+            selectWidth={108}
+            selectHeight={26}
           />
           <TextInput
             customStyle={`float:right;`}
-            height={1.63}
+            inputWidth={10.8}
+            height={2.6}
             textValue={'이름'}
             onChange={onChangeInput}
             name={'name'}
             value={form.name}
-            fontSize={0.81}
+            fontSize={13}
           />
           <TextInput
             customStyle={`float:right;`}
-            height={1.63}
+            inputWidth={10.8}
+            height={2.6}
             textValue={'아이디'}
             onChange={onChangeInput}
             name={'id'}
             value={form.id}
-            fontSize={0.81}
-            disabled={form.admin === 0}
-          />
-          <TextInput
-            customStyle={`float:right;`}
-            height={1.63}
-            type={'password'}
-            textValue={'비밀번호'}
-            onChange={onChangeInput}
-            name={'password'}
-            value={form.password}
-            fontSize={0.81}
+            fontSize={13}
             disabled={form.admin === 0}
           />
           <TextInput
             customStyle={`float:right;`}
             padRight={2}
-            height={1.63}
+            inputWidth={10.8}
+            height={2.6}
             textValue={'전화번호'}
             onChange={onChangeInput}
             name={'tel'}
             value={formatPhoneNumber(form.tel)}
-            fontSize={0.81}
+            fontSize={13}
             disabled={form.admin !== 0}
           />
           <TextInput
             customStyle={`float:right;`}
-            height={1.63}
-            textValue={'ZiBox IP 직접 입력하기'}
+            inputWidth={10.8}
+            height={2.6}
+            textValue={'ZiBox IP'}
             onChange={onChangeInput}
             name={'zibox'}
             value={form.zibox}
-            fontSize={0.81}
+            fontSize={13}
             disabled={form.admin !== 0}
+          />
+          <TextInput
+            customStyle={`float:right;`}
+            inputWidth={10.8}
+            height={2.6}
+            textValue={'ZiBox MAC'}
+            onChange={onChangeInput}
+            name={'password'}
+            value={form.password}
+            fontSize={13}
+            disabled={form.admin === 0}
+          />
+          <TextRange
+            rangeName="test"
+            rangeValue="1"
+            textValue="ZiBox Mic"
+            onChangeRange={(e) => {
+              console.log('ESSS');
+            }}
+          />
+          <TextRange
+            rangeName="test"
+            rangeValue="1"
+            textValue="ZiBox Spk"
+            onChangeRange={(e) => {
+              console.log('ESSS');
+            }}
           />
         </StyledUserInfo>
         {data && data.admin_id === 0 ? (
@@ -332,35 +356,19 @@ function UserData({
                 </StyledPhone>
               ) : null}
             </StyledStatus>
-
-            {/* <Button
-              width={8}
-              height={1.63}
-              bgColor={COLORS.red}
-              onClick={() => onClickDisconnect!(data.number)}
-            >
-              <Text
-                fontColor={COLORS.white}
-                fontFamily={'NanumBarunGothic'}
-                fontSize={0.88}
-                fontWeight={700}
-              >
-                연결 끊기
-              </Text>
-            </Button> */}
           </>
         ) : null}
       </StyledContent>
       <StyledFooter>
         <Button
-          width={4.3}
-          height={1.63}
+          width={7}
+          height={2.6}
           bgColor={
-            company === COMPANY_MAP.DBLIFE
-              ? COLORS.green
-              : company === COMPANY_MAP.LINA
-              ? COLORS.blue
-              : COLORS.light_blue2
+            constants.COMPANY === COMPANY_TYPE.DBLIFE
+              ? Colors.green1
+              : constants.COMPANY === COMPANY_TYPE.LINA
+              ? Colors.blue1
+              : Colors.blue4
           }
           customStyle={`
             float:right;
@@ -404,18 +412,18 @@ function UserData({
           }}
         >
           <Text
-            fontColor={COLORS.white}
+            fontColor={Colors.white}
             fontFamily={'NanumBarunGothic'}
-            fontSize={0.88}
+            fontSize={14}
             fontWeight={700}
           >
             저장
           </Text>
         </Button>
         <Button
-          width={4.3}
-          height={1.6}
-          bgColor={COLORS.dark_gray1}
+          width={7}
+          height={2.6}
+          bgColor={Colors.gray4}
           onClick={(e) => {
             onClickVisible();
             if (data && !data!.id) {
@@ -430,9 +438,9 @@ function UserData({
           `}
         >
           <Text
-            fontColor={COLORS.white}
+            fontColor={Colors.white}
             fontFamily={'NanumBarunGothic'}
-            fontSize={0.88}
+            fontSize={14}
             fontWeight={700}
           >
             취소

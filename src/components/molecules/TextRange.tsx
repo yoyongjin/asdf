@@ -74,6 +74,7 @@ interface TextInputProps {
 TextRange.defaultProps = {
   textColor: Colors.gray9,
   textSize: 14,
+  textFamily: 'inherit',
   textValue: '',
   textWeight: 700,
   rangeDisable: false,

@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { Text, Select } from 'components/atoms';
-import { Colors, COLORS } from 'utils/color';
+import { Colors } from 'utils/color';
 
 const StyledWrapper = styled.div`
   padding-bottom: 20px;
@@ -17,33 +17,31 @@ function TextSelect({
   textValue,
   textWeight,
   selectWidth,
+  selectHeight,
   selectRadius,
   defaultValue,
-  // defaultOption,
   list,
   name,
   textColor,
-  // selected,
   onChange,
 }: TextSelectProps) {
   return (
     <StyledWrapper>
-      <Text fontSize={0.81} fontWeight={textWeight} fontColor={textColor}>
+      <Text fontSize={13} fontWeight={textWeight} fontColor={textColor}>
         {textValue}
       </Text>
       <StyledBlank />
       <Select
         width={selectWidth}
+        height={selectHeight}
         borderWidth={0}
         borderRadius={selectRadius}
         options={list}
         name={name}
         defaultValue={defaultValue}
         fontColor={textColor}
-        // defaultOption={defaultOption}
         onChange={(e) => onChange(e)}
-        // selected={selected}
-      ></Select>
+      />
     </StyledWrapper>
   );
 }
@@ -54,11 +52,10 @@ interface TextSelectProps {
   selectRadius: number;
   textColor: string;
   textWeight: number | string;
+  selectHeight: number;
   defaultValue?: number;
-  // defaultOption?: string;
   list: Array<SelectDataType>;
   name: string;
-  // selected: string;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
@@ -68,10 +65,11 @@ interface SelectDataType {
 }
 
 TextSelect.defaultProps = {
-  selectWidth: 7,
+  selectWidth: 100,
+  selectHeight: 30,
   selectRadius: 0,
   textColor: Colors.gray9,
-  textWeight: 600,
+  textWeight: 700,
   defaultValue: '기본값',
 };
 

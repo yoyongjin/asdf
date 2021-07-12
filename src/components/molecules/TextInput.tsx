@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { Text, Input } from 'components/atoms';
-import { Colors, COLORS } from 'utils/color';
+import { Colors } from 'utils/color';
 
 const StyledWrapper = styled.div`
   padding-bottom: 20px;
@@ -43,7 +43,7 @@ function TextInput({
         type={type}
         customStyle={customStyle}
         height={height}
-        width={6.5}
+        width={inputWidth}
         borderRadius={inputRadius}
         placeholder={inputPh}
         onChange={onChange}
@@ -51,7 +51,7 @@ function TextInput({
         logoImg={image}
         fontSize={fontSize}
         fontWeight={fontWeight}
-      ></Input>
+      />
     </StyledWrapper>
   );
 }
