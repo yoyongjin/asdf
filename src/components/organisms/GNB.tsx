@@ -4,7 +4,7 @@ import { Location } from 'history';
 
 import { Image, Link } from 'components/atoms';
 import { LinkSelector, UserLog } from 'components/molecules';
-import { COLORS } from 'utils/color';
+import { Colors } from 'utils/color';
 import { LoginData } from 'types/auth';
 
 import constants, { COMPANY_TYPE } from 'utils/constants';
@@ -95,7 +95,7 @@ interface GNBProps {
 }
 
 GNB.defaultProps = {
-  bgColor: COLORS.dark_blue2,
+  bgColor: Colors.navy2,
 };
 
 export default React.memo(GNB);

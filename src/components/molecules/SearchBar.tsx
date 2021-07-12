@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import styled from 'styled-components';
 
 import { Button, Input, Text } from 'components/atoms';
-import { Colors, COLORS } from 'utils/color';
+import { Colors } from 'utils/color';
 
 import searchIcon from 'images/icon-search.png';
 

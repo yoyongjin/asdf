@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import MainRouter from 'MainRouter';
-import { COLORS } from 'utils/color';
+import { Colors } from 'utils/color';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -51,7 +51,7 @@ interface MainTemplateProps extends StyledProps {
 }
 
 MainTemplate.defaultProps = {
-  backgroundColor: COLORS.white,
+  backgroundColor: Colors.white,
 };
 
 export default MainTemplate;

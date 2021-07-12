@@ -13,7 +13,7 @@ import useAuth from 'hooks/useAuth';
 import useVisible from 'hooks/useVisible';
 import useZibox from 'hooks/useZibox';
 
-import { CONSULTANT_BOX_WIDTH, SOCKET_CONNECTION } from 'utils/constants';
+import { SOCKET_CONNECTION } from 'utils/constants';
 
 const AREA_MAGIN = 27; //상담사 박스 영역 마진
 const BOX_MAGIN = 5; //상담사 박스 마진
@@ -391,6 +391,7 @@ function Monitoring({ location }: MonitoringProps) {
   };
 
   const calculateMaxWidth = (): number => {
+    const CONSULTANT_BOX_WIDTH = 200; // 상담사 박스 너비
     return (
       Math.floor(
         (windowWidth - 2 * AREA_MAGIN) / (CONSULTANT_BOX_WIDTH + 2 * BOX_MAGIN),

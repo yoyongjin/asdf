@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Text } from 'components/atoms';
 import { UserInfo } from 'modules/types/user';
 import { Colors } from 'utils/color';
-import { company, COMPANY_TYPE } from 'utils/constants';
+import constants, { COMPANY_TYPE } from 'utils/constants';
 
 const StyledWrapper = styled.ul`
   /* Position */
@@ -31,8 +31,8 @@ const StyledContent = styled.li`
   background-color: ${Colors.gray8};
 
   &:hover {
-    background-color: ${company === COMPANY_TYPE.DBLIFE ||
-    company === COMPANY_TYPE.LINA
+    background-color: ${constants.COMPANY === COMPANY_TYPE.DBLIFE ||
+    constants.COMPANY === COMPANY_TYPE.LINA
       ? Colors.green2
       : Colors.blue5};
     cursor: pointer;

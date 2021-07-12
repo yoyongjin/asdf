@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { COLORS } from 'utils/color';
+import { Colors } from 'utils/color';
 
 const StyledWrapper = styled.div<ModalProps>`
   /* Position */
@@ -39,7 +39,7 @@ const StyledInner = styled.div`
   transform: translateY(-50%);
 
   /* Color */
-  background-color: ${COLORS.dark_gray5};
+  background-color: ${Colors.gray8};
 `;
 
 function Modal({ isVisible, Component }: ModalProps) {

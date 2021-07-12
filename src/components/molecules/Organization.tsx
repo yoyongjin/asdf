@@ -4,18 +4,18 @@ import styled from 'styled-components';
 import { Input } from 'components/atoms';
 import { BranchInfo, TeamInfo } from 'modules/types/branch';
 import useInputForm from 'hooks/useInputForm';
-import { COLORS } from 'utils/color';
+import { Colors } from 'utils/color';
 
-import { company, COMPANY_MAP } from 'utils/constants';
+import constants, { COMPANY_TYPE } from 'utils/constants';
 
 const StyledWrapper = styled.div`
   /* Display */
   width: 200px;
   height: 100%;
   border-right: 1px solid
-    ${company === COMPANY_MAP.DBLIFE ? COLORS.green : COLORS.light_blue};
+    ${constants.COMPANY === COMPANY_TYPE.DBLIFE ? Colors.green1 : Colors.blue3};
   border-right: 1px solid
-    ${company === COMPANY_MAP.LINA ? COLORS.blue : COLORS.light_blue};
+    ${constants.COMPANY === COMPANY_TYPE.LINA ? Colors.blue1 : Colors.blue3};
 
   /* Other */
   overflow: auto;
@@ -184,11 +184,11 @@ function Organization({
                     borderWidth={2}
                     borderRadius={20}
                     borderColor={
-                      company === COMPANY_MAP.DBLIFE
-                        ? COLORS.green
-                        : company === COMPANY_MAP.LINA
-                        ? COLORS.blue
-                        : COLORS.light_blue
+                      constants.COMPANY === COMPANY_TYPE.DBLIFE
+                        ? Colors.green1
+                        : constants.COMPANY === COMPANY_TYPE.LINA
+                        ? Colors.blue1
+                        : Colors.blue3
                     }
                     textAlign={1}
                     fontFamily="NanumBarunGothic"
@@ -228,7 +228,7 @@ function Organization({
                     width={18}
                     height={4}
                     borderWidth={2}
-                    borderColor={COLORS.light_gray2}
+                    borderColor={Colors.gray2}
                     textAlign={1}
                     fontFamily="NanumBarunGothic"
                     fontSize={14}

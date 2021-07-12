@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { COLORS } from 'utils/color';
+import { Colors } from 'utils/color';
 
 const StyledSelect = styled.select<SelectProps>`
   /* Position */
@@ -87,10 +87,10 @@ Select.defaultProps = {
   borderRadius: 6,
   borderWidth: 1,
   height: 30,
-  optionFontColor: COLORS.black,
+  optionFontColor: Colors.gray10,
   paddingLeft: 6,
   width: 100,
-  bgColor: COLORS.white,
+  bgColor: Colors.white,
 };
 
 export default React.memo(Select);

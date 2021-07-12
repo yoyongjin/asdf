@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import MainRouter from 'MainRouter';
-import { COLORS } from 'utils/color';
+import { Colors } from 'utils/color';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -24,7 +24,7 @@ const StyledContent = styled.div`
   width: 100%;
 
   /* Color */
-  background-color: ${COLORS.blue};
+  background-color: ${Colors.blue1};
 `;
 
 const StyledMainLogoSpace = styled.div`
@@ -37,15 +37,14 @@ const StyledMainLogoSpace = styled.div`
   width: 28.25rem;
 
   /* Color */
-  background-color: ${COLORS.white};
+  background-color: ${Colors.white};
 `;
 
 const StyledMainLogo = styled.span`
   /* Position */
   left: 20%;
   position: absolute;
-  top: 30%; 
-  
+  top: 30%;
 `;
 
 const StyledLoginForm = styled.div`
