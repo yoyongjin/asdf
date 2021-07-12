@@ -10,12 +10,12 @@ import {
   PhoneData,
   TextRange,
 } from 'components/molecules';
-import useBranch from 'hooks/useBranch';
+import useOrganization from 'hooks/useOrganization';
 import useInputForm from 'hooks/useInputForm';
 import { TeamInfo, BranchInfo } from 'modules/types/branch';
 import { ConsultantInfo, UserInfo } from 'types/user';
 import { Colors } from 'utils/color';
-import constants, { COMPANY_TYPE } from 'utils/constants';
+import constants, { COMPANY_TYPE, USER_TYPE } from 'utils/constants';
 import { formatPhoneNumber } from 'utils/utils';
 
 const StyledWrapper = styled.div`
@@ -78,7 +78,6 @@ function UserData({
   onClickVisible,
   onClickInsertUser,
   onClickUpdateUser,
-  onClickDisconnect,
   adminList,
   data,
   isVisible,
@@ -95,7 +94,8 @@ function UserData({
       id: data && data!.user_name ? data!.user_name : '',
       password: '',
       tel: data && data!.number ? data!.number : '',
-      zibox: data && data!.ziboxip ? data!.ziboxip : '',
+      zibox_ip: data && data!.ziboxip ? data!.ziboxip : '',
+      zibox_mac: data && data!.ziboxip ? data!.ziboxip : '',
       mic: data && data!.ziboxmic ? data!.ziboxmic : 0,
       spk: data && data!.ziboxspk ? data!.ziboxspk : 0,
     };
@@ -105,17 +105,17 @@ function UserData({
     useInputForm(initialized);
 
   const {
-    userBranchList,
-    userTeamList,
-    getUserBranchList,
-    getUserTeamList,
+    userBranches,
+    userTeams,
+    getUserBranches,
+    getUserTeams,
     initUserBranchList,
-  } = useBranch();
+  } = useOrganization();
 
   const branch = useMemo(() => {
     let branch: Array<SelectDataType> = [];
-    if (userBranchList!.length > 0) {
-      let temp = userBranchList as Array<BranchInfo>;
+    if (userBranches!.length > 0) {
+      let temp = userBranches as Array<BranchInfo>;
       branch = temp.map((value) => {
         let data = {
           id: value.id,
@@ -126,13 +126,13 @@ function UserData({
       });
     }
     return branch;
-  }, [userBranchList]);
+  }, [userBranches]);
 
   const team = useMemo(() => {
     let team: Array<SelectDataType> = [];
 
-    if (userTeamList!.length > 0) {
-      let temp2 = userTeamList as Array<TeamInfo>;
+    if (userTeams!.length > 0) {
+      let temp2 = userTeams as Array<TeamInfo>;
       team = temp2.map((value) => {
         let data = {
           id: value.id,
@@ -144,33 +144,37 @@ function UserData({
     }
 
     return team;
-  }, [userTeamList]);
+  }, [userTeams]);
 
   useEffect(() => {
-    if (isVisible && adminId === 2) {
-      getUserBranchList();
-    } else if (isVisible) {
-      initUserBranchList(branchId!, branchName);
+    if (isVisible) {
+      if (adminId === USER_TYPE.SUPER_ADMIN) {
+        getUserBranches();
+      } else {
+        // 일반 사용자일 경우 지점을 선택할 수 없음
+        initUserBranchList(branchId!, branchName);
+      }
     }
   }, [
     adminId,
     branchId,
     branchName,
-    isVisible,
-    getUserBranchList,
+    getUserBranches,
     initUserBranchList,
+    isVisible,
   ]);
 
   useEffect(() => {
-    if (isVisible && adminId === 2) {
-      getUserTeamList(form.branch);
-    } else if (isVisible) {
-      getUserTeamList(branchId!);
+    if (isVisible) {
+      if (adminId === USER_TYPE.SUPER_ADMIN) {
+        getUserTeams(form.branch);
+      } else {
+        getUserTeams(branchId!);
+      }
     }
-  }, [isVisible, adminId, getUserTeamList, form.branch, branchId]);
+  }, [adminId, branchId, form.branch, getUserTeams, isVisible]);
 
   useEffect(() => {
-    console.log(initialized);
     initValue(initialized);
   }, [initialized, initValue]);
 
@@ -308,8 +312,8 @@ function UserData({
             height={2.6}
             textValue={'ZiBox IP'}
             onChange={onChangeInput}
-            name={'zibox'}
-            value={form.zibox}
+            name={'ziboxip'}
+            value={form.zibox_ip}
             fontSize={13}
             disabled={form.admin !== 0}
           />
@@ -319,8 +323,8 @@ function UserData({
             height={2.6}
             textValue={'ZiBox MAC'}
             onChange={onChangeInput}
-            name={'password'}
-            value={form.password}
+            name={'ziboxmac'}
+            value={form.zibox_mac}
             fontSize={13}
             disabled={form.admin === 0}
           />
@@ -386,7 +390,7 @@ function UserData({
                   form.id,
                   form.password,
                   form.tel,
-                  form.zibox,
+                  form.zibox_ip,
                   Number(form.mic),
                   Number(form.spk),
                 );
@@ -403,7 +407,7 @@ function UserData({
                   form.id,
                   form.password,
                   form.tel,
-                  form.zibox,
+                  form.zibox_ip,
                 );
                 initValue(initialized);
                 onClickVisible();
@@ -482,7 +486,6 @@ interface UserDataProps {
     mic: number,
     spk: number,
   ) => void;
-  onClickDisconnect?: (number: string) => void;
 }
 
 interface SelectDataType {

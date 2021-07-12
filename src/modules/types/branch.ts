@@ -3,20 +3,25 @@ import { ActionType } from 'typesafe-actions';
 import * as actions from 'modules/actions/branch';
 import * as common from 'modules/types/common';
 
-export type BranchAction = ActionType<typeof actions>;
+export type OrganizationAction = ActionType<typeof actions>;
 
-export interface BranchType<T> {
-  branch: common.FetchType;
-  insertBranch: common.FetchType;
-  updateBranch: common.FetchType;
-  deleteBranch: common.FetchType;
-  insertTeam: common.FetchType;
-  updateTeam: common.FetchType;
-  deleteTeam: common.FetchType;
-  branchName: common.FetchType;
-  branchInfo: object | BranchInfoType<T>;
+export interface OrganizationState<T> {
+  request: RequestType;
+  branchInfo: BranchInfoType<T>;
   numberOfBranch: number;
   namesList: NameListType;
+}
+
+export interface RequestType {
+  getOrganization: common.FetchType;
+  getBranch: common.FetchType;
+  getTeam: common.FetchType;
+  addBranch: common.FetchType;
+  addTeam: common.FetchType;
+  modifyBranch: common.FetchType;
+  modifyTeam: common.FetchType;
+  removeBranch: common.FetchType;
+  removeTeam: common.FetchType;
 }
 
 export interface NameListType {

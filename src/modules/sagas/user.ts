@@ -45,7 +45,7 @@ function* getUsersProcess(action: ReturnType<typeof requestGetUsers>) {
 
   try {
     const response: ResponseSuccessData | ResponseFailureData = yield call(
-      ZMSUser.getConsultData,
+      ZMSUser.getUsers,
       branchId,
       teamId,
       limit,

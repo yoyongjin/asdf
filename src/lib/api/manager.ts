@@ -36,9 +36,17 @@ class API {
    * @param type host 타입
    * @returns
    */
-  static delete(endpoint: string, params?: any, type: string = 'zms') {
+  static delete(
+    endpoint: string,
+    params?: any,
+    headers?: any,
+    type: string = 'zms',
+  ) {
     const host = this.getHost(type);
-    return host!.delete(endpoint, params);
+    return host!.delete(endpoint, {
+      headers,
+      data: params,
+    });
   }
 
   /**
@@ -47,9 +55,16 @@ class API {
    * @param params 파라미터
    * @param type host 타입
    */
-  static patch(endpoint: string, params?: any, type: string = 'zms') {
+  static patch(
+    endpoint: string,
+    params?: any,
+    headers?: any,
+    type: string = 'zms',
+  ) {
     const host = this.getHost(type);
-    return host!.patch(endpoint, params);
+    return host!.patch(endpoint, params, {
+      headers,
+    });
   }
 
   /**
@@ -76,9 +91,16 @@ class API {
    * @param params 파라미터
    * @param type host 타입
    */
-  static put(endpoint: string, params?: any, type: string = 'zms') {
+  static put(
+    endpoint: string,
+    params?: any,
+    headers?: any,
+    type: string = 'zms',
+  ) {
     const host = this.getHost(type);
-    return host!.put(endpoint, params);
+    return host!.put(endpoint, params, {
+      headers,
+    });
   }
 
   /**

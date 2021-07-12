@@ -1,115 +1,164 @@
 import { createAction } from 'typesafe-actions';
 
 import {
-  BranchInfoType,
-  RequestAddBranch,
-  RequestAddTeam,
-  AddBranch,
-  AddTeam,
-  ChangeInput,
   TemporaryTeam,
-  RequestUpdateTeam,
-  SuccessUpdateTeam,
-  RequestUpdateBranch,
-  BranchInfo,
-  TeamInfo,
-  BranchId,
   DelelteData,
   SuccessDeleteBranch,
 } from 'modules/types/branch';
 
-export const REQUEST_GET_BRANCH_INFO = 'REQUEST_GET_BRANCH_INFO';
-export const SUCCESS_GET_BRANCH_INFO = 'SUCCESS_GET_BRANCH_INFO';
-export const FAILURE_GET_BRANCH_INFO = 'FAILURE_GET_BRANCH_INFO';
-export const ADD_TEMPERATURE_BRANCH_INFO = 'ADD_TEMPERATURE_BRANCH_INFO';
-export const ADD_TEMPERATURE_TEAM_INFO = 'ADD_TEMPERATURE_TEAM_INFO';
-export const REQUEST_ADD_BRANCH_INFO = 'REQUEST_ADD_BRANCH_INFO';
-export const REQUEST_ADD_TEAM_INFO = 'REQUEST_ADD_TEAM_INFO';
-export const SUCCESS_ADD_BRANCH_INFO = 'SUCCESS_ADD_BRANCH_INFO';
-export const SUCCESS_ADD_TEAM_INFO = 'SUCCESS_ADD_TEAM_INFO';
-export const CHANGE_INPUT = 'CAHNGE_INPUT';
-export const REQEUST_UPDATE_TEAM_INFO = 'REQEUST_UPDATE_TEAM_INFO';
-export const SUCCESS_UPDATE_TEAM_INFO = 'SUCCESS_UPDATE_TEAM_INFO';
-export const REQUEST_UPDATE_BRANCH_INFO = 'REQUEST_UPDATE_BRANCH_INFO';
-export const SUCCESS_UPDATE_BRANCH_INFO = 'SUCCESS_UPDATE_BRANCH_INFO';
-export const REQUEST_GET_BRANCH_LIST = 'REQUEST_GET_BRANCH_LIST';
-export const SUCCESS_GET_BRANCH_LIST = 'SUCCESS_GET_BRANCH_LIST';
-export const REQUEST_GET_TEAM_LIST = 'REQUEST_GET_TEAM_LIST';
-export const SUCCESS_GET_TEAM_LIST = 'SUCCESS_GET_TEAM_LIST';
-export const SUCCESS_GET_USER_BRANCH_LIST = 'SUCCESS_GET_USER_BRANCH_LIST';
-export const SUCCESS_GET_USER_TEAM_LIST = 'SUCCESS_GET_USER_TEAM_LIST';
+import {
+  OrganizationData,
+  TeamData,
+  RequestAddBranch,
+  SuccessAddBranch,
+  SuccessModifyBranch,
+  RequestRemoveBranch,
+  SuccessRemoveBranch,
+  BranchData,
+  RequestGetBranch,
+  RequestGetTeam,
+  RequestAddTeam,
+  SuccessAddTeam,
+  RequestModifyBranch,
+  RequestModifyTeam,
+  SuccessModifyTeam,
+  SuccessRemoveTeam,
+  RequestRemoveTeam,
+} from 'types/organization';
+
+// 조직 가져오기
+export const REQUEST_GET_ORGANIZATION = 'REQUEST_GET_ORGANIZATION';
+export const SUCCESS_GET_ORGANIZATION = 'SUCCESS_GET_ORGANIZATION';
+export const FAILURE_GET_ORGANIZATION = 'FAILURE_GET_ORGANIZATION';
+
+// 지점 가져오기
+export const REQUEST_GET_BRANCH = 'REQUEST_GET_BRANCH';
+export const SUCCESS_GET_BRANCH = 'SUCCESS_GET_BRANCH';
+export const SUCCESS_GET_USER_BRANCH = 'SUCCESS_GET_USER_BRANCH';
+export const FAILURE_GET_BRANCH = 'FAILURE_GET_BRANCH';
+
+// 팀 가져오기
+export const REQUEST_GET_TEAM = 'REQUEST_GET_TEAM';
+export const SUCCESS_GET_TEAM = 'SUCCESS_GET_TEAM';
+export const SUCCESS_GET_USER_TEAM = 'SUCCESS_GET_USER_TEAM';
+export const FAILURE_GET_TEAM = 'FAILURE_GET_TEAM';
+
+// 지점 추가
+export const ADD_TEMPERATURE_BRANCH = 'ADD_TEMPERATURE_BRANCH';
+export const REQUEST_ADD_BRANCH = 'REQUEST_ADD_BRANCH';
+export const SUCCESS_ADD_BRANCH = 'SUCCESS_ADD_BRANCH';
+export const FAILURE_ADD_BRANCH = 'FAILURE_ADD_BRANCH';
+
+// 지점 변경
+export const REQUEST_MODIFY_BRANCH = 'REQUEST_MODIFY_BRANCH';
+export const SUCCESS_MODIFY_BRANCH = 'SUCCESS_MODIFY_BRANCH';
+export const FAILURE_MODIFY_BRANCH = 'FAILURE_MODIFY_BRANCH';
+
+// 지점 삭제
+export const REQUEST_REMOVE_BRANCH = 'REQUEST_REMOVE_BRANCH';
+export const SUCCESS_REMOVE_BRANCH = 'SUCCESS_REMOVE_BRANCH';
+export const FAILURE_REMOVE_BRANCH = 'FAILURE_REMOVE_BRANCH';
+
+// 팀 추가
+export const ADD_TEMPERATURE_TEAM = 'ADD_TEMPERATURE_TEAM';
+export const REQUEST_ADD_TEAM = 'REQUEST_ADD_TEAM';
+export const SUCCESS_ADD_TEAM = 'SUCCESS_ADD_TEAM';
+export const FAILURE_ADD_TEAM = 'FAILURE_ADD_TEAM';
+
+// 팀 변경
+export const REQEUST_MODIFY_TEAM = 'REQEUST_MODIFY_TEAM';
+export const SUCCESS_MODIFY_TEAM = 'SUCCESS_MODIFY_TEAM';
+export const FAILURE_MODIFY_TEAM = 'FAILURE_MODIFY_TEAM';
+
+// 팀 삭제
+export const REQUEST_REMOVE_TEAM = 'REQUEST_REMOVE_TEAM';
+export const SUCCESS_REMOVE_TEAM = 'SUCCESS_REMOVE_TEAM';
+export const FAILURE_REMOVE_TEAM = 'FAILURE_REMOVE_TEAM';
+
+// ??
 export const INIT_BRANCH_LIST = 'INIT_BRANCH_LIST';
 export const INIT_TEAM_LST = 'INIT_TEAM_LST';
-export const REQUEST_DELETE_BRANCH_INFO = 'REQUEST_DELETE_BRANCH_INFO';
-export const REQUEST_DELETE_TEAM_INFO = 'REQUEST_DELETE_TEAM_INFO';
-export const SUCCESS_DELETE_BRANCH_INFO = 'SUCCESS_DELETE_BRANCH_INFO';
-export const SUCCESS_DELETE_TEAM_INFO = 'SUCCESS_DELETE_TEAM_INFO';
 
-export const requestGetBranchInfo = createAction(REQUEST_GET_BRANCH_INFO)();
-export const successGetBranchInfo = createAction(SUCCESS_GET_BRANCH_INFO)<
-  BranchInfoType<number>
+// 액션함수
+
+// 조직 가져오기
+export const requestGetOrganization = createAction(REQUEST_GET_ORGANIZATION)();
+export const successGetOrganization = createAction(SUCCESS_GET_ORGANIZATION)<
+  OrganizationData<number>
 >();
-export const failureGetBrnachInfo = createAction(FAILURE_GET_BRANCH_INFO)();
-export const addTemperatureBranchInfo = createAction(
-  ADD_TEMPERATURE_BRANCH_INFO,
-)();
-export const addTemperatureTeamInfo = createAction(ADD_TEMPERATURE_TEAM_INFO)<
-  TemporaryTeam
+export const failureGetOrganization = createAction(
+  FAILURE_GET_ORGANIZATION,
+)<string>();
+
+// 지점 가져오기
+export const requestGetBranch =
+  createAction(REQUEST_GET_BRANCH)<RequestGetBranch>();
+export const successGetBranch =
+  createAction(SUCCESS_GET_BRANCH)<Array<BranchData>>();
+export const successGetUserBranch = createAction(SUCCESS_GET_USER_BRANCH)<
+  Array<BranchData>
 >();
-export const requestAddBranchInfo = createAction(REQUEST_ADD_BRANCH_INFO)<
-  RequestAddBranch
+export const failureGetBranch = createAction(FAILURE_GET_BRANCH)<string>();
+
+// 팀 가져오기
+export const requestGetTeam = createAction(REQUEST_GET_TEAM)<RequestGetTeam>();
+export const successGetTeam = createAction(SUCCESS_GET_TEAM)<Array<TeamData>>();
+export const successGetUserTeam = createAction(SUCCESS_GET_USER_TEAM)<
+  Array<TeamData>
 >();
-export const requestAddTeamInfo = createAction(REQUEST_ADD_TEAM_INFO)<
-  RequestAddTeam
->();
-export const successAddBranchInfo = createAction(SUCCESS_ADD_BRANCH_INFO)<
-  AddBranch
->();
-export const successAddTeamInfo = createAction(SUCCESS_ADD_TEAM_INFO)<
-  AddTeam
->();
-export const changeInput = createAction(CHANGE_INPUT)<ChangeInput>();
-export const requestUpdateTeamInfo = createAction(REQEUST_UPDATE_TEAM_INFO)<
-  RequestUpdateTeam
->();
-export const successUpdateTeamInfo = createAction(SUCCESS_UPDATE_TEAM_INFO)<
-  SuccessUpdateTeam
->();
-export const requestUpdateBranchInfo = createAction(REQUEST_UPDATE_BRANCH_INFO)<
-  RequestUpdateBranch
->();
-export const successUpdateBranchInfo = createAction(SUCCESS_UPDATE_BRANCH_INFO)<
-  RequestUpdateBranch
->();
-export const requestGetBranchList = createAction(REQUEST_GET_BRANCH_LIST)<{
-  type?: boolean;
-}>();
-export const successGetBranchList = createAction(SUCCESS_GET_BRANCH_LIST)<
-  Array<BranchInfo>
->();
-export const requestGetTeamList = createAction(REQUEST_GET_TEAM_LIST)<
-  BranchId
->();
-export const successGetTeamList = createAction(SUCCESS_GET_TEAM_LIST)<
-  Array<TeamInfo>
->();
-export const successGetUserBranchList = createAction(
-  SUCCESS_GET_USER_BRANCH_LIST,
-)<Array<BranchInfo>>();
-export const successGetUserTeamList = createAction(SUCCESS_GET_USER_TEAM_LIST)<
-  Array<TeamInfo>
->();
-export const initBranchList = createAction(INIT_BRANCH_LIST)<BranchInfo>();
+export const failureGetTema = createAction(FAILURE_GET_TEAM)<string>();
+
+// 조직 추가
+export const addTemperatureBranch = createAction(ADD_TEMPERATURE_BRANCH)();
+export const requestAddBranch =
+  createAction(REQUEST_ADD_BRANCH)<RequestAddBranch>();
+export const successAddBranch =
+  createAction(SUCCESS_ADD_BRANCH)<SuccessAddBranch>();
+export const failureAddBranch = createAction(FAILURE_ADD_BRANCH)<string>();
+
+// 팀 추가
+export const addTemperatureTeam =
+  createAction(ADD_TEMPERATURE_TEAM)<TemporaryTeam>();
+export const requestAddTeam = createAction(REQUEST_ADD_TEAM)<RequestAddTeam>();
+export const successAddTeam = createAction(SUCCESS_ADD_TEAM)<SuccessAddTeam>();
+export const failureAddTeam = createAction(FAILURE_ADD_TEAM)<string>();
+
+// 조직 수정
+export const requestModifyBranch = createAction(
+  REQUEST_MODIFY_BRANCH,
+)<RequestModifyBranch>();
+export const successModifyBranch = createAction(
+  SUCCESS_MODIFY_BRANCH,
+)<SuccessModifyBranch>();
+export const failureModifyBranch = createAction(
+  FAILURE_MODIFY_BRANCH,
+)<string>();
+
+// 팀 수정
+export const requestModifyTeam =
+  createAction(REQEUST_MODIFY_TEAM)<RequestModifyTeam>();
+export const successModifyTeam =
+  createAction(SUCCESS_MODIFY_TEAM)<SuccessModifyTeam>();
+export const failureModifyTeam = createAction(FAILURE_MODIFY_TEAM)<string>();
+
+// 조직 삭제
+export const requestRemoveBranch = createAction(
+  REQUEST_REMOVE_BRANCH,
+)<RequestRemoveBranch>();
+export const successRemoveBranch = createAction(
+  SUCCESS_REMOVE_BRANCH,
+)<SuccessDeleteBranch>();
+export const failureRemoveBranch = createAction(
+  FAILURE_REMOVE_BRANCH,
+)<string>();
+
+// 팀 삭제
+export const requestRemoveTeam =
+  createAction(REQUEST_REMOVE_TEAM)<RequestRemoveTeam>();
+export const successRemoveTeam =
+  createAction(SUCCESS_REMOVE_TEAM)<SuccessRemoveTeam>();
+export const failureRemoveTeam = createAction(FAILURE_REMOVE_TEAM)<string>();
+
+// ??
+export const initBranchList = createAction(INIT_BRANCH_LIST)<BranchData>();
 export const initTeamList = createAction(INIT_TEAM_LST)();
-export const requestDeleteBranchInfo = createAction(REQUEST_DELETE_BRANCH_INFO)<
-  TemporaryTeam
->();
-export const requestDeleteTeamInfo = createAction(REQUEST_DELETE_TEAM_INFO)<
-  DelelteData
->();
-export const successDeleteBranchInfo = createAction(SUCCESS_DELETE_BRANCH_INFO)<
-  SuccessDeleteBranch
->();
-export const successDeleteTeamInfo = createAction(SUCCESS_DELETE_TEAM_INFO)<
-  DelelteData
->();

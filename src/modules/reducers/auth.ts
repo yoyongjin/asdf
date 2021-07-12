@@ -1,12 +1,12 @@
-import { createReducer } from 'typesafe-actions';
 import produce from 'immer';
-
-import { AuthAction, AuthType } from 'types/auth';
-import * as actions from 'modules/actions/auth';
 import _ from 'lodash';
+import { createReducer } from 'typesafe-actions';
+
+import * as actions from 'modules/actions/auth';
+import { AuthAction, AuthState } from 'types/auth';
 
 // 상태
-const initialState: AuthType = {
+const initialState: AuthState = {
   request: {
     login: {
       fetch: false,
@@ -34,19 +34,19 @@ const initialState: AuthType = {
     is_init_password: false,
     is_expired_password: false,
   },
+  tappingStatus: 0,
   tappingTarget: {
     id: -1,
     ip: '',
     number: '',
   },
   socketConnectionStatus: 0,
-  tappingStatus: 0,
-  serverTime: 0,
   localTime: 0,
+  serverTime: 0,
 };
 
 // 리듀서
-const authReducer = createReducer<AuthType, AuthAction>(initialState, {
+const authReducer = createReducer<AuthState, AuthAction>(initialState, {
   [actions.REQUEST_LOGIN]: (state, action) => {
     return produce(state, (draft) => {
       draft.request.login.fetch = true;

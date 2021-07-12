@@ -7,13 +7,13 @@ import { Consultant, Title, UserData } from 'components/molecules';
 import { ConsultantInfo } from 'types/user';
 import useUser from 'hooks/useUser';
 import useMonitoring from 'hooks/useMonitoring';
-import useBranch from 'hooks/useBranch';
+import useOrganization from 'hooks/useOrganization';
 import useInputForm from 'hooks/useInputForm';
 import useAuth from 'hooks/useAuth';
 import useVisible from 'hooks/useVisible';
 import useZibox from 'hooks/useZibox';
 
-import { SOCKET_CONNECTION } from 'utils/constants';
+import { SOCKET_CONNECTION, USER_TYPE } from 'utils/constants';
 
 const AREA_MAGIN = 27; //상담사 박스 영역 마진
 const BOX_MAGIN = 5; //상담사 박스 마진
@@ -65,7 +65,7 @@ function Monitoring({ location }: MonitoringProps) {
   const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
   const [tempConsultInfo, setTempConsultInfo] = useState<ConsultantInfo>();
   const { loginInfo, socketConnection } = useAuth();
-  const { branchList, teamList, getBranchList, getTeamList } = useBranch();
+  const { branches, teams, getBranches, getTeams } = useOrganization();
   const { form, onChangeSelect, setKeyValue, onChangeInput } = useInputForm({
     branch: -1,
     team: -1,
@@ -84,16 +84,50 @@ function Monitoring({ location }: MonitoringProps) {
     getUsers,
     resetFilteredList,
     onClickUpdateUser,
-    onClickDisconnect,
   } = useUser();
   const { visible, onClickVisible } = useVisible();
   const { connectZibox, requestTapping, startTapping, stopTapping, setVolume } =
     useZibox();
 
   const selectData = useMemo(() => {
+    const _branches = branches!.map((values) => {
+      return {
+        id: values.id,
+        data: values.branch_name,
+      };
+    });
+
+    const _teams = teams!.map((values) => {
+      return {
+        id: values.id,
+        data: values.team_name,
+      };
+    });
+
+    if (loginInfo.admin_id === USER_TYPE.ADMIN) {
+      return {
+        count: 1,
+        data: [_teams],
+        info: [
+          {
+            id: form.team,
+            name: 'team',
+            click: onChangeSelect,
+          },
+        ],
+        style: [
+          {
+            width: 120,
+            height: 28,
+            borderRadius: 0,
+          },
+        ],
+      };
+    }
+
     return {
       count: 2,
-      data: [branchList, teamList],
+      data: [_branches, _teams],
       info: [
         {
           id: loginInfo.admin_id === 1 ? loginInfo.branch_id : form.branch,
@@ -120,13 +154,13 @@ function Monitoring({ location }: MonitoringProps) {
       ],
     };
   }, [
-    branchList,
+    branches,
     form.branch,
     form.team,
     loginInfo.admin_id,
     loginInfo.branch_id,
     onChangeSelect,
-    teamList,
+    teams,
   ]);
 
   const volumeData = useMemo(() => {
@@ -360,19 +394,19 @@ function Monitoring({ location }: MonitoringProps) {
   useEffect(() => {
     if (loginInfo.admin_id === 2) {
       // 슈퍼관리자일 경우에만 지점명 가져오기
-      getBranchList();
+      getBranches();
     }
-  }, [getBranchList, loginInfo.admin_id]);
+  }, [getBranches, loginInfo.admin_id]);
 
   useEffect(() => {
     if (loginInfo.admin_id === 2) {
       // 슈퍼 관리자
-      getTeamList(form.branch);
+      getTeams(form.branch);
     } else if (loginInfo.admin_id === 1) {
       // 일반 관리자
-      getTeamList(loginInfo.branch_id);
+      getTeams(loginInfo.branch_id);
     }
-  }, [loginInfo.admin_id, loginInfo.branch_id, form.branch, getTeamList]);
+  }, [loginInfo.admin_id, loginInfo.branch_id, form.branch, getTeams]);
 
   useEffect(() => {
     // 지점명 변경 시 팀 id 초기화
@@ -453,7 +487,6 @@ function Monitoring({ location }: MonitoringProps) {
             adminId={loginInfo.admin_id}
             branchId={loginInfo.branch_id}
             branchName={loginInfo.branch_name!}
-            onClickDisconnect={onClickDisconnect}
           />
         }
       />

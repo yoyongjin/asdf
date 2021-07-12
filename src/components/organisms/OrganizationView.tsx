@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { Organization, Title } from 'components/molecules';
 import useAuth from 'hooks/useAuth';
-import useBranch from 'hooks/useBranch';
+import useOrganization from 'hooks/useOrganization';
 import usePage from 'hooks/usePage';
 import constants, { COMPANY_TYPE, USER_TYPE } from 'utils/constants';
 
@@ -35,23 +35,17 @@ const StyledOrganization = styled.div`
 function OrganizationView() {
   const { loginInfo } = useAuth();
   const {
-    branchInfo,
-    getBranchInfo,
+    organizations,
+    getOrganizations,
     onClickAddTempBranch,
     handleAddBranch,
     handleAddTeam,
-    handleUpdateTeam,
-    handleUpdateBranch,
-    handleDeleteTeam,
-    handleDeleteBranch,
-  } = useBranch();
+    handleModifyBranch,
+    handleModifyTeam,
+    handleRemoveBranch,
+    handleRemoveTeam,
+  } = useOrganization();
   const { page, countBranch, onClickNextPage, onClickPrevPage } = usePage();
-
-  useEffect(() => {
-    if (loginInfo.id) {
-      getBranchInfo();
-    }
-  }, [loginInfo, getBranchInfo]);
 
   const buttonData = useMemo(() => {
     return {
@@ -82,8 +76,15 @@ function OrganizationView() {
     };
   }, [countBranch, onClickNextPage, onClickPrevPage, page]);
 
-  const branchKeys = Object.getOwnPropertyNames(branchInfo).reverse();
-  const branchValues = Object.values(branchInfo).reverse();
+  const branchIdList = Object.getOwnPropertyNames(organizations).reverse();
+  const organizationDataList = Object.values(organizations).reverse();
+
+  useEffect(() => {
+    if (loginInfo.id) {
+      // 로그인 시 조직 정보 가져오기
+      getOrganizations();
+    }
+  }, [loginInfo, getOrganizations]);
 
   return (
     <StyledWrapper>
@@ -100,21 +101,21 @@ function OrganizationView() {
         </Title>
       </StyledTitle>
       <StyledOrganizationArea>
-        {branchKeys.map((value, i) => {
+        {branchIdList.map((value, i) => {
           if (Math.floor(i / 5) + 1 === page) {
             return (
               <StyledOrganization key={`styled-organization-${value}`}>
                 <Organization
                   index={i}
                   key={`organization-${value}`}
-                  branch={branchValues[i]}
+                  organizationDataList={organizationDataList[i]}
                   branchId={Number(value)}
                   handleAddBranch={handleAddBranch}
                   handleAddTeam={handleAddTeam}
-                  handleUpdateTeam={handleUpdateTeam}
-                  handleUpdateBranch={handleUpdateBranch}
-                  handleDeleteTeam={handleDeleteTeam}
-                  handleDeleteBranch={handleDeleteBranch}
+                  handleModifyBranch={handleModifyBranch}
+                  handleModifyTeam={handleModifyTeam}
+                  handleRemoveBranch={handleRemoveBranch}
+                  handleRemoveTeam={handleRemoveTeam}
                 />
               </StyledOrganization>
             );

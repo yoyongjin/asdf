@@ -8,12 +8,12 @@ import { Table } from 'components/organisms';
 import useUser from 'hooks/useUser';
 import usePage from 'hooks/usePage';
 import useVisible from 'hooks/useVisible';
-import useBranch from 'hooks/useBranch';
+import useOrganization from 'hooks/useOrganization';
 import useInputForm from 'hooks/useInputForm';
 import useAuth from 'hooks/useAuth';
 import { UserInfo } from 'types/user';
 import { Colors } from 'utils/color';
-import constants, { COMPANY_TYPE } from 'utils/constants';
+import constants, { COMPANY_TYPE, USER_TYPE } from 'utils/constants';
 
 import optionIcon from 'images/bt-user-modi-nor@2x.png';
 import optionHoverIcon from 'images/bt-user-modi-over@2x.png';
@@ -80,7 +80,7 @@ function UserView({ location }: UserViewProps) {
   const [tempUserInfo, setTempUserInfo] = useState<UserInfo>();
   const [search, setSearch] = useState<string>('');
   const { loginInfo } = useAuth();
-  const { branchList, teamList, getBranchList, getTeamList } = useBranch();
+  const { branches, teams, getBranches, getTeams } = useOrganization();
   const { form, onChangeSelect, onChangeInput, setKeyValue } = useInputForm({
     userListCount: 5,
     branch: -1,
@@ -109,9 +109,59 @@ function UserView({ location }: UserViewProps) {
   const { visible, onClickVisible } = useVisible();
 
   const selectData = useMemo(() => {
+    const _branches = branches!.map((values) => {
+      return {
+        id: values.id,
+        data: values.branch_name,
+      };
+    });
+
+    const _teams = teams!.map((values) => {
+      return {
+        id: values.id,
+        data: values.team_name,
+      };
+    });
+
+    if (loginInfo.admin_id === USER_TYPE.ADMIN) {
+      return {
+        count: 2,
+        data: [userCountData, _teams],
+        style: [
+          {
+            width: 50,
+            height: 25,
+            borderRadius: 12.5,
+            borderColor: Colors.gray7,
+            fontColor: Colors.gray4,
+          },
+          {
+            width: 150,
+            height: 25,
+            borderRadius: 12.5,
+            borderColor: Colors.gray7,
+            fontColor: Colors.gray4,
+            paddingLeft: 16,
+          },
+        ],
+        info: [
+          {
+            id: form.userListCount,
+            name: 'user',
+            click: onChangeSelect,
+          },
+          {
+            id: form.team,
+            name: 'team',
+            click: onChangeSelect,
+          },
+        ],
+      };
+    }
+
     return {
       count: 3,
-      data: [userCountData, branchList, teamList],
+      data: [userCountData, _branches, _teams],
       style: [
         {
           width: 50,
@@ -156,14 +206,14 @@ function UserView({ location }: UserViewProps) {
       ],
     };
   }, [
-    branchList,
+    branches,
     form.branch,
     form.team,
     form.userListCount,
     loginInfo.admin_id,
     loginInfo.branch_id,
     onChangeSelect,
-    teamList,
+    teams,
   ]);
 
   const buttonData = useMemo(() => {
@@ -309,18 +359,18 @@ function UserView({ location }: UserViewProps) {
   useEffect(() => {
     if (loginInfo.admin_id === 2) {
       // 슈퍼관리자일 경우에만 지점명 리스트 가져오기
-      getBranchList();
+      getBranches();
     }
-  }, [loginInfo.admin_id, getBranchList]);
+  }, [loginInfo.admin_id, getBranches]);
 
   useEffect(() => {
     // 관리자의 권한에 따라 팀명 리스트 다르게 가져오기
     if (loginInfo.admin_id === 2) {
-      getTeamList(form.branch);
+      getTeams(form.branch);
     } else if (loginInfo.admin_id === 1) {
-      getTeamList(loginInfo.branch_id);
+      getTeams(loginInfo.branch_id);
     }
-  }, [loginInfo.admin_id, loginInfo.branch_id, form.branch, getTeamList]);
+  }, [loginInfo.admin_id, loginInfo.branch_id, form.branch, getTeams]);
 
   useEffect(() => {
     // 지점명이 변경될 때 team id 초기화

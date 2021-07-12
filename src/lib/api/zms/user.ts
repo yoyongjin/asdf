@@ -4,7 +4,7 @@ import Main from 'lib/api/zms/main';
 import Logger from 'utils/log';
 
 class User {
-  static async getConsultData(
+  static async getUsers(
     branchId: number,
     teamId: number,
     limit: number,
@@ -23,7 +23,7 @@ class User {
       };
 
       const { data } = await APIManager.get(
-        url.zms.api.path.get_consultant_data,
+        url.zms.api.path.get_users,
         payload,
         {
           token,

@@ -2,11 +2,20 @@ import React, { useRef, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { Input } from 'components/atoms';
-import { BranchInfo, TeamInfo } from 'modules/types/branch';
 import useInputForm from 'hooks/useInputForm';
 import { Colors } from 'utils/color';
 
 import constants, { COMPANY_TYPE } from 'utils/constants';
+import { BranchData, TeamData } from 'types/organization';
+import { DynamicJSON } from 'types/common';
+import {
+  HandleAddBranch,
+  HandleAddTeam,
+  HandleModifyBranch,
+  HandleModifyTeam,
+  HandleRemoveBranch,
+  HandleRemoveTeam,
+} from 'hooks/useOrganization';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -34,37 +43,34 @@ const StyledTeam = styled.div`
 let isCtrl = false;
 
 function Organization({
-  index,
-  branch,
   branchId,
   handleAddBranch,
   handleAddTeam,
-  handleUpdateTeam,
-  handleUpdateBranch,
-  handleDeleteTeam,
-  handleDeleteBranch,
+  handleModifyBranch,
+  handleModifyTeam,
+  handleRemoveBranch,
+  handleRemoveTeam,
+  index,
+  organizationDataList,
 }: OrganizationProps) {
-  const { form, onChangeInput, setKeyValue } = useInputForm<Dic>({});
+  const { form, onChangeInput, setKeyValue } = useInputForm<DynamicJSON>({});
   const inputRef = useRef<HTMLInputElement[]>([]) as React.MutableRefObject<
     HTMLInputElement[]
   >;
 
-  useEffect(() => {
-    if (!branchId) {
-      inputRef.current[0].focus();
-    } else if (index === 0) {
-      inputRef.current[branch!.length - 1].focus();
+  const onKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.keyCode === 17) {
+      isCtrl = true;
     }
-  }, [inputRef, index, branch, branchId]);
+  };
 
   const onKeyEvent = useCallback(
     (
       e: React.KeyboardEvent<HTMLInputElement>,
-      index: number,
-      value: string,
-      name: string,
-      branch: Array<BranchInfo | TeamInfo>,
       branchId: number,
+      name: string,
+      value: string,
+      organizationData: BranchData | TeamData,
     ) => {
       switch (e.keyCode) {
         case 9:
@@ -72,33 +78,40 @@ function Organization({
           if (!value || value.trim() === '') return;
 
           if (name.indexOf('branch') > -1) {
-            const branchIf = branch[index] as BranchInfo;
-            if (!branchIf.branch_name) {
+            // 지점 추가/수정/삭제 시
+            const branchData = organizationData as BranchData;
+
+            if (!branchData.branch_name) {
               // 지점 입력이 처음일 때
-              handleAddBranch!(value);
+              handleAddBranch(value);
               setKeyValue(name, '');
+
               return;
             } else {
-              handleUpdateBranch!(branchIf.id, value);
+              handleModifyBranch!(branchData.id, value);
             }
           } else if (name.indexOf('team') > -1) {
-            const teamIf = branch[index] as TeamInfo;
-            if (!teamIf.team_name) {
+            // 팀 추가/수정/삭제 시
+            const teamData = organizationData as TeamData;
+
+            if (!teamData.team_name) {
               // 팀 입력이 처음일 때
-              handleAddTeam!(value, teamIf.branch_id, teamIf.id);
+              console.log(teamData);
+              handleAddTeam(teamData.branch_id, teamData.id, value);
               setKeyValue(name, '');
+
               return;
             } else {
-              handleUpdateTeam!(teamIf.id, value, branchId);
+              handleModifyTeam!(teamData.id, value, branchId);
             }
           }
           break;
         case 8:
           if (!value || value.trim() === '') {
             if (name.indexOf('branch') > -1) {
-              const branchIf = branch[index] as BranchInfo;
+              const branchData = organizationData as BranchData;
 
-              if (!branchIf.branch_name) {
+              if (!branchData.branch_name) {
                 // 서버에 없는 데이터(팀명 입력 부분)
                 return;
               }
@@ -113,11 +126,11 @@ function Organization({
                 return;
               }
 
-              handleDeleteBranch!(branchIf.id);
+              handleRemoveBranch(branchData.id);
             } else if (name.indexOf('team') > -1) {
-              const teamIf = branch[index] as TeamInfo;
+              const teamData = organizationData as TeamData;
 
-              if (!teamIf.team_name) {
+              if (!teamData.team_name) {
                 // 서버에 없는 데이터(팀명 입력 부분)
                 return;
               }
@@ -131,7 +144,7 @@ function Organization({
               if (form[name] === undefined) {
                 return;
               }
-              handleDeleteTeam!(branchId, teamIf.id);
+              handleRemoveTeam(branchId, teamData.id);
             }
           }
           break;
@@ -140,134 +153,134 @@ function Organization({
       }
     },
     [
+      form,
       handleAddBranch,
       handleAddTeam,
-      handleUpdateBranch,
-      handleUpdateTeam,
+      handleModifyBranch,
+      handleModifyTeam,
+      handleRemoveBranch,
+      handleRemoveTeam,
       setKeyValue,
-      handleDeleteTeam,
-      handleDeleteBranch,
-      form,
     ],
   );
 
-  const onKeyUp = useCallback((e) => {
-    if (e.keyCode === 17) {
-      isCtrl = true;
+  useEffect(() => {
+    if (!branchId) {
+      inputRef.current[0]?.focus();
+    } else if (!branchId && index === 0) {
+      inputRef.current[organizationDataList.length - 1]?.focus();
     }
-  }, []);
+  }, [inputRef, index, organizationDataList, branchId]);
 
   return (
     <StyledWrapper>
-      {branch!.length < 1
-        ? null
-        : branch?.map((value, i) => {
-            const branchIf = value as BranchInfo;
-            const teamIf = value as TeamInfo;
-            if (branchIf.branch_name !== undefined) {
-              return (
-                <StyledBranch key={`styled-branch-${branchIf.branch_name}`}>
-                  <Input
-                    key={`input-branch-${branchIf.branch_name}`}
-                    innerRef={(ref) => (inputRef.current[i] = ref)}
-                    name={`branch${branchIf.id}`}
-                    type={'search'}
-                    value={
-                      form[`branch${branchIf.id}`] ||
-                      form[`branch${branchIf.id}`] === ''
-                        ? form[`branch${branchIf.id}`]
-                        : branchIf.branch_name
-                    }
-                    placeholder={'지점명 입력'}
-                    width={18}
-                    height={4}
-                    borderWidth={2}
-                    borderRadius={20}
-                    borderColor={
-                      constants.COMPANY === COMPANY_TYPE.DBLIFE
-                        ? Colors.green1
-                        : constants.COMPANY === COMPANY_TYPE.LINA
-                        ? Colors.blue1
-                        : Colors.blue3
-                    }
-                    textAlign={1}
-                    fontFamily="NanumBarunGothic"
-                    fontSize={14}
-                    fontWeight={700}
-                    onChange={onChangeInput}
-                    onKeyDown={(e) =>
-                      onKeyEvent(
-                        e,
-                        i,
-                        form[`branch${branchIf.id}`],
-                        `branch${branchIf.id}`,
-                        branch,
-                        branchId!,
-                      )
-                    }
-                  />
-                </StyledBranch>
-              );
-            } else if (teamIf.team_name !== undefined) {
-              return (
-                <StyledTeam
-                  key={`styled-team-${teamIf.team_name}-${teamIf.id}`}
-                >
-                  <Input
-                    key={`input-team-${teamIf.team_name}-${teamIf.id}`}
-                    innerRef={(ref) => (inputRef.current[i] = ref)}
-                    name={`${teamIf.branch_id}-team${teamIf.id}`}
-                    type={'search'}
-                    value={
-                      form[`${teamIf.branch_id}-team${teamIf.id}`] ||
-                      form[`${teamIf.branch_id}-team${teamIf.id}`] === ''
-                        ? form[`${teamIf.branch_id}-team${teamIf.id}`]
-                        : teamIf.team_name
-                    }
-                    placeholder={'팀명 입력'}
-                    width={18}
-                    height={4}
-                    borderWidth={2}
-                    borderColor={Colors.gray2}
-                    textAlign={1}
-                    fontFamily="NanumBarunGothic"
-                    fontSize={14}
-                    fontWeight={700}
-                    onChange={onChangeInput}
-                    onKeyUp={onKeyUp}
-                    onKeyDown={(e) =>
-                      onKeyEvent(
-                        e,
-                        i,
-                        form[`${teamIf.branch_id}-team${teamIf.id}`],
-                        `${teamIf.branch_id}-team${teamIf.id}`,
-                        branch,
-                        branchId!,
-                      )
-                    }
-                  />
-                </StyledTeam>
-              );
-            }
-          })}
+      {organizationDataList.map((value, i) => {
+        const branchData = value as BranchData;
+        const teamData = value as TeamData;
+
+        if (branchData.branch_name !== undefined) {
+          // 해당 정보가 지점인 경우
+          return (
+            <StyledBranch key={`styled-branch-${branchData.branch_name}`}>
+              <Input
+                key={`input-branch-${branchData.branch_name}`}
+                borderColor={
+                  constants.COMPANY === COMPANY_TYPE.DBLIFE
+                    ? Colors.green1
+                    : constants.COMPANY === COMPANY_TYPE.LINA
+                    ? Colors.blue1
+                    : Colors.blue3
+                }
+                borderRadius={20}
+                borderWidth={2}
+                fontFamily="NanumBarunGothic"
+                fontSize={14}
+                fontWeight={700}
+                height={4}
+                innerRef={(ref) => (inputRef.current[i] = ref)}
+                name={`branch${branchData.id}`}
+                placeholder="지점명 입력"
+                textAlign={1}
+                type="search"
+                value={
+                  form[`branch${branchData.id}`] ||
+                  form[`branch${branchData.id}`] === ''
+                    ? form[`branch${branchData.id}`]
+                    : branchData.branch_name
+                }
+                width={18}
+                onChange={onChangeInput}
+                onKeyDown={(e) => {
+                  const name = `branch${branchData.id}`;
+
+                  onKeyEvent(
+                    e,
+                    branchId,
+                    name,
+                    form[name],
+                    organizationDataList[i],
+                  );
+                }}
+              />
+            </StyledBranch>
+          );
+        } else if (teamData.team_name !== undefined) {
+          return (
+            <StyledTeam
+              key={`styled-team-${teamData.team_name}-${teamData.id}`}
+            >
+              <Input
+                key={`input-team-${teamData.team_name}-${teamData.id}`}
+                type="search"
+                borderColor={Colors.gray2}
+                borderWidth={2}
+                fontFamily="NanumBarunGothic"
+                fontSize={14}
+                fontWeight={700}
+                height={4}
+                innerRef={(ref) => (inputRef.current[i] = ref)}
+                name={`${teamData.branch_id}-team${teamData.id}`}
+                placeholder="팀명 입력"
+                textAlign={1}
+                value={
+                  form[`${teamData.branch_id}-team${teamData.id}`] ||
+                  form[`${teamData.branch_id}-team${teamData.id}`] === ''
+                    ? form[`${teamData.branch_id}-team${teamData.id}`]
+                    : teamData.team_name
+                }
+                width={18}
+                onChange={onChangeInput}
+                onKeyUp={onKeyUp}
+                onKeyDown={(e) => {
+                  const name = `${teamData.branch_id}-team${teamData.id}`;
+
+                  onKeyEvent(
+                    e,
+                    branchId,
+                    name,
+                    form[name],
+                    organizationDataList[i],
+                  );
+                }}
+              />
+            </StyledTeam>
+          );
+        }
+      })}
     </StyledWrapper>
   );
 }
 
 interface OrganizationProps {
+  branchId: number;
+  handleAddBranch: HandleAddBranch;
+  handleAddTeam: HandleAddTeam;
+  handleModifyBranch: HandleModifyBranch;
+  handleModifyTeam: HandleModifyTeam;
+  handleRemoveBranch: HandleRemoveBranch;
+  handleRemoveTeam: HandleRemoveTeam;
   index: number;
-  branch?: Array<BranchInfo | TeamInfo>;
-  branchId?: number;
-  handleAddBranch?: (name: string) => void;
-  handleAddTeam?: (name: string, branchId: number, teamId: number) => void;
-  handleUpdateTeam?: (id: number, name: string, branchId: number) => void;
-  handleUpdateBranch?: (id: number, name: string) => void;
-  handleDeleteTeam?: (branchId: number, teamId: number) => void;
-  handleDeleteBranch?: (id: number) => void;
-}
-
-interface Dic {
-  [key: string]: string;
+  organizationDataList: Array<BranchData | TeamData>;
 }
 
 Organization.defaultProps = {};

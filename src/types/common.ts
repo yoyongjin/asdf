@@ -19,3 +19,7 @@ export interface ResponseFailureData {
   result_code: number;
   error_msg: string;
 }
+
+export interface DynamicJSON {
+  [key: string]: string;
+}

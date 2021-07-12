@@ -1,11 +1,11 @@
 import { ActionType } from 'typesafe-actions';
 
 import * as actions from 'modules/actions/auth';
-import * as common from 'modules/types/common';
+import * as common from 'types/common';
 
 export type AuthAction = ActionType<typeof actions>;
 
-export interface AuthType {
+export interface AuthState {
   request: RequestType;
   loginInfo: LoginData;
   socketConnectionStatus: number;
@@ -34,7 +34,7 @@ export interface RequestType {
   checkLogin: common.FetchType;
 }
 
-export interface RequestLogin extends common.RouterType {
+export interface RequestLogin {
   id: string;
   password: string;
 }

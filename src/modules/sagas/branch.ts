@@ -1,257 +1,377 @@
 import { all, call, fork, takeLatest, put } from 'redux-saga/effects';
 
 import {
-  requestGetBranchInfo,
-  REQUEST_GET_BRANCH_INFO,
-  successGetBranchInfo,
-  REQUEST_ADD_BRANCH_INFO,
-  requestAddBranchInfo,
-  REQUEST_ADD_TEAM_INFO,
-  requestAddTeamInfo,
-  successAddBranchInfo,
-  successAddTeamInfo,
-  requestUpdateTeamInfo,
-  REQEUST_UPDATE_TEAM_INFO,
-  successUpdateTeamInfo,
-  requestUpdateBranchInfo,
-  REQUEST_UPDATE_BRANCH_INFO,
-  successUpdateBranchInfo,
-  requestGetBranchList,
-  REQUEST_GET_BRANCH_LIST,
-  successGetBranchList,
-  requestGetTeamList,
-  REQUEST_GET_TEAM_LIST,
-  successGetTeamList,
-  successGetUserBranchList,
-  successGetUserTeamList,
-  REQUEST_DELETE_TEAM_INFO,
-  requestDeleteTeamInfo,
-  successDeleteTeamInfo,
-  successDeleteBranchInfo,
-  REQUEST_DELETE_BRANCH_INFO,
-  requestDeleteBranchInfo,
+  requestGetOrganization,
+  REQUEST_GET_ORGANIZATION,
+  successGetOrganization,
+  failureGetOrganization,
+  REQUEST_ADD_BRANCH,
+  requestAddBranch,
+  REQUEST_ADD_TEAM,
+  requestAddTeam,
+  successAddBranch,
+  successAddTeam,
+  requestModifyTeam,
+  REQEUST_MODIFY_TEAM,
+  successModifyTeam,
+  requestModifyBranch,
+  REQUEST_MODIFY_BRANCH,
+  successModifyBranch,
+  requestGetBranch,
+  REQUEST_GET_BRANCH,
+  successGetBranch,
+  requestGetTeam,
+  REQUEST_GET_TEAM,
+  successGetTeam,
+  successGetUserBranch,
+  successGetUserTeam,
+  REQUEST_REMOVE_TEAM,
+  requestRemoveTeam,
+  successRemoveTeam,
+  successRemoveBranch,
+  REQUEST_REMOVE_BRANCH,
+  requestRemoveBranch,
+  failureAddBranch,
+  failureAddTeam,
+  failureModifyBranch,
+  failureModifyTeam,
+  failureRemoveBranch,
+  failureRemoveTeam,
+  failureGetBranch,
 } from 'modules/actions/branch';
-import * as API from 'lib/api';
-import Logger from 'utils/log';
+import ZMSOrganization from 'lib/api/zms/organization';
+import { ResponseFailureData, ResponseSuccessData } from 'types/common';
+import { API_FETCH } from 'utils/constants';
 
-function* getBranchInfoProcess(
-  action: ReturnType<typeof requestGetBranchInfo>,
+function* getOrganizationProcess(
+  action: ReturnType<typeof requestGetOrganization>,
 ) {
   try {
-    const response = yield call(API.getBranchInfo);
-    Logger.log('branch Data =>', response);
-    const { login_at, ...rest } = response.data.data;
+    const response: ResponseSuccessData | ResponseFailureData = yield call(
+      ZMSOrganization.getOrganization,
+    );
 
-    yield put(successGetBranchInfo(rest));
+    if (response.status === API_FETCH.SUCCESS) {
+      const { data } = response as ResponseSuccessData;
+      const { ...rest } = data;
+
+      yield put(successGetOrganization(rest));
+
+      return;
+    }
+
+    const { error_msg } = response as ResponseFailureData;
+    yield put(failureGetOrganization(error_msg));
+
+    alert(error_msg);
   } catch (error) {
-    console.log(error);
+    yield put(failureGetOrganization(error.message));
   }
 }
 
-function* insertBranch(action: ReturnType<typeof requestAddBranchInfo>) {
+function* getBranchProcess(action: ReturnType<typeof requestGetBranch>) {
+  const { isIndividual } = action.payload;
   try {
-    const { name } = action.payload;
-    const response = yield call(API.insertBranch, name);
-    Logger.log('insert branch Data =>', response);
-    const { data, status } = response.data;
+    const response: ResponseSuccessData | ResponseFailureData = yield call(
+      ZMSOrganization.getBranches,
+    );
 
-    if (status === 'success') {
+    if (response.status === API_FETCH.SUCCESS) {
+      const { data } = response as ResponseSuccessData;
+
+      if (isIndividual) {
+        // 개인의 지점 가져오기
+        yield put(successGetUserBranch(data.branchs));
+
+        return;
+      }
+
+      yield put(successGetBranch(data.branchs));
+
+      return;
+    }
+
+    const { error_msg } = response as ResponseFailureData;
+    yield put(failureGetBranch(error_msg));
+
+    alert(error_msg);
+  } catch (error) {
+    yield put(failureGetBranch(error.message));
+  }
+}
+
+function* getTeamProcess(action: ReturnType<typeof requestGetTeam>) {
+  const { branch_id, isIndividual } = action.payload;
+  try {
+    const response: ResponseSuccessData | ResponseFailureData = yield call(
+      ZMSOrganization.getTeams,
+      branch_id,
+    );
+
+    if (response.status === API_FETCH.SUCCESS) {
+      const { data } = response as ResponseSuccessData;
+
+      if (isIndividual) {
+        // 개인의 팀 가져오기
+        yield put(successGetUserTeam(data.teams));
+
+        return;
+      }
+
+      yield put(successGetTeam(data.teams));
+
+      return;
+    }
+
+    const { error_msg } = response as ResponseFailureData;
+    // yield put(failureGetOrganization(error_msg));
+
+    alert(error_msg);
+  } catch (error) {
+    // yield put(failureGetOrganization(error.message));
+  }
+}
+
+function* addBranchProcess(action: ReturnType<typeof requestAddBranch>) {
+  const { name } = action.payload;
+
+  try {
+    const response: ResponseSuccessData | ResponseFailureData = yield call(
+      ZMSOrganization.addBranch,
+      name,
+    );
+
+    if (response.status === API_FETCH.SUCCESS) {
+      const { data } = response as ResponseSuccessData;
+
       const payload = {
         id: data,
         name,
       };
-      yield put(successAddBranchInfo(payload));
+
+      yield put(successAddBranch(payload));
+
+      return;
     }
+
+    const { error_msg } = response as ResponseFailureData;
+    yield put(failureAddBranch(error_msg));
+
+    alert(error_msg);
   } catch (error) {
-    console.log(error);
+    yield put(failureAddBranch(error.message));
   }
 }
 
-function* insertTeam(action: ReturnType<typeof requestAddTeamInfo>) {
-  try {
-    const { name, branch_id, team_id } = action.payload;
-    const response = yield call(API.insertTeam, name, branch_id);
-    Logger.log('insert team Data =>', response);
-    const { data, status } = response.data;
+function* addTeamProcess(action: ReturnType<typeof requestAddTeam>) {
+  const { name, branch_id, team_id } = action.payload;
 
-    if (status === 'success') {
+  console.log(name, branch_id, team_id);
+
+  try {
+    const response: ResponseSuccessData | ResponseFailureData = yield call(
+      ZMSOrganization.addTeam,
+      branch_id,
+      name,
+    );
+
+    if (response.status === API_FETCH.SUCCESS) {
+      const { data } = response as ResponseSuccessData;
+
       const payload = {
         branch_id,
         before_id: team_id,
         next_id: data,
         name,
       };
-      yield put(successAddTeamInfo(payload));
+
+      yield put(successAddTeam(payload));
+
+      return;
     }
+
+    const { error_msg } = response as ResponseFailureData;
+    yield put(failureAddTeam(error_msg));
+
+    alert(error_msg);
   } catch (error) {
-    console.log(error);
+    yield put(failureAddTeam(error.message));
   }
 }
 
-function* updateTeam(action: ReturnType<typeof requestUpdateTeamInfo>) {
-  try {
-    const { id, name, branch_id } = action.payload;
-    const response = yield call(API.updateTeam, id, name);
-    Logger.log('update team Data =>', response);
-    const { data, status } = response.data;
+function* modifyBranchProcess(action: ReturnType<typeof requestModifyBranch>) {
+  const { id, name } = action.payload;
 
-    if (status === 'success') {
+  try {
+    const response: ResponseSuccessData | ResponseFailureData = yield call(
+      ZMSOrganization.modifyBranch,
+      id,
+      name,
+    );
+
+    if (response.status === API_FETCH.SUCCESS) {
+      const { data } = response as ResponseSuccessData;
+
+      const payload = {
+        id: Number(data.id),
+        name,
+      };
+
+      yield put(successModifyBranch(payload));
+
+      return;
+    }
+
+    const { error_msg } = response as ResponseFailureData;
+    yield put(failureModifyBranch(error_msg));
+
+    alert(error_msg);
+  } catch (error) {
+    yield put(failureModifyBranch(error.message));
+  }
+}
+
+function* modifyTeamProcess(action: ReturnType<typeof requestModifyTeam>) {
+  const { id: team_id, name, branch_id } = action.payload;
+  try {
+    const response: ResponseSuccessData | ResponseFailureData = yield call(
+      ZMSOrganization.modifyTeam,
+      team_id,
+      name,
+    );
+
+    if (response.status === API_FETCH.SUCCESS) {
+      const { data } = response as ResponseSuccessData;
+
       const payload = {
         id: Number(data.id),
         name,
         branch_id,
       };
-      yield put(successUpdateTeamInfo(payload));
+
+      yield put(successModifyTeam(payload));
+
+      return;
     }
+
+    const { error_msg } = response as ResponseFailureData;
+    yield put(failureModifyTeam(error_msg));
+
+    alert(error_msg);
   } catch (error) {
-    console.log(error);
+    yield put(failureModifyTeam(error.message));
   }
 }
 
-function* updateBranch(action: ReturnType<typeof requestUpdateBranchInfo>) {
+function* removeBranchProcess(action: ReturnType<typeof requestRemoveBranch>) {
+  const { id } = action.payload;
+
   try {
-    const { id, name } = action.payload;
-    const response = yield call(API.updateBranch, id, name);
-    Logger.log('update branch Data =>', response);
-    const { data, status } = response.data;
+    const response: ResponseSuccessData | ResponseFailureData = yield call(
+      ZMSOrganization.removeBranch,
+      id,
+    );
 
-    if (status === 'success') {
-      const payload = {
-        id: Number(data.id),
-        name,
-      };
-      yield put(successUpdateBranchInfo(payload));
-    }
-  } catch (error) {
-    console.log(error);
-  }
-}
+    if (response.status === API_FETCH.SUCCESS) {
+      const { data } = response as ResponseSuccessData;
 
-function* getBranchList(action: ReturnType<typeof requestGetBranchList>) {
-  try {
-    const { type } = action.payload;
-    const response = yield call(API.getBranchList);
-    Logger.log('get branch list Data =>', response);
-    const { status, data } = response.data;
-    if (status === 'success') {
-      if (type) {
-        yield put(successGetBranchList(data.branchs));
-      } else {
-        yield put(successGetUserBranchList(data.branchs));
-      }
-    }
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-function* getTeamList(action: ReturnType<typeof requestGetTeamList>) {
-  const { branch_id, type } = action.payload;
-  try {
-    const response = yield call(API.getTeamList, branch_id);
-    Logger.log('get team list Data =>', response);
-    const { status, data } = response.data;
-
-    if (status === 'success') {
-      if (type) {
-        yield put(successGetTeamList(data.teams));
-      } else {
-        yield put(successGetUserTeamList(data.teams));
-      }
-    }
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-function* deleteBranchProcess(
-  action: ReturnType<typeof requestDeleteBranchInfo>,
-) {
-  try {
-    const { branch_id } = action.payload;
-    const response = yield call(API.deleteBranch, branch_id);
-    Logger.log('delete branch Data =>', response);
-    const { data, status } = response.data;
-
-    if (status === 'success') {
       const payload = {
         branch_id: Number(data.id),
         count: data.count ? data.count : 0,
       };
-      yield put(successDeleteBranchInfo(payload));
+
+      yield put(successRemoveBranch(payload));
+
+      return;
     }
+
+    const { error_msg } = response as ResponseFailureData;
+    yield put(failureRemoveBranch(error_msg));
+
+    alert(error_msg);
   } catch (error) {
-    console.log(error);
+    yield put(failureRemoveBranch(error.message));
   }
 }
 
-function* deleteTeamProcess(action: ReturnType<typeof requestDeleteTeamInfo>) {
+function* removeTeamProcess(action: ReturnType<typeof requestRemoveTeam>) {
+  const { branch_id, team_id } = action.payload;
   try {
-    const { branch_id, team_id } = action.payload;
-    const response = yield call(API.deleteTeam, branch_id, team_id);
-    Logger.log('delete team Data =>', response);
-    const { data, status } = response.data;
+    const response: ResponseSuccessData | ResponseFailureData = yield call(
+      ZMSOrganization.removeTeam,
+      branch_id,
+      team_id,
+    );
 
-    if (status === 'success') {
+    if (response.status === API_FETCH.SUCCESS) {
+      const { data } = response as ResponseSuccessData;
+
       const payload = {
         branch_id,
         team_id: Number(data.id),
         count: data.count || 0,
       };
-      yield put(successDeleteTeamInfo(payload));
+
+      yield put(successRemoveTeam(payload));
+
+      return;
     }
+
+    const { error_msg } = response as ResponseFailureData;
+    yield put(failureRemoveTeam(error_msg));
+
+    alert(error_msg);
   } catch (error) {
-    console.log(error);
+    yield put(failureRemoveTeam(error.message));
   }
 }
 
-function* watchGetBranchInfo() {
-  yield takeLatest(REQUEST_GET_BRANCH_INFO, getBranchInfoProcess);
+function* watchGetOrganization() {
+  yield takeLatest(REQUEST_GET_ORGANIZATION, getOrganizationProcess);
 }
 
-function* watchInsertBranch() {
-  yield takeLatest(REQUEST_ADD_BRANCH_INFO, insertBranch);
+function* watchAddBranch() {
+  yield takeLatest(REQUEST_ADD_BRANCH, addBranchProcess);
 }
 
-function* watchInsertTeam() {
-  yield takeLatest(REQUEST_ADD_TEAM_INFO, insertTeam);
+function* watchAddTeam() {
+  yield takeLatest(REQUEST_ADD_TEAM, addTeamProcess);
+}
+function* watchModifyBranch() {
+  yield takeLatest(REQUEST_MODIFY_BRANCH, modifyBranchProcess);
 }
 
-function* watchUpdateTeam() {
-  yield takeLatest(REQEUST_UPDATE_TEAM_INFO, updateTeam);
+function* watchModifyTeam() {
+  yield takeLatest(REQEUST_MODIFY_TEAM, modifyTeamProcess);
 }
 
-function* watchUpdateBranch() {
-  yield takeLatest(REQUEST_UPDATE_BRANCH_INFO, updateBranch);
+function* watchRemoveBranch() {
+  yield takeLatest(REQUEST_REMOVE_BRANCH, removeBranchProcess);
 }
 
-function* watchGetBranchList() {
-  yield takeLatest(REQUEST_GET_BRANCH_LIST, getBranchList);
+function* watchRemoveTeam() {
+  yield takeLatest(REQUEST_REMOVE_TEAM, removeTeamProcess);
 }
 
-function* watchGetTeamList() {
-  yield takeLatest(REQUEST_GET_TEAM_LIST, getTeamList);
+function* watchGetBranch() {
+  yield takeLatest(REQUEST_GET_BRANCH, getBranchProcess);
 }
 
-function* watchDeleteTeam() {
-  yield takeLatest(REQUEST_DELETE_TEAM_INFO, deleteTeamProcess);
-}
-
-function* watchDeleteBranch() {
-  yield takeLatest(REQUEST_DELETE_BRANCH_INFO, deleteBranchProcess);
+function* watchGetTeam() {
+  yield takeLatest(REQUEST_GET_TEAM, getTeamProcess);
 }
 
 function* branchSaga() {
   yield all([
-    fork(watchGetBranchInfo),
-    fork(watchInsertBranch),
-    fork(watchInsertTeam),
-    fork(watchUpdateTeam),
-    fork(watchUpdateBranch),
-    fork(watchGetBranchList),
-    fork(watchGetTeamList),
-    fork(watchDeleteTeam),
-    fork(watchDeleteBranch),
+    fork(watchGetOrganization),
+    fork(watchGetBranch),
+    fork(watchGetTeam),
+    fork(watchAddBranch),
+    fork(watchAddTeam),
+    fork(watchModifyBranch),
+    fork(watchModifyTeam),
+    fork(watchRemoveBranch),
+    fork(watchRemoveTeam),
   ]);
 }
 
