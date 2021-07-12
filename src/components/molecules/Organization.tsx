@@ -10,9 +10,8 @@ import { company, COMPANY_MAP } from 'utils/constants';
 
 const StyledWrapper = styled.div`
   /* Display */
-  width: 13.75rem;
+  width: 200px;
   height: 100%;
-  text-align: center;
   border-right: 1px solid
     ${company === COMPANY_MAP.DBLIFE ? COLORS.green : COLORS.light_blue};
   border-right: 1px solid
@@ -24,12 +23,12 @@ const StyledWrapper = styled.div`
 
 const StyledBranch = styled.div`
   /* Display */
-  padding-bottom: 1rem;
+  padding-bottom: 10px;
 `;
 
 const StyledTeam = styled.div`
   /* Display */
-  padding-bottom: 1rem;
+  padding-bottom: 10px;
 `;
 
 let isCtrl = false;
@@ -180,9 +179,9 @@ function Organization({
                         : branchIf.branch_name
                     }
                     placeholder={'지점명 입력'}
-                    width={11.25}
-                    height={2.5}
-                    borderWidth={2.5}
+                    width={18}
+                    height={4}
+                    borderWidth={2}
                     borderRadius={20}
                     borderColor={
                       company === COMPANY_MAP.DBLIFE
@@ -192,8 +191,9 @@ function Organization({
                         : COLORS.light_blue
                     }
                     textAlign={1}
-                    fontSize={0.87}
-                    fontWeight={800}
+                    fontFamily="NanumBarunGothic"
+                    fontSize={14}
+                    fontWeight={700}
                     onChange={onChangeInput}
                     onKeyDown={(e) =>
                       onKeyEvent(
@@ -225,13 +225,14 @@ function Organization({
                         : teamIf.team_name
                     }
                     placeholder={'팀명 입력'}
-                    width={11.25}
-                    height={2}
-                    borderWidth={2.5}
+                    width={18}
+                    height={4}
+                    borderWidth={2}
                     borderColor={COLORS.light_gray2}
                     textAlign={1}
-                    fontSize={0.87}
-                    fontWeight={800}
+                    fontFamily="NanumBarunGothic"
+                    fontSize={14}
+                    fontWeight={700}
                     onChange={onChangeInput}
                     onKeyUp={onKeyUp}
                     onKeyDown={(e) =>

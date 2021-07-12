@@ -60,7 +60,6 @@ const StyledInput = styled.input<StyledInputProps>`
     }
   }};
   font-stretch: normal;
-  line-height: 12px;
   letter-spacing: normal;
   box-sizing: border-box;
 
