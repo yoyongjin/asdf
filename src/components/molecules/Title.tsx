@@ -2,17 +2,15 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 
 import { Button, Select, Text } from 'components/atoms';
-import { SearchBar, PageCount } from 'components/molecules';
+import { SearchBar, PageCount, TextRange } from 'components/molecules';
 import { Colors } from 'utils/color';
 import constants, { COMPANY_TYPE } from 'utils/constants';
-import { getMaxPage } from 'utils/utils';
+import Utils from 'utils/new_utils';
 
 import DB_prevPageIcon from 'images/bt-page-pre.png';
 import DB_nextPageIcon from 'images/bt-page-next.png';
 import prevPageIcon from 'images/zms/bt-page-pre.png';
 import nextPageIcon from 'images/zms/bt-page-next.png';
-import TextRange from './TextRange';
-import Utils from 'utils/new_utils';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -85,10 +83,12 @@ function Title({
   selectData,
   volumeData,
   pageData,
+  leftBottomPixel,
+  rightBottomPixel,
 }: TitleProps) {
   return (
     <StyledWrapper>
-      <StyledBorderPostion pixel={13} float="left">
+      <StyledBorderPostion pixel={leftBottomPixel} float="left">
         <StyleTitle>
           <Text fontSize={18} fontWeight={800}>
             {children}
@@ -128,7 +128,7 @@ function Title({
           </StyledExplanation>
         ) : null}
       </StyledBorderPostion>
-      <StyledBorderPostion pixel={4} float="right">
+      <StyledBorderPostion pixel={rightBottomPixel} float="right">
         {isVolume ? (
           <>
             {[...Array(volumeData!.count)].map((values, index) => {
@@ -352,6 +352,8 @@ interface TitleProps {
   searchData?: SearchData;
   selectData?: SelectData;
   volumeData?: VolumeData;
+  leftBottomPixel: number;
+  rightBottomPixel: number;
 }
 
 Title.defaultProps = {
@@ -361,6 +363,8 @@ Title.defaultProps = {
   isSearch: false,
   isSelect: false,
   isVolume: false,
+  leftBottomPixel: 13,
+  rightBottomPixel: 4,
 };
 
 export default React.memo(Title);

@@ -48,6 +48,7 @@ function SearchBar({
           height={inputHeight}
           borderColor={borderColor}
           borderWidth={borderWidth}
+          fontSize={14}
           textAlign={1}
           logoImg={searchIcon}
           onChange={onChange}
@@ -63,6 +64,7 @@ function SearchBar({
         >
           <Text
             fontColor={Colors.white}
+            fontSize={14}
             fontFamily="NanumBarunGothic"
             fontWeight={700}
           >
