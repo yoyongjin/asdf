@@ -4,10 +4,11 @@ import styled from 'styled-components';
 import { Image } from 'components/atoms';
 import { PageCount } from 'components/molecules';
 import { getMaxPage } from 'utils/utils';
-import nextIcon from 'images/list-page-n@2x.png';
-import prevIcon from 'images/list-page-p@2x.png';
-import firstIcon from 'images/list-page-pp@2x.png';
-import endIcon from 'images/list-page-nn@2x.png';
+
+import nextIcon from 'images/list-page-n.png';
+import prevIcon from 'images/list-page-p.png';
+import firstIcon from 'images/list-page-pp.png';
+import endIcon from 'images/list-page-nn.png';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -48,16 +49,16 @@ function TablePagination({
         <StyledBlankSpace>
           <Image
             src={firstIcon}
-            width={1}
-            height={1}
+            width={16}
+            height={17}
             onClick={() => onClickPrevPage(curPage, count, true)}
           />
         </StyledBlankSpace>
         <StyledBlankSpace>
           <Image
             src={prevIcon}
-            width={1}
-            height={1}
+            width={11}
+            height={17}
             onClick={() => onClickPrevPage(curPage, count, false)}
           />
         </StyledBlankSpace>
@@ -73,16 +74,16 @@ function TablePagination({
         <StyledBlankSpace>
           <Image
             src={nextIcon}
-            width={1}
-            height={1}
+            width={11}
+            height={17}
             onClick={() => onClickNextPage(curPage, count, divide, false)}
           ></Image>
         </StyledBlankSpace>
         <StyledBlankSpace>
           <Image
             src={endIcon}
-            width={1}
-            height={1}
+            width={16}
+            height={17}
             onClick={() => onClickNextPage(curPage, count, divide, true)}
           ></Image>
         </StyledBlankSpace>

@@ -3,10 +3,9 @@ import styled from 'styled-components';
 
 import { Image, Text } from 'components/atoms';
 import { List } from 'components/molecules';
-import { COLORS } from 'utils/color';
-import { formatPhoneNumber } from 'utils/utils';
 import { UserInfo } from 'modules/types/user';
-import { BranchInfo, TeamInfo } from 'modules/types/branch';
+import { Colors } from 'utils/color';
+import { formatPhoneNumber } from 'utils/utils';
 
 const StyledWrapper = styled.td``;
 
@@ -17,7 +16,7 @@ const StyledProperty = styled.td`
 
   /* Display */
   height: calc(100% - 10px);
-  width: 2rem;
+  width: 5rem;
 `;
 
 const StyledList = styled.div`
@@ -25,7 +24,7 @@ const StyledList = styled.div`
   position: relative;
 
   /* Display */
-  width: 10rem;
+  width: 120px;
 `;
 
 const menuList = ['정보 수정', '비밀번호 초기화', '삭제'];
@@ -34,23 +33,15 @@ function TableProperty({
   info,
   optionIcon,
   optionHoverIcon,
-  branchList,
-  teamList,
-  adminList,
   page,
   branchId,
-  branchName,
   adminId,
   teamId,
-  getBranchList,
-  getTeamList,
   getUserInfo,
   onClickDeleteUser,
   onClickResetPassword,
-  onClickUpdateUser,
 }: TableContentProps) {
   const [isHover, setIsHover] = useState<boolean>(false);
-  // const { visible, onClickVisible } = useVisible();
 
   const onMouseIn = useCallback(() => {
     setIsHover(true);
@@ -84,8 +75,9 @@ function TableProperty({
         return (
           <StyledWrapper key={`styled-list-wrapper-${i}`}>
             <Text
-              fontColor={COLORS.dark_gray1}
-              fontSize={0.81}
+              fontColor={Colors.gray4}
+              fontFamily="NanumBarunGothic"
+              fontSize={13}
               fontWeight={700}
             >
               {key === 'admin_id'
@@ -121,26 +113,11 @@ function TableProperty({
         )}
         <Image
           src={optionIcon}
-          width={2}
-          height={2}
+          width={3.2}
+          height={3.2}
           hoverImg={optionHoverIcon}
         />
       </StyledProperty>
-      {/* <Modal
-        isVisible={visible}
-        Component={
-          <UserInfo
-            isVisible={visible}
-            onClickVisible={onClickVisible}
-            adminList={adminList}
-            data={info}
-            branchId={branchId}
-            branchName={branchName}
-            adminType={adminId}
-            onClickUpdateUser={onClickUpdateUser}
-          />
-        }
-      /> */}
     </>
   );
 }
@@ -153,28 +130,11 @@ interface TableContentProps {
   info: UserInfo;
   optionIcon: string;
   optionHoverIcon: string;
-  branchList: Array<BranchInfo>;
-  teamList: Array<TeamInfo>;
-  adminList: Array<SelectDataType>;
   page?: number;
   branchId?: number;
-  branchName?: string;
   adminId?: number;
   teamId?: number;
   getUserInfo?: (info: UserInfo) => void;
-  onClickUpdateUser: (
-    id: number,
-    branchId: number,
-    teamId: number,
-    admin: number,
-    name: string,
-    userId: string,
-    password: string,
-    tel: string,
-    ip: string,
-    mic: number,
-    spk: number,
-  ) => void;
   onClickDeleteUser: (
     id: number,
     page: number,
@@ -183,8 +143,6 @@ interface TableContentProps {
     adminId: number,
   ) => void;
   onClickResetPassword?: (id: number) => void;
-  getBranchList: () => void;
-  getTeamList: (branch_id: number) => void;
 }
 
 TableProperty.defaultProps = {};

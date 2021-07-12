@@ -5,7 +5,6 @@ import { RouteComponentProps } from 'react-router-dom';
 import { Modal } from 'components/atoms';
 import { Title, TablePagination, UserData } from 'components/molecules';
 import { Table } from 'components/organisms';
-import { TeamInfo, BranchInfo } from 'modules/types/branch';
 import useUser from 'hooks/useUser';
 import usePage from 'hooks/usePage';
 import useVisible from 'hooks/useVisible';
@@ -13,7 +12,7 @@ import useBranch from 'hooks/useBranch';
 import useInputForm from 'hooks/useInputForm';
 import useAuth from 'hooks/useAuth';
 import { UserInfo } from 'types/user';
-import { Colors, COLORS } from 'utils/color';
+import { Colors } from 'utils/color';
 import constants, { COMPANY_TYPE } from 'utils/constants';
 
 import optionIcon from 'images/bt-user-modi-nor@2x.png';
@@ -55,7 +54,7 @@ const adminList = [
 ];
 
 const tableTitle = [
-  // { title: 'No.', width: 7 },
+  { title: 'No.', width: 7 },
   { title: '지점명', width: 14 },
   { title: '팀명', width: 7 },
   { title: '권한', width: 7 },
@@ -63,6 +62,9 @@ const tableTitle = [
   { title: '아이디.', width: 14 },
   { title: '전화번호.', width: 14 },
   { title: 'ZiBox IP.', width: 20 },
+  { title: 'ZiBox Mac.', width: 20 },
+  { title: 'ZiBox Mic.', width: 7 },
+  { title: 'ZiBox Spk.', width: 7 },
   { title: '', width: 10 },
 ];
 
@@ -197,19 +199,6 @@ function UserView({ location }: UserViewProps) {
       ],
     };
   }, [form.search, onChangeInput, onClickSearch]);
-
-  const selectInfo = useMemo(() => {
-    return {
-      color: COLORS.dark_gray1,
-      borderRadius: 1,
-      borderColor: COLORS.dark_gray4,
-      data1: branchList as Array<BranchInfo>,
-      data2: teamList as Array<TeamInfo>,
-      width: 9.3,
-      height: 1.5,
-      paddingLeft: 16,
-    };
-  }, [branchList, teamList]);
 
   const getUsers2 = useCallback(
     (
@@ -364,6 +353,7 @@ function UserView({ location }: UserViewProps) {
             buttonData={buttonData}
             searchData={searchData}
             selectData={selectData}
+            rightBottomPixel={9}
           >
             사용자 관리
           </Title>
@@ -372,14 +362,10 @@ function UserView({ location }: UserViewProps) {
           <StyledUserList>
             <Table
               adminId={loginInfo.admin_id}
-              adminList={adminList}
               branchId={loginInfo.branch_id}
-              branchList={selectInfo.data1}
-              branchName={loginInfo.branch_name!}
               page={page}
               tableTitle={tableTitle}
               teamId={form.team}
-              teamList={selectInfo.data2}
               userInfo={
                 loginInfo.admin_id === 2
                   ? search.trim() && form.search.trim()
@@ -395,12 +381,9 @@ function UserView({ location }: UserViewProps) {
               }
               optionIcon={optionIcon}
               optionHoverIcon={optionHoverIcon}
-              getBranchList={getBranchList}
-              getTeamList={getTeamList}
               getUserInfo={getUserInfo}
               onClickDeleteUser={onClickDeleteUser}
               onClickResetPassword={onClickResetPassword}
-              onClickUpdateUser={onClickUpdateUser}
             />
           </StyledUserList>
           <StyledUserPage>

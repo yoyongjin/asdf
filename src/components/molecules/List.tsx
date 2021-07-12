@@ -2,19 +2,19 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { Text } from 'components/atoms';
-import { COLORS } from 'utils/color';
 import { UserInfo } from 'modules/types/user';
-
-import { company, COMPANY_MAP } from 'utils/constants';
+import { Colors } from 'utils/color';
+import { company, COMPANY_TYPE } from 'utils/constants';
 
 const StyledWrapper = styled.ul`
   /* Position */
+  right: 100px;
   position: absolute;
 
   /* Display */
-  width: 100%;
-  right: 10rem;
+  height: 40px;
   list-style-type: none;
+  width: 100%;
 `;
 
 const StyledContent = styled.li`
@@ -28,12 +28,13 @@ const StyledContent = styled.li`
   list-style-type: none;
 
   /* Color */
-  background-color: ${COLORS.dark_gray5};
+  background-color: ${Colors.gray8};
 
   &:hover {
-    background-color: ${company === COMPANY_MAP.DBLIFE || company === COMPANY_MAP.LINA
-      ? COLORS.light_green
-      : COLORS.light_blue3};
+    background-color: ${company === COMPANY_TYPE.DBLIFE ||
+    company === COMPANY_TYPE.LINA
+      ? Colors.green2
+      : Colors.blue5};
     cursor: pointer;
   }
 `;
@@ -70,7 +71,12 @@ function List({
               }
             }}
           >
-            <Text fontColor={COLORS.dark_gray1} fontWeight={600}>
+            <Text
+              fontColor={Colors.gray4}
+              fontFamily="NanumBarunGothic"
+              fontSize={13}
+              fontWeight={700}
+            >
               {title}
             </Text>
           </StyledContent>
