@@ -25,11 +25,11 @@ import {
   ConsultantAllStatusByNumber,
   ConsultantAllStatus,
   ChangeUser,
-  UserInfo,
   CallStatus,
   ZiboxStatus,
   ConsultantStatus,
   PhoneStatus,
+  UserData,
 } from 'types/user';
 import Logger from 'utils/log';
 import {
@@ -57,7 +57,7 @@ function useCommunicator() {
         Logger.log('onChangeStatusEventHandler', { type, data });
         let parseData: ConsultantAllStatusByNumber = {};
         let payload: ChangeUser;
-        let userInfo: UserInfo;
+        let userInfo: UserData;
 
         switch (type) {
           case 'all':
@@ -119,7 +119,7 @@ function useCommunicator() {
             dispatch(modifyUser(payload));
             break;
           case 'delete':
-            dispatch(deleteUser(data));
+            // dispatch(deleteUser(data));
             break;
           // case 'reset':
           //   dispatch(resetStatus(data));

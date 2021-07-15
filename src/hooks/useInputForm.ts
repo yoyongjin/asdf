@@ -29,22 +29,25 @@ function useInputForm<T>(initialForm: T) {
     [],
   );
 
-  const setKeyValue = useCallback((name: string, value: string | number) => {
-    setForm((form) => {
-      return produce(form, (draft) => {
-        (draft as any)[name] = value;
-      });
-    });
-  }, []);
-
   const setInitializedForm = useCallback((data: T) => {
     setForm(() => data);
   }, []);
 
+  const setSpecificValue = useCallback(
+    (name: string, value: string | number) => {
+      setForm((form) => {
+        return produce(form, (draft) => {
+          (draft as any)[name] = value;
+        });
+      });
+    },
+    [],
+  );
+
   return {
     form,
     onChangeInput,
-    setKeyValue,
+    setSpecificValue,
     setInitializedForm,
     onChangeSelect,
   };

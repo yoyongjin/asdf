@@ -1,4 +1,4 @@
-import { all, call, fork, put, takeLatest } from 'redux-saga/effects';
+import { all, call, delay, fork, put, takeLatest } from 'redux-saga/effects';
 
 import {
   requestGetUsers,
@@ -7,19 +7,18 @@ import {
   failureGetUsers,
   requestAddUser,
   REQUEST_ADD_USER,
-  requestUpdateUser,
-  REQUEST_UPDATE_USER,
-  requestDeleteUser,
-  REQUEST_DELETE_USER,
-  successGetFilterUsers,
-  requestResetPassword,
-  REQUEST_RESET_PASSWORD,
   successAddUser,
   failureAddUser,
-  successUpdateUser,
-  failureUpdateUser,
-  successDeleteUser,
-  failureDeleteUser,
+  requestModifyUser,
+  successModifyUser,
+  failureModifyUser,
+  REQUEST_MODIFY_USER,
+  requestRemoveUser,
+  REQUEST_REMOVE_USER,
+  successRemoveUser,
+  failureRemoveUser,
+  requestResetPassword,
+  REQUEST_RESET_PASSWORD,
   successResetPassword,
   failureResetPassword,
   REQUEST_ZIBOX_VOLUME,
@@ -35,19 +34,18 @@ import {
 import * as API from 'lib/api';
 import ZMSUser from 'lib/api/zms/user';
 import Socket from 'lib/socket';
-import Logger from 'utils/log';
 import { ResponseFailureData, ResponseSuccessData } from 'types/common';
 import { API_FETCH } from 'utils/constants';
 
 function* getUsersProcess(action: ReturnType<typeof requestGetUsers>) {
-  const { branchId, teamId, limit, page, search, url, adminId, loginId } =
-    action.payload;
+  const { branch_id, team_id, limit, page, search, url } = action.payload;
 
   try {
+    yield delay(500);
     const response: ResponseSuccessData | ResponseFailureData = yield call(
       ZMSUser.getUsers,
-      branchId,
-      teamId,
+      branch_id,
+      team_id,
       limit,
       page,
       search!,
@@ -89,10 +87,10 @@ function* addUserProcess(action: ReturnType<typeof requestAddUser>) {
     name,
     user_name,
     number,
-    zibox_ip,
-    zibox_mac,
-    zibox_mic,
-    zibox_spk,
+    ziboxip,
+    ziboxmac,
+    ziboxmic,
+    ziboxspk,
   } = action.payload;
 
   try {
@@ -104,10 +102,10 @@ function* addUserProcess(action: ReturnType<typeof requestAddUser>) {
       name,
       user_name,
       number,
-      zibox_ip,
-      zibox_mac,
-      zibox_mic,
-      zibox_spk,
+      ziboxip,
+      ziboxmac,
+      ziboxmic,
+      ziboxspk,
     );
 
     if (response.status === API_FETCH.SUCCESS) {
@@ -127,76 +125,115 @@ function* addUserProcess(action: ReturnType<typeof requestAddUser>) {
   }
 }
 
-function* modifyUserProcess(action: ReturnType<typeof requestUpdateUser>) {
+function* modifyUserProcess(action: ReturnType<typeof requestModifyUser>) {
   const {
-    user_id,
+    id,
     branch_id,
     team_id,
     admin_id,
     name,
     user_name,
-    password,
     number,
     ziboxip,
+    ziboxmac,
     ziboxmic,
     ziboxspk,
   } = action.payload;
+
   try {
-    yield call(
-      API.updateUser,
-      user_id,
+    const response: ResponseSuccessData | ResponseFailureData = yield call(
+      ZMSUser.modifyUser,
+      id,
       branch_id,
       team_id,
       admin_id,
       name,
       user_name,
-      password,
       number,
       ziboxip,
-      ziboxmic!,
-      ziboxspk!,
+      ziboxmac,
+      ziboxmic,
+      ziboxspk,
     );
-    yield put(successUpdateUser());
+
+    if (response.status === API_FETCH.SUCCESS) {
+      const { data } = response as ResponseSuccessData;
+
+      yield put(successModifyUser());
+
+      return;
+    }
+
+    const { error_msg } = response as ResponseFailureData;
+    yield put(failureModifyUser(error_msg));
+
+    alert(error_msg);
   } catch (error) {
-    console.log(error);
-    yield put(failureUpdateUser(error));
-    alert('동일한 전화번호, 아이디, 지박스 IP가 존재합니다.');
+    yield put(failureModifyUser(error.message));
   }
 }
 
-function* removeUserProcess(action: ReturnType<typeof requestDeleteUser>) {
-  try {
-    const { id, branchId, teamId, page, adminId } = action.payload;
+function* removeUserProcess(action: ReturnType<typeof requestRemoveUser>) {
+  const { id, branch_id, team_id, limit, page, search } = action.payload;
 
-    const response = yield call(API.deleteUser, id);
-    if (response.data.data) {
+  try {
+    const response: ResponseSuccessData | ResponseFailureData = yield call(
+      ZMSUser.removeUser,
+      id,
+    );
+
+    if (response.status === API_FETCH.SUCCESS) {
+      const { data } = response as ResponseSuccessData;
+
+      yield put(successRemoveUser());
+
       const payload = {
-        adminId,
-        branchId,
-        teamId,
-        limit: 5,
+        branch_id,
+        team_id,
+        limit,
         page,
+        search,
         url: '/main/manage/user',
       };
+
       yield put(requestGetUsers(payload));
-      yield put(successDeleteUser());
+
+      return;
     }
+
+    const { error_msg } = response as ResponseFailureData;
+    yield put(failureRemoveUser(error_msg));
+
+    alert(error_msg);
   } catch (error) {
-    console.log(error);
-    yield put(failureDeleteUser(error));
+    yield put(failureRemoveUser(error));
   }
 }
 
 function* resetPasswordProcess(
   action: ReturnType<typeof requestResetPassword>,
 ) {
+  const { id } = action.payload;
+
   try {
-    const { id } = action.payload;
-    yield call(API.resetPassword, id);
-    yield put(successResetPassword());
-    alert('초기 비밀번호는 0000 입니다.');
+    const response: ResponseSuccessData | ResponseFailureData = yield call(
+      ZMSUser.resetPassword,
+      id,
+    );
+
+    if (response.status === API_FETCH.SUCCESS) {
+      const { data } = response as ResponseSuccessData;
+
+      yield put(successResetPassword());
+
+      return;
+    }
+
+    const { error_msg } = response as ResponseFailureData;
+    yield put(failureRemoveUser(error_msg));
+
+    alert(error_msg);
   } catch (error) {
-    console.log(error);
     yield put(failureResetPassword(error));
   }
 }
@@ -266,11 +303,11 @@ function* watchAddUser() {
 }
 
 function* watchModifyUser() {
-  yield takeLatest(REQUEST_UPDATE_USER, modifyUserProcess);
+  yield takeLatest(REQUEST_MODIFY_USER, modifyUserProcess);
 }
 
 function* watchRemoveUser() {
-  yield takeLatest(REQUEST_DELETE_USER, removeUserProcess);
+  yield takeLatest(REQUEST_REMOVE_USER, removeUserProcess);
 }
 
 function* watchResetPassword() {

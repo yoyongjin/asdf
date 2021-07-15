@@ -12,4 +12,6 @@ function useVisible() {
   };
 }
 
+export type OnClickVisible = () => void;
+
 export default useVisible;

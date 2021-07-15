@@ -22,9 +22,11 @@ const StyledWrapper = styled.div`
   width: 200px;
   height: 100%;
   border-right: 1px solid
-    ${constants.COMPANY === COMPANY_TYPE.DBLIFE ? Colors.green1 : Colors.blue3};
-  border-right: 1px solid
-    ${constants.COMPANY === COMPANY_TYPE.LINA ? Colors.blue1 : Colors.blue3};
+    ${constants.COMPANY === COMPANY_TYPE.DBLIFE
+      ? Colors.green1
+      : COMPANY_TYPE.LINA
+      ? Colors.blue1
+      : Colors.blue3};
 
   /* Other */
   overflow: auto;
@@ -53,7 +55,9 @@ function Organization({
   index,
   organizationDataList,
 }: OrganizationProps) {
-  const { form, onChangeInput, setKeyValue } = useInputForm<DynamicJSON>({});
+  const { form, onChangeInput, setSpecificValue } = useInputForm<DynamicJSON>(
+    {},
+  );
   const inputRef = useRef<HTMLInputElement[]>([]) as React.MutableRefObject<
     HTMLInputElement[]
   >;
@@ -84,7 +88,7 @@ function Organization({
             if (!branchData.branch_name) {
               // 지점 입력이 처음일 때
               handleAddBranch(value);
-              setKeyValue(name, '');
+              setSpecificValue(name, '');
 
               return;
             } else {
@@ -96,9 +100,8 @@ function Organization({
 
             if (!teamData.team_name) {
               // 팀 입력이 처음일 때
-              console.log(teamData);
               handleAddTeam(teamData.branch_id, teamData.id, value);
-              setKeyValue(name, '');
+              setSpecificValue(name, '');
 
               return;
             } else {
@@ -160,7 +163,7 @@ function Organization({
       handleModifyTeam,
       handleRemoveBranch,
       handleRemoveTeam,
-      setKeyValue,
+      setSpecificValue,
     ],
   );
 

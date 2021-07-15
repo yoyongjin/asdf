@@ -117,7 +117,7 @@ export interface ConsultantInfoType extends UserInfo {
 
 export interface ChangeUser {
   branch_id: number;
-  userInfo: UserInfo;
+  userInfo: UserData;
 }
 
 /**
@@ -172,6 +172,15 @@ export interface ConsultantAllStatusByNumberV2 {
   [number: string]: ConsultantAllStatus_V2;
 }
 
+export interface RequestGetUsers {
+  branch_id: number;
+  team_id: number;
+  limit: number;
+  page: number;
+  search?: string;
+  url: string;
+}
+
 export interface RequestAddUser {
   branch_id: number;
   team_id: number;
@@ -179,8 +188,25 @@ export interface RequestAddUser {
   name: string;
   user_name?: string;
   number?: string;
-  zibox_ip?: string;
-  zibox_mac?: string;
-  zibox_mic?: number;
-  zibox_spk?: number;
+  ziboxip?: string;
+  ziboxmac?: string;
+  ziboxmic?: number;
+  ziboxspk?: number;
+}
+
+export interface RequestModifyUser extends RequestAddUser {
+  id: number;
+}
+
+export interface RequestRemoveUser {
+  id: number;
+  branch_id: number;
+  team_id: number;
+  limit: number;
+  page: number;
+  search: string;
+}
+
+export interface RequestResetPassword {
+  id: number;
 }

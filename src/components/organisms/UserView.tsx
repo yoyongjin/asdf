@@ -11,12 +11,10 @@ import useVisible from 'hooks/useVisible';
 import useOrganization from 'hooks/useOrganization';
 import useInputForm from 'hooks/useInputForm';
 import useAuth from 'hooks/useAuth';
-import { UserData as UserDataV2, UserInfo } from 'types/user';
+import { UserData as UserDataV2 } from 'types/user';
 import { Colors } from 'utils/color';
 import constants, { COMPANY_TYPE, USER_TYPE } from 'utils/constants';
 
-import optionIcon from 'images/bt-user-modi-nor@2x.png';
-import optionHoverIcon from 'images/bt-user-modi-over@2x.png';
 import DB_addUserImage from 'images/bt-add-u-1-nor.png';
 import addUserImage from 'images/zms/bt-add-u-1-nor.png';
 
@@ -53,18 +51,16 @@ const adminList = [
   { id: 1, data: '관리자' },
 ];
 
-const tableTitle = [
+const tableTitles = [
   // { title: 'No.', width: 7 },
-  { title: '지점명', width: 14 },
-  { title: '팀명', width: 7 },
-  { title: '권한', width: 7 },
-  { title: '이름.', width: 7 },
-  { title: '아이디.', width: 14 },
-  { title: '전화번호.', width: 14 },
-  { title: 'ZiBox IP.', width: 20 },
-  { title: 'ZiBox Mac.', width: 20 },
-  { title: 'ZiBox Mic.', width: 7 },
-  { title: 'ZiBox Spk.', width: 7 },
+  { title: '지점명', width: 10 },
+  { title: '팀명', width: 10 },
+  { title: '권한', width: 5 },
+  { title: '이름.', width: 5 },
+  { title: '아이디.', width: 15 },
+  { title: '전화번호.', width: 15 },
+  { title: 'ZiBox IP.', width: 15 },
+  { title: 'ZiBox Mac.', width: 15 },
   { title: '', width: 10 },
 ];
 
@@ -74,32 +70,28 @@ const userCountData = [
   { id: 15, data: 15 },
 ];
 
-let currentPage = 0;
-
 function UserView({ location }: UserViewProps) {
-  const [tempUserInfo, setTempUserInfo] = useState<UserDataV2>();
+  const [selectedConsultant, setSelectedConsultant] = useState<UserDataV2>();
   const [search, setSearch] = useState<string>('');
   const { loginInfo } = useAuth();
   const { branches, teams, getBranches, getTeams } = useOrganization();
-  const { form, onChangeSelect, onChangeInput, setKeyValue } = useInputForm({
-    userListCount: 5,
-    branch: -1,
-    team: -1,
-    search: '',
-  });
+  const { form, onChangeSelect, onChangeInput, setSpecificValue } =
+    useInputForm({
+      userCount: 15,
+      branch: -1,
+      team: -1,
+      search: '',
+    });
   const {
     userInfo,
-    filterUserInfo,
     getUsers,
-    resetFilteredList,
     onClickAddUser,
-    onClickUpdateUser,
-    onClickDeleteUser,
+    onClickModifyUser,
+    onClickRemoveUser,
     onClickResetPassword,
   } = useUser();
   const {
     countUser,
-    filterCountUser,
     page,
     onChangeCurrentPage,
     onChangePageFirst,
@@ -146,8 +138,8 @@ function UserView({ location }: UserViewProps) {
         ],
         info: [
           {
-            id: form.userListCount,
-            name: 'user',
+            id: form.userCount,
+            name: 'userCount',
             click: onChangeSelect,
           },
           {
@@ -189,8 +181,8 @@ function UserView({ location }: UserViewProps) {
       ],
       info: [
         {
-          id: form.userListCount,
-          name: 'user',
+          id: form.userCount,
+          name: 'userCount',
           click: onChangeSelect,
         },
         {
@@ -209,7 +201,7 @@ function UserView({ location }: UserViewProps) {
     branches,
     form.branch,
     form.team,
-    form.userListCount,
+    form.userCount,
     loginInfo.admin_id,
     loginInfo.branch_id,
     onChangeSelect,
@@ -266,98 +258,81 @@ function UserView({ location }: UserViewProps) {
     [getUsers],
   );
 
-  const getUserInfo = useCallback(
-    (info?: UserDataV2) => {
-      // 사용자 등록, 수정 눌렀을 때 타는 로직
-      setTempUserInfo(info);
+  const setSeletedConsultantData = useCallback(
+    (userInfo: UserDataV2) => {
+      setSelectedConsultant(userInfo);
       onClickVisible();
     },
-    [setTempUserInfo, onClickVisible],
+    [onClickVisible],
   );
 
-  useEffect(() => {
-    if (loginInfo.admin_id === 2) {
-      // 슈퍼관리자
-      // if (form.branch === -1 && filterUserInfo.length > 0) {
-      //   // 필터링된 유저 리스트에서 전체 지점명을 볼 경우 필터링된 유저 리스트 초기화
-      //   if (search.trim() && currentPage === page) {
-      //     if (!form.search.trim() && form.search !== search) {
-      //       // 실제 검색 내용과 입력중
-      //       setSearch('');
-      //     }
-      //     return;
-      //   }
-      //   resetFilteredList(1);
-      // }
-
-      // if (form.search.trim() !== search.trim() && currentPage === page) {
-      //   // 실제 검색 내용과 입력한 내용이 다를 경우
-      //   if (!form.search.trim() && search.trim()) {
-      //     setSearch('');
-      //   }
-      //   return;
-      // }
-
-      getUsers2(
-        form.branch,
-        form.team,
-        form.userListCount,
-        page,
-        location.pathname,
-        search,
-        loginInfo.admin_id,
-      );
-      currentPage = page;
-    } else if (loginInfo.admin_id === 1) {
-      // 일반 관리자
-      // if (form.team === -1 && filterUserInfo.length > 0) {
-      //   // 필터링된 유저 리스트에서 전체 지점명을 볼 경우 필터링된 유저 리스트 초기화
-      //   if (search.trim() && currentPage === page) {
-      //     if (!form.search.trim() && form.search !== search) {
-      //       // 실제 검색 내용과 입력중
-      //       setSearch('');
-      //     }
-      //     return;
-      //   }
-      //   resetFilteredList(1);
-      // }
-
-      // if (form.search.trim() !== search.trim() && currentPage === page) {
-      //   // 실제 검색 내용과 입력한 내용이 다를 경우
-      //   if (!form.search.trim() && search.trim()) {
-      //     setSearch('');
-      //   }
-      //   return;
-      // }
-
-      getUsers2(
-        loginInfo.branch_id,
-        form.team,
-        form.userListCount,
-        page,
-        location.pathname,
-        search,
-        loginInfo.admin_id,
-      );
-      currentPage = page;
-    }
+  const tableContents = useMemo(() => {
+    return {
+      data: userInfo,
+      click: [
+        setSeletedConsultantData,
+        onClickResetPassword,
+        onClickRemoveUser,
+      ],
+      option: {
+        currentBranchId: form.branch,
+        currentPage: page,
+        currentSearchText: form.search,
+        currentTeamId: form.team,
+        currentLimit: form.userCount,
+      },
+      type: 'user',
+    };
   }, [
-    loginInfo.admin_id,
-    loginInfo.branch_id,
-    form.userListCount,
     form.branch,
-    form.team,
     form.search,
-    search,
+    form.team,
+    form.userCount,
+    onClickRemoveUser,
+    onClickResetPassword,
     page,
-    filterUserInfo.length,
-    location.pathname,
-    getUsers2,
-    resetFilteredList,
+    setSeletedConsultantData,
+    userInfo,
   ]);
 
   useEffect(() => {
     if (loginInfo.admin_id === 2) {
+      // 슈퍼관리자
+      getUsers2(
+        form.branch,
+        form.team,
+        form.userCount,
+        page,
+        location.pathname,
+        form.search,
+        loginInfo.admin_id,
+      );
+    } else if (loginInfo.admin_id === 1) {
+      // 일반 관리자
+      getUsers2(
+        loginInfo.branch_id,
+        form.team,
+        form.userCount,
+        page,
+        location.pathname,
+        form.search,
+        loginInfo.admin_id,
+      );
+    }
+  }, [
+    form.branch,
+    form.search,
+    form.team,
+    form.userCount,
+    getUsers2,
+    location.pathname,
+    loginInfo.admin_id,
+    loginInfo.branch_id,
+    page,
+  ]);
+
+  useEffect(() => {
+    if (loginInfo.admin_id === USER_TYPE.SUPER_ADMIN) {
       // 슈퍼관리자일 경우에만 지점명 리스트 가져오기
       getBranches();
     }
@@ -365,32 +340,21 @@ function UserView({ location }: UserViewProps) {
 
   useEffect(() => {
     // 관리자의 권한에 따라 팀명 리스트 다르게 가져오기
-    if (loginInfo.admin_id === 2) {
+    if (loginInfo.admin_id === USER_TYPE.SUPER_ADMIN) {
       getTeams(form.branch);
-    } else if (loginInfo.admin_id === 1) {
+    } else if (loginInfo.admin_id === USER_TYPE.ADMIN) {
       getTeams(loginInfo.branch_id);
     }
-  }, [loginInfo.admin_id, loginInfo.branch_id, form.branch, getTeams]);
+  }, [form.branch, getTeams, loginInfo.admin_id, loginInfo.branch_id]);
 
   useEffect(() => {
-    // 지점명이 변경될 때 team id 초기화
-    setKeyValue('team', -1);
-  }, [form.branch, setKeyValue]);
+    // 지점명 변경 시 팀 id 초기화
+    setSpecificValue('team', -1);
+  }, [form.branch, setSpecificValue]);
 
   useEffect(() => {
-    // 페이지가 이동된 상태에서 지점명이나 팀명을 필터링했을 때, 현재 페이지를 변경시키는 부분
-    if (filterCountUser > 0) {
-      onChangeCurrentPage(page, filterCountUser, form.userListCount);
-    } else {
-      onChangeCurrentPage(page, countUser, form.userListCount);
-    }
-  }, [
-    countUser,
-    filterCountUser,
-    page,
-    form.userListCount,
-    onChangeCurrentPage,
-  ]);
+    onChangeCurrentPage(page, countUser, form.userCount);
+  }, [countUser, form.userCount, onChangeCurrentPage, page]);
 
   return (
     <>
@@ -410,46 +374,12 @@ function UserView({ location }: UserViewProps) {
         </StyledTitle>
         <StyledUserListArea>
           <StyledUserList>
-            <Table
-              adminId={loginInfo.admin_id}
-              branchId={loginInfo.branch_id}
-              page={page}
-              tableTitle={tableTitle}
-              teamId={form.team}
-              userInfo={
-                loginInfo.admin_id === 2
-                  ? search.trim() && form.search.trim()
-                    ? userInfo
-                    : // filterUserInfo
-                    form.branch === -1 && form.team === -1
-                    ? userInfo
-                    : userInfo
-                  : //filterUserInfo
-                  search.trim() && form.search.trim()
-                  ? userInfo
-                  : //filterUserInfo
-                  form.team === -1
-                  ? userInfo
-                  : userInfo
-                //filterUserInfo
-              }
-              optionIcon={optionIcon}
-              optionHoverIcon={optionHoverIcon}
-              getUserInfo={getUserInfo}
-              onClickDeleteUser={onClickDeleteUser}
-              onClickResetPassword={onClickResetPassword}
-            />
+            <Table contents={tableContents} titles={tableTitles} />
           </StyledUserList>
           <StyledUserPage>
             <TablePagination
-              count={
-                search.trim() && form.search.trim()
-                  ? filterCountUser
-                  : form.branch !== -1
-                  ? filterCountUser
-                  : countUser
-              }
-              divide={form.userListCount}
+              count={countUser}
+              divide={form.userCount}
               curPage={page}
               onClickNextPage={onClickNextPage}
               onClickPrevPage={onClickPrevPage}
@@ -461,15 +391,13 @@ function UserView({ location }: UserViewProps) {
         isVisible={visible}
         Component={
           <UserData
-            adminId={loginInfo.admin_id}
             adminList={adminList}
-            branchId={loginInfo.branch_id}
-            branchName={loginInfo.branch_name!}
-            userData={tempUserInfo}
+            loginData={loginInfo}
             isVisible={visible}
-            onClickVisible={getUserInfo}
             onClickAddUser={onClickAddUser}
-            onClickUpdateUser={onClickUpdateUser}
+            onClickModifyUser={onClickModifyUser}
+            onClickVisible={onClickVisible}
+            userData={selectedConsultant}
           />
         }
       />
@@ -479,6 +407,27 @@ function UserView({ location }: UserViewProps) {
 
 interface UserViewProps extends RouteComponentProps {}
 
+export type SetSeletedConsultantData = (consultantData: UserDataV2) => void;
+
+export interface TableTitleData {
+  title: string;
+  width: number;
+}
+
+export interface TableContentData {
+  click?: Array<any>;
+  data: Array<any>;
+  option?: TableContentOption;
+  type: string;
+}
+
+export interface TableContentOption {
+  currentBranchId?: number;
+  currentPage?: number;
+  currentSearchText?: string;
+  currentTeamId?: number;
+  currentLimit?: number;
+}
 UserView.defaultProps = {};
 
 export default UserView;

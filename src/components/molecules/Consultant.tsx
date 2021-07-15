@@ -18,6 +18,7 @@ import {
   CONSULTANT_STATUS,
   ZIBOX_TRANSPORT,
   ZIBOX_MONIT_STATUS,
+  PHONE_STATUS,
 } from 'utils/constants';
 import { getHourMinSecV1 } from 'utils/utils';
 
@@ -235,7 +236,7 @@ function Consultant({
               <Button
                 width={7.5}
                 height={2.6}
-                bgColor={'inherit'}
+                bgColor="inherit"
                 image={tappingIcon}
                 borderRadius={0.81}
               >
@@ -251,7 +252,7 @@ function Consultant({
             <Button
               width={7.5}
               height={2.6}
-              bgColor={'inherit'}
+              bgColor="inherit"
               image={startTappingIcon}
               onClick={handleTapping}
             >
@@ -270,7 +271,7 @@ function Consultant({
                 <Button
                   width={7.5}
                   height={2.6}
-                  bgColor={'inherit'}
+                  bgColor="inherit"
                   image={stopTappingIcon}
                   borderRadius={0.81}
                   onClick={handleTapping}
@@ -286,7 +287,7 @@ function Consultant({
                 <Button
                   width={7.5}
                   height={2.6}
-                  bgColor={'inherit'}
+                  bgColor="inherit"
                   image={tappingIcon}
                   borderRadius={0.81}
                 >
@@ -304,7 +305,37 @@ function Consultant({
   );
 
   const handleConsultantStatus = useCallback(
-    (callStatus: number, consultantStatus: number) => {
+    (callStatus: number, consultantStatus: number, phoneStatus: number) => {
+      // 기준은 phoneStatus
+      switch (phoneStatus) {
+        case PHONE_STATUS.NOTHING:
+          return (
+            <Text fontColor={Colors.gray4} fontWeight={700}>
+              {consultantStatus === CONSULTANT_STATUS.LOGOUT
+                ? '로그아웃'
+                : '미연결'}
+            </Text>
+          );
+        case PHONE_STATUS.WEB:
+          return (
+            <Text fontColor={Colors.gray4} fontWeight={700}>
+              {consultantStatus === CONSULTANT_STATUS.LOGOUT
+                ? '로그아웃'
+                : '미연결'}
+            </Text>
+          );
+        case PHONE_STATUS.PHONE:
+          return (
+            <Text fontColor={Colors.gray4} fontWeight={700}>
+              {consultantStatus === CONSULTANT_STATUS.LOGOUT
+                ? '로그아웃'
+                : '미연결'}
+            </Text>
+          );
+        default:
+          break;
+      }
+
       switch (callStatus) {
         case CALL_STATUS_V2.IDLE:
           return (
@@ -356,6 +387,7 @@ function Consultant({
         {handleConsultantStatus(
           consultInfo.call?.status!,
           consultInfo.consultant?.status!,
+          consultInfo.phone?.connection!,
         )}
         <Text
           fontColor={

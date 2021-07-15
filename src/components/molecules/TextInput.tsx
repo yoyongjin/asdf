@@ -8,92 +8,95 @@ const StyledWrapper = styled.div`
   padding-bottom: 20px;
   min-width: 170px;
 `;
-const StyledBlank = styled.span<BlankProps>`
+const StyledBlank = styled.span<StyledBlankProps>`
   padding-left: 0.5rem;
   padding-right: ${(props) =>
     props.padRight ? `${props.padRight}px` : '0.5rem'};
 `;
 
 function TextInput({
+  inputBorderRadius,
+  inputCustomStyle,
+  inputDisabled,
+  inputHeight,
+  inputImage,
+  inputMaxLength,
+  inputName,
+  inputOnChange,
+  inputPlaceHolder,
+  inputSize,
+  inputType,
+  inputValue,
+  inputWeight,
+  inputWidth,
+  padRight,
+  textColor,
+  textSize,
   textValue,
   textWeight,
-  inputWidth,
-  inputRadius,
-  inputPh,
-  padRight,
-  height,
-  customStyle,
-  onChange,
-  name,
-  value,
-  type,
-  image,
-  fontSize,
-  fontWeight,
-  textColor,
-  inputMaxLength,
-  disabled,
 }: TextInputProps) {
   return (
     <StyledWrapper>
-      <Text fontSize={fontSize} fontWeight={textWeight} fontColor={textColor}>
+      <Text fontColor={textColor} fontSize={textSize} fontWeight={textWeight}>
         {textValue}
       </Text>
       <StyledBlank padRight={padRight} />
       <Input
-        name={name}
-        type={type}
-        customStyle={customStyle}
-        height={height}
-        width={inputWidth}
-        borderRadius={inputRadius}
-        placeholder={inputPh}
-        onChange={onChange}
-        value={value}
-        logoImg={image}
-        fontSize={fontSize}
-        fontWeight={fontWeight}
-        disabled={disabled}
+        borderRadius={inputBorderRadius}
+        customStyle={inputCustomStyle}
+        disabled={inputDisabled}
+        fontSize={inputSize}
+        fontWeight={inputWeight}
+        height={inputHeight}
+        logoImg={inputImage}
         maxLength={inputMaxLength}
+        name={inputName}
+        onChange={inputOnChange}
+        placeholder={inputPlaceHolder}
+        type={inputType}
+        value={inputValue}
+        width={inputWidth}
       />
     </StyledWrapper>
   );
 }
 
-interface BlankProps {
+interface StyledBlankProps {
   padRight?: number;
 }
 
-interface TextInputProps extends BlankProps {
+interface TextInputProps extends StyledBlankProps {
+  inputBorderRadius: number;
+  inputCustomStyle?: string;
+  inputDisabled: boolean;
+  inputHeight?: number;
+  inputImage?: string;
+  inputMaxLength?: number;
+  inputName: string;
+  inputOnChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  inputPlaceHolder: string;
+  inputSize: number;
+  inputType?: string;
+  inputValue: string;
+  inputWeight: number | string;
+  inputWidth: number;
+  textColor: string;
+  textSize: number;
   textValue: string;
   textWeight: string;
-  inputWidth: number;
-  inputRadius: number;
-  inputPh: string;
-  textColor: string;
-  height?: number;
-  customStyle?: string;
-  name: string;
-  value: string;
-  type?: string;
-  image?: string;
-  fontSize: number;
-  fontWeight: number | string;
-  disabled: boolean;
-  inputMaxLength?: number;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 TextInput.defaultProps = {
+  inputBorderRadius: 0,
+  inputDisabled: false,
+  inputPlaceHolder: '',
+  inputSize: 1,
+  inputType: 'input',
+  inputWeight: 700,
   inputWidth: 7,
-  inputRadius: 0,
-  inputPh: '',
   textColor: Colors.gray9,
+  textSize: 1,
   textWeight: 600,
-  type: 'input',
-  fontSize: 1,
-  fontWeight: 700,
-  disabled: false,
 };
 
 export default TextInput;

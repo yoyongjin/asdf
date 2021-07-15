@@ -122,11 +122,24 @@ export enum USER_TYPE {
   SUPER_ADMIN = 2,
 }
 
+export enum PHONE_STATUS {
+  NOTHING = 0,
+  WEB = 1,
+  PHONE = 2,
+  ALL = 3,
+}
+
 export enum ZIBOX_EVENT_TYPE {
   CONNECTION_INFO = 'connection_info',
   VOLUME_INFO = 'vol_info',
   MONITORING_INFO = 'mon_info',
 }
+
+export const REG_EXR = {
+  ip: /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
+  mac: /([0-9a-fA-F]{2}-){5}[0-9a-fA-F]{2}/,
+  id: /^[A-Za-z0-9]{4,32}$/,
+};
 
 export default {
   NODE_ENV: process.env.NODE_ENV,

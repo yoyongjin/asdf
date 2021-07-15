@@ -81,60 +81,60 @@ export const resetPassword = (id: number) =>
 //     },
 //   });
 
-export const insertUser = (
-  branch_id: string,
-  team_id: string,
-  admin_id: string,
-  name: string,
-  user_name: string,
-  user_pass: string,
-  number: string,
-  ziboxip: string,
-) =>
-  instance.post('/api/auth/signup', {
-    branch_id,
-    team_id,
-    admin_id,
-    name,
-    user_name,
-    user_pass,
-    number,
-    ziboxip,
-  });
+// export const insertUser = (
+//   branch_id: string,
+//   team_id: string,
+//   admin_id: string,
+//   name: string,
+//   user_name: string,
+//   user_pass: string,
+//   number: string,
+//   ziboxip: string,
+// ) =>
+//   instance.post('/api/auth/signup', {
+//     branch_id,
+//     team_id,
+//     admin_id,
+//     name,
+//     user_name,
+//     user_pass,
+//     number,
+//     ziboxip,
+//   });
 
-export const updateUser = (
-  user_id: string,
-  branch_id: string,
-  team_id: string,
-  admin_id: string,
-  name: string,
-  user_name: string,
-  user_pass: string,
-  number: string,
-  ziboxip: string,
-  ziboxmic: number,
-  ziboxspk: number,
-) =>
-  instance.patch('/api/auth', {
-    user_id,
-    branch_id,
-    team_id,
-    admin_id,
-    name,
-    user_name,
-    user_pass,
-    number,
-    ziboxip,
-    ziboxmic,
-    ziboxspk,
-  });
+// export const updateUser = (
+//   user_id: string,
+//   branch_id: string,
+//   team_id: string,
+//   admin_id: string,
+//   name: string,
+//   user_name: string,
+//   user_pass: string,
+//   number: string,
+//   ziboxip: string,
+//   ziboxmic: number,
+//   ziboxspk: number,
+// ) =>
+//   instance.patch('/api/auth', {
+//     user_id,
+//     branch_id,
+//     team_id,
+//     admin_id,
+//     name,
+//     user_name,
+//     user_pass,
+//     number,
+//     ziboxip,
+//     ziboxmic,
+//     ziboxspk,
+//   });
 
-export const deleteUser = (id: number) =>
-  instance.delete('/api/auth', {
-    data: {
-      user_id: id,
-    },
-  });
+// export const deleteUser = (id: number) =>
+//   instance.delete('/api/auth', {
+//     data: {
+//       user_id: id,
+//     },
+//   });
 
 // export const deleteTeam = (branchId: number, teamId: number) =>
 //   instance.delete(`/api/team/${teamId}`, {

@@ -32,6 +32,7 @@ const StyledOption = styled.option<StyledOptionProps>`
 `;
 
 function Select({
+  disabled,
   defaultValue,
   name,
   options,
@@ -43,6 +44,7 @@ function Select({
       name={name}
       value={defaultValue}
       onChange={onChange}
+      disabled={disabled}
       {...rest}
     >
       {options?.map((option, i) => {
@@ -77,6 +79,7 @@ interface StyledOptionProps {
 }
 
 interface SelectProps extends StyledSelectProps {
+  disabled: boolean;
   defaultValue?: number;
   name: string;
   options?: Array<{ id: number; data: string }>;
@@ -86,6 +89,7 @@ interface SelectProps extends StyledSelectProps {
 Select.defaultProps = {
   borderRadius: 6,
   borderWidth: 1,
+  disabled: false,
   height: 30,
   optionFontColor: Colors.gray10,
   paddingLeft: 6,

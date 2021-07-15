@@ -4,8 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   requestGetUsers,
   requestAddUser,
-  requestUpdateUser,
-  requestDeleteUser,
+  requestModifyUser,
+  requestRemoveUser,
   requestResetPassword,
   resetFilteredUser,
   resetFilteredConsultant,
@@ -19,12 +19,6 @@ function useUser() {
   const consultantInfo = useSelector(
     (state: RootState) => state.user.consultant,
   ); // 상담원 정보
-  const filterUserInfo = useSelector(
-    (state: RootState) => state.user.filterUserList.users,
-  ); // 필터링된 전체 유저 정보
-  const filterConsultantInfo = useSelector(
-    (state: RootState) => state.user.filterUserList.consultants,
-  ); // 필터링된 상담원 정보
 
   const dispatch = useDispatch();
 
@@ -40,8 +34,8 @@ function useUser() {
       loginId?: number,
     ) => {
       const payload = {
-        branchId,
-        teamId,
+        branch_id: branchId,
+        team_id: teamId,
         limit: limit || LIMIT,
         page: page || PAGE,
         search,
@@ -49,18 +43,8 @@ function useUser() {
         adminId,
         loginId,
       };
-      dispatch(requestGetUsers(payload));
-    },
-    [dispatch],
-  );
 
-  const resetFilteredList = useCallback(
-    (type: number) => {
-      if (type === 1) {
-        dispatch(resetFilteredUser());
-      } else if (type === 2) {
-        dispatch(resetFilteredConsultant());
-      }
+      dispatch(requestGetUsers(payload));
     },
     [dispatch],
   );
@@ -78,56 +62,76 @@ function useUser() {
       mic?: number,
       spk?: number,
     ) => {
-      // let number = tel.replace(/-/g, '');
       const payload = {
         branch_id: branchId,
         team_id: teamId,
         admin_id: adminId,
         name,
         user_name: userName,
-        number,
-        zibox_ip: ip,
-        zibox_mac: mac,
-        zibox_mic: mic,
-        zibox_spk: spk,
+        number: number?.replace(/-/g, ''),
+        ziboxip: ip,
+        ziboxmac: mac,
+        ziboxmic: mic,
+        ziboxspk: spk,
       };
-
-      console.log(payload);
 
       dispatch(requestAddUser(payload));
     },
     [dispatch],
   );
 
-  const onClickUpdateUser = useCallback(
+  const onClickModifyUser = useCallback(
     (
       id: number,
       branchId: number,
       teamId: number,
-      admin: number,
+      adminId: number,
       name: string,
-      userId: string,
-      password: string,
-      tel: string,
-      ip: string,
-      mic: number,
-      spk: number,
+      userName?: string,
+      number?: string,
+      ip?: string,
+      mac?: string,
+      mic?: number,
+      spk?: number,
     ) => {
-      let number = tel.replace(/-/g, '');
       const payload = {
-        user_id: String(id),
-        branch_id: String(branchId),
-        team_id: String(teamId),
-        admin_id: String(admin),
+        id,
+        branch_id: branchId,
+        team_id: teamId,
+        admin_id: adminId,
         name,
-        user_name: userId,
-        password,
-        number,
+        user_name: userName,
+        number: number?.replace(/-/g, ''),
         ziboxip: ip,
+        ziboxmac: mac,
         ziboxmic: mic,
         ziboxspk: spk,
       };
-      dispatch(requestUpdateUser(payload));
+
+      dispatch(requestModifyUser(payload));
+    },
+    [dispatch],
+  );
+
+  const onClickRemoveUser = useCallback(
+    (
+      id: number,
+      branchId: number,
+      teamId: number,
+      limit: number,
+      page: number,
+      search: string,
+    ) => {
+      const payload = {
+        id,
+        branch_id: branchId,
+        team_id: teamId,
+        limit,
+        page,
+        search,
+      };
+
+      dispatch(requestRemoveUser(payload));
     },
     [dispatch],
   );
@@ -137,21 +141,8 @@ function useUser() {
       const payload = {
         id,
       };
-      dispatch(requestResetPassword(payload));
-    },
-    [dispatch],
-  );
 
-  const onClickDeleteUser = useCallback(
-    (id: number, page: number, branchId = -1, teamId = -1, adminId: number) => {
-      const payload = {
-        id,
-        page,
-        branchId,
-        teamId,
-        adminId,
-      };
-      dispatch(requestDeleteUser(payload));
+      dispatch(requestResetPassword(payload));
     },
     [dispatch],
   );
@@ -169,13 +160,10 @@ function useUser() {
   return {
     userInfo,
     consultantInfo,
-    filterUserInfo,
-    filterConsultantInfo,
     getUsers,
-    resetFilteredList,
     onClickAddUser,
-    onClickUpdateUser,
-    onClickDeleteUser,
+    onClickModifyUser,
+    onClickRemoveUser,
     onClickResetPassword,
     onClickDisconnect,
   };
@@ -193,5 +181,30 @@ export type OnClickAddUser = (
   mic?: number,
   spk?: number,
 ) => void;
+
+export type OnClickModifyUser = (
+  id: number,
+  branchId: number,
+  teamId: number,
+  adminId: number,
+  name: string,
+  userName?: string,
+  number?: string,
+  ip?: string,
+  mac?: string,
+  mic?: number,
+  spk?: number,
+) => void;
+
+export type OnClickRemoveUser = (
+  id: number,
+  branchId: number,
+  teamId: number,
+  limit: number,
+  page: number,
+  search: string,
+) => void;
+
+export type OnClickResetPassword = (id: number) => void;
 
 export default useUser;

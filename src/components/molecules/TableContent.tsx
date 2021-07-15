@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { TableProperty } from 'components/molecules';
-import { UserInfo } from 'modules/types/user';
+import { UserProperty } from 'components/molecules';
 import { Colors } from 'utils/color';
-import { UserData } from 'types/user';
+import { LoginData } from 'types/auth';
+import { TableContentData } from 'components/organisms/UserView';
 
 const StyledWrapper = styled.tr`
   width: 100%;
@@ -12,60 +12,33 @@ const StyledWrapper = styled.tr`
   border-bottom: 1px solid ${Colors.gray7};
 `;
 
-function TableContent({
-  adminId,
-  branchId,
-  page,
-  teamId,
-  userInfo,
-  optionIcon,
-  optionHoverIcon,
-  getUserInfo,
-  onClickDeleteUser,
-  onClickResetPassword,
-}: TableContentProps) {
+function TableContent({ contents }: TableContentProps) {
   return (
     <>
-      {userInfo.map((user, i) => {
-        return (
-          <StyledWrapper key={`styled-property-${i}`}>
-            <TableProperty
-              key={`table-property-${i}`}
-              adminId={adminId}
-              branchId={branchId!}
-              info={user}
-              page={page!}
-              teamId={teamId!}
-              optionIcon={optionIcon}
-              optionHoverIcon={optionHoverIcon}
-              getUserInfo={getUserInfo!}
-              onClickDeleteUser={onClickDeleteUser!}
-              onClickResetPassword={onClickResetPassword!}
-            />
-          </StyledWrapper>
-        );
+      {contents.data.map((data, i) => {
+        if (contents.type === 'user') {
+          return (
+            <StyledWrapper key={`styled-property-${i}`}>
+              <UserProperty
+                key={`table-property-${i}`}
+                userData={data}
+                options={contents.option!}
+                onClickUserDataPopup={contents.click![0]}
+                onClickRemoveUser={contents.click![2]}
+                onClickResetPassword={contents.click![1]}
+              />
+            </StyledWrapper>
+          );
+        } else if (contents.type === 'manager') {
+          return null;
+        }
       })}
     </>
   );
 }
 
 interface TableContentProps {
-  adminId?: number;
-  branchId?: number;
-  page?: number;
-  teamId?: number;
-  userInfo: Array<UserData>;
-  optionIcon: string;
-  optionHoverIcon: string;
-  getUserInfo?: (info: UserData) => void;
-  onClickDeleteUser?: (
-    id: number,
-    page: number,
-    branchId: number,
-    teamId: number,
-    adminId: number,
-  ) => void;
-  onClickResetPassword?: (id: number) => void;
+  contents: TableContentData;
 }
 
 TableContent.defaultProps = {};

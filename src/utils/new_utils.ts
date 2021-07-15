@@ -55,8 +55,8 @@ class Utils {
   static formatMacAddress(text: string, pad: string = '-') {
     const mac = text
       .toLowerCase()
-      .replace(/[^\d|A-Z]/g, '')
-      .match(/.{1,2}/g || [])
+      .replace(/[^\d|가-힣|a-z]/g, '')
+      .match(/.{1,2}/g)
       ?.join(pad);
 
     return mac || '';

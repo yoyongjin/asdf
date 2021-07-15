@@ -75,19 +75,19 @@ class User {
       }
 
       if (ip) {
-        payload.zibox_ip = ip;
+        payload.ziboxip = ip;
       }
 
       if (mac) {
-        payload.zibox_mac = mac;
+        payload.ziboxmac = mac;
       }
 
       if (mic) {
-        payload.zibox_mic = mic;
+        payload.ziboxmic = mic;
       }
 
       if (spk) {
-        payload.zibox_spk = spk;
+        payload.ziboxspk = spk;
       }
 
       const { data } = await APIManager.post(
@@ -98,6 +98,124 @@ class User {
         },
       );
       Logger.log('Add User', JSON.stringify(data));
+
+      return data;
+    } catch (error) {
+      if (error.response?.data) {
+        Logger.log(JSON.stringify(error.response.data));
+
+        return error.response.data;
+      }
+
+      throw new Error(error);
+    }
+  }
+
+  static async modifyUser(
+    id: number,
+    branchId: number,
+    teamId: number,
+    adminId: number,
+    name: string,
+    userName?: string,
+    number?: string,
+    ip?: string,
+    mac?: string,
+    mic?: number,
+    spk?: number,
+  ) {
+    try {
+      const token = Main.getAccessToken();
+
+      const payload: RequestAddUser = {
+        branch_id: branchId,
+        team_id: teamId,
+        admin_id: adminId,
+        name,
+      };
+
+      if (userName) {
+        payload.user_name = userName;
+      }
+
+      if (number) {
+        payload.number = number;
+      }
+
+      if (ip) {
+        payload.ziboxip = ip;
+      }
+
+      if (mac) {
+        payload.ziboxmac = mac;
+      }
+
+      if (mic) {
+        payload.ziboxmic = mic;
+      }
+
+      if (spk) {
+        payload.ziboxspk = spk;
+      }
+
+      const { data } = await APIManager.patch(
+        `${url.zms.api.path.modify_user}/${id}`,
+        payload,
+        {
+          token,
+        },
+      );
+      Logger.log('Modify User', JSON.stringify(data));
+
+      return data;
+    } catch (error) {
+      if (error.response?.data) {
+        Logger.log(JSON.stringify(error.response.data));
+
+        return error.response.data;
+      }
+
+      throw new Error(error);
+    }
+  }
+
+  static async removeUser(id: number) {
+    try {
+      const token = Main.getAccessToken();
+
+      const { data } = await APIManager.delete(
+        `${url.zms.api.path.remove_user}/${id}`,
+        null,
+        {
+          token,
+        },
+      );
+      Logger.log('Remove User', JSON.stringify(data));
+
+      return data;
+    } catch (error) {
+      if (error.response?.data) {
+        Logger.log(JSON.stringify(error.response.data));
+
+        return error.response.data;
+      }
+
+      throw new Error(error);
+    }
+  }
+
+  static async resetPassword(id: number) {
+    try {
+      const token = Main.getAccessToken();
+
+      const { data } = await APIManager.patch(
+        `${url.zms.api.path.reset_user_password}/${id}`,
+        null,
+        {
+          token,
+        },
+      );
+      Logger.log('Reset User Password', JSON.stringify(data));
 
       return data;
     } catch (error) {

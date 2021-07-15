@@ -14,49 +14,56 @@ const StyledBlank = styled.span`
 `;
 
 function TextSelect({
+  selectBorderWidth,
+  selectDisabled,
+  selectDefaultValue,
+  selectHeight,
+  selectName,
+  selectOnChange,
+  selectOptions,
+  selectBorderRadius,
+  selectWidth,
+  textColor,
+  textSize,
   textValue,
   textWeight,
-  selectWidth,
-  selectHeight,
-  selectRadius,
-  defaultValue,
-  list,
-  name,
-  textColor,
-  onChange,
 }: TextSelectProps) {
   return (
     <StyledWrapper>
-      <Text fontSize={13} fontWeight={textWeight} fontColor={textColor}>
+      <Text fontColor={textColor} fontSize={textSize} fontWeight={textWeight}>
         {textValue}
       </Text>
       <StyledBlank />
       <Select
-        width={selectWidth}
-        height={selectHeight}
-        borderWidth={0}
-        borderRadius={selectRadius}
-        options={list}
-        name={name}
-        defaultValue={defaultValue}
+        borderRadius={selectBorderRadius}
+        borderWidth={selectBorderWidth}
+        disabled={selectDisabled}
+        defaultValue={selectDefaultValue}
         fontColor={textColor}
-        onChange={(e) => onChange(e)}
+        height={selectHeight}
+        name={selectName}
+        onChange={selectOnChange}
+        options={selectOptions}
+        width={selectWidth}
       />
     </StyledWrapper>
   );
 }
 
 interface TextSelectProps {
-  textValue: string;
-  selectWidth: number;
-  selectRadius: number;
-  textColor: string;
-  textWeight: number | string;
+  selectBorderRadius: number;
+  selectBorderWidth: number;
+  selectDisabled: boolean;
+  selectDefaultValue?: number;
   selectHeight: number;
-  defaultValue?: number;
-  list: Array<SelectDataType>;
-  name: string;
-  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  selectName: string;
+  selectOnChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  selectOptions: Array<SelectDataType>;
+  selectWidth: number;
+  textColor: string;
+  textSize: number;
+  textValue: string;
+  textWeight: number | string;
 }
 
 interface SelectDataType {
@@ -65,12 +72,14 @@ interface SelectDataType {
 }
 
 TextSelect.defaultProps = {
-  selectWidth: 100,
+  selectBorderRadius: 0,
+  selectBorderWidth: 0,
+  selectDisabled: false,
+  selectDefaultValue: '기본값',
   selectHeight: 30,
-  selectRadius: 0,
+  selectWidth: 100,
   textColor: Colors.gray9,
   textWeight: 700,
-  defaultValue: '기본값',
 };
 
 export default TextSelect;

@@ -15,18 +15,18 @@ const StyledTitle = styled.th<StyledProps>`
   vertical-align: middle;
 `;
 
-function TableTitle({ titleList, fontColor }: TableTitleProps) {
+function TableTitle({ titles, fontColor, fontSize }: TableTitleProps) {
   return (
     <StyledWrapper>
-      {titleList.map((values, i) => {
+      {titles.map((titleData, i) => {
         return (
-          <StyledTitle key={`styled-title-${i}`} width={values.width}>
+          <StyledTitle key={`styled-title-${i}`} width={titleData.width}>
             <Text
               fontColor={fontColor}
               fontFamily="NanumBarunGothic"
-              fontSize={13}
+              fontSize={fontSize}
             >
-              {values.title}
+              {titleData.title}
             </Text>
           </StyledTitle>
         );
@@ -44,13 +44,15 @@ interface TitleProps extends StyledProps {
 }
 
 interface TableTitleProps {
-  titleList: Array<TitleProps>;
+  titles: Array<TitleProps>;
   fontColor: string;
+  fontSize: number;
 }
 
 TableTitle.defaultProps = {
   bgColor: Colors.gray4,
   fontColor: Colors.white,
+  fontSize: 13,
 };
 
 export default TableTitle;

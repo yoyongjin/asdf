@@ -2,10 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { Text } from 'components/atoms';
-import { UserInfo } from 'modules/types/user';
 import { Colors } from 'utils/color';
-import constants, { COMPANY_TYPE } from 'utils/constants';
+import constants, { COMPANY_TYPE, USER_TYPE } from 'utils/constants';
 import { UserData } from 'types/user';
+import { OnClickRemoveUser, OnClickResetPassword } from 'hooks/useUser';
+import { SetSeletedConsultantData } from 'components/organisms/UserView';
 
 const StyledWrapper = styled.ul`
   /* Position */
@@ -41,34 +42,42 @@ const StyledContent = styled.li`
 `;
 
 function List({
-  adminId,
-  branchId,
-  menu,
-  id,
-  info,
-  page,
-  teamId,
-  loginAdmin,
-  onClickDeleteUser,
-  onClickGetUserInfo,
+  currentBranchId,
+  currentLimit,
+  currentPage,
+  currentSearchText,
+  currentTeamId,
+  menus,
+  userData,
+  onClickRemoveUser,
+  onClickUserDataPopup,
   onClickResetPassword,
 }: ListProps) {
   return (
     <StyledWrapper>
-      {menu.map((title, i) => {
-        // 상담원일 경우 비밀번호 초기화 부분 삭제
-        if (adminId === 0 && i === 1) return null;
+      {menus.map((values) => {
+        if (userData.admin_id === USER_TYPE.CONSULTANT && values.id === 1) {
+          // 상담원일 경우 비밀번호 초기화 부분 삭제
+          return null;
+        }
 
         return (
           <StyledContent
-            key={`styled-content-${i}`}
+            key={`styled-content-${values.id}`}
             onClick={() => {
-              if (i === 0) {
-                onClickGetUserInfo!(info);
-              } else if (i === 1) {
-                onClickResetPassword!(id);
-              } else if (i === 2) {
-                onClickDeleteUser!(id, page!, branchId!, teamId!, loginAdmin);
+              if (values.id === 0) {
+                onClickUserDataPopup(userData);
+              } else if (values.id === 1) {
+                onClickResetPassword(userData.id);
+              } else if (values.id === 2) {
+                onClickRemoveUser!(
+                  userData.id,
+                  currentBranchId!,
+                  currentTeamId,
+                  currentLimit,
+                  currentPage,
+                  currentSearchText,
+                );
               }
             }}
           >
@@ -78,7 +87,7 @@ function List({
               fontSize={13}
               fontWeight={700}
             >
-              {title}
+              {values.name}
             </Text>
           </StyledContent>
         );
@@ -88,24 +97,21 @@ function List({
 }
 
 interface ListProps {
-  adminId: number;
-  branchId?: number;
-  menu: Array<string>;
+  currentBranchId: number;
+  currentLimit: number;
+  currentSearchText: string;
+  currentPage: number;
+  currentTeamId: number;
+  menus: Array<MenuData>;
+  userData: UserData;
+  onClickUserDataPopup: SetSeletedConsultantData;
+  onClickRemoveUser: OnClickRemoveUser;
+  onClickResetPassword: OnClickResetPassword;
+}
+
+export interface MenuData {
   id: number;
-  info: UserData;
-  page?: number;
-  teamId?: number;
-  loginAdmin: number;
-  onClickGetUserInfo?: (info: UserData) => void;
-  onClickDeleteUser?: (
-    id: number,
-    page: number,
-    branchId: number,
-    teamId: number,
-    adminId: number,
-  ) => void;
-  onClickResetPassword?: (id: number) => void;
-  onClickVisible?: () => void;
+  name: string;
 }
 
 List.defaultProps = {};

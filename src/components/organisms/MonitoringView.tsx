@@ -66,19 +66,20 @@ function Monitoring({ location }: MonitoringProps) {
   const [selectedConsultant, setSelectedConsultant] = useState<UserDataV2>();
   const { loginInfo, socketConnection } = useAuth();
   const { branches, teams, getBranches, getTeams } = useOrganization();
-  const { form, onChangeSelect, setKeyValue, onChangeInput } = useInputForm({
-    branch: -1,
-    team: -1,
-    left: 1.5,
-    right: 1.5,
-  });
+  const { form, onChangeSelect, setSpecificValue, onChangeInput } =
+    useInputForm({
+      branch: -1,
+      team: -1,
+      left: 1.5,
+      right: 1.5,
+    });
   const {
     tappingStatus,
     changeTappingData,
     changeTappingStatus,
     tappingTarget,
   } = useMonitoring();
-  const { consultantInfo, getUsers, onClickUpdateUser } = useUser();
+  const { consultantInfo, getUsers, onClickModifyUser } = useUser();
   const { visible, onClickVisible } = useVisible();
   const { connectZibox, requestTapping, startTapping, stopTapping, setVolume } =
     useZibox();
@@ -337,8 +338,8 @@ function Monitoring({ location }: MonitoringProps) {
 
   useEffect(() => {
     // 지점명 변경 시 팀 id 초기화
-    setKeyValue('team', -1);
-  }, [form.branch, setKeyValue]);
+    setSpecificValue('team', -1);
+  }, [form.branch, setSpecificValue]);
 
   useEffect((): any => {
     window.addEventListener('resize', handleWindowResize);
@@ -374,12 +375,10 @@ function Monitoring({ location }: MonitoringProps) {
         isVisible={visible}
         Component={
           <UserData
-            adminId={loginInfo.admin_id}
+            loginData={loginInfo}
             adminList={adminList}
-            branchId={loginInfo.branch_id}
-            branchName={loginInfo.branch_name!}
             isVisible={visible}
-            onClickUpdateUser={onClickUpdateUser}
+            onClickModifyUser={onClickModifyUser}
             onClickVisible={onClickVisible}
             userData={selectedConsultant}
           />

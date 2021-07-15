@@ -2,9 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { TableTitle, TableContent } from 'components/molecules';
-import { UserInfo } from 'modules/types/user';
 import { Colors } from 'utils/color';
-import { UserData } from 'types/user';
+import { LoginData } from 'types/auth';
+import { TableContentData, TableTitleData } from './UserView';
 
 const StyledWrapper = styled.table`
   /* Display */
@@ -14,12 +14,12 @@ const StyledWrapper = styled.table`
   width: 100%;
 `;
 
-const StyledHead = styled.thead<StyledProps>`
+const StyledHead = styled.thead<StyledHeadProps>`
   /* Display */
   height: 30px;
 
   /* Color */
-  background-color: ${(props) => props.bgColor};
+  background-color: ${(props) => props.titleColor};
 `;
 
 const StyledBody = styled.tbody`
@@ -30,77 +30,30 @@ const StyledBody = styled.tbody`
   text-align: center;
 `;
 
-function Table({
-  adminId,
-  branchId,
-  page,
-  tableTitle,
-  teamId,
-  userInfo,
-  bgColor,
-  optionIcon,
-  optionHoverIcon,
-  getUserInfo,
-  onClickDeleteUser,
-  onClickResetPassword,
-}: TableProps) {
+function Table({ contents, titleColor, titles }: TableProps) {
   return (
     <StyledWrapper>
-      <StyledHead bgColor={bgColor}>
-        <TableTitle titleList={tableTitle} />
+      <StyledHead titleColor={titleColor}>
+        <TableTitle titles={titles} />
       </StyledHead>
       <StyledBody>
-        <TableContent
-          adminId={adminId}
-          branchId={branchId}
-          page={page!}
-          teamId={teamId}
-          userInfo={userInfo}
-          optionIcon={optionIcon}
-          optionHoverIcon={optionHoverIcon}
-          getUserInfo={getUserInfo!}
-          onClickDeleteUser={onClickDeleteUser!}
-          onClickResetPassword={onClickResetPassword!}
-        ></TableContent>
+        <TableContent contents={contents} />
       </StyledBody>
     </StyledWrapper>
   );
 }
 
-interface StyledProps {
-  bgColor?: string;
+interface StyledHeadProps {
+  titleColor: string;
 }
 
-interface TitleProps {
-  title: string;
-  width: number;
-}
-
-interface TableProps extends StyledProps {
-  adminId?: number;
-  branchId?: number;
-  page?: number;
-  tableTitle: Array<TitleProps>;
-  teamId?: number;
-  userInfo: Array<UserData>;
-  optionIcon: string;
-  optionHoverIcon: string;
-  getUserInfo?: (info: UserData) => void;
-  onClickDeleteUser?: (
-    id: number,
-    page: number,
-    branchId: number,
-    teamId: number,
-    adminId: number,
-  ) => void;
-  onClickResetPassword?: (id: number) => void;
+interface TableProps extends StyledHeadProps {
+  contents: TableContentData;
+  titles: Array<TableTitleData>;
 }
 
 Table.defaultProps = {
-  bgColor: Colors.gray4,
+  titleColor: Colors.gray4,
 };
 
-export default React.memo(
-  Table,
-  (preProps, nextProps) => preProps.userInfo === nextProps.userInfo,
-);
+export default React.memo(Table);
