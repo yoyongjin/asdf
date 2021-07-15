@@ -35,7 +35,7 @@ function TextRange({
         fontSize={textSize}
         fontWeight={textWeight}
       >
-        {textValue}
+        {`${textValue}(${rangeValue})`}
       </Text>
       <StyledWhiteSpace pixel={5} />
       <Range

@@ -11,7 +11,7 @@ import {
 } from 'hooks/useZibox';
 import Communicator from 'lib/communicator';
 import { TappingTarget } from 'types/auth';
-import { ConsultantInfo } from 'types/user';
+import { ConsultantInfo, UserData } from 'types/user';
 import { Colors } from 'utils/color';
 import {
   CALL_STATUS_V2,
@@ -28,6 +28,7 @@ import startTappingIcon from 'images/zms/bt-mnt-listen-nor.png';
 import tappingIcon from 'images/zms/bt-mnt-listen-ing.png';
 import stopTappingIcon from 'images/zms/bt-mnt-listen-fin-nor.png';
 import loadingIcon from 'images/loading.svg';
+import { SetSeletedConsultantData } from 'components/organisms/MonitoringView';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -65,7 +66,7 @@ function Consultant({
   tappingStatus,
   consultInfo,
   loginId,
-  getConsultantInfo,
+  setSeletedConsultantData,
   requestTapping,
   changeTappingStatus,
   tappingTarget,
@@ -81,21 +82,20 @@ function Consultant({
 
       if (mode === ZIBOX_TRANSPORT.SERVER) {
         requestTapping(
-          consultInfo.number,
+          consultInfo.number!,
           loginId,
           consultInfo.zibox?.monit_user === -1 ? 1 : 0,
-          consultInfo.ziboxip,
+          consultInfo.zibox_ip!,
         );
       } else {
-        stopTapping(consultInfo.number);
+        stopTapping(consultInfo.number!);
       }
     }
   }, [
-    changeTappingData,
     consultInfo.call,
     consultInfo.number,
     consultInfo.zibox,
-    consultInfo.ziboxip,
+    consultInfo.zibox_ip,
     loginId,
     requestTapping,
     stopTapping,
@@ -110,9 +110,9 @@ function Consultant({
       // 감청 중인 경우
       changeTappingData(
         2,
-        consultInfo.ziboxip,
+        consultInfo.zibox_ip!,
         consultInfo.id,
-        consultInfo.number,
+        consultInfo.number!,
       );
     } else if (
       (consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.START_REQUEST ||
@@ -123,9 +123,9 @@ function Consultant({
       // 감청을 요청한 경우
       changeTappingData(
         1,
-        consultInfo.ziboxip,
+        consultInfo.zibox_ip!,
         consultInfo.id,
-        consultInfo.number,
+        consultInfo.number!,
       );
     } else if (
       consultInfo.id === tappingTarget.id &&
@@ -139,7 +139,7 @@ function Consultant({
     consultInfo.id,
     consultInfo.number,
     consultInfo.zibox,
-    consultInfo.ziboxip,
+    consultInfo.zibox_ip,
     loginId,
     tappingStatus,
     tappingTarget.id,
@@ -148,10 +148,10 @@ function Consultant({
   const handleTapping = useCallback(
     async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       requestTapping(
-        consultInfo.number,
+        consultInfo.number!,
         loginId,
         consultInfo.zibox?.monit_user === -1 ? 1 : 0,
-        consultInfo.ziboxip,
+        consultInfo.zibox_ip!,
       );
 
       const mode = Communicator.getInstance().getMode();
@@ -165,7 +165,7 @@ function Consultant({
         // 감청 대상인 경우
         // 연결 끊기
         if (mode !== ZIBOX_TRANSPORT.SERVER) {
-          stopTapping(consultInfo.number);
+          stopTapping(consultInfo.number!);
         }
         return;
       }
@@ -173,11 +173,11 @@ function Consultant({
       if (mode === ZIBOX_TRANSPORT.MQTT) {
         try {
           const isSuccess = await connectZibox(
-            consultInfo.ziboxip,
-            consultInfo.ziboxmic,
-            consultInfo.ziboxspk,
+            consultInfo.zibox_ip!,
+            consultInfo.zibox_mic!,
+            consultInfo.zibox_spk!,
             consultInfo.id,
-            consultInfo.number,
+            consultInfo.number!,
           );
 
           if (!isSuccess) {
@@ -187,13 +187,13 @@ function Consultant({
           console.log(error);
         }
       } else if (mode === ZIBOX_TRANSPORT.OCX) {
-        startTapping(consultInfo.number, loginId, {
+        startTapping(consultInfo.number!, loginId, {
           mode: 1,
           ip: consultInfo.zibox?.pc_ip!,
         });
       } else if (mode === ZIBOX_TRANSPORT.PACKET) {
-        startTapping(consultInfo.number, loginId, {
-          key: consultInfo.number,
+        startTapping(consultInfo.number!, loginId, {
+          key: consultInfo.number!,
           ip: consultInfo.zibox?.zibox_ip!,
         });
       }
@@ -203,9 +203,9 @@ function Consultant({
       consultInfo.id,
       consultInfo.number,
       consultInfo.zibox,
-      consultInfo.ziboxip,
-      consultInfo.ziboxmic,
-      consultInfo.ziboxspk,
+      consultInfo.zibox_ip,
+      consultInfo.zibox_mic,
+      consultInfo.zibox_spk,
       loginId,
       requestTapping,
       startTapping,
@@ -214,7 +214,7 @@ function Consultant({
   );
 
   const handleButtonView = useCallback(
-    (consultInfo: ConsultantInfo) => {
+    (consultInfo: UserData) => {
       if (
         // 감청 요청 상태로 변경 시
         consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.START_REQUEST ||
@@ -342,7 +342,7 @@ function Consultant({
         default:
           return (
             <Text fontColor={Colors.gray4} fontWeight={700}>
-              로그아웃
+              {''}
             </Text>
           );
       }
@@ -410,7 +410,7 @@ function Consultant({
           fontSize={18}
           fontWeight={700}
           onClick={() => {
-            getConsultantInfo(consultInfo);
+            setSeletedConsultantData(consultInfo);
           }}
         >
           {`${consultInfo.name} 님`}
@@ -433,11 +433,11 @@ interface ConsultantProps {
   stopTapping: stopTapping;
   requestTapping: requestTapping;
   tappingStatus: number;
-  consultInfo: ConsultantInfo;
+  consultInfo: UserData;
   loginId: number;
   changeTappingStatus: changeTappingStatus;
   tappingTarget: TappingTarget;
-  getConsultantInfo: (data: ConsultantInfo) => void;
+  setSeletedConsultantData: SetSeletedConsultantData;
 }
 
 interface StyledWhiteSpaceProps {

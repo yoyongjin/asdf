@@ -9,24 +9,24 @@ import Logger from 'utils/log';
 import { CALL_STATUS, USER_TYPE } from 'utils/constants';
 import { UserInfo } from 'types/user';
 import Utils from 'utils/new_utils';
-import { UserAction, UserType } from 'types/user';
+import { UserAction, UserState } from 'types/user';
 import { CALL_STATUS_V2 } from 'utils/constants';
 
-const initialState: UserType = {
+const initialState: UserState = {
   request: {
     getUser: {
       fetch: false,
       error: '',
     },
-    insertUser: {
+    addUser: {
       fetch: false,
       error: '',
     },
-    updateUser: {
+    modifyUser: {
       fetch: false,
       error: '',
     },
-    deleteUser: {
+    removeUser: {
       fetch: false,
       error: '',
     },
@@ -35,6 +35,9 @@ const initialState: UserType = {
       error: '',
     },
   },
+  user: [],
+  consultant: [],
+  numberOfUsers: 0,
   userList: {
     users: [],
     consultants: [],
@@ -46,13 +49,10 @@ const initialState: UserType = {
     numberOfUsers: 0,
   },
   status: {},
-  // monit: {
-  //   tapping: false,
-  //   pc_ip: '',
-  // },
+  realTimeStatus: {},
 };
 
-const userReducer = createReducer<UserType, UserAction>(initialState, {
+const userReducer = createReducer<UserState, UserAction>(initialState, {
   [types.REQUEST_GET_USERS]: (state, action) => {
     return produce(state, (draft) => {
       draft.request.getUser.fetch = true;
@@ -60,7 +60,8 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
     });
   },
   [types.SUCCESS_GET_USERS]: (state, action) => {
-    const { users, count, url, loginId } = action.payload;
+    const { users, count, url } = action.payload;
+
     const consultants = users.filter((user) => {
       return user.admin_id === USER_TYPE.CONSULTANT;
     });
@@ -70,55 +71,7 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
       draft.request.getUser.error = '';
 
       if (url === '/main') {
-        let temp = consultants.map((user) => {
-          const value = state.status[user.number];
-          let newUser = Object.assign({}, user);
-          // if (value && value.call) {
-          //   const { call, connection, number, time } = value.call;
-          //   if (number === user.number) {
-          //     newUser.call_time = time;
-          //     newUser.call_status = call;
-          //     newUser.phone_status = connection;
-          //   }
-          // }
-
-          // if (value && value.consultant) {
-          //   const { number, tmr } = value.consultant;
-          //   if (number === user.number) {
-          //     newUser.consultant_status = tmr;
-          //   }
-          // }
-
-          // if (value && value.zibox) {
-          //   const {
-          //     ats,
-          //     connection,
-          //     monitoring,
-          //     number,
-          //     pc_ip,
-          //     record,
-          //     zibox_ip,
-          //     zibox_mac,
-          //     monit_user,
-          //   } = value.zibox;
-          //   if (number === user.number) {
-          //     newUser.zibox_status = connection;
-          //     newUser.ats_status = ats;
-          //     newUser.record_status = record;
-          //     newUser.monit_status = monitoring;
-          //     newUser.zibox_ip = zibox_ip;
-          //     newUser.zibox_mac = zibox_mac;
-          //     newUser.pc_ip = pc_ip;
-          //     newUser.monit_user = monit_user;
-          //     // if (loginId === monit_user) {
-          //     //   draft.monit.tapping = true;
-          //     // }
-          //   }
-          // }
-
-          return newUser;
-        });
-        draft.userList.consultants = temp.sort((r1, r2) => {
+        draft.consultant = consultants.sort((r1, r2) => {
           if (r1.branch_id === r2.branch_id) {
             // id가 같으면 team_name순 정렬 (레벨값 우선 정렬)
             if (r1.team_name && r2.team_name && r1.team_name !== r2.team_name) {
@@ -133,97 +86,119 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
           }
           return r1.branch_id - r2.branch_id;
         });
-        if (draft.filterUserList.consultants.length > 0) {
-          draft.filterUserList.consultants = [];
-        }
+        // let temp = consultants.map((user) => {
+        //   let newUser = Object.assign({}, user);
+
+        //   return newUser;
+        // });
+        // draft.userList.consultants = temp.sort((r1, r2) => {
+        //   if (r1.branch_id === r2.branch_id) {
+        //     // id가 같으면 team_name순 정렬 (레벨값 우선 정렬)
+        //     if (r1.team_name && r2.team_name && r1.team_name !== r2.team_name) {
+        //       return r1.team_name < r2.team_name
+        //         ? -1
+        //         : r1.team_name > r2.team_name
+        //         ? 1
+        //         : 0;
+        //     }
+
+        //     return r1.name < r2.name ? -1 : r1.name > r2.name ? 1 : 0;
+        //   }
+        //   return r1.branch_id - r2.branch_id;
+        // });
+        // if (draft.filterUserList.consultants.length > 0) {
+        //   draft.filterUserList.consultants = [];
+        // }
       } else if (url === '/main/manage/user') {
-        draft.userList.users = users.sort((r1, r2) => r2.id - r1.id); // 등록 순서로 정렬
-        draft.userList.numberOfUsers = count;
-        if (draft.filterUserList.users.length > 0) {
-          draft.filterUserList.users = [];
-          draft.filterUserList.numberOfUsers = 0;
-        }
+        draft.numberOfUsers = count;
+        draft.user = users.sort((r1, r2) => r2.id - r1.id); // 등록 순서로 정렬
+        // draft.userList.users = users.sort((r1, r2) => r2.id - r1.id); // 등록 순서로 정렬
+        // draft.userList.numberOfUsers = count;
+        // if (draft.filterUserList.users.length > 0) {
+        //   draft.filterUserList.users = [];
+        //   draft.filterUserList.numberOfUsers = 0;
+        // }
       }
     });
   },
-  [types.SUCCESS_GET_FILTER_USERS]: (state, action) => {
-    const { users, count, url, loginId } = action.payload;
-    const consultants = users.filter((user) => {
-      return user.admin_id === 0;
-    });
-    return produce(state, (draft) => {
-      draft.request.getUser.fetch = false;
-      draft.request.getUser.error = '';
-      if (url === '/main') {
-        let temp = consultants.map((user) => {
-          let value = state.status[user.number];
-          let newUser: ConsultantInfoType = Object.assign({}, user);
-          // if (value && value.call) {
-          //   const { call, connection, number, time } = value.call;
-          //   if (number === user.number) {
-          //     newUser.call_time = time;
-          //     newUser.call_status = call;
-          //     newUser.phone_status = connection;
-          //   }
-          // }
+  // [types.SUCCESS_GET_FILTER_USERS]: (state, action) => {
+  //   const { users, count, url } = action.payload;
+  //   const consultants = users.filter((user) => {
+  //     return user.admin_id === 0;
+  //   });
+  //   return produce(state, (draft) => {
+  //     draft.request.getUser.fetch = false;
+  //     draft.request.getUser.error = '';
+  //     if (url === '/main') {
+  //       let temp = consultants.map((user) => {
+  //         let value = state.status[user.number];
+  //         let newUser: ConsultantInfoType = Object.assign({}, user);
+  //         // if (value && value.call) {
+  //         //   const { call, connection, number, time } = value.call;
+  //         //   if (number === user.number) {
+  //         //     newUser.call_time = time;
+  //         //     newUser.call_status = call;
+  //         //     newUser.phone_status = connection;
+  //         //   }
+  //         // }
 
-          // if (value && value.consultant) {
-          //   const { number, tmr } = value.consultant;
-          //   if (number === user.number) {
-          //     newUser.consultant_status = tmr;
-          //   }
-          // }
+  //         // if (value && value.consultant) {
+  //         //   const { number, tmr } = value.consultant;
+  //         //   if (number === user.number) {
+  //         //     newUser.consultant_status = tmr;
+  //         //   }
+  //         // }
 
-          // if (value && value.zibox) {
-          //   const {
-          //     ats,
-          //     connection,
-          //     monitoring,
-          //     number,
-          //     pc_ip,
-          //     record,
-          //     zibox_ip,
-          //     zibox_mac,
-          //     monit_user,
-          //   } = value.zibox;
-          //   if (number === user.number) {
-          //     newUser.zibox_status = connection;
-          //     newUser.ats_status = ats;
-          //     newUser.record_status = record;
-          //     newUser.monit_status = monitoring;
-          //     newUser.zibox_ip = zibox_ip;
-          //     newUser.zibox_mac = zibox_mac;
-          //     newUser.pc_ip = pc_ip;
-          //     newUser.monit_user = monit_user;
-          //     // if (loginId === monit_user) {
-          //     //   draft.monit.tapping = true;
-          //     // }
-          //   }
-          // }
+  //         // if (value && value.zibox) {
+  //         //   const {
+  //         //     ats,
+  //         //     connection,
+  //         //     monitoring,
+  //         //     number,
+  //         //     pc_ip,
+  //         //     record,
+  //         //     zibox_ip,
+  //         //     zibox_mac,
+  //         //     monit_user,
+  //         //   } = value.zibox;
+  //         //   if (number === user.number) {
+  //         //     newUser.zibox_status = connection;
+  //         //     newUser.ats_status = ats;
+  //         //     newUser.record_status = record;
+  //         //     newUser.monit_status = monitoring;
+  //         //     newUser.zibox_ip = zibox_ip;
+  //         //     newUser.zibox_mac = zibox_mac;
+  //         //     newUser.pc_ip = pc_ip;
+  //         //     newUser.monit_user = monit_user;
+  //         //     // if (loginId === monit_user) {
+  //         //     //   draft.monit.tapping = true;
+  //         //     // }
+  //         //   }
+  //         // }
 
-          return newUser;
-        });
-        draft.filterUserList.consultants = consultants.sort((r1, r2) => {
-          if (r1.branch_id === r2.branch_id) {
-            // id가 같으면 team_name순 정렬 (레벨값 우선 정렬)
-            if (r1.team_name && r2.team_name && r1.team_name !== r2.team_name) {
-              return r1.team_name < r2.team_name
-                ? -1
-                : r1.team_name > r2.team_name
-                ? 1
-                : 0;
-            }
+  //         return newUser;
+  //       });
+  //       draft.filterUserList.consultants = consultants.sort((r1, r2) => {
+  //         if (r1.branch_id === r2.branch_id) {
+  //           // id가 같으면 team_name순 정렬 (레벨값 우선 정렬)
+  //           if (r1.team_name && r2.team_name && r1.team_name !== r2.team_name) {
+  //             return r1.team_name < r2.team_name
+  //               ? -1
+  //               : r1.team_name > r2.team_name
+  //               ? 1
+  //               : 0;
+  //           }
 
-            return r1.name < r2.name ? -1 : r1.name > r2.name ? 1 : 0;
-          }
-          return r1.branch_id - r2.branch_id;
-        });
-      } else if (url === '/main/manage/user') {
-        draft.filterUserList.users = users.sort((r1, r2) => r2.id - r1.id); // 등록 순서로 정렬
-        draft.filterUserList.numberOfUsers = count;
-      }
-    });
-  },
+  //           return r1.name < r2.name ? -1 : r1.name > r2.name ? 1 : 0;
+  //         }
+  //         return r1.branch_id - r2.branch_id;
+  //       });
+  //     } else if (url === '/main/manage/user') {
+  //       draft.filterUserList.users = users.sort((r1, r2) => r2.id - r1.id); // 등록 순서로 정렬
+  //       draft.filterUserList.numberOfUsers = count;
+  //     }
+  //   });
+  // },
   [types.FAILURE_GET_USERS]: (state, action) => {
     return produce(state, (draft) => {
       draft.request.getUser.fetch = false;
@@ -232,38 +207,38 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
   },
   [types.REQUEST_ADD_USER]: (state, action) => {
     return produce(state, (draft) => {
-      draft.request.insertUser.fetch = true;
-      draft.request.insertUser.error = '';
+      draft.request.addUser.fetch = true;
+      draft.request.addUser.error = '';
     });
   },
   [types.SUCCESS_ADD_USER]: (state, action) => {
     return produce(state, (draft) => {
-      draft.request.insertUser.fetch = false;
-      draft.request.insertUser.error = '';
+      draft.request.addUser.fetch = false;
+      draft.request.addUser.error = '';
     });
   },
   [types.FAILRUE_ADD_USER]: (state, action) => {
     return produce(state, (draft) => {
-      draft.request.insertUser.fetch = false;
-      draft.request.insertUser.error = action.payload;
+      draft.request.addUser.fetch = false;
+      draft.request.addUser.error = action.payload;
     });
   },
   [types.REQUEST_UPDATE_USER]: (state, action) => {
     return produce(state, (draft) => {
-      draft.request.updateUser.fetch = true;
-      draft.request.updateUser.error = '';
+      draft.request.modifyUser.fetch = true;
+      draft.request.modifyUser.error = '';
     });
   },
   [types.SUCCESS_UPDATE_USER]: (state, action) => {
     return produce(state, (draft) => {
-      draft.request.updateUser.fetch = false;
-      draft.request.updateUser.error = '';
+      draft.request.modifyUser.fetch = false;
+      draft.request.modifyUser.error = '';
     });
   },
   [types.FAILURE_UPDATE_USER]: (state, action) => {
     return produce(state, (draft) => {
-      draft.request.updateUser.fetch = false;
-      draft.request.updateUser.error = action.payload;
+      draft.request.modifyUser.fetch = false;
+      draft.request.modifyUser.error = action.payload;
     });
   },
   [types.GET_CALL_STATUS]: (state, action) => {
@@ -572,20 +547,20 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
   },
   [types.REQUEST_DELETE_USER]: (state, action) => {
     return produce(state, (draft) => {
-      draft.request.deleteUser.fetch = true;
-      draft.request.deleteUser.error = '';
+      draft.request.removeUser.fetch = true;
+      draft.request.removeUser.error = '';
     });
   },
   [types.SUCCESS_DELETE_USER]: (state, action) => {
     return produce(state, (draft) => {
-      draft.request.deleteUser.fetch = false;
-      draft.request.deleteUser.error = '';
+      draft.request.removeUser.fetch = false;
+      draft.request.removeUser.error = '';
     });
   },
   [types.FAILURE_DELETE_USER]: (state, action) => {
     return produce(state, (draft) => {
-      draft.request.deleteUser.fetch = false;
-      draft.request.deleteUser.error = action.payload;
+      draft.request.removeUser.fetch = false;
+      draft.request.removeUser.error = action.payload;
     });
   },
   [types.DELETE_USER]: (state, action) => {
@@ -613,14 +588,14 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
   },
   [types.SUCCESS_RESET_PASSWORD]: (state, action) => {
     return produce(state, (draft) => {
-      draft.request.deleteUser.fetch = false;
-      draft.request.deleteUser.error = '';
+      draft.request.resetPassword.fetch = false;
+      draft.request.resetPassword.error = '';
     });
   },
   [types.FAILURE_RESET_PASSWORD]: (state, action) => {
     return produce(state, (draft) => {
-      draft.request.deleteUser.fetch = false;
-      draft.request.deleteUser.error = action.payload;
+      draft.request.resetPassword.fetch = false;
+      draft.request.resetPassword.error = action.payload;
     });
   },
   // [types.CHANGE_CALL_STATE]: (state, action) => {
@@ -798,21 +773,21 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
       // });
     });
   },
-  [types.SAVE_STATUS]: (state, action) => {
-    let parseData = {};
+  // [types.SAVE_STATUS]: (state, action) => {
+  //   let parseData = {};
 
-    for (let key in action.payload) {
-      let parseValue = JSON.parse(action.payload[key]);
-      parseData = {
-        ...parseData,
-        [key]: parseValue,
-      };
-    }
+  //   for (let key in action.payload) {
+  //     let parseValue = JSON.parse(action.payload[key]);
+  //     parseData = {
+  //       ...parseData,
+  //       [key]: parseValue,
+  //     };
+  //   }
 
-    return produce(state, (draft) => {
-      draft.status = parseData;
-    });
-  },
+  //   return produce(state, (draft) => {
+  //     draft.status = parseData;
+  //   });
+  // },
   [types.RESET_STATUS]: (state, action) => {
     return produce(state, (draft) => {
       // for (let key in state.status) {
@@ -920,111 +895,52 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
     // 모든 상태 전달
     Logger.log('SET_USER_STATUS', action.payload);
 
-    const consultantStatus = _.cloneDeep(action.payload);
+    // const consultantStatus = _.cloneDeep(action.payload);
 
-    const newUserList = state.userList.consultants.map((user) => {
-      const allStatus = consultantStatus[user.number];
+    // const newConsultants = state.consultant.map((consultantData) => {
+    //   const allStatus = consultantStatus[consultantData.number!];
 
-      if (allStatus) {
-        const { call, consultant, phone, zibox } = allStatus;
+    //   if (allStatus) {
+    //     const { call, consultant, phone, zibox } = allStatus;
 
-        const newUser = _.cloneDeep(user);
-        if (call) {
-          newUser.call = call;
-        }
+    //     const newUser = _.cloneDeep(consultantData);
+    //     if (call) {
+    //       newUser.call = call;
+    //     }
 
-        if (consultant) {
-          newUser.consultant = consultant;
-        }
+    //     if (consultant) {
+    //       newUser.consultant = consultant;
+    //     }
 
-        if (phone) {
-          newUser.phone = phone;
-        }
+    //     if (phone) {
+    //       newUser.phone = phone;
+    //     }
 
-        if (zibox) {
-          newUser.zibox = zibox;
-        }
+    //     if (zibox) {
+    //       newUser.zibox = zibox;
+    //     }
 
-        return newUser;
-      }
-      return user;
-    });
-
-    const newFilteredUserList = state.filterUserList.consultants.map((user) => {
-      const allStatus = consultantStatus[user.number];
-
-      if (allStatus) {
-        const { call, consultant, phone, zibox } = allStatus;
-        const newUser = _.cloneDeep(user);
-
-        if (call) {
-          newUser.call = call;
-        }
-
-        if (consultant) {
-          newUser.consultant = consultant;
-        }
-
-        if (phone) {
-          newUser.phone = phone;
-        }
-
-        if (zibox) {
-          newUser.zibox = zibox;
-        }
-
-        return newUser;
-      }
-
-      return user;
-    });
+    //     return newUser;
+    //   }
+    //   return consultantData;
+    // });
 
     return produce(state, (draft) => {
-      draft.userList.consultants = newUserList;
-
-      if (state.filterUserList.consultants.length > 0) {
-        draft.filterUserList.consultants = newFilteredUserList;
-      }
+      draft.realTimeStatus = action.payload;
+      // draft.consultant = newConsultants;
     });
   },
   [types.CHANGE_CALL_STATUS]: (state, action) => {
     const callStatus = _.cloneDeep(action.payload);
     Logger.log('CHANGE_CALL_STATUS', callStatus);
 
-    const newUserList = state.userList.consultants.map((consultant) => {
-      const { status, time, number } = callStatus;
-
-      if (number !== consultant.number) return consultant;
-
-      const newUser = _.cloneDeep(consultant);
-
-      if (newUser.call) {
-        newUser.call.status = status;
-        newUser.call.time = time;
-      }
-      return newUser;
-    });
-
-    const newFilteredUserList = state.filterUserList.consultants.map(
-      (consultant) => {
-        const { status, time, number } = callStatus;
-
-        if (number !== consultant.number) return consultant;
-
-        const newUser = _.cloneDeep(consultant);
-
-        if (newUser.call) {
-          newUser.call.status = status;
-          newUser.call.time = time;
-        }
-        return newUser;
-      },
-    );
-
     return produce(state, (draft) => {
-      draft.userList.consultants = newUserList;
-      if (state.filterUserList.consultants.length > 0) {
-        draft.filterUserList.consultants = newFilteredUserList;
+      if (draft.realTimeStatus[callStatus.number!]) {
+        draft.realTimeStatus[callStatus.number!].call = callStatus;
+      } else {
+        draft.realTimeStatus[callStatus.number!] = {
+          call: callStatus,
+        };
       }
     });
   },
@@ -1032,73 +948,13 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
     const ziboxStatus = _.cloneDeep(action.payload);
     Logger.log('CHANGE_ZIBOX_STATUS', ziboxStatus);
 
-    const newUserList = state.userList.consultants.map((consultant) => {
-      const {
-        ats,
-        connection,
-        monit_user,
-        monitoring,
-        number,
-        pc_ip,
-        record,
-        zibox_ip,
-        zibox_mac,
-      } = ziboxStatus;
-
-      if (number !== consultant.number) return consultant;
-
-      const newConsultant = _.cloneDeep(consultant);
-
-      if (newConsultant.zibox) {
-        newConsultant.zibox.ats = ats;
-        newConsultant.zibox.connection = connection;
-        newConsultant.zibox.monit_user = monit_user;
-        newConsultant.zibox.monitoring = monitoring;
-        newConsultant.zibox.pc_ip = pc_ip;
-        newConsultant.zibox.record = record;
-        newConsultant.zibox.zibox_ip = zibox_ip;
-        newConsultant.zibox.zibox_mac = zibox_mac;
-      }
-      return newConsultant;
-    });
-
-    const newFilteredUserList = state.filterUserList.consultants.map(
-      (consultant) => {
-        const {
-          ats,
-          connection,
-          monit_user,
-          monitoring,
-          number,
-          pc_ip,
-          record,
-          zibox_ip,
-          zibox_mac,
-        } = ziboxStatus;
-
-        if (number !== consultant.number) return consultant;
-
-        const newConsultant = _.cloneDeep(consultant);
-
-        if (newConsultant.zibox) {
-          newConsultant.zibox.ats = ats;
-          newConsultant.zibox.connection = connection;
-          newConsultant.zibox.monit_user = monit_user;
-          newConsultant.zibox.monitoring = monitoring;
-          newConsultant.zibox.pc_ip = pc_ip;
-          newConsultant.zibox.record = record;
-          newConsultant.zibox.zibox_ip = zibox_ip;
-          newConsultant.zibox.zibox_mac = zibox_mac;
-        }
-
-        return newConsultant;
-      },
-    );
-
     return produce(state, (draft) => {
-      draft.userList.consultants = newUserList;
-      if (state.filterUserList.consultants.length > 0) {
-        draft.filterUserList.consultants = newFilteredUserList;
+      if (draft.realTimeStatus[ziboxStatus.number!]) {
+        draft.realTimeStatus[ziboxStatus.number!].zibox = ziboxStatus;
+      } else {
+        draft.realTimeStatus[ziboxStatus.number!] = {
+          zibox: ziboxStatus,
+        };
       }
     });
   },
@@ -1106,38 +962,14 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
     const consultantStatus = _.cloneDeep(action.payload);
     Logger.log('CHANGE_CONSULTANT_STATUS', consultantStatus);
 
-    const newUserList = state.userList.consultants.map((consultant) => {
-      const { status, number } = consultantStatus;
-
-      if (number !== consultant.number) return consultant;
-
-      const newUser = _.cloneDeep(consultant);
-
-      if (newUser.consultant) {
-        newUser.consultant.status = status;
-      }
-      return newUser;
-    });
-
-    const newFilteredUserList = state.filterUserList.consultants.map(
-      (consultant) => {
-        const { status, number } = consultantStatus;
-
-        if (number !== consultant.number) return consultant;
-
-        const newUser = _.cloneDeep(consultant);
-
-        if (newUser.consultant) {
-          newUser.consultant.status = status;
-        }
-        return newUser;
-      },
-    );
-
     return produce(state, (draft) => {
-      draft.userList.consultants = newUserList;
-      if (state.filterUserList.consultants.length > 0) {
-        draft.filterUserList.consultants = newFilteredUserList;
+      if (draft.realTimeStatus[consultantStatus.number!]) {
+        draft.realTimeStatus[consultantStatus.number!].consultant =
+          consultantStatus;
+      } else {
+        draft.realTimeStatus[consultantStatus.number!] = {
+          consultant: consultantStatus,
+        };
       }
     });
   },
@@ -1145,39 +977,17 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
     const phoneStatus = _.cloneDeep(action.payload);
     Logger.log('CHANGE_PHONE_STATUS', phoneStatus);
 
-    const newUserList = state.userList.consultants.map((consultant) => {
-      const { number, connection } = phoneStatus;
-
-      if (number !== consultant.number) return consultant;
-
-      const newUser = _.cloneDeep(consultant);
-
-      if (newUser.phone) {
-        newUser.phone.connection = connection;
-      }
-      return newUser;
-    });
-
-    const newFilteredUserList = state.filterUserList.consultants.map(
-      (consultant) => {
-        const { number, connection } = phoneStatus;
-
-        if (number !== consultant.number) return consultant;
-
-        const newUser = _.cloneDeep(consultant);
-
-        if (newUser.phone) {
-          newUser.phone.connection = connection;
-        }
-        return newUser;
-      },
-    );
-
     return produce(state, (draft) => {
-      draft.userList.consultants = newUserList;
-      if (state.filterUserList.consultants.length > 0) {
-        draft.filterUserList.consultants = newFilteredUserList;
+      if (draft.realTimeStatus[phoneStatus.number!]) {
+        draft.realTimeStatus[phoneStatus.number!].phone = phoneStatus;
+      } else {
+        draft.realTimeStatus[phoneStatus.number!] = {
+          phone: phoneStatus,
+        };
       }
+
+      (draft.realTimeStatus[phoneStatus.number!] as any).consultant =
+        phoneStatus;
     });
   },
   [types.CHANGE_ALL_RESET_STATUS]: (state, action) => {
@@ -1238,13 +1048,6 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
       if (state.filterUserList.consultants.length > 0) {
         draft.filterUserList.consultants = newFilteredUserList;
       }
-    });
-  },
-  [types.CHANGE_MONIT_STATUS]: (state, action) => {
-    // 삭제 예정
-    return produce(state, (draft) => {
-      // 고쳐야함
-      // draft.monit.pc_ip = action.payload.number;
     });
   },
   [types.ADD_USER]: (state, action) => {
@@ -1408,42 +1211,110 @@ const userReducer = createReducer<UserType, UserAction>(initialState, {
         }
 
         if (draft.filterUserList.consultants.length > 0) {
-          draft.filterUserList.consultants = draft.filterUserList.consultants.filter(
-            (values) => {
+          draft.filterUserList.consultants =
+            draft.filterUserList.consultants.filter((values) => {
               return values.id !== newUser.id;
-            },
-          );
+            });
         }
       }
     });
   },
   [types.SET_CALCULATED_CALL_TIME]: (state, action) => {
     const { local_time, server_time } = action.payload;
+    const realTimeStatus = _.cloneDeep(state.realTimeStatus);
 
     return produce(state, (draft) => {
-      state.userList.consultants.map((consultant, i) => {
-        if (consultant.call?.time) {
-          const callingTime = Utils.getLocalDiffTime(
-            consultant.call?.time,
-            local_time,
-            server_time,
-          );
-          draft.userList.consultants[i].calling_time = callingTime;
-        }
-      });
+      state.consultant.map((consultant, i) => {
+        if (consultant.call) {
+          // 콜 상태가 현재 존재할 경우
+          if (realTimeStatus[consultant.number!].call) {
+            draft.consultant[i].call = realTimeStatus[consultant.number!].call;
+          }
 
-      if (state.filterUserList.consultants.length > 0) {
-        state.filterUserList.consultants.map((consultant, i) => {
           if (consultant.call?.time) {
             const callingTime = Utils.getLocalDiffTime(
-              consultant.call?.time,
+              consultant.call.time,
               local_time,
               server_time,
             );
-            draft.filterUserList.consultants[i].calling_time = callingTime;
+            draft.consultant[i].calling_time = callingTime;
           }
-        });
-      }
+        } else {
+          // 콜 상태가 존재하지 않는 경우
+          if (
+            realTimeStatus[consultant.number!] &&
+            realTimeStatus[consultant.number!].call
+          ) {
+            // 실시간 상태 정보가 있을 경우
+            draft.consultant[i] = {
+              ...state.consultant[i],
+              call: realTimeStatus[consultant.number!].call,
+            };
+          }
+        }
+
+        if (consultant.consultant) {
+          // 상담원 상태가 현재 존재할 경우
+          if (realTimeStatus[consultant.number!].consultant) {
+            draft.consultant[i].consultant =
+              realTimeStatus[consultant.number!].consultant;
+          }
+        } else {
+          // 상담원 상태가 존재하지 않는 경우
+          if (
+            realTimeStatus[consultant.number!] &&
+            realTimeStatus[consultant.number!].consultant
+          ) {
+            // 실시간 상태 정보가 있을 경우
+            draft.consultant[i] = {
+              ...state.consultant[i],
+              consultant: realTimeStatus[consultant.number!].consultant,
+            };
+          }
+        }
+
+        if (consultant.phone) {
+          // 휴대전화 상태가 현재 존재할 경우
+          if (realTimeStatus[consultant.number!].phone) {
+            draft.consultant[i].phone =
+              realTimeStatus[consultant.number!].phone;
+          }
+        } else {
+          // 휴대전화 상태가 존재하지 않는 경우
+          if (
+            realTimeStatus[consultant.number!] &&
+            realTimeStatus[consultant.number!].phone
+          ) {
+            // 실시간 상태 정보가 있을 경우
+            draft.consultant[i] = {
+              ...state.consultant[i],
+              phone: realTimeStatus[consultant.number!].phone,
+            };
+          }
+        }
+
+        if (consultant.zibox) {
+          // 지박스 상태가 현재 존재할 경우
+          if (realTimeStatus[consultant.number!].zibox) {
+            draft.consultant[i].zibox =
+              realTimeStatus[consultant.number!].zibox;
+          }
+        } else {
+          // 지박스 상태가 존재하지 않는 경우
+          if (
+            realTimeStatus[consultant.number!] &&
+            realTimeStatus[consultant.number!].zibox
+          ) {
+            // 실시간 상태 정보가 있을 경우
+            draft.consultant[i] = {
+              ...state.consultant[i],
+              zibox: realTimeStatus[consultant.number!].zibox,
+            };
+          }
+        }
+
+        return consultant;
+      });
     });
   },
 });

@@ -100,6 +100,7 @@ function Input({
   name,
   placeholder,
   type,
+  maxLength,
   value,
   onChange,
   onKeyDown,
@@ -108,6 +109,8 @@ function Input({
 }: InputProps) {
   return (
     <StyledInput
+      disabled={disabled}
+      maxLength={maxLength === 0 ? 524288 : maxLength}
       ref={innerRef}
       type={type}
       name={name}
@@ -144,6 +147,7 @@ interface InputProps extends StyledInputProps {
     | ((instance: HTMLInputElement) => void)
     | React.MutableRefObject<HTMLInputElement>
     | null;
+  readonly maxLength: number;
   readonly name?: string;
   readonly placeholder?: string;
   readonly type: string;
@@ -168,6 +172,7 @@ Input.defaultProps = {
   textAlign: 2,
   fontColor: Colors.gray4,
   disabled: false,
+  maxLength: 524288,
 };
 
 export default React.memo(Input);

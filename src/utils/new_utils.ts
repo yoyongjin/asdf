@@ -1,3 +1,7 @@
+import { AsYouType } from 'libphonenumber-js';
+
+const krPhone = new AsYouType('KR');
+
 class Utils {
   static checkBrowser() {
     const agent = navigator.userAgent.toLowerCase();
@@ -47,6 +51,25 @@ class Utils {
 
     return maxPage;
   };
+
+  static formatMacAddress(text: string, pad: string = '-') {
+    const mac = text
+      .toLowerCase()
+      .replace(/[^\d|A-Z]/g, '')
+      .match(/.{1,2}/g || [])
+      ?.join(pad);
+
+    return mac || '';
+  }
+
+  static formatPhoneNumber(str = '', delim = '-') {
+    const clean = str.replace(/[^\d]+/gi, '').substr(0, 13);
+    let r = krPhone.input(clean);
+    if (delim !== '-') r = r.replace(/-/g, delim);
+    krPhone.reset();
+
+    return r;
+  }
 }
 
 export default Utils;

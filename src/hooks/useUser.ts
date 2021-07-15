@@ -15,9 +15,9 @@ import { RootState } from 'modules/reducers';
 import { LIMIT, PAGE } from 'utils/constants';
 
 function useUser() {
-  const userInfo = useSelector((state: RootState) => state.user.userList.users); // 전체 유저 정보
+  const userInfo = useSelector((state: RootState) => state.user.user); // 전체 유저 정보
   const consultantInfo = useSelector(
-    (state: RootState) => state.user.userList.consultants,
+    (state: RootState) => state.user.consultant,
   ); // 상담원 정보
   const filterUserInfo = useSelector(
     (state: RootState) => state.user.filterUserList.users,
@@ -65,28 +65,34 @@ function useUser() {
     [dispatch],
   );
 
-  const onClickInsertUser = useCallback(
+  const onClickAddUser = useCallback(
     (
       branchId: number,
       teamId: number,
-      admin: number,
+      adminId: number,
       name: string,
-      userId: string,
-      password: string,
-      tel: string,
-      ip: string,
+      userName?: string,
+      number?: string,
+      ip?: string,
+      mac?: string,
+      mic?: number,
+      spk?: number,
     ) => {
-      let number = tel.replace(/-/g, '');
+      // let number = tel.replace(/-/g, '');
       const payload = {
-        branch_id: String(branchId),
-        team_id: String(teamId),
-        admin_id: String(admin),
+        branch_id: branchId,
+        team_id: teamId,
+        admin_id: adminId,
         name,
-        user_name: userId,
-        password,
-        number: number,
-        ziboxip: ip,
+        user_name: userName,
+        number,
+        zibox_ip: ip,
+        zibox_mac: mac,
+        zibox_mic: mic,
+        zibox_spk: spk,
       };
+
+      console.log(payload);
 
       dispatch(requestAddUser(payload));
     },
@@ -150,12 +156,15 @@ function useUser() {
     [dispatch],
   );
 
-  const onClickDisconnect = useCallback((number: string) => {
-    const payload = {
-      number,
-    };
-    dispatch(disconnectForce(payload));
-  }, [dispatch]);
+  const onClickDisconnect = useCallback(
+    (number: string) => {
+      const payload = {
+        number,
+      };
+      dispatch(disconnectForce(payload));
+    },
+    [dispatch],
+  );
 
   return {
     userInfo,
@@ -164,12 +173,25 @@ function useUser() {
     filterConsultantInfo,
     getUsers,
     resetFilteredList,
-    onClickInsertUser,
+    onClickAddUser,
     onClickUpdateUser,
     onClickDeleteUser,
     onClickResetPassword,
     onClickDisconnect,
   };
 }
+
+export type OnClickAddUser = (
+  branchId: number,
+  teamId: number,
+  adminId: number,
+  name: string,
+  userName?: string,
+  number?: string,
+  ip?: string,
+  mac?: string,
+  mic?: number,
+  spk?: number,
+) => void;
 
 export default useUser;

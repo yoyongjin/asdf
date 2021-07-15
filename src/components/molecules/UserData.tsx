@@ -13,10 +13,12 @@ import {
 import useOrganization from 'hooks/useOrganization';
 import useInputForm from 'hooks/useInputForm';
 import { TeamInfo, BranchInfo } from 'modules/types/branch';
-import { ConsultantInfo, UserInfo } from 'types/user';
+import { ConsultantInfo, UserData as UserDataV2, UserInfo } from 'types/user';
 import { Colors } from 'utils/color';
 import constants, { COMPANY_TYPE, USER_TYPE } from 'utils/constants';
 import { formatPhoneNumber } from 'utils/utils';
+import Utils from 'utils/new_utils';
+import { OnClickAddUser } from 'hooks/useUser';
 
 const StyledWrapper = styled.div`
   width: 100%;
@@ -74,35 +76,53 @@ const StyledFooter = styled.div`
     ${constants.COMPANY === COMPANY_TYPE.LINA ? Colors.blue1 : Colors.blue3};
 `;
 
+const defaultSelectData = [
+  { id: 0, name: 'branch', value: '지점명' },
+  { id: 1, name: 'team', value: '팀명' },
+  { id: 2, name: 'admin', value: '권한' },
+];
+
+const defaultInputData = [
+  { id: 0, name: 'name', value: '이름' },
+  { id: 1, name: 'id', value: '아이디' },
+  { id: 2, name: 'number', value: '전화번호' },
+  { id: 3, name: 'zibox_ip', value: 'ZiBox IP' },
+  { id: 4, name: 'zibox_mac', value: 'ZiBox MAC' },
+];
+
+const defaultRangeData = [
+  { id: 0, name: 'zibox_mic', value: 'ZiBox MIC' },
+  { id: 1, name: 'zibox_spk', value: 'ZiBox SPK' },
+];
+
 function UserData({
-  onClickVisible,
-  onClickInsertUser,
-  onClickUpdateUser,
+  adminId,
   adminList,
-  data,
-  isVisible,
   branchId,
   branchName,
-  adminId,
+  isVisible,
+  onClickAddUser,
+  onClickUpdateUser,
+  onClickVisible,
+  userData,
 }: UserDataProps) {
-  const initialized = useMemo(() => {
+  const initializedData = useMemo(() => {
     return {
-      branch: data && data!.branch_id ? data!.branch_id : -1,
-      team: data && data!.team_id ? data!.team_id : -1,
-      admin: data && data!.admin_id >= 0 ? data!.admin_id : 0,
-      name: data && data!.name ? data!.name : '',
-      id: data && data!.user_name ? data!.user_name : '',
-      password: '',
-      tel: data && data!.number ? data!.number : '',
-      zibox_ip: data && data!.ziboxip ? data!.ziboxip : '',
-      zibox_mac: data && data!.ziboxip ? data!.ziboxip : '',
-      mic: data && data!.ziboxmic ? data!.ziboxmic : 0,
-      spk: data && data!.ziboxspk ? data!.ziboxspk : 0,
+      branch: userData?.branch_id ? userData!.branch_id : -1,
+      team: userData?.team_id ? userData!.team_id : -1,
+      admin: userData?.admin_id ? userData!.admin_id : 0,
+      name: userData?.name ? userData!.name : '',
+      id: userData?.user_name ? userData!.user_name : '',
+      number: userData?.number ? userData!.number : '',
+      zibox_ip: userData?.zibox_ip ? userData!.zibox_ip : '',
+      zibox_mac: userData?.zibox_mac ? userData!.zibox_mac : '',
+      zibox_mic: userData?.zibox_mic ? userData!.zibox_mic : 0,
+      zibox_spk: userData?.zibox_spk ? userData!.zibox_spk : 0,
     };
-  }, [data]);
+  }, [userData]);
 
-  const { form, onChangeInput, onChangeSelect, initValue } =
-    useInputForm(initialized);
+  const { form, onChangeInput, onChangeSelect, setInitializedForm } =
+    useInputForm(initializedData);
 
   const {
     userBranches,
@@ -112,39 +132,126 @@ function UserData({
     initUserBranchList,
   } = useOrganization();
 
-  const branch = useMemo(() => {
-    let branch: Array<SelectDataType> = [];
-    if (userBranches!.length > 0) {
-      let temp = userBranches as Array<BranchInfo>;
-      branch = temp.map((value) => {
-        let data = {
-          id: value.id,
-          data: value.branch_name,
-        };
-
-        return data;
-      });
-    }
-    return branch;
+  const branches = useMemo(() => {
+    return userBranches!.map((values) => {
+      return {
+        id: values.id,
+        data: values.branch_name,
+      };
+    });
   }, [userBranches]);
 
-  const team = useMemo(() => {
-    let team: Array<SelectDataType> = [];
-
-    if (userTeams!.length > 0) {
-      let temp2 = userTeams as Array<TeamInfo>;
-      team = temp2.map((value) => {
-        let data = {
-          id: value.id,
-          data: value.team_name,
-        };
-
-        return data;
-      });
-    }
-
-    return team;
+  const teams = useMemo(() => {
+    return userTeams!.map((values) => {
+      return {
+        id: values.id,
+        data: values.team_name,
+      };
+    });
   }, [userTeams]);
+
+  const setUserData = useCallback(() => {
+    if (userData!.id) {
+      // 추가
+      const id = form.admin === USER_TYPE.CONSULTANT ? undefined : form.id;
+      const number =
+        form.admin === USER_TYPE.CONSULTANT ? undefined : form.number;
+      const ip =
+        form.admin === USER_TYPE.CONSULTANT ? undefined : form.zibox_ip;
+      const mac =
+        form.admin === USER_TYPE.CONSULTANT ? undefined : form.zibox_mac;
+      const mic =
+        form.admin === USER_TYPE.CONSULTANT ? undefined : form.zibox_mic;
+      const spk =
+        form.admin === USER_TYPE.CONSULTANT ? undefined : form.zibox_spk;
+
+      onClickAddUser!(
+        form.branch,
+        form.team,
+        form.admin,
+        form.name,
+        id,
+        number,
+        ip,
+        mac,
+        mic,
+        spk,
+      );
+    } else {
+    }
+  }, [
+    form.admin,
+    form.branch,
+    form.id,
+    form.name,
+    form.number,
+    form.team,
+    form.zibox_ip,
+    form.zibox_mac,
+    form.zibox_mic,
+    form.zibox_spk,
+    onClickAddUser,
+    userData,
+  ]);
+
+  // const validateInput = useCallback(() => {
+  //   if (adminId === 2) {
+  //     // 슈퍼관리자일 경우
+  //     if (form.branch === -1 || form.team === -1) {
+  //       alert('지점명과 팀명을 선택해주세요.');
+  //       return false;
+  //     }
+
+  //     if (form.admin === 0) {
+  //       // 상담원으로 추가/수정 할 경우
+  //       if (!form.name.trim() || !form.tel.trim()) {
+  //         alert('빈란 없이 입력해주세요.');
+  //         return false;
+  //       }
+  //       return true;
+  //     } else if (form.admin === 1) {
+  //       // 관리자일 경우
+  //       if (!form.name.trim() || !form.id.trim()) {
+  //         alert('빈란 없이 입력해주세요.');
+  //         return false;
+  //       }
+  //       return true;
+  //     }
+  //     return false;
+  //   } else if (adminId === 1) {
+  //     // 일반 관리자
+  //     if (form.team === -1) {
+  //       alert('팀명을 선택해주세요.');
+  //       return false;
+  //     }
+
+  //     if (form.admin === 0) {
+  //       // 상담원으로 추가/수정 할 경우
+  //       if (!form.name.trim() || !form.tel.trim()) {
+  //         alert('빈란 없이 입력해주세요.');
+  //         return false;
+  //       }
+  //       return true;
+  //     } else if (form.admin === 1) {
+  //       // 관리자일 경우
+  //       if (!form.name.trim() || !form.id.trim()) {
+  //         alert('빈란 없이 입력해주세요.');
+  //         return false;
+  //       }
+  //       return true;
+  //     }
+
+  //     return false;
+  //   }
+  // }, [
+  //   adminId,
+  //   form.id,
+  //   form.branch,
+  //   form.admin,
+  //   form.name,
+  //   form.team,
+  //   form.tel,
+  // ]);
 
   useEffect(() => {
     if (isVisible) {
@@ -175,67 +282,10 @@ function UserData({
   }, [adminId, branchId, form.branch, getUserTeams, isVisible]);
 
   useEffect(() => {
-    initValue(initialized);
-  }, [initialized, initValue]);
-
-  const validateInput = useCallback(() => {
-    if (adminId === 2) {
-      // 슈퍼관리자일 경우
-      if (form.branch === -1 || form.team === -1) {
-        alert('지점명과 팀명을 선택해주세요.');
-        return false;
-      }
-
-      if (form.admin === 0) {
-        // 상담원으로 추가/수정 할 경우
-        if (!form.name.trim() || !form.tel.trim()) {
-          alert('빈란 없이 입력해주세요.');
-          return false;
-        }
-        return true;
-      } else if (form.admin === 1) {
-        // 관리자일 경우
-        if (!form.name.trim() || !form.id.trim()) {
-          alert('빈란 없이 입력해주세요.');
-          return false;
-        }
-        return true;
-      }
-      return false;
-    } else if (adminId === 1) {
-      // 일반 관리자
-      if (form.team === -1) {
-        alert('팀명을 선택해주세요.');
-        return false;
-      }
-
-      if (form.admin === 0) {
-        // 상담원으로 추가/수정 할 경우
-        if (!form.name.trim() || !form.tel.trim()) {
-          alert('빈란 없이 입력해주세요.');
-          return false;
-        }
-        return true;
-      } else if (form.admin === 1) {
-        // 관리자일 경우
-        if (!form.name.trim() || !form.id.trim()) {
-          alert('빈란 없이 입력해주세요.');
-          return false;
-        }
-        return true;
-      }
-
-      return false;
+    if (isVisible) {
+      setInitializedForm(initializedData);
     }
-  }, [
-    adminId,
-    form.id,
-    form.branch,
-    form.admin,
-    form.name,
-    form.team,
-    form.tel,
-  ]);
+  }, [initializedData, isVisible, setInitializedForm]);
 
   return (
     <StyledWrapper>
@@ -244,108 +294,106 @@ function UserData({
       </StyledTitle>
       <StyledContent>
         <StyledUserInfo>
-          <TextSelect
-            defaultValue={form.branch}
-            textValue={'지점명'}
-            name={'branch'}
-            list={branch}
-            selectWidth={108}
-            selectHeight={26}
-            onChange={(e) => onChangeSelect(e)}
-          />
-          <TextSelect
-            defaultValue={form.team}
-            textValue={'팀명'}
-            name={'team'}
-            list={team}
-            selectWidth={108}
-            selectHeight={26}
-            onChange={(e) =>
-              onChangeSelect(e, adminId === 1 ? branchId : form.branch)
-            }
-          />
-          <TextSelect
-            defaultValue={form.admin}
-            textValue={'권한'}
-            name={'admin'}
-            list={adminList}
-            onChange={onChangeSelect}
-            selectWidth={108}
-            selectHeight={26}
-          />
-          <TextInput
-            customStyle={`float:right;`}
-            inputWidth={10.8}
-            height={2.6}
-            textValue={'이름'}
-            onChange={onChangeInput}
-            name={'name'}
-            value={form.name}
-            fontSize={13}
-          />
-          <TextInput
-            customStyle={`float:right;`}
-            inputWidth={10.8}
-            height={2.6}
-            textValue={'아이디'}
-            onChange={onChangeInput}
-            name={'id'}
-            value={form.id}
-            fontSize={13}
-            disabled={form.admin === 0}
-          />
-          <TextInput
-            customStyle={`float:right;`}
-            padRight={2}
-            inputWidth={10.8}
-            height={2.6}
-            textValue={'전화번호'}
-            onChange={onChangeInput}
-            name={'tel'}
-            value={formatPhoneNumber(form.tel)}
-            fontSize={13}
-            disabled={form.admin !== 0}
-          />
-          <TextInput
-            customStyle={`float:right;`}
-            inputWidth={10.8}
-            height={2.6}
-            textValue={'ZiBox IP'}
-            onChange={onChangeInput}
-            name={'ziboxip'}
-            value={form.zibox_ip}
-            fontSize={13}
-            disabled={form.admin !== 0}
-          />
-          <TextInput
-            customStyle={`float:right;`}
-            inputWidth={10.8}
-            height={2.6}
-            textValue={'ZiBox MAC'}
-            onChange={onChangeInput}
-            name={'ziboxmac'}
-            value={form.zibox_mac}
-            fontSize={13}
-            disabled={form.admin === 0}
-          />
-          <TextRange
-            rangeName="test"
-            rangeValue="1"
-            textValue="ZiBox Mic"
-            onChangeRange={(e) => {
-              console.log('ESSS');
-            }}
-          />
-          <TextRange
-            rangeName="test"
-            rangeValue="1"
-            textValue="ZiBox Spk"
-            onChangeRange={(e) => {
-              console.log('ESSS');
-            }}
-          />
+          {
+            <>
+              {defaultSelectData.map((data, index) => {
+                return (
+                  <TextSelect
+                    defaultValue={
+                      data.id === 0
+                        ? Number(form.branch)
+                        : data.id === 1
+                        ? Number(form.team)
+                        : data.id === 2
+                        ? Number(form.admin)
+                        : -1
+                    }
+                    list={
+                      data.id === 0
+                        ? branches
+                        : data.id === 1
+                        ? teams
+                        : data.id === 2
+                        ? adminList
+                        : []
+                    }
+                    name={data.name}
+                    onChange={onChangeSelect}
+                    selectHeight={26}
+                    selectWidth={108}
+                    textValue={data.value}
+                  />
+                );
+              })}
+            </>
+          }
+          {
+            <>
+              {defaultInputData.map((data, index) => {
+                return (
+                  <TextInput
+                    customStyle="float:right;"
+                    disabled={
+                      data.name === 'name'
+                        ? false
+                        : data.name === 'id'
+                        ? form.admin === USER_TYPE.CONSULTANT
+                        : form.admin !== USER_TYPE.CONSULTANT
+                    }
+                    fontSize={13}
+                    height={2.6}
+                    inputWidth={
+                      data.name === 'zibox_ip' || data.name === 'zibox_mac'
+                        ? 18.8
+                        : 10.8
+                    }
+                    name={data.name}
+                    onChange={onChangeInput}
+                    textValue={data.value}
+                    value={
+                      data.name === 'name'
+                        ? form.name
+                        : data.name === 'id'
+                        ? form.id
+                        : data.name === 'number'
+                        ? Utils.formatPhoneNumber(form.number)
+                        : data.name === 'zibox_ip'
+                        ? form.zibox_ip
+                        : data.name === 'zibox_mac'
+                        ? Utils.formatMacAddress(form.zibox_mac)
+                        : ''
+                    }
+                    inputMaxLength={data.name === 'zibox_mac' ? 17 : 0}
+                  />
+                );
+              })}
+            </>
+          }
+          {
+            <>
+              {defaultRangeData.map((data, index) => {
+                return (
+                  <TextRange
+                    rangeDisable={form.admin !== USER_TYPE.CONSULTANT}
+                    rangeName={data.name}
+                    rangeValue={
+                      data.name === 'zibox_mic'
+                        ? String(form.zibox_mic)
+                        : data.name === 'zibox_spk'
+                        ? String(form.zibox_spk)
+                        : ''
+                    }
+                    textValue={data.value}
+                    onChangeRange={(e) => {
+                      console.log('LEFT');
+                    }}
+                  />
+                );
+              })}
+            </>
+          }
         </StyledUserInfo>
-        {data && data.admin_id === 0 ? (
+        {/* {data && data.admin_id === 0 ? (
           <>
             <StyledStatus>
               {data.zibox ? (
@@ -361,12 +409,10 @@ function UserData({
               ) : null}
             </StyledStatus>
           </>
-        ) : null}
+        ) : null} */}
       </StyledContent>
       <StyledFooter>
         <Button
-          width={7}
-          height={2.6}
           bgColor={
             constants.COMPANY === COMPANY_TYPE.DBLIFE
               ? Colors.green1
@@ -377,43 +423,45 @@ function UserData({
           customStyle={`
             float:right;
           `}
+          height={2.6}
           onClick={(e) => {
-            if (data! && data!.id) {
-              // 수정
-              if (validateInput()) {
-                onClickUpdateUser!(
-                  data!.id,
-                  form!.branch === -1 ? branchId! : form!.branch,
-                  form.team,
-                  form.admin,
-                  form.name,
-                  form.id,
-                  form.password,
-                  form.tel,
-                  form.zibox_ip,
-                  Number(form.mic),
-                  Number(form.spk),
-                );
-                onClickVisible();
-              }
-            } else {
-              // 추가
-              if (validateInput()) {
-                onClickInsertUser!(
-                  form!.branch === -1 ? branchId! : form!.branch,
-                  form.team,
-                  form.admin,
-                  form.name,
-                  form.id,
-                  form.password,
-                  form.tel,
-                  form.zibox_ip,
-                );
-                initValue(initialized);
-                onClickVisible();
-              }
-            }
+            // if (userData! && userData!.id) {
+            //   // 수정
+            //   if (validateInput()) {
+            //     onClickUpdateUser!(
+            //       userData!.id,
+            //       form!.branch === -1 ? branchId! : form!.branch,
+            //       form.team,
+            //       form.admin,
+            //       form.name,
+            //       form.id,
+            //       '',
+            //       form.tel,
+            //       form.zibox_ip,
+            //       Number(form.mic),
+            //       Number(form.spk),
+            //     );
+            //     onClickVisible();
+            //   }
+            // } else {
+            //   // 추가
+            //   if (validateInput()) {
+            //     onClickInsertUser!(
+            //       form!.branch === -1 ? branchId! : form!.branch,
+            //       form.team,
+            //       form.admin,
+            //       form.name,
+            //       form.id,
+            //       '',
+            //       form.tel,
+            //       form.zibox_ip,
+            //     );
+            //     // initValue(initialized);
+            //     onClickVisible();
+            //   }
+            // }
           }}
+          width={7}
         >
           <Text
             fontColor={Colors.white}
@@ -430,10 +478,10 @@ function UserData({
           bgColor={Colors.gray4}
           onClick={(e) => {
             onClickVisible();
-            if (data && !data!.id) {
-              initValue(initialized);
+            if (userData && !userData!.id) {
+              // initValue(initialized);
             } else {
-              initValue(initialized);
+              // initValue(initialized);
             }
           }}
           customStyle={`
@@ -461,18 +509,9 @@ interface UserDataProps {
   branchName?: string;
   isVisible?: boolean;
   adminList: Array<SelectDataType>;
-  data?: UserInfo | ConsultantInfo;
+  userData?: UserDataV2;
   onClickVisible: () => void;
-  onClickInsertUser?: (
-    branchId: number,
-    teamId: number,
-    admin: number,
-    name: string,
-    userId: string,
-    password: string,
-    tel: string,
-    ip: string,
-  ) => void;
+  onClickAddUser?: OnClickAddUser;
   onClickUpdateUser?: (
     id: number,
     branchId: number,

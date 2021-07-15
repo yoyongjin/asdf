@@ -4,7 +4,7 @@ import { RouteComponentProps } from 'react-router-dom';
 
 import { Modal } from 'components/atoms';
 import { Consultant, Title, UserData } from 'components/molecules';
-import { ConsultantInfo } from 'types/user';
+import { ConsultantInfo, UserData as UserDataV2 } from 'types/user';
 import useUser from 'hooks/useUser';
 import useMonitoring from 'hooks/useMonitoring';
 import useOrganization from 'hooks/useOrganization';
@@ -57,13 +57,13 @@ const adminList = [
   { id: 1, data: '관리자' },
 ];
 
-let branch = -1; // 임시 지점 번호
-let team = -1; // 임시 팀 번호
-let request = false;
+// let branch = -1; // 임시 지점 번호
+// let team = -1; // 임시 팀 번호
+// let request = false;
 
 function Monitoring({ location }: MonitoringProps) {
   const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
-  const [tempConsultInfo, setTempConsultInfo] = useState<ConsultantInfo>();
+  const [selectedConsultant, setSelectedConsultant] = useState<UserDataV2>();
   const { loginInfo, socketConnection } = useAuth();
   const { branches, teams, getBranches, getTeams } = useOrganization();
   const { form, onChangeSelect, setKeyValue, onChangeInput } = useInputForm({
@@ -78,13 +78,7 @@ function Monitoring({ location }: MonitoringProps) {
     changeTappingStatus,
     tappingTarget,
   } = useMonitoring();
-  const {
-    consultantInfo,
-    filterConsultantInfo,
-    getUsers,
-    resetFilteredList,
-    onClickUpdateUser,
-  } = useUser();
+  const { consultantInfo, getUsers, onClickUpdateUser } = useUser();
   const { visible, onClickVisible } = useVisible();
   const { connectZibox, requestTapping, startTapping, stopTapping, setVolume } =
     useZibox();
@@ -198,12 +192,12 @@ function Monitoring({ location }: MonitoringProps) {
     };
   }, [form.left, form.right, onChangeInput]);
 
-  const getConsultantInfo = useCallback(
-    (consultantInfo: ConsultantInfo) => {
-      setTempConsultInfo(consultantInfo);
+  const setSeletedConsultantData = useCallback(
+    (consultantInfo: UserDataV2) => {
+      setSelectedConsultant(consultantInfo);
       onClickVisible();
     },
-    [setTempConsultInfo, onClickVisible],
+    [onClickVisible],
   );
 
   const getUsers2 = useCallback(
@@ -222,7 +216,7 @@ function Monitoring({ location }: MonitoringProps) {
   );
 
   const consultantView = useCallback(
-    (consultant: ConsultantInfo) => {
+    (consultant: UserDataV2) => {
       return (
         <StyledConsultant
           key={`${loginInfo.admin_id}-${form.branch}-${form.team}-styled-consultant-${consultant.id}`}
@@ -231,7 +225,7 @@ function Monitoring({ location }: MonitoringProps) {
             key={`${loginInfo.admin_id}-${form.branch}-${form.team}-consultant-${consultant.id}`}
             consultInfo={consultant}
             loginId={loginInfo.id}
-            getConsultantInfo={getConsultantInfo}
+            setSeletedConsultantData={setSeletedConsultantData}
             connectZibox={connectZibox}
             changeTappingData={changeTappingData}
             tappingStatus={tappingStatus}
@@ -249,7 +243,7 @@ function Monitoring({ location }: MonitoringProps) {
       loginInfo.id,
       form.branch,
       form.team,
-      getConsultantInfo,
+      setSeletedConsultantData,
       connectZibox,
       changeTappingData,
       tappingStatus,
@@ -260,165 +254,6 @@ function Monitoring({ location }: MonitoringProps) {
       tappingTarget,
     ],
   );
-
-  useEffect(() => {
-    if (!tempConsultInfo) {
-      return;
-    }
-    const consultant = consultantInfo.find((consultant) => {
-      return consultant.id === tempConsultInfo!.id;
-    });
-
-    if (
-      consultant?.zibox !== tempConsultInfo?.zibox ||
-      consultant?.phone !== tempConsultInfo?.phone
-    ) {
-      setTempConsultInfo(consultant);
-    }
-  }, [consultantInfo, tempConsultInfo]);
-
-  useEffect(() => {
-    if (tappingStatus === 2) {
-      setVolume(1, form.left);
-    }
-  }, [tappingStatus, form.left, setVolume]);
-
-  useEffect(() => {
-    if (tappingStatus === 2) {
-      setVolume(2, form.right);
-    }
-  }, [tappingStatus, form.right, setVolume]);
-
-  useEffect(() => {
-    if (socketConnection !== SOCKET_CONNECTION.SUCCESS) return;
-
-    if (loginInfo.admin_id === 2) {
-      // 슈퍼 관리자
-      if (form.branch === -1 && filterConsultantInfo.length > 0) {
-        // 필터링된 유저 리스트에서 전체 지점명을 볼 경우 필터링된 유저 리스트 초기화
-        resetFilteredList(2);
-      }
-
-      if (consultantInfo.length > 0) {
-        if (form.branch === -1 && request) {
-          branch = form.branch;
-          team = form.team;
-          return;
-        }
-
-        if (form.branch !== branch || form.team !== team || !request) {
-          // 지점명 또는 팀명 선택이 변경될 경우
-          getUsers2(
-            form.branch,
-            form.team,
-            2000,
-            1,
-            location.pathname,
-            loginInfo.admin_id,
-            loginInfo.id,
-          );
-          branch = form.branch;
-          team = form.team;
-        }
-        return;
-      }
-
-      // 첫 상담원 정보 가져올 때
-      getUsers2(
-        form.branch,
-        form.team,
-        2000,
-        1,
-        location.pathname,
-        loginInfo.admin_id,
-        loginInfo.id,
-      );
-      branch = form.branch;
-      team = form.team;
-      request = true;
-    } else if (loginInfo.admin_id === 1) {
-      // 일반 관리자
-      if (form.team === -1 && filterConsultantInfo.length > 0) {
-        // 필터링된 유저 리스트에서 전체 지점명을 볼 경우 필터링된 유저 리스트 초기화
-        resetFilteredList(2);
-      }
-
-      if (consultantInfo.length > 0) {
-        if (form.team === -1 && request) {
-          team = form.team;
-          return;
-        }
-
-        if (form.team !== team || !request) {
-          // 지점 또는 팀 선택이 변경될 경우
-          getUsers2(
-            loginInfo.branch_id,
-            form.team,
-            2000,
-            1,
-            location.pathname,
-            loginInfo.admin_id,
-            loginInfo.id,
-          );
-          team = form.team;
-        }
-        return;
-      }
-
-      // 첫 상담원 정보 가져올 때
-      getUsers2(
-        loginInfo.branch_id,
-        form.team,
-        2000,
-        1,
-        location.pathname,
-        loginInfo.admin_id,
-        loginInfo.id,
-      );
-      team = form.team;
-    }
-  }, [
-    socketConnection,
-    loginInfo.id,
-    loginInfo.admin_id,
-    loginInfo.branch_id,
-    form.branch,
-    form.team,
-    consultantInfo.length,
-    filterConsultantInfo.length,
-    location.pathname,
-    getUsers2,
-    resetFilteredList,
-  ]);
-
-  useEffect(() => {
-    if (loginInfo.admin_id === 2) {
-      // 슈퍼관리자일 경우에만 지점명 가져오기
-      getBranches();
-    }
-  }, [getBranches, loginInfo.admin_id]);
-
-  useEffect(() => {
-    if (loginInfo.admin_id === 2) {
-      // 슈퍼 관리자
-      getTeams(form.branch);
-    } else if (loginInfo.admin_id === 1) {
-      // 일반 관리자
-      getTeams(loginInfo.branch_id);
-    }
-  }, [loginInfo.admin_id, loginInfo.branch_id, form.branch, getTeams]);
-
-  useEffect(() => {
-    // 지점명 변경 시 팀 id 초기화
-    setKeyValue('team', -1);
-  }, [form.branch, setKeyValue]);
-
-  useEffect((): any => {
-    window.addEventListener('resize', handleWindowResize);
-    return () => {
-      window.removeEventListener('resize', handleWindowResize);
-    };
-  }, []);
 
   const handleWindowResize = (): void => {
     setWindowWidth(window.innerWidth);
@@ -433,6 +268,84 @@ function Monitoring({ location }: MonitoringProps) {
       (CONSULTANT_BOX_WIDTH + 2 * BOX_MAGIN)
     );
   };
+
+  useEffect(() => {
+    if (socketConnection !== SOCKET_CONNECTION.SUCCESS) return;
+
+    if (loginInfo.admin_id === USER_TYPE.SUPER_ADMIN) {
+      // 슈퍼 관리자
+      getUsers2(
+        form.branch,
+        form.team,
+        2000,
+        1,
+        location.pathname,
+        loginInfo.admin_id,
+        loginInfo.id,
+      );
+    } else if (loginInfo.admin_id === USER_TYPE.ADMIN) {
+      // 일반 관리자
+      getUsers2(
+        loginInfo.branch_id,
+        form.team,
+        2000,
+        1,
+        location.pathname,
+        loginInfo.admin_id,
+        loginInfo.id,
+      );
+    }
+  }, [
+    form.branch,
+    form.team,
+    getUsers2,
+    location.pathname,
+    loginInfo.admin_id,
+    loginInfo.branch_id,
+    loginInfo.id,
+    socketConnection,
+  ]);
+
+  useEffect(() => {
+    if (loginInfo.admin_id === USER_TYPE.SUPER_ADMIN) {
+      // 슈퍼관리자일 경우에만 지점명 가져오기
+      getBranches();
+    }
+  }, [getBranches, loginInfo.admin_id]);
+
+  useEffect(() => {
+    if (loginInfo.admin_id === USER_TYPE.SUPER_ADMIN) {
+      // 슈퍼 관리자
+      getTeams(form.branch);
+    } else if (loginInfo.admin_id === USER_TYPE.ADMIN) {
+      // 일반 관리자
+      getTeams(loginInfo.branch_id);
+    }
+  }, [form.branch, getTeams, loginInfo.admin_id, loginInfo.branch_id]);
+
+  useEffect(() => {
+    if (tappingStatus === 2) {
+      setVolume(1, form.left);
+    }
+  }, [tappingStatus, form.left, setVolume]);
+
+  useEffect(() => {
+    if (tappingStatus === 2) {
+      setVolume(2, form.right);
+    }
+  }, [tappingStatus, form.right, setVolume]);
+
+  useEffect(() => {
+    // 지점명 변경 시 팀 id 초기화
+    setKeyValue('team', -1);
+  }, [form.branch, setKeyValue]);
+
+  useEffect((): any => {
+    window.addEventListener('resize', handleWindowResize);
+    return () => {
+      window.removeEventListener('resize', handleWindowResize);
+    };
+  }, []);
 
   return (
     <>
@@ -451,27 +364,9 @@ function Monitoring({ location }: MonitoringProps) {
           <StyledConsultantArea
             style={{ maxWidth: calculateMaxWidth() + 'px' }}
           >
-            {loginInfo.admin_id === 2
-              ? form.branch === -1 && form.team === -1
-                ? consultantInfo.map((consultant, i) => {
-                    return consultantView(consultant);
-                  })
-                : filterConsultantInfo.map((consultant, i) => {
-                    return consultantView(consultant);
-                  })
-              : loginInfo.admin_id === 1
-              ? form.team === -1
-                ? consultantInfo.map((consultant, i) => {
-                    if (consultant.branch_id !== loginInfo.branch_id)
-                      return null;
-                    return consultantView(consultant);
-                  })
-                : filterConsultantInfo.map((consultant, i) => {
-                    if (consultant.branch_id !== loginInfo.branch_id)
-                      return null;
-                    return consultantView(consultant);
-                  })
-              : null}
+            {consultantInfo.map((consultant, i) => {
+              return consultantView(consultant);
+            })}
           </StyledConsultantArea>
         </StyledConsultantAreaWrap>
       </StyledWrapper>
@@ -479,14 +374,14 @@ function Monitoring({ location }: MonitoringProps) {
         isVisible={visible}
         Component={
           <UserData
-            isVisible={visible}
-            onClickVisible={onClickVisible}
-            adminList={adminList}
-            onClickUpdateUser={onClickUpdateUser}
-            data={tempConsultInfo}
             adminId={loginInfo.admin_id}
+            adminList={adminList}
             branchId={loginInfo.branch_id}
             branchName={loginInfo.branch_name!}
+            isVisible={visible}
+            onClickUpdateUser={onClickUpdateUser}
+            onClickVisible={onClickVisible}
+            userData={selectedConsultant}
           />
         }
       />
@@ -495,5 +390,7 @@ function Monitoring({ location }: MonitoringProps) {
 }
 
 interface MonitoringProps extends RouteComponentProps {}
+
+export type SetSeletedConsultantData = (consultantData: UserDataV2) => void;
 
 export default Monitoring;

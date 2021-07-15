@@ -18,6 +18,7 @@ export default {
         modify_team: '/api/team',
         remove_branch: '/api/branch',
         remove_team: '/api/team',
+        add_user: '/api/auth/signup',
       },
     },
   },

@@ -5,6 +5,7 @@ import { Text } from 'components/atoms';
 import { UserInfo } from 'modules/types/user';
 import { Colors } from 'utils/color';
 import constants, { COMPANY_TYPE } from 'utils/constants';
+import { UserData } from 'types/user';
 
 const StyledWrapper = styled.ul`
   /* Position */
@@ -91,11 +92,11 @@ interface ListProps {
   branchId?: number;
   menu: Array<string>;
   id: number;
-  info: UserInfo;
+  info: UserData;
   page?: number;
   teamId?: number;
   loginAdmin: number;
-  onClickGetUserInfo?: (info: UserInfo) => void;
+  onClickGetUserInfo?: (info: UserData) => void;
   onClickDeleteUser?: (
     id: number,
     page: number,

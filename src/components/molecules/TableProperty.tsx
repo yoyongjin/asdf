@@ -6,6 +6,7 @@ import { List } from 'components/molecules';
 import { UserInfo } from 'modules/types/user';
 import { Colors } from 'utils/color';
 import { formatPhoneNumber } from 'utils/utils';
+import { UserData } from 'types/user';
 
 const StyledWrapper = styled.td``;
 
@@ -127,14 +128,14 @@ interface SelectDataType {
 }
 
 interface TableContentProps {
-  info: UserInfo;
+  info: UserData;
   optionIcon: string;
   optionHoverIcon: string;
   page?: number;
   branchId?: number;
   adminId?: number;
   teamId?: number;
-  getUserInfo?: (info: UserInfo) => void;
+  getUserInfo?: (info: UserData) => void;
   onClickDeleteUser: (
     id: number,
     page: number,

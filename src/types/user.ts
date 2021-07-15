@@ -5,18 +5,22 @@ import * as common from 'modules/types/common';
 
 export type UserAction = ActionType<typeof actions>;
 
-export interface UserType {
+export interface UserState {
   request: RequestType;
+  user: Array<UserData>;
+  consultant: Array<UserData>;
+  numberOfUsers: number;
   userList: UsersData;
   filterUserList: UsersData;
   status: ConsultantAllStatusByNumber;
+  realTimeStatus: ConsultantAllStatusByNumberV2;
 }
 
 export interface RequestType {
   getUser: common.FetchType;
-  insertUser: common.FetchType;
-  updateUser: common.FetchType;
-  deleteUser: common.FetchType;
+  addUser: common.FetchType;
+  modifyUser: common.FetchType;
+  removeUser: common.FetchType;
   resetPassword: common.FetchType;
 }
 
@@ -116,14 +120,67 @@ export interface ChangeUser {
   userInfo: UserInfo;
 }
 
-export interface SuccessGetUsers {
-  users: Array<UserInfo>;
-  count: number;
-  url: string;
-  loginId: number;
-}
+/**
+ * @deprecated
+ */
+// export interface SuccessGetUsers {
+//   users: Array<UserInfo>;
+//   count: number;
+//   url: string;
+// }
 
 export interface TimeData {
   server_time: number;
   local_time: number;
+}
+
+// 새로 만듬
+export interface UserData extends ConsultantAllStatus_V2 {
+  id: number;
+  branch_id: number;
+  team_id: number;
+  branch_name: string;
+  team_name: string;
+  admin_id: number;
+  name: string;
+  user_name: string | null;
+  number: string | null;
+  zibox_ip: string | null;
+  zibox_mac: string | null;
+  zibox_mic: number | null;
+  zibox_spk: number | null;
+  zibox_ip_type: string | null;
+  zibox_fw_version: string | null;
+  login_at: number | null;
+}
+
+export interface ConsultantAllStatus_V2 {
+  call?: CallStatus;
+  consultant?: ConsultantStatus;
+  phone?: PhoneStatus;
+  zibox?: ZiboxStatus;
+  calling_time?: number;
+}
+
+export interface SuccessGetUsers {
+  users: Array<UserData>;
+  count: number;
+  url: string;
+}
+
+export interface ConsultantAllStatusByNumberV2 {
+  [number: string]: ConsultantAllStatus_V2;
+}
+
+export interface RequestAddUser {
+  branch_id: number;
+  team_id: number;
+  admin_id: number;
+  name: string;
+  user_name?: string;
+  number?: string;
+  zibox_ip?: string;
+  zibox_mac?: string;
+  zibox_mic?: number;
+  zibox_spk?: number;
 }

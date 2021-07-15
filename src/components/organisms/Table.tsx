@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { TableTitle, TableContent } from 'components/molecules';
 import { UserInfo } from 'modules/types/user';
 import { Colors } from 'utils/color';
+import { UserData } from 'types/user';
 
 const StyledWrapper = styled.table`
   /* Display */
@@ -81,10 +82,10 @@ interface TableProps extends StyledProps {
   page?: number;
   tableTitle: Array<TitleProps>;
   teamId?: number;
-  userInfo: Array<UserInfo>;
+  userInfo: Array<UserData>;
   optionIcon: string;
   optionHoverIcon: string;
-  getUserInfo?: (info: UserInfo) => void;
+  getUserInfo?: (info: UserData) => void;
   onClickDeleteUser?: (
     id: number,
     page: number,

@@ -17,11 +17,7 @@ function useInputForm<T>(initialForm: T) {
   );
 
   const onChangeSelect = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>, data?: number) => {
-      if (data === -1) {
-        alert('지점명을 선택한 후 진행해주세요.');
-        return;
-      }
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
       const { name, value } = e.target;
 
       setForm((form) => {
@@ -41,7 +37,7 @@ function useInputForm<T>(initialForm: T) {
     });
   }, []);
 
-  const initValue = useCallback((data: T) => {
+  const setInitializedForm = useCallback((data: T) => {
     setForm(() => data);
   }, []);
 
@@ -49,7 +45,7 @@ function useInputForm<T>(initialForm: T) {
     form,
     onChangeInput,
     setKeyValue,
-    initValue,
+    setInitializedForm,
     onChangeSelect,
   };
 }

@@ -31,6 +31,8 @@ function TextInput({
   fontSize,
   fontWeight,
   textColor,
+  inputMaxLength,
+  disabled,
 }: TextInputProps) {
   return (
     <StyledWrapper>
@@ -51,6 +53,8 @@ function TextInput({
         logoImg={image}
         fontSize={fontSize}
         fontWeight={fontWeight}
+        disabled={disabled}
+        maxLength={inputMaxLength}
       />
     </StyledWrapper>
   );
@@ -76,9 +80,7 @@ interface TextInputProps extends BlankProps {
   fontSize: number;
   fontWeight: number | string;
   disabled: boolean;
-  step?: number;
-  min?: number;
-  max?: number;
+  inputMaxLength?: number;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 

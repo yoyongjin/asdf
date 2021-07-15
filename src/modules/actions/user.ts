@@ -19,15 +19,20 @@ import {
   ConsultantStatus,
   ConsultantAllStatus,
   PhoneStatus,
+  RequestAddUser,
 } from 'types/user';
 
+// 유저 정보 가져오기
 export const REQUEST_GET_USERS = 'REQUEST_GET_USERS';
 export const SUCCESS_GET_USERS = 'SUCCESS_GET_USERS';
 export const SUCCESS_GET_FILTER_USERS = 'SUCCESS_GET_FILTER_USERS';
 export const FAILURE_GET_USERS = 'FAILURE_GET_USERS';
+
+// 유저 정보 추가하기
 export const REQUEST_ADD_USER = 'REQUEST_ADD_USER';
 export const SUCCESS_ADD_USER = 'SUCCESS_ADD_USER';
 export const FAILRUE_ADD_USER = 'FAILRUE_ADD_USER';
+
 export const REQUEST_UPDATE_USER = 'REQUEST_UPDATE_USER';
 export const SUCCESS_UPDATE_USER = 'SUCCESS_UPDATE_USER';
 export const FAILURE_UPDATE_USER = 'FAILURE_UPDATE_USER';
@@ -67,22 +72,22 @@ export const ADD_USER = 'ADD_USER';
 export const MODIFY_USER = 'MODIFY_USER';
 export const SET_CALCULATED_CALL_TIME = 'SET_CALCULATED_CALL_TIME';
 
-export const requestGetUsers = createAction(
-  REQUEST_GET_USERS,
-)<getRequestType>();
-export const successGetUsers = createAction(
-  SUCCESS_GET_USERS,
-)<SuccessGetUsers>();
+// action
+// 유저 정보 가져오기
+export const requestGetUsers =
+  createAction(REQUEST_GET_USERS)<getRequestType>();
+export const successGetUsers =
+  createAction(SUCCESS_GET_USERS)<SuccessGetUsers>();
 export const successGetFilterUsers = createAction(
   SUCCESS_GET_FILTER_USERS,
 )<SuccessGetUsers>();
 export const failureGetUsers = createAction(FAILURE_GET_USERS)<string>();
-export const requestAddUser = createAction(REQUEST_ADD_USER)<UserInfoType>();
+
+export const requestAddUser = createAction(REQUEST_ADD_USER)<RequestAddUser>();
 export const successAddUser = createAction(SUCCESS_ADD_USER)();
 export const failureAddUser = createAction(FAILRUE_ADD_USER)<string>();
-export const requestUpdateUser = createAction(
-  REQUEST_UPDATE_USER,
-)<UpdateUserInfoType>();
+export const requestUpdateUser =
+  createAction(REQUEST_UPDATE_USER)<UpdateUserInfoType>();
 export const successUpdateUser = createAction(SUCCESS_UPDATE_USER)();
 export const failureUpdateUser = createAction(FAILURE_UPDATE_USER)<string>();
 export const insertUser = createAction(INSERT_USER)<{
@@ -94,9 +99,8 @@ export const updateUser = createAction(UPDATE_USER)<{
   branch_id: number;
 }>();
 export const deleteUser = createAction(DELETE_USER)<{ id: number }>();
-export const requestDeleteUser = createAction(
-  REQUEST_DELETE_USER,
-)<deleteUserType>();
+export const requestDeleteUser =
+  createAction(REQUEST_DELETE_USER)<deleteUserType>();
 export const successDeleteUser = createAction(SUCCESS_DELETE_USER)();
 export const failureDeleteUser = createAction(FAILURE_DELETE_USER)<string>();
 export const changeStatus = createAction(CHANGE_STATUS)<{
@@ -127,12 +131,10 @@ export const successResetPassword = createAction(SUCCESS_RESET_PASSWORD)();
 export const failureResetPassword = createAction(
   FAILURE_RESET_PASSWORD,
 )<string>();
-export const insertConsultant = createAction(
-  INSERT_CONSULTANT,
-)<ConsultantInfoType>();
-export const updateConsultant = createAction(
-  UPDATE_CONSULTANT,
-)<ConsultantInfoType>();
+export const insertConsultant =
+  createAction(INSERT_CONSULTANT)<ConsultantInfoType>();
+export const updateConsultant =
+  createAction(UPDATE_CONSULTANT)<ConsultantInfoType>();
 export const resetFilteredUser = createAction(RESET_FILTERED_USER)();
 export const resetFilteredConsultant = createAction(
   RESET_FILTERED_CONSULTANT,
@@ -159,24 +161,21 @@ export const disconnectForce = createAction(DISCONNECT_FORCE)<{
 }>();
 
 // new
-export const setUserStatus = createAction(
-  SET_USER_STATUS,
-)<ConsultantAllStatusByNumber>();
+export const setUserStatus =
+  createAction(SET_USER_STATUS)<ConsultantAllStatusByNumber>();
 export const addUser = createAction(ADD_USER)<ChangeUser>();
 export const modifyUser = createAction(MODIFY_USER)<ChangeUser>();
 export const setCalculatedCallTime = createAction(
   SET_CALCULATED_CALL_TIME,
 )<TimeData>();
 export const changeCallStatus = createAction(CHANGE_CALL_STATUS)<CallStatus>();
-export const changeZiboxStatus = createAction(
-  CHANGE_ZIBOX_STATUS,
-)<ZiboxStatus>();
+export const changeZiboxStatus =
+  createAction(CHANGE_ZIBOX_STATUS)<ZiboxStatus>();
 export const changeConsultantStatus = createAction(
   CHANGE_CONSULTANT_STATUS,
 )<ConsultantStatus>();
-export const changePhoneStatus = createAction(
-  CHANGE_PHONE_STATUS,
-)<PhoneStatus>();
+export const changePhoneStatus =
+  createAction(CHANGE_PHONE_STATUS)<PhoneStatus>();
 export const changeAllResetStatus = createAction(
   CHANGE_ALL_RESET_STATUS,
 )<ConsultantAllStatus>();

@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { TableProperty } from 'components/molecules';
 import { UserInfo } from 'modules/types/user';
 import { Colors } from 'utils/color';
+import { UserData } from 'types/user';
 
 const StyledWrapper = styled.tr`
   width: 100%;
@@ -53,10 +54,10 @@ interface TableContentProps {
   branchId?: number;
   page?: number;
   teamId?: number;
-  userInfo: Array<UserInfo>;
+  userInfo: Array<UserData>;
   optionIcon: string;
   optionHoverIcon: string;
-  getUserInfo?: (info: UserInfo) => void;
+  getUserInfo?: (info: UserData) => void;
   onClickDeleteUser?: (
     id: number,
     page: number,

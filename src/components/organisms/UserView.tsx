@@ -11,7 +11,7 @@ import useVisible from 'hooks/useVisible';
 import useOrganization from 'hooks/useOrganization';
 import useInputForm from 'hooks/useInputForm';
 import useAuth from 'hooks/useAuth';
-import { UserInfo } from 'types/user';
+import { UserData as UserDataV2, UserInfo } from 'types/user';
 import { Colors } from 'utils/color';
 import constants, { COMPANY_TYPE, USER_TYPE } from 'utils/constants';
 
@@ -54,7 +54,7 @@ const adminList = [
 ];
 
 const tableTitle = [
-  { title: 'No.', width: 7 },
+  // { title: 'No.', width: 7 },
   { title: '지점명', width: 14 },
   { title: '팀명', width: 7 },
   { title: '권한', width: 7 },
@@ -77,7 +77,7 @@ const userCountData = [
 let currentPage = 0;
 
 function UserView({ location }: UserViewProps) {
-  const [tempUserInfo, setTempUserInfo] = useState<UserInfo>();
+  const [tempUserInfo, setTempUserInfo] = useState<UserDataV2>();
   const [search, setSearch] = useState<string>('');
   const { loginInfo } = useAuth();
   const { branches, teams, getBranches, getTeams } = useOrganization();
@@ -92,7 +92,7 @@ function UserView({ location }: UserViewProps) {
     filterUserInfo,
     getUsers,
     resetFilteredList,
-    onClickInsertUser,
+    onClickAddUser,
     onClickUpdateUser,
     onClickDeleteUser,
     onClickResetPassword,
@@ -267,7 +267,7 @@ function UserView({ location }: UserViewProps) {
   );
 
   const getUserInfo = useCallback(
-    (info?: UserInfo) => {
+    (info?: UserDataV2) => {
       // 사용자 등록, 수정 눌렀을 때 타는 로직
       setTempUserInfo(info);
       onClickVisible();
@@ -278,25 +278,25 @@ function UserView({ location }: UserViewProps) {
   useEffect(() => {
     if (loginInfo.admin_id === 2) {
       // 슈퍼관리자
-      if (form.branch === -1 && filterUserInfo.length > 0) {
-        // 필터링된 유저 리스트에서 전체 지점명을 볼 경우 필터링된 유저 리스트 초기화
-        if (search.trim() && currentPage === page) {
-          if (!form.search.trim() && form.search !== search) {
-            // 실제 검색 내용과 입력중
-            setSearch('');
-          }
-          return;
-        }
-        resetFilteredList(1);
-      }
+      // if (form.branch === -1 && filterUserInfo.length > 0) {
+      //   // 필터링된 유저 리스트에서 전체 지점명을 볼 경우 필터링된 유저 리스트 초기화
+      //   if (search.trim() && currentPage === page) {
+      //     if (!form.search.trim() && form.search !== search) {
+      //       // 실제 검색 내용과 입력중
+      //       setSearch('');
+      //     }
+      //     return;
+      //   }
+      //   resetFilteredList(1);
+      // }
 
-      if (form.search.trim() !== search.trim() && currentPage === page) {
-        // 실제 검색 내용과 입력한 내용이 다를 경우
-        if (!form.search.trim() && search.trim()) {
-          setSearch('');
-        }
-        return;
-      }
+      // if (form.search.trim() !== search.trim() && currentPage === page) {
+      //   // 실제 검색 내용과 입력한 내용이 다를 경우
+      //   if (!form.search.trim() && search.trim()) {
+      //     setSearch('');
+      //   }
+      //   return;
+      // }
 
       getUsers2(
         form.branch,
@@ -310,25 +310,25 @@ function UserView({ location }: UserViewProps) {
       currentPage = page;
     } else if (loginInfo.admin_id === 1) {
       // 일반 관리자
-      if (form.team === -1 && filterUserInfo.length > 0) {
-        // 필터링된 유저 리스트에서 전체 지점명을 볼 경우 필터링된 유저 리스트 초기화
-        if (search.trim() && currentPage === page) {
-          if (!form.search.trim() && form.search !== search) {
-            // 실제 검색 내용과 입력중
-            setSearch('');
-          }
-          return;
-        }
-        resetFilteredList(1);
-      }
+      // if (form.team === -1 && filterUserInfo.length > 0) {
+      //   // 필터링된 유저 리스트에서 전체 지점명을 볼 경우 필터링된 유저 리스트 초기화
+      //   if (search.trim() && currentPage === page) {
+      //     if (!form.search.trim() && form.search !== search) {
+      //       // 실제 검색 내용과 입력중
+      //       setSearch('');
+      //     }
+      //     return;
+      //   }
+      //   resetFilteredList(1);
+      // }
 
-      if (form.search.trim() !== search.trim() && currentPage === page) {
-        // 실제 검색 내용과 입력한 내용이 다를 경우
-        if (!form.search.trim() && search.trim()) {
-          setSearch('');
-        }
-        return;
-      }
+      // if (form.search.trim() !== search.trim() && currentPage === page) {
+      //   // 실제 검색 내용과 입력한 내용이 다를 경우
+      //   if (!form.search.trim() && search.trim()) {
+      //     setSearch('');
+      //   }
+      //   return;
+      // }
 
       getUsers2(
         loginInfo.branch_id,
@@ -419,15 +419,19 @@ function UserView({ location }: UserViewProps) {
               userInfo={
                 loginInfo.admin_id === 2
                   ? search.trim() && form.search.trim()
-                    ? filterUserInfo
-                    : form.branch === -1 && form.team === -1
                     ? userInfo
-                    : filterUserInfo
-                  : search.trim() && form.search.trim()
-                  ? filterUserInfo
-                  : form.team === -1
+                    : // filterUserInfo
+                    form.branch === -1 && form.team === -1
+                    ? userInfo
+                    : userInfo
+                  : //filterUserInfo
+                  search.trim() && form.search.trim()
                   ? userInfo
-                  : filterUserInfo
+                  : //filterUserInfo
+                  form.team === -1
+                  ? userInfo
+                  : userInfo
+                //filterUserInfo
               }
               optionIcon={optionIcon}
               optionHoverIcon={optionHoverIcon}
@@ -461,10 +465,10 @@ function UserView({ location }: UserViewProps) {
             adminList={adminList}
             branchId={loginInfo.branch_id}
             branchName={loginInfo.branch_name!}
-            data={tempUserInfo}
+            userData={tempUserInfo}
             isVisible={visible}
             onClickVisible={getUserInfo}
-            onClickInsertUser={onClickInsertUser}
+            onClickAddUser={onClickAddUser}
             onClickUpdateUser={onClickUpdateUser}
           />
         }

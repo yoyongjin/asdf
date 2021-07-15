@@ -61,33 +61,12 @@ function* getUsersProcess(action: ReturnType<typeof requestGetUsers>) {
         users,
         count: max_count,
         url,
-        loginId: loginId!,
       };
 
-      if (adminId === 2) {
-        if (branchId === -1 && teamId === -1 && !search?.trim()) {
-          // 전체 지점
-          yield put(successGetUsers(payload));
-        } else {
-          // 필터링된 유저
-          yield put(successGetFilterUsers(payload));
-        }
+      yield put(successGetUsers(payload));
 
-        if (url === '/main') {
-          Socket.getInstance().onEmit('state');
-        }
-      } else if (adminId === 1) {
-        if (teamId === -1 && !search?.trim()) {
-          // 전체 지점
-          yield put(successGetUsers(payload));
-        } else {
-          // 필터링된 유저
-          yield put(successGetFilterUsers(payload));
-        }
-
-        if (url === '/main') {
-          Socket.getInstance().onEmit('state');
-        }
+      if (url === '/main') {
+        Socket.getInstance().onEmit('state');
       }
 
       return;
@@ -109,28 +88,42 @@ function* addUserProcess(action: ReturnType<typeof requestAddUser>) {
     admin_id,
     name,
     user_name,
-    password,
     number,
-    ziboxip,
+    zibox_ip,
+    zibox_mac,
+    zibox_mic,
+    zibox_spk,
   } = action.payload;
+
   try {
-    const response = yield call(
-      API.insertUser,
+    const response: ResponseSuccessData | ResponseFailureData = yield call(
+      ZMSUser.addUser,
       branch_id,
       team_id,
       admin_id,
       name,
       user_name,
-      password,
       number,
-      ziboxip,
+      zibox_ip,
+      zibox_mac,
+      zibox_mic,
+      zibox_spk,
     );
-    Logger.log('insert user Data', response);
-    yield put(successAddUser());
+
+    if (response.status === API_FETCH.SUCCESS) {
+      const { data } = response as ResponseSuccessData;
+
+      yield put(successAddUser());
+
+      return;
+    }
+
+    const { error_msg } = response as ResponseFailureData;
+    yield put(failureAddUser(error_msg));
+
+    alert(error_msg);
   } catch (error) {
-    console.log(error);
     yield put(failureAddUser(error.message));
-    alert('동일한 전화번호, 아이디, 지박스 IP가 존재합니다.');
   }
 }
 
