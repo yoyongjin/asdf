@@ -29,7 +29,8 @@ const StyledOrganizationArea = styled.div`
 `;
 
 const StyledOrganization = styled.div`
-  padding-top: 1rem;
+  padding-top: 20px;
+  padding-right: 20px;
 `;
 
 function OrganizationView() {
