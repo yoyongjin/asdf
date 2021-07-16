@@ -379,6 +379,11 @@ function Consultant({
             </Text>
           );
         default:
+          return (
+            <Text fontColor={Colors.gray4} fontWeight={700}>
+              대기중
+            </Text>
+          );
       }
     },
     [],

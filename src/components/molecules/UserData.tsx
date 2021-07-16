@@ -47,10 +47,10 @@ const StyledUserInfo = styled.div`
   justify-content: space-between;
   align-content: flex-start;
   /* align-content: space-around; */
-  border-bottom: 0.05rem solid
+  border-bottom: 1px solid
     ${constants.COMPANY === COMPANY_TYPE.DBLIFE ? Colors.green1 : Colors.blue3};
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+  padding-top: 10px;
+  padding-bottom: 20px;
 `;
 
 const StyledStatus = styled.div`
@@ -439,23 +439,23 @@ function UserData({
             </>
           }
         </StyledUserInfo>
-        {/* {data && data.admin_id === 0 ? (
+        {userData && userData.admin_id === USER_TYPE.CONSULTANT ? (
           <>
             <StyledStatus>
-              {data.zibox ? (
+              {userData.zibox ? (
                 <StyledZibox>
-                  <ZiboxData data={data.zibox!} />
+                  <ZiboxData data={userData.zibox!} />
                 </StyledZibox>
               ) : null}
 
-              {data.phone ? (
+              {userData.phone ? (
                 <StyledPhone>
-                  <PhoneData data={data.phone!} />
+                  <PhoneData data={userData.phone!} />
                 </StyledPhone>
               ) : null}
             </StyledStatus>
           </>
-        ) : null} */}
+        ) : null}
       </StyledContent>
       <StyledFooter>
         <Button

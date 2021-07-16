@@ -24,6 +24,10 @@ import {
   REQUEST_LOGOUT,
   successLogout,
   failureLogout,
+  requestChangePassword,
+  successChangePassword,
+  failureChangePassword,
+  REQUEST_CHANGE_PASSWORD,
 } from 'modules/actions/auth';
 import { ResponseSuccessData, ResponseFailureData } from 'types/common';
 import { API_FETCH, ROUTER_TYPE } from 'utils/constants';
@@ -43,13 +47,25 @@ function* loginProcess(action: ReturnType<typeof requestLogin>) {
       const { data } = response as ResponseSuccessData;
       const { user, token } = data;
 
-      // 소켓 연결
-      Communicator.getInstance().connectSocket(user.id);
+      yield put(successLogin(user));
 
       // 쿠키 설정
       ZMSMain.setAccessToken(token);
 
-      yield put(successLogin(user));
+      if (user.is_init_password) {
+        alert('초기 비밀번호이므로 변경해주시기 바랍니다.');
+        history.push(ROUTER_TYPE.CHANGE_PASSWORD);
+
+        return;
+      } else if (user.is_expired_password) {
+        alert('비밀번호가 만료되어 변경해주시기 바랍니다.');
+        history.push(ROUTER_TYPE.CHANGE_PASSWORD);
+
+        return;
+      }
+
+      // 소켓 연결
+      Communicator.getInstance().connectSocket(user.id);
 
       history.push(ROUTER_TYPE.MONIT);
 
@@ -77,13 +93,25 @@ function* checkLoginProcess(action: ReturnType<typeof requestCheckLogin>) {
       const { data } = response as ResponseSuccessData;
       const { user, token } = data;
 
-      // 소켓 연결
-      Communicator.getInstance().connectSocket(user.id);
+      yield put(successCheckLogin(user));
 
       // 쿠키 설정
       ZMSMain.setAccessToken(token);
 
-      yield put(successCheckLogin(user));
+      if (user.is_init_password) {
+        alert('초기 비밀번호이므로 변경해주시기 바랍니다.');
+        history.push(ROUTER_TYPE.CHANGE_PASSWORD);
+
+        return;
+      } else if (user.is_expired_password) {
+        alert('비밀번호가 만료되어 변경해주시기 바랍니다.');
+        history.push(ROUTER_TYPE.CHANGE_PASSWORD);
+
+        return;
+      }
+
+      // 소켓 연결
+      Communicator.getInstance().connectSocket(user.id);
 
       history!.push(ROUTER_TYPE.MONIT);
 
@@ -138,6 +166,42 @@ function* logoutProcess(action: ReturnType<typeof requestLogout>) {
   }
 }
 
+function* changePasswordProcess(
+  action: ReturnType<typeof requestChangePassword>,
+) {
+  const { current_password, new_password, new_confirm_password } =
+    action.payload;
+
+  try {
+    const response: ResponseSuccessData | ResponseFailureData = yield call(
+      ZMSAuth.changePassword,
+      current_password,
+      new_password,
+      new_confirm_password,
+    );
+
+    if (response.status === API_FETCH.SUCCESS) {
+      const { data } = response as ResponseSuccessData;
+
+      if (data) {
+        yield put(successChangePassword());
+
+        alert('다시 로그인해주세요.');
+        yield put(requestLogout());
+      }
+
+      return;
+    }
+
+    const { error_msg } = response as ResponseFailureData;
+    yield put(failureChangePassword(error_msg));
+
+    alert(error_msg);
+  } catch (error) {
+    yield put(failureChangePassword(error.message));
+  }
+}
+
 function* watchLogin() {
   yield takeLatest(REQUEST_LOGIN, loginProcess);
 }
@@ -150,8 +214,17 @@ function* watchLogout() {
   yield takeLatest(REQUEST_LOGOUT, logoutProcess);
 }
 
+function* watchChangePassword() {
+  yield takeLatest(REQUEST_CHANGE_PASSWORD, changePasswordProcess);
+}
+
 function* authSaga() {
-  yield all([fork(watchLogin), fork(watchCheckLogin), fork(watchLogout)]);
+  yield all([
+    fork(watchLogin),
+    fork(watchCheckLogin),
+    fork(watchLogout),
+    fork(watchChangePassword),
+  ]);
 }
 
 export default authSaga;

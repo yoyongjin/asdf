@@ -20,6 +20,10 @@ const initialState: AuthState = {
       fetch: false,
       error: '',
     },
+    changePassword: {
+      fetch: false,
+      error: '',
+    },
   },
   loginInfo: {
     id: 0,
@@ -108,6 +112,24 @@ const authReducer = createReducer<AuthState, AuthAction>(initialState, {
     return produce(state, (draft) => {
       draft.request.logout.fetch = false;
       draft.request.logout.error = action.payload;
+    });
+  },
+  [actions.REQUEST_CHANGE_PASSWORD]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.request.changePassword.fetch = true;
+      draft.request.changePassword.error = '';
+    });
+  },
+  [actions.SUCCESS_CHANGE_PASSWORD]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.request.changePassword.fetch = false;
+      draft.request.changePassword.error = '';
+    });
+  },
+  [actions.FAILURE_CHANGE_PASSWORD]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.request.changePassword.fetch = false;
+      draft.request.changePassword.error = action.payload;
     });
   },
   /**

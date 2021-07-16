@@ -4,7 +4,7 @@ import { RouteComponentProps } from 'react-router-dom';
 
 import { Modal } from 'components/atoms';
 import { Consultant, Title, UserData } from 'components/molecules';
-import { ConsultantInfo, UserData as UserDataV2 } from 'types/user';
+import { UserData as UserDataV2 } from 'types/user';
 import useUser from 'hooks/useUser';
 import useMonitoring from 'hooks/useMonitoring';
 import useOrganization from 'hooks/useOrganization';

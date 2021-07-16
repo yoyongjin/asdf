@@ -15,7 +15,11 @@ function MainRouter() {
     <Switch>
       <Route exact path="/auth/login" component={LoginForm} />
       <Route exact path="/main/" component={MonitoringView} />
-      <Route exact path="/main/manage/organization" component={OrganizationView} />
+      <Route
+        exact
+        path="/main/manage/organization"
+        component={OrganizationView}
+      />
       <Route exact path="/main/manage/user" component={UserView} />
       <Route component={NotFound} />
     </Switch>

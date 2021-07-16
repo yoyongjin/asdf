@@ -1,7 +1,12 @@
 import React, { useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
 
-import { AuthPage, MainPage, NotFound } from 'components/pages';
+import {
+  AuthPage,
+  MainPage,
+  NotFound,
+  PasswordChangedPage,
+} from 'components/pages';
 import Communicator from 'lib/communicator';
 
 function App() {
@@ -15,6 +20,7 @@ function App() {
       <Route exact path="/" component={MainPage} />
       <Route path="/auth" component={AuthPage} />
       <Route path="/main" component={MainPage} />
+      <Route path="/user" component={PasswordChangedPage} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -12,10 +12,11 @@ import DB_nextPageIcon from 'images/bt-page-next.png';
 import prevPageIcon from 'images/zms/bt-page-pre.png';
 import nextPageIcon from 'images/zms/bt-page-next.png';
 
-const StyledWrapper = styled.div`
+const StyledWrapper = styled.div<StyledWrapperProps>`
   /* Display */
   height: 100%;
-  border-bottom: 1px solid ${(props) => props.theme.color.sub};
+  border-bottom: ${(props) => props.pixel}px solid
+    ${(props) => props.color || props.theme.color.sub};
 `;
 
 const StyledBorderPostion = styled.span<StyledBorderPostionProps>`
@@ -83,14 +84,25 @@ function Title({
   selectData,
   volumeData,
   pageData,
+  titleFontColor,
+  titleFontSize,
+  titleFontWeight,
+  titleFontFamily,
+  bottomLineColor,
+  bottomLinePixel,
   leftBottomPixel,
   rightBottomPixel,
 }: TitleProps) {
   return (
-    <StyledWrapper>
+    <StyledWrapper color={bottomLineColor!} pixel={bottomLinePixel}>
       <StyledBorderPostion pixel={leftBottomPixel} float="left">
         <StyleTitle>
-          <Text fontSize={18} fontWeight={800}>
+          <Text
+            fontColor={titleFontColor}
+            fontFamily={titleFontFamily}
+            fontSize={titleFontSize}
+            fontWeight={titleFontWeight}
+          >
             {children}
           </Text>
         </StyleTitle>
@@ -250,6 +262,11 @@ function Title({
   );
 }
 
+interface StyledWrapperProps {
+  color: string;
+  pixel: number;
+}
+
 interface StyledBorderPostionProps {
   pixel: number;
   float: string;
@@ -352,6 +369,12 @@ interface TitleProps {
   searchData?: SearchData;
   selectData?: SelectData;
   volumeData?: VolumeData;
+  titleFontColor: string;
+  titleFontFamily: string;
+  titleFontSize: number;
+  titleFontWeight: number;
+  bottomLineColor?: string;
+  bottomLinePixel: number;
   leftBottomPixel: number;
   rightBottomPixel: number;
 }
@@ -365,6 +388,11 @@ Title.defaultProps = {
   isVolume: false,
   leftBottomPixel: 13,
   rightBottomPixel: 4,
+  titleFontColor: Colors.blue4,
+  titleFontFamily: 'NanumGothic',
+  titleFontSize: 18,
+  titleFontWeight: 800,
+  bottomLinePixel: 1,
 };
 
 export default React.memo(Title);

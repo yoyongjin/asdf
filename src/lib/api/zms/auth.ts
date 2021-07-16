@@ -81,6 +81,41 @@ class Auth {
       throw new Error(error);
     }
   }
+
+  static async changePassword(
+    currentPassword: string,
+    newPassword: string,
+    newConfirmPassword: string,
+  ) {
+    try {
+      const token = Main.getAccessToken();
+
+      const payload = {
+        current_pw: currentPassword,
+        new_pw: newPassword,
+        confirm_new_pw: newConfirmPassword,
+      };
+
+      const { data } = await APIManager.patch(
+        url.zms.api.path.change_user_password,
+        payload,
+        {
+          token,
+        },
+      );
+      Logger.log('Change Password Data', JSON.stringify(data));
+
+      return data;
+    } catch (error) {
+      if (error.response?.data) {
+        Logger.log(JSON.stringify(error.response.data));
+
+        return error.response.data;
+      }
+
+      throw new Error(error);
+    }
+  }
 }
 
 export default Auth;

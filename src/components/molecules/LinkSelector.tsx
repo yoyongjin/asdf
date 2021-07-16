@@ -41,7 +41,10 @@ function LinkSelector({ location }: LinkSelectorProps) {
 
   useEffect(() => {
     const { pathname } = location;
-    if (pathname === '/main/manage/user') {
+
+    if (pathname === '/main/manage/stat') {
+      setVisible(4);
+    } else if (pathname === '/main/manage/user') {
       setVisible(3);
     } else if (pathname === '/main/manage/organization') {
       setVisible(2);
@@ -72,6 +75,14 @@ function LinkSelector({ location }: LinkSelectorProps) {
         <Link path="/main/manage/user">
           <Text fontColor={Colors.white} fontSize={16} fontWeight={700}>
             사용자 관리
+          </Text>
+        </Link>
+      </StyledLink>
+      <StyledCommonWhiteSpace pixel={18} />
+      <StyledLink visible={visible} type={4}>
+        <Link path="/main/manage/stat">
+          <Text fontColor={Colors.white} fontSize={16} fontWeight={700}>
+            법인폰 통계
           </Text>
         </Link>
       </StyledLink>

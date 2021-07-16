@@ -10,7 +10,7 @@ const StyledWrapper = styled.div`
   max-height: 1200rem;
   min-height: 100vh;
   max-width: 200rem;
-  min-width: 80rem;
+  min-width: 115rem;
   width: 100vw;
 `;
 
@@ -47,7 +47,7 @@ interface StyledProps {
 }
 
 interface MainTemplateProps extends StyledProps {
-  gnb: React.ReactChild;
+  gnb?: React.ReactChild;
 }
 
 MainTemplate.defaultProps = {

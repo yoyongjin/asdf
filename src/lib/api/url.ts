@@ -22,6 +22,7 @@ export default {
         modify_user: '/api/auth',
         remove_user: '/api/auth',
         reset_user_password: 'api/auth/password',
+        change_user_password: 'api/auth/password',
       },
     },
   },

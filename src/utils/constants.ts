@@ -6,40 +6,25 @@ export const LIMIT = 30;
 export const PAGE = 1;
 
 export const ZIBOX_TYPE = {
-  ZIBOX_LOAD: 'LOAD',
   ZIBOX_CONNECTION: '연결',
   ZIBOX_DISCONNECTION: '연결 실패',
-  ZIBOX_DISCONNECTION_ERRORCODE: '연결 실패(에러코드 확인)',
   ATS_START: 'ATS 재생',
   ATS_STOP: 'ATS 정지',
   ATS_PAUSE: 'ATS 일시 정지',
-  ATS_RESUME: 'ATS 다시 재생',
-  ATS_START_ERROR: 'ATS 재생 오류',
-  ATS_STOP_ERROR: 'ATS 정지 오류',
+  ATS_ERROR: 'ATS 오류',
   RECORD_START: '녹취 시작',
   RECORD_STOP: '녹취 종료',
-  RECORD_START_ERROR: '녹취 시작 오류',
-  RECORD_STOP_ERROR: '녹취 종료 오류',
+  RECORD_ERROR: '녹취 오류',
   MONIT_START: '감청 시작',
   MONIT_STOP: '감청 종료',
   MONIT_ERROR: '감청 오류',
-  MONIT_BUFFER_START: '버퍼링 시작',
-  MONIT_BUFFER_STOP: '버퍼링 종료',
-  MONIT_CONNECTION_TIMEOUT: '타임아웃',
 };
 
 export const PHONE_TYPE = {
-  PHONE_LOAD: 'LOAD',
-  OCX_CONNECTION: 'WEB만 연결',
+  WEB_CONNECTION: 'WEB만 연결',
   PHONE_CONNECTION: '법인폰만 연결',
-  BOTH_CONNECTION: '전체 연결',
-  PHONE_SERVER_ERROR: '연결 실패(서버 에러)',
-  PHONE_CONNECTION_ERROR_01: '연결 실패(필요한 데이터가 없음)',
-  PHONE_CONNECTION_ERROR_02: '연결 실패(서버를 찾을 수 없음)',
-  PHONE_DISCONNECTION_01: '정상 접속 종료',
-  PHONE_DISCONNECTION_02: '비정상 접속 종료',
-  PHONE_DISCONNECTION_03: '법인폰이 끊어졌을 때',
-  PHONE_RECONNECTION: '재연결',
+  BOTH_CONNECTION: '둘 다 연결',
+  DISCONNECTION: '둘 다 미연결',
 };
 
 export enum SOCKET_EVENT_TYPE {
@@ -51,6 +36,7 @@ export enum SOCKET_EVENT_TYPE {
 export enum ROUTER_TYPE {
   LOGIN = '/auth/login',
   MONIT = '/main',
+  CHANGE_PASSWORD = '/user/password/change',
 }
 
 export enum COMPANY_TYPE {
@@ -139,6 +125,8 @@ export const REG_EXR = {
   ip: /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
   mac: /([0-9a-fA-F]{2}-){5}[0-9a-fA-F]{2}/,
   id: /^[A-Za-z0-9]{4,32}$/,
+  password:
+    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,32}$/,
 };
 
 export default {

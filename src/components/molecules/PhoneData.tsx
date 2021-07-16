@@ -26,38 +26,18 @@ const StyledPhone = styled.div`
 function PhoneData({ data }: PhoneDataProps) {
   const getPhoneStatus = useCallback(() => {
     switch (data?.connection) {
-      case -99:
-        // 초기 로딩
-        return PHONE_TYPE.PHONE_LOAD;
-      case -4:
-        // 법인폰과 서버가 끊어졌을 때
-        return PHONE_TYPE.PHONE_DISCONNECTION_03;
-      case -3:
-        // 비정상 접속 종료
-        return PHONE_TYPE.PHONE_DISCONNECTION_02;
-      case -2:
-        // 정상 접속 종료
-        return PHONE_TYPE.PHONE_DISCONNECTION_01;
-      case -1:
-        // 서버를 찾을 수 없다
-        return PHONE_TYPE.PHONE_CONNECTION_ERROR_02;
       case 0:
-        // ocx만 연결
-        return PHONE_TYPE.OCX_CONNECTION;
+        // 전부 끊어진 상태
+        return PHONE_TYPE.DISCONNECTION;
       case 1:
-        // 법인폰만 연결
-        return PHONE_TYPE.PHONE_CONNECTION;
+        // WEB만 연결
+        return PHONE_TYPE.WEB_CONNECTION;
       case 2:
+        // PHONE만 연결
+        return PHONE_TYPE.PHONE_CONNECTION;
+      case 3:
         // 둘 다 연결
         return PHONE_TYPE.BOTH_CONNECTION;
-      case 3:
-        // 서버 에러(접속 실패)
-        return PHONE_TYPE.PHONE_SERVER_ERROR;
-      case 4:
-        // 필요한 데이터가 존재하지 않음(접속 실패)
-        return PHONE_TYPE.PHONE_CONNECTION_ERROR_01;
-      case 6:
-        return PHONE_TYPE.PHONE_RECONNECTION;
       default:
         return '';
     }
@@ -66,10 +46,16 @@ function PhoneData({ data }: PhoneDataProps) {
   return (
     <StyledWrapper>
       <StyledTitle>
-        <Text fontWeight={600}>PHONE</Text>
+        <Text fontFamily="NanumBarunGothic" fontSize={15} fontWeight={800}>
+          PHONE
+        </Text>
       </StyledTitle>
       <StyledPhone>
-        <Text fontWeight={600} fontSize={0.9} fontColor={Colors.gray9}>
+        <Text
+          fontFamily="NanumBarunGothic"
+          fontSize={13}
+          fontColor={Colors.gray9}
+        >
           {`PHONE : ${getPhoneStatus()} (${
             data && data.connection ? data.connection : ''
           })`}

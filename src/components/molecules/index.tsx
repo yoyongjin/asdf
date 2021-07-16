@@ -1,3 +1,4 @@
+import ChangedPasswordForm from './ChangedPasswordForm';
 import Consultant from './Consultant';
 import LinkSelector from './LinkSelector';
 import List from './List';
@@ -18,6 +19,7 @@ import UserLog from './UserLog';
 import UserProperty from './UserProperty';
 
 export {
+  ChangedPasswordForm,
   Consultant,
   LinkSelector,
   List,

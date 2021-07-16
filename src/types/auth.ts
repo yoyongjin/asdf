@@ -32,6 +32,7 @@ export interface RequestType {
   login: common.FetchType;
   logout: common.FetchType;
   checkLogin: common.FetchType;
+  changePassword: common.FetchType;
 }
 
 export interface RequestLogin {
@@ -51,4 +52,10 @@ export interface LoginData {
   login_at: number;
   is_init_password: boolean;
   is_expired_password: boolean;
+}
+
+export interface RequestChangePassword {
+  current_password: string;
+  new_password: string;
+  new_confirm_password: string;
 }

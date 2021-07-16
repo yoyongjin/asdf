@@ -26,37 +26,30 @@ const StyledZibox = styled.div`
 function ZiboxData({ data }: ZiboxDataProps) {
   const getZiBoxConnectionStatus = useCallback(() => {
     switch (data?.connection) {
-      case -99:
-        // 초기 로딩
-        return ZIBOX_TYPE.ZIBOX_LOAD;
       case 0:
-      case -1:
-        // 0은 연결 실패
-        // -1은 연결 실패(에러 코드 확인)
         return ZIBOX_TYPE.ZIBOX_DISCONNECTION;
       case 1:
         // 지박스 연결 완료
         return ZIBOX_TYPE.ZIBOX_CONNECTION;
       default:
-        break;
+        return '';
     }
   }, [data]);
 
   const getZiBoxATSStatus = useCallback(() => {
     switch (data?.ats) {
-      case -2:
-        return ZIBOX_TYPE.ATS_STOP_ERROR;
       case -1:
-        return ZIBOX_TYPE.ATS_START_ERROR;
+        // ATS 에러
+        return ZIBOX_TYPE.ATS_ERROR;
       case 0:
         // ATS 정지
         return ZIBOX_TYPE.ATS_STOP;
-      case 2:
-        return ZIBOX_TYPE.ATS_START;
-      case 3:
+      case 1:
+        // ATS 중지
         return ZIBOX_TYPE.ATS_PAUSE;
-      case 4:
-        return ZIBOX_TYPE.ATS_RESUME;
+      case 2:
+        // ATS 재생
+        return ZIBOX_TYPE.ATS_START;
       default:
         break;
     }
@@ -64,21 +57,17 @@ function ZiboxData({ data }: ZiboxDataProps) {
 
   const getZiBoxRecordStatus = useCallback(() => {
     switch (data?.record) {
-      case -2:
-        // 녹취 종료 에러 | STT 종료 에러
-        return ZIBOX_TYPE.RECORD_STOP_ERROR;
       case -1:
-        // 녹취 시작 에러 | STT 시작 에러
-        return ZIBOX_TYPE.RECORD_START_ERROR;
+        // 녹취 에러
+        return ZIBOX_TYPE.RECORD_ERROR;
       case 0:
         // 녹취 종료
         return ZIBOX_TYPE.RECORD_STOP;
       case 1:
-      case 2:
         // 녹취 시작
         return ZIBOX_TYPE.RECORD_START;
       default:
-        break;
+        return '';
     }
   }, [data]);
 
@@ -93,17 +82,8 @@ function ZiboxData({ data }: ZiboxDataProps) {
       case 1:
         // 감청 시작
         return ZIBOX_TYPE.MONIT_START;
-      case 2:
-        // 버퍼링 시작
-        return ZIBOX_TYPE.MONIT_BUFFER_START;
-      case 3:
-        // 버퍼링 시작
-        return ZIBOX_TYPE.MONIT_BUFFER_STOP;
-      case 4:
-        // 타임아웃
-        return ZIBOX_TYPE.MONIT_CONNECTION_TIMEOUT;
       default:
-        break;
+        return '';
     }
   }, [data]);
 

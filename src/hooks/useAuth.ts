@@ -5,6 +5,7 @@ import {
   requestLogin,
   requestCheckLogin,
   requestLogout,
+  requestChangePassword,
 } from 'modules/actions/auth';
 import { RootState } from 'modules/reducers';
 
@@ -35,9 +36,27 @@ function useAuth() {
     dispatch(requestLogout());
   }, [dispatch]);
 
+  const onClickChangePassword = useCallback(
+    (
+      currentPassword: string,
+      newPassword: string,
+      newConfirmPassword: string,
+    ) => {
+      const payload = {
+        current_password: currentPassword,
+        new_password: newPassword,
+        new_confirm_password: newConfirmPassword,
+      };
+
+      dispatch(requestChangePassword(payload));
+    },
+    [dispatch],
+  );
+
   return {
     socketConnection,
     loginInfo,
+    onClickChangePassword,
     onCheckLogin,
     onClickLogin,
     onClickLogout,
