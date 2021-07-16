@@ -336,6 +336,14 @@ function Consultant({
           break;
       }
 
+      if (!phoneStatus) {
+        return (
+          <Text fontColor={Colors.blue1} fontWeight={700}>
+            {''}
+          </Text>
+        );
+      }
+
       switch (callStatus) {
         case CALL_STATUS_V2.IDLE:
           return (
@@ -371,11 +379,6 @@ function Consultant({
             </Text>
           );
         default:
-          return (
-            <Text fontColor={Colors.gray4} fontWeight={700}>
-              {''}
-            </Text>
-          );
       }
     },
     [],
