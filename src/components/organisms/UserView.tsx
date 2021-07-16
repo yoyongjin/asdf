@@ -32,8 +32,8 @@ const StyledTitle = styled.div`
 
 const StyledUserListArea = styled.div`
   /* Display */
-  height: 100%;
-  width: 100%;
+  height: calc(100% - 6rem - 66px);
+  overflow: auto;
 `;
 
 const StyledUserList = styled.div`
