@@ -418,7 +418,11 @@ function UserData({
               {defaultRangeData.map((data, index) => {
                 return (
                   <TextRange
-                    rangeDisable={form.admin !== USER_TYPE.CONSULTANT}
+                    rangeDisable={
+                      data.name === 'zibox_mic'
+                        ? true
+                        : form.admin !== USER_TYPE.CONSULTANT
+                    }
                     rangeName={data.name}
                     rangeValue={
                       data.name === 'zibox_mic'
