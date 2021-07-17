@@ -46,19 +46,18 @@ function PhoneData({ data }: PhoneDataProps) {
   return (
     <StyledWrapper>
       <StyledTitle>
-        <Text fontFamily="NanumBarunGothic" fontSize={15} fontWeight={800}>
+        <Text fontFamily="NanumBarunGothic" fontSize={18} fontWeight={800}>
           PHONE
         </Text>
       </StyledTitle>
       <StyledPhone>
         <Text
-          fontFamily="NanumBarunGothic"
-          fontSize={13}
           fontColor={Colors.gray9}
+          fontFamily="NanumBarunGothic"
+          fontSize={15}
+          fontWeight={600}
         >
-          {`PHONE : ${getPhoneStatus()} (${
-            data && data.connection ? data.connection : ''
-          })`}
+          {`PHONE : ${getPhoneStatus()}`}
         </Text>
       </StyledPhone>
     </StyledWrapper>
@@ -71,4 +70,4 @@ interface PhoneDataProps {
 
 PhoneData.defaultProps = {};
 
-export default React.memo(PhoneData);
+export default PhoneData;

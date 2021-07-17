@@ -90,33 +90,34 @@ function ZiboxData({ data }: ZiboxDataProps) {
   return (
     <StyledWrapper>
       <StyledTitle>
-        <Text fontWeight={600}>ZIBOX</Text>
+        <Text fontFamily="NanumBarunGothic" fontSize={18} fontWeight={800}>
+          ZIBOX
+        </Text>
       </StyledTitle>
       <StyledZibox>
-        <Text fontWeight={600} fontSize={0.9} fontColor={Colors.gray9}>
-          {`ZIBOX IP : ${data.zibox_ip}`}
+        <Text
+          fontColor={Colors.gray9}
+          fontFamily="NanumBarunGothic"
+          fontSize={15}
+          fontWeight={600}
+        >
+          {`연결 상태 : ${getZiBoxConnectionStatus()}`}
         </Text>
-        <Text fontWeight={600} fontSize={0.9} fontColor={Colors.gray9}>
-          {`ZIBOX MAC : ${data.zibox_mac}`}
+        <Text
+          fontColor={Colors.gray9}
+          fontFamily="NanumBarunGothic"
+          fontSize={15}
+          fontWeight={600}
+        >
+          {`녹취 : ${getZiBoxRecordStatus()}`}
         </Text>
-        <Text fontWeight={600} fontSize={0.9} fontColor={Colors.gray9}>
-          {`상담원 PC IP : ${data.pc_ip}`}
-        </Text>
-        <Text fontWeight={600} fontSize={0.9} fontColor={Colors.gray9}>
-          {`연결 상태 : ${getZiBoxConnectionStatus()} (${
-            data && data.connection
-          })`}
-        </Text>
-        <Text fontWeight={600} fontSize={0.9} fontColor={Colors.gray9}>
-          {`ATS : ${getZiBoxATSStatus()} (${data && data.ats})`}
-        </Text>
-        <Text fontWeight={600} fontSize={0.9} fontColor={Colors.gray9}>
-          {`녹취(STT) : ${getZiBoxRecordStatus()}  (${data && data.record})`}
-        </Text>
-        <Text fontWeight={600} fontSize={0.9} fontColor={Colors.gray9}>
-          {`감청 : ${getZiBoxMonitoringStatus()} (상태 ${
-            data && data.monitoring
-          }, 대상 ${data && data.monit_user})`}
+        <Text
+          fontColor={Colors.gray9}
+          fontFamily="NanumBarunGothic"
+          fontSize={15}
+          fontWeight={600}
+        >
+          {`ATS : ${getZiBoxATSStatus()}`}
         </Text>
       </StyledZibox>
     </StyledWrapper>
