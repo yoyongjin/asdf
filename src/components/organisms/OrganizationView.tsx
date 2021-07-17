@@ -46,7 +46,7 @@ function OrganizationView() {
     handleRemoveBranch,
     handleRemoveTeam,
   } = useOrganization();
-  const { page, countBranch, onClickNextPage, onClickPrevPage } = usePage();
+  const { page, maxBranch, onClickNextPage, onClickPrevPage } = usePage();
 
   const buttonData = useMemo(() => {
     return {
@@ -70,12 +70,12 @@ function OrganizationView() {
 
   const pageData = useMemo(() => {
     return {
-      max: countBranch,
+      max: maxBranch,
       cur: page,
       click_next: onClickNextPage,
       click_prev: onClickPrevPage,
     };
-  }, [countBranch, onClickNextPage, onClickPrevPage, page]);
+  }, [maxBranch, onClickNextPage, onClickPrevPage, page]);
 
   const branchIdList = Object.getOwnPropertyNames(organizations).reverse();
   const organizationDataList = Object.values(organizations).reverse();

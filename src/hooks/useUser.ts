@@ -7,9 +7,8 @@ import {
   requestModifyUser,
   requestRemoveUser,
   requestResetPassword,
-  resetFilteredUser,
-  resetFilteredConsultant,
   disconnectForce,
+  changeUsersCount,
 } from 'modules/actions/user';
 import { RootState } from 'modules/reducers';
 import { LIMIT, PAGE } from 'utils/constants';
@@ -19,6 +18,7 @@ function useUser() {
   const consultantInfo = useSelector(
     (state: RootState) => state.user.consultant,
   ); // 상담원 정보
+  const userCount = useSelector((state: RootState) => state.user.userCount);
 
   const dispatch = useDispatch();
 
@@ -147,6 +147,16 @@ function useUser() {
     [dispatch],
   );
 
+  const onChangeUserCount = useCallback(
+    (count: number) => {
+      dispatch(changeUsersCount(count));
+    },
+    [dispatch],
+  );
+
+  /**
+   * @deprecated
+   */
   const onClickDisconnect = useCallback(
     (number: string) => {
       const payload = {
@@ -165,6 +175,7 @@ function useUser() {
     onClickModifyUser,
     onClickRemoveUser,
     onClickResetPassword,
+    onChangeUserCount,
     onClickDisconnect,
   };
 }

@@ -10,9 +10,9 @@ export interface UserState {
   user: Array<UserData>;
   consultant: Array<UserData>;
   numberOfUsers: number;
+  userCount: number;
   userList: UsersData;
   filterUserList: UsersData;
-  status: ConsultantAllStatusByNumber;
   realTimeStatus: ConsultantAllStatusByNumberV2;
 }
 
@@ -145,6 +145,7 @@ export interface UserData extends ConsultantAllStatus_V2 {
   name: string;
   user_name: string | null;
   number: string | null;
+  zibox_id: number | null;
   zibox_ip: string | null;
   zibox_mac: string | null;
   zibox_mic: number | null;

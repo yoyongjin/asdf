@@ -33,7 +33,7 @@ const StyledTitle = styled.div`
 const StyledUserListArea = styled.div`
   /* Display */
   height: calc(100% - 6rem - 66px);
-  overflow: auto;
+  overflow-x: auto;
 `;
 
 const StyledUserList = styled.div`
@@ -85,16 +85,16 @@ function UserView({ location }: UserViewProps) {
   const {
     userInfo,
     getUsers,
+    onChangeUserCount,
     onClickAddUser,
     onClickModifyUser,
     onClickRemoveUser,
     onClickResetPassword,
   } = useUser();
   const {
-    countUser,
+    maxUser,
     page,
     onChangeCurrentPage,
-    onChangePageFirst,
     onClickNextPage,
     onClickPrevPage,
   } = usePage();
@@ -226,8 +226,7 @@ function UserView({ location }: UserViewProps) {
 
   const onClickSearch = useCallback(() => {
     setSearch(form.search);
-    onChangePageFirst();
-  }, [form.search, onChangePageFirst]);
+  }, [form.search]);
 
   const searchData = useMemo(() => {
     return {
@@ -296,7 +295,7 @@ function UserView({ location }: UserViewProps) {
   ]);
 
   useEffect(() => {
-    if (loginInfo.admin_id === 2) {
+    if (loginInfo.admin_id === USER_TYPE.SUPER_ADMIN) {
       // 슈퍼관리자
       getUsers2(
         form.branch,
@@ -304,10 +303,10 @@ function UserView({ location }: UserViewProps) {
         form.userCount,
         page,
         location.pathname,
-        form.search,
+        search,
         loginInfo.admin_id,
       );
-    } else if (loginInfo.admin_id === 1) {
+    } else if (loginInfo.admin_id === USER_TYPE.ADMIN) {
       // 일반 관리자
       getUsers2(
         loginInfo.branch_id,
@@ -315,13 +314,13 @@ function UserView({ location }: UserViewProps) {
         form.userCount,
         page,
         location.pathname,
-        form.search,
+        search,
         loginInfo.admin_id,
       );
     }
   }, [
     form.branch,
-    form.search,
+    search,
     form.team,
     form.userCount,
     getUsers2,
@@ -353,8 +352,18 @@ function UserView({ location }: UserViewProps) {
   }, [form.branch, setSpecificValue]);
 
   useEffect(() => {
-    onChangeCurrentPage(page, countUser, form.userCount);
-  }, [countUser, form.userCount, onChangeCurrentPage, page]);
+    if (form.search === '') {
+      setSearch(form.search);
+    }
+  }, [form.search]);
+
+  useEffect(() => {
+    onChangeUserCount(form.userCount);
+  }, [form.userCount, onChangeUserCount]);
+
+  useEffect(() => {
+    onChangeCurrentPage(page, maxUser, form.userCount);
+  }, [maxUser, form.userCount, onChangeCurrentPage, page]);
 
   return (
     <>
@@ -378,7 +387,7 @@ function UserView({ location }: UserViewProps) {
           </StyledUserList>
           <StyledUserPage>
             <TablePagination
-              count={countUser}
+              count={maxUser}
               divide={form.userCount}
               curPage={page}
               onClickNextPage={onClickNextPage}

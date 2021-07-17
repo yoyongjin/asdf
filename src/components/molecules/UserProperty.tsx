@@ -77,6 +77,7 @@ function UserProperty({
           values === 'id' ||
           values === 'branch_id' ||
           values === 'team_id' ||
+          values === 'zibox_id' ||
           values === 'zibox_mic' ||
           values === 'zibox_spk' ||
           values === 'zibox_ip_type' ||

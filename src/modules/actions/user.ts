@@ -44,34 +44,37 @@ export const REQUEST_RESET_PASSWORD = 'REQUEST_RESET_PASSWORD';
 export const SUCCESS_RESET_PASSWORD = 'SUCCESS_RESET_PASSWORD';
 export const FAILURE_RESET_PASSWORD = 'FAILURE_RESET_PASSWORD';
 
-export const RESET_FILTERED_USER = 'RESET_FILTERED_USER';
-export const RESET_FILTERED_CONSULTANT = 'RESET_FILTERED_CONSULTANT';
-
-export const REQUEST_ZIBOX_VOLUME = 'UPDATE_ZIBOX_VOLUME';
+export const REQUEST_ZIBOX_VOLUME = 'REQUEST_ZIBOX_VOLUME';
 export const SUCCESS_ZIBOX_VOLUME = 'SUCCESS_ZIBOX_VOLUME';
 export const FAILURE_ZIBOX_VOLUME = 'FAILURE_ZIBOX_VOLUME';
 
-export const INSERT_USER = 'INSERT_USER';
-export const UPDATE_USER = 'UPDATE_USER';
-export const DELETE_USER = 'DELETE_USER';
-
-export const CHANGE_STATUS = 'CHANGE_STATUS';
-export const SAVE_STATUS = 'SAVE_STATUS';
-export const RESET_STATUS = 'RESET_STATUS';
-export const CHANGE_MONIT_STATUS = 'CHANGE_MONIT_STATUS';
-export const SET_MONIT_STATUS = 'SET_MONIT_STATUS';
-export const DISCONNECT_FORCE = 'DISCONNECT_FORCE';
-
-// new
+// 실시간 상태 변경하기
 export const SET_USER_STATUS = 'SET_USER_STATUS';
 export const CHANGE_CALL_STATUS = 'CHANGE_CALL_STATUS';
 export const CHANGE_ZIBOX_STATUS = 'CHANGE_ZIBOX_STATUS';
 export const CHANGE_CONSULTANT_STATUS = 'CHANGE_CONSULTANT_STATUS';
 export const CHANGE_PHONE_STATUS = 'CHANGE_PHONE_STATUS';
 export const CHANGE_ALL_RESET_STATUS = 'CHANGE_ALL_RESET_STATUS';
+
+// 사용자 추가 / 수정
 export const ADD_USER = 'ADD_USER';
 export const MODIFY_USER = 'MODIFY_USER';
+
+// 실시간 시간 변경
 export const SET_CALCULATED_CALL_TIME = 'SET_CALCULATED_CALL_TIME';
+
+export const CHANGE_USERS_COUNT = 'CHANGE_USERS_COUNT';
+
+// deprecated
+export const INSERT_USER = 'INSERT_USER';
+export const UPDATE_USER = 'UPDATE_USER';
+export const DELETE_USER = 'DELETE_USER';
+export const CHANGE_STATUS = 'CHANGE_STATUS';
+export const SAVE_STATUS = 'SAVE_STATUS';
+export const RESET_STATUS = 'RESET_STATUS';
+export const CHANGE_MONIT_STATUS = 'CHANGE_MONIT_STATUS';
+export const SET_MONIT_STATUS = 'SET_MONIT_STATUS';
+export const DISCONNECT_FORCE = 'DISCONNECT_FORCE';
 
 // action
 // 유저 정보 가져오기
@@ -110,6 +113,49 @@ export const failureResetPassword = createAction(
   FAILURE_RESET_PASSWORD,
 )<string>();
 
+// 지박스 볼륨 변경하기
+export const requestZiboxVolume = createAction(REQUEST_ZIBOX_VOLUME)<{
+  id: number;
+  ziboxmic: number;
+  ziboxspk: number;
+}>();
+export const successZiboxVolume = createAction(SUCCESS_ZIBOX_VOLUME)<{
+  id: number;
+  ziboxmic: number;
+  ziboxspk: number;
+}>();
+export const failureZiboxVolume = createAction(FAILURE_ZIBOX_VOLUME)<string>();
+
+// 실시간 상태 변경하기
+export const setUserStatus =
+  createAction(SET_USER_STATUS)<ConsultantAllStatusByNumber>();
+export const changeCallStatus = createAction(CHANGE_CALL_STATUS)<CallStatus>();
+export const changeZiboxStatus =
+  createAction(CHANGE_ZIBOX_STATUS)<ZiboxStatus>();
+export const changeConsultantStatus = createAction(
+  CHANGE_CONSULTANT_STATUS,
+)<ConsultantStatus>();
+export const changePhoneStatus =
+  createAction(CHANGE_PHONE_STATUS)<PhoneStatus>();
+export const changeAllResetStatus = createAction(
+  CHANGE_ALL_RESET_STATUS,
+)<ConsultantAllStatus>();
+
+// 사용자 추가 / 수정
+export const addUser = createAction(ADD_USER)<ChangeUser>();
+export const modifyUser = createAction(MODIFY_USER)<ChangeUser>();
+
+// 실시간 시간 변경
+export const setCalculatedCallTime = createAction(
+  SET_CALCULATED_CALL_TIME,
+)<TimeData>();
+
+// 사용자 수 저장하기
+export const changeUsersCount = createAction(CHANGE_USERS_COUNT)<number>();
+
+// deprecated
+export const GET_CALL_STATUS = 'GET_CALL_STATUS';
+export const getCallStatus = createAction(GET_CALL_STATUS)<any>();
 export const insertUser = createAction(INSERT_USER)<{
   data: UserInfo;
   branch_id: number;
@@ -119,7 +165,6 @@ export const updateUser = createAction(UPDATE_USER)<{
   branch_id: number;
 }>();
 export const deleteUser = createAction(DELETE_USER)<{ id: number }>();
-
 export const changeStatus = createAction(CHANGE_STATUS)<{
   data: {
     number: string;
@@ -137,28 +182,10 @@ export const changeStatus = createAction(CHANGE_STATUS)<{
   };
   type: string;
 }>();
-
 export const saveStatus = createAction(SAVE_STATUS)<{
   [key: string]: string;
 }>();
 export const resetStatus = createAction(RESET_STATUS)<StatusType>();
-
-export const resetFilteredUser = createAction(RESET_FILTERED_USER)();
-export const resetFilteredConsultant = createAction(
-  RESET_FILTERED_CONSULTANT,
-)();
-export const requestZiboxVolume = createAction(REQUEST_ZIBOX_VOLUME)<{
-  id: number;
-  ziboxmic: number;
-  ziboxspk: number;
-}>();
-export const successZiboxVolume = createAction(SUCCESS_ZIBOX_VOLUME)<{
-  id: number;
-  ziboxmic: number;
-  ziboxspk: number;
-}>();
-export const failureZiboxVolume = createAction(FAILURE_ZIBOX_VOLUME)<string>();
-
 export const changeMonitStatus = createAction(CHANGE_MONIT_STATUS)<{
   status: number;
   number: string;
@@ -168,29 +195,3 @@ export const setMonitStatus = createAction(SET_MONIT_STATUS)<number>();
 export const disconnectForce = createAction(DISCONNECT_FORCE)<{
   number: string;
 }>();
-
-// new
-export const setUserStatus =
-  createAction(SET_USER_STATUS)<ConsultantAllStatusByNumber>();
-export const addUser = createAction(ADD_USER)<ChangeUser>();
-export const modifyUser = createAction(MODIFY_USER)<ChangeUser>();
-export const setCalculatedCallTime = createAction(
-  SET_CALCULATED_CALL_TIME,
-)<TimeData>();
-export const changeCallStatus = createAction(CHANGE_CALL_STATUS)<CallStatus>();
-export const changeZiboxStatus =
-  createAction(CHANGE_ZIBOX_STATUS)<ZiboxStatus>();
-export const changeConsultantStatus = createAction(
-  CHANGE_CONSULTANT_STATUS,
-)<ConsultantStatus>();
-export const changePhoneStatus =
-  createAction(CHANGE_PHONE_STATUS)<PhoneStatus>();
-export const changeAllResetStatus = createAction(
-  CHANGE_ALL_RESET_STATUS,
-)<ConsultantAllStatus>();
-
-// 삭제 예정
-export const GET_CALL_STATUS = 'GET_CALL_STATUS';
-export const getCallStatus = createAction(GET_CALL_STATUS)<any>();
-export const RUN_TIMER = 'RUN_TIMER';
-export const runTimer = createAction(RUN_TIMER)();

@@ -3,7 +3,6 @@ import styled from 'styled-components';
 
 import { UserProperty } from 'components/molecules';
 import { Colors } from 'utils/color';
-import { LoginData } from 'types/auth';
 import { TableContentData } from 'components/organisms/UserView';
 
 const StyledWrapper = styled.tr`
@@ -29,7 +28,7 @@ function TableContent({ contents }: TableContentProps) {
               />
             </StyledWrapper>
           );
-        } else if (contents.type === 'manager') {
+        } else if (contents.type === 'stat') {
           return null;
         }
       })}

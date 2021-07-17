@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux';
 
 import Socket from 'lib/socket';
 import {
-  getCallStatus,
   insertUser,
   updateUser,
   changeStatus,
@@ -47,7 +46,7 @@ function useSocket() {
             Logger.log('Init Status', _response);
             break;
           default:
-            dispatch(changeStatus({data: _response, type}));
+            dispatch(changeStatus({ data: _response, type }));
             Logger.log('Change Status', _response);
             break;
         }

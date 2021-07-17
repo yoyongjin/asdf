@@ -71,27 +71,27 @@ const StyledButtonSpace = styled.span`
 `;
 
 function Title({
+  bottomLineColor,
+  bottomLinePixel,
   buttonData,
   children,
   explanData,
+  leftBottomPixel,
   isButton,
   isExplan,
   isPage,
   isSelect,
   isSearch,
   isVolume,
+  pageData,
+  rightBottomPixel,
   searchData,
   selectData,
-  volumeData,
-  pageData,
   titleFontColor,
   titleFontSize,
   titleFontWeight,
   titleFontFamily,
-  bottomLineColor,
-  bottomLinePixel,
-  leftBottomPixel,
-  rightBottomPixel,
+  volumeData,
 }: TitleProps) {
   return (
     <StyledWrapper color={bottomLineColor!} pixel={bottomLinePixel}>

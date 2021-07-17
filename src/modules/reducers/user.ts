@@ -34,6 +34,7 @@ const initialState: UserState = {
   user: [],
   consultant: [],
   numberOfUsers: 0,
+  userCount: 0,
   userList: {
     users: [],
     consultants: [],
@@ -44,7 +45,6 @@ const initialState: UserState = {
     consultants: [],
     numberOfUsers: 0,
   },
-  status: {},
   realTimeStatus: {},
 };
 
@@ -164,44 +164,6 @@ const userReducer = createReducer<UserState, UserAction>(initialState, {
     return produce(state, (draft) => {
       draft.request.resetPassword.fetch = false;
       draft.request.resetPassword.error = action.payload;
-    });
-  },
-  [types.SET_MONIT_STATUS]: (state, action) => {
-    return produce(state, (draft) => {
-      state.userList.consultants.findIndex((consult) => {});
-      switch (action.payload) {
-        case 0:
-          // 감청 종료
-          // draft.monit.tapping = false;
-          break;
-        case 1:
-          // 감청 시작
-          // draft.monit.tapping = true;
-          break;
-        case 2:
-          // 버퍼링 시작
-          break;
-        case 3:
-          // 버퍼링 종료
-          break;
-        case 4:
-          // 타임아웃
-          // draft.monit.tapping = false;
-          break;
-        default:
-          break;
-      }
-    });
-  },
-  [types.RESET_FILTERED_USER]: (state, action) => {
-    return produce(state, (draft) => {
-      draft.filterUserList.users = [];
-      draft.filterUserList.numberOfUsers = 0;
-    });
-  },
-  [types.RESET_FILTERED_CONSULTANT]: (state, action) => {
-    return produce(state, (draft) => {
-      draft.filterUserList.consultants = [];
     });
   },
   [types.SET_USER_STATUS]: (state, action) => {
@@ -348,8 +310,7 @@ const userReducer = createReducer<UserState, UserAction>(initialState, {
         return;
       }
 
-      if (state.user.length > 4) {
-        // 수정 예정
+      if (state.user.length >= state.userCount) {
         // 페이지가 넘어갈 경우
         draft.user.unshift(newUser);
         draft.user.pop();
@@ -508,6 +469,41 @@ const userReducer = createReducer<UserState, UserAction>(initialState, {
 
         return consultant;
       });
+    });
+  },
+  [types.CHANGE_USERS_COUNT]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.userCount = action.payload;
+    });
+  },
+  /**
+   * @deprecated
+   */
+  [types.SET_MONIT_STATUS]: (state, action) => {
+    return produce(state, (draft) => {
+      state.userList.consultants.findIndex((consult) => {});
+      switch (action.payload) {
+        case 0:
+          // 감청 종료
+          // draft.monit.tapping = false;
+          break;
+        case 1:
+          // 감청 시작
+          // draft.monit.tapping = true;
+          break;
+        case 2:
+          // 버퍼링 시작
+          break;
+        case 3:
+          // 버퍼링 종료
+          break;
+        case 4:
+          // 타임아웃
+          // draft.monit.tapping = false;
+          break;
+        default:
+          break;
+      }
     });
   },
 });

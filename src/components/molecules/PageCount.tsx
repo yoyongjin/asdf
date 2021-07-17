@@ -35,11 +35,14 @@ const StyledCurrent = styled.div<StyledProps>`
 `;
 
 const StyledDivide = styled.div<StyledProps>`
+  align-self: center;
   padding-left: ${(props) => props.padding || 0.2}rem;
   padding-right: ${(props) => props.padding || 0.2}rem;
 `;
 
-const StyledMax = styled.div``;
+const StyledMax = styled.div`
+  align-self: center;
+`;
 
 function PageCount({ curPage, maxPage, padding, textAlign }: PageCountProps) {
   return (
