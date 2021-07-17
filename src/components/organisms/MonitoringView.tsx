@@ -57,10 +57,6 @@ const adminList = [
   { id: 1, data: '관리자' },
 ];
 
-// let branch = -1; // 임시 지점 번호
-// let team = -1; // 임시 팀 번호
-// let request = false;
-
 function Monitoring({ location }: MonitoringProps) {
   const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
   const [selectedConsultant, setSelectedConsultant] = useState<UserDataV2>();
