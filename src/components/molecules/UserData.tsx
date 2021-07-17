@@ -245,6 +245,8 @@ function UserData({
         mic,
         spk,
       );
+
+      onClickVisible();
     } else {
       // 추가
       onClickAddUser!(
@@ -259,6 +261,8 @@ function UserData({
         mic,
         spk,
       );
+
+      onClickVisible();
     }
   }, [
     form.admin,
@@ -275,6 +279,7 @@ function UserData({
     loginData.branch_id,
     onClickAddUser,
     onClickModifyUser,
+    onClickVisible,
     userData,
     validateForm,
   ]);
