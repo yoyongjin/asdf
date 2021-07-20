@@ -1,0 +1,275 @@
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import styled from 'styled-components';
+
+import { StatisticsTotal, Title } from 'components/molecules';
+import { Table } from 'components/organisms';
+import useInputForm from 'hooks/useInputForm';
+import { UserData as UserDataV2 } from 'types/user';
+import { Colors } from 'utils/color';
+import useStatistics from 'hooks/useStatistics';
+import useAuth from 'hooks/useAuth';
+import Utils from 'utils/new_utils';
+
+const StyledWrapper = styled.div`
+  /* Display */
+  height: 100%;
+  width: 100%;
+`;
+
+const StyledTitle = styled.div`
+  /* Display */
+  height: 6rem;
+  width: 100%;
+`;
+
+const StyledUserListArea = styled.div`
+  /* Display */
+  height: calc(100% - 6rem - 66px);
+  overflow-x: auto;
+`;
+
+const StyledUserList = styled.div`
+  /* Position */
+  padding-top: 20px;
+`;
+
+const StyledTotal = styled.div`
+  padding-top: 50px;
+`;
+
+const tableTitles = [
+  { title: '팀명', width: 15 },
+  { title: '법인폰 번호', width: 15 },
+  { title: 'OB 총 건수', width: 10 },
+  { title: '연결 성공', width: 10 },
+  { title: '연결률', width: 10 },
+  { title: '콜백 건수', width: 10 },
+  { title: '총 통화시간', width: 15 },
+];
+
+const searchSubjectData = [
+  { id: 2, data: '상담원' },
+  { id: 1, data: '법인폰' },
+];
+
+function StatisticsView() {
+  const [search, setSearch] = useState<string>('');
+  const [subject, setSubject] = useState<number>(2);
+  const { loginInfo } = useAuth();
+  const { form, onChangeSelect, onChangeInput, setSpecificValue } =
+    useInputForm({
+      start_date: Utils.getChangedMonthYYYYMMDD(new Date().getTime()),
+      end_date: Utils.getYYYYMMDD(new Date().getTime(), '-'),
+      search: '',
+      subject: 2,
+    });
+  const { statistics, handleGetStatistics } = useStatistics();
+
+  const selectData = useMemo(() => {
+    return {
+      count: 1,
+      data: [searchSubjectData],
+      style: [
+        {
+          width: 111,
+          height: 25,
+          borderRadius: 12.5,
+          borderColor: Colors.gray7,
+          fontColor: Colors.gray4,
+          paddingLeft: 16,
+        },
+      ],
+      info: [
+        {
+          id: form.subject,
+          name: 'subject',
+          click: onChangeSelect,
+        },
+      ],
+    };
+  }, [form.subject, onChangeSelect]);
+
+  const calendarData = useMemo(() => {
+    return {
+      info: [
+        {
+          value: form.start_date,
+          name: 'start_date',
+          change: setSpecificValue,
+        },
+        {
+          value: form.end_date,
+          name: 'end_date',
+          change: setSpecificValue,
+        },
+      ],
+    };
+  }, [form.end_date, form.start_date, setSpecificValue]);
+
+  const onClickSearch = useCallback(() => {
+    setSearch(form.search);
+    setSubject(form.subject);
+  }, [form.search, form.subject]);
+
+  const searchData = useMemo(() => {
+    return {
+      count: 1,
+      data: [form.search],
+      info: [
+        {
+          change: onChangeInput,
+          click: onClickSearch,
+        },
+      ],
+    };
+  }, [form.search, onChangeInput, onClickSearch]);
+
+  const tableContents = useMemo(() => {
+    return {
+      data: statistics,
+      styles: {
+        tableHeight: 30,
+      },
+      type: 'stat',
+    };
+  }, [statistics]);
+
+  const totalStatistics = useMemo(() => {
+    let outboundCount = 0;
+    let successCount = 0;
+    let successRatio = 0;
+    let inboundCount = 0;
+    let allCallTime = 0;
+
+    statistics.map((values) => {
+      outboundCount += values.outbound_count;
+      successCount += values.success_count;
+      successRatio += values.success_ratio;
+      inboundCount += values.inbound_count;
+      allCallTime += values.all_call_time;
+    });
+
+    return {
+      outboundCount,
+      successCount,
+      successRatio,
+      inboundCount,
+      allCallTime,
+      count: statistics.length,
+    };
+  }, [statistics]);
+
+  const excelData = useMemo(() => {
+    return {
+      titles: tableTitles,
+      contents: statistics,
+    };
+  }, [statistics]);
+
+  useEffect(() => {
+    if (form.search === '') {
+      setSearch(form.search);
+      setSubject(2);
+      setSpecificValue('subject', 2);
+    }
+  }, [form.search, setSpecificValue]);
+
+  useEffect(() => {
+    if (loginInfo.id) {
+      handleGetStatistics(form.start_date, form.end_date, subject, search);
+    }
+  }, [
+    form.end_date,
+    form.start_date,
+    handleGetStatistics,
+    loginInfo.id,
+    search,
+    subject,
+  ]);
+
+  useEffect(() => {
+    // const currentStart = new Date(form.start_date);
+    // const currentEnd = new Date(form.end_date);
+    // const currentStartYear = currentStart.getFullYear();
+    // const currentEndYear = currentEnd.getFullYear();
+    // const currentStartMonth = currentStart.getMonth() + 1;
+    // const currentEndMonth = currentEnd.getMonth() + 1;
+    // const currentStartDate = currentStart.getDate(); // 일
+    // const currentEndDate = currentEnd.getDate(); // 일
+    // console.log(currentStartYear, currentStartMonth, currentStartDate);
+    // console.log(currentEndYear, currentEndMonth, currentEndDate);
+    // if (currentStartYear < currentEndYear) {
+    //   //
+    // }
+    // const yyyymmdd = Utils.getChangedMonthYYYYMMDD(
+    //   currentEndDate.getTime(),
+    //   currentStartMonth - currentEndMonth,
+    // );
+    // console.log(yyyymmdd, currentStartMonth - currentEndMonth);
+    // if (form.end_date === form.start_date) {
+    //   return;
+    // }
+    // setSpecificValue('end_date', yyyymmdd);
+  }, [form.start_date, form.end_date, setSpecificValue]);
+
+  return (
+    <>
+      <StyledWrapper>
+        <StyledTitle>
+          <Title
+            calendarData={calendarData}
+            isCalendar
+            isExcel
+            isSearch
+            isSelect
+            rightBottomPixel={9}
+            excelData={excelData}
+            searchData={searchData}
+            selectData={selectData}
+          >
+            법인폰 통계
+          </Title>
+        </StyledTitle>
+        <StyledUserListArea>
+          <StyledUserList>
+            <Table contents={tableContents} titles={tableTitles} />
+          </StyledUserList>
+          <StyledTotal>
+            <StatisticsTotal titles={tableTitles} contents={totalStatistics} />
+          </StyledTotal>
+        </StyledUserListArea>
+      </StyledWrapper>
+    </>
+  );
+}
+
+export type SetSeletedConsultantData = (consultantData: UserDataV2) => void;
+
+export interface TableTitleData {
+  title: string;
+  width: number;
+}
+
+export interface TableContentData {
+  click?: Array<any>;
+  data: Array<any>;
+  option?: TableContentOption;
+  styles?: TableContentStyles;
+  type: string;
+}
+
+export interface TableContentStyles {
+  tableHeight: number;
+}
+
+export interface TableContentOption {
+  currentBranchId?: number;
+  currentPage?: number;
+  currentSearchText?: string;
+  currentTeamId?: number;
+  currentLimit?: number;
+}
+
+StatisticsView.defaultProps = {};
+
+export default StatisticsView;

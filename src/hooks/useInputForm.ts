@@ -53,17 +53,6 @@ function useInputForm<T>(initialForm: T) {
   };
 }
 
-interface DataType {
-  userListCount: string;
-  branch: string;
-  team: string;
-  admin: string;
-  name: string;
-  id: string;
-  password: string;
-  tel: string;
-  zibox: string;
-  volum: number;
-}
+export type SetSpecificValue = (name: string, value: string | number) => void;
 
 export default useInputForm;

@@ -60,7 +60,7 @@ class Socket implements WebSocket {
     callback: (connection: number, timestamp: number) => void,
   ) {
     Logger.log('[WEB SOCKET] Register Connect Event');
-    this.socket.on(SOCKET_EVENT_TYPE.INITIALIZE, (message: string) => {
+    this.socket?.on(SOCKET_EVENT_TYPE.INITIALIZE, (message: string) => {
       Logger.log(`[WEB SOCKET] ${SOCKET_EVENT_TYPE.INITIALIZE}`, message);
       const { status, data, type } = JSON.parse(message) as ResponseType;
 
@@ -78,7 +78,7 @@ class Socket implements WebSocket {
   }
 
   onMonitorEventHandler(callback: (packet: any) => void) {
-    this.socket.on(SOCKET_EVENT_TYPE.MONITORING, (message: string) => {
+    this.socket?.on(SOCKET_EVENT_TYPE.MONITORING, (message: string) => {
       Logger.log(`[WEB SOCKET] ${SOCKET_EVENT_TYPE.MONITORING}`, message);
 
       callback(message);
@@ -94,7 +94,7 @@ class Socket implements WebSocket {
 
   onChangeStatusEventHandler(callback: (type: string, data: any) => void) {
     Logger.log('[WEB SOCKET] Register Change Status Event');
-    this.socket.on(SOCKET_EVENT_TYPE.STATE, (message: string) => {
+    this.socket?.on(SOCKET_EVENT_TYPE.STATE, (message: string) => {
       // 상태에 관련된 모든 데이터 응답 리스너
       // Logger.log(`[WEB SOCKET] ${SOCKET_EVENT_TYPE.STATE}`, message);
       const { status, data, type } = JSON.parse(message) as ResponseType;
@@ -106,7 +106,7 @@ class Socket implements WebSocket {
   }
 
   onMessageInit(callback: (parameters: any) => void) {
-    this.socket.on(
+    this.socket?.on(
       'initialize',
       (message: { status: string; type: string }) => {
         console.log('initialize');
@@ -138,7 +138,7 @@ class Socket implements WebSocket {
   }
 
   onMessageMonitoring(callback: (parameters: any) => void) {
-    this.socket.on('monitoring', (message: string) => {
+    this.socket?.on('monitoring', (message: string) => {
       console.log('monitoring');
       console.log(message);
       // const data = JSON.parse(message);
@@ -153,7 +153,7 @@ class Socket implements WebSocket {
 
   onMessageUser(callback: (parameters: any) => void) {
     // 사용자 등록 / 수정 / 삭제 시
-    this.socket.on('user', (message: string) => {
+    this.socket?.on('user', (message: string) => {
       console.log('user');
       console.log(message);
       const data = JSON.parse(message);
@@ -169,7 +169,7 @@ class Socket implements WebSocket {
   onMessageAllCallStates(callback: (parameters: any) => void) {
     // 상담원 콜 상태 전부 가져오기
     console.log(this.socket);
-    this.socket.on('all-state', (message: string) => {
+    this.socket?.on('all-state', (message: string) => {
       console.log('all-state');
       // console.log(message)
       // const data = JSON.parse(message);
@@ -180,7 +180,7 @@ class Socket implements WebSocket {
   onMeesageCallState(callback: (parameters: any) => void) {
     // 상담원, 법인폰, 지박스 상태 변경 시
     // 전체 데이터도 여기로 전달
-    this.socket.on('state', (message: string) => {
+    this.socket?.on('state', (message: string) => {
       console.log('state');
       console.log(message);
       const data = JSON.parse(message);

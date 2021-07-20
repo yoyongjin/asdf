@@ -7,6 +7,7 @@ import {
   LoginForm,
   MonitoringView,
   OrganizationView,
+  StatisticsView,
   UserView,
 } from 'components/organisms';
 
@@ -21,6 +22,7 @@ function MainRouter() {
         component={OrganizationView}
       />
       <Route exact path="/main/manage/user" component={UserView} />
+      <Route exact path="/main/manage/stat" component={StatisticsView} />
       <Route component={NotFound} />
     </Switch>
   );

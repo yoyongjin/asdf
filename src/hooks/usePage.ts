@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 
 import { RootState } from 'modules/reducers';
-import { getMaxPage } from 'utils/utils';
+import Utils from 'utils/new_utils';
 
 function usePage() {
   const maxBranch = useSelector(
@@ -13,7 +13,7 @@ function usePage() {
 
   const onChangeCurrentPage = useCallback(
     (cur: number, total: number, divide: number) => {
-      let maxPage = getMaxPage(total, divide);
+      let maxPage = Utils.getMaxPage(total, divide);
 
       if (cur > maxPage) {
         setPage(maxPage);
@@ -24,7 +24,7 @@ function usePage() {
 
   const onClickNextPage = useCallback(
     (cur: number, total: number, divide: number, isEnd = false) => {
-      let maxPage = getMaxPage(total, divide);
+      let maxPage = Utils.getMaxPage(total, divide);
       if (cur >= maxPage) return;
 
       if (isEnd) {

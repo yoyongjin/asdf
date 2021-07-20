@@ -11,7 +11,7 @@ import {
 } from 'hooks/useZibox';
 import Communicator from 'lib/communicator';
 import { TappingTarget } from 'types/auth';
-import { ConsultantInfo, UserData } from 'types/user';
+import { UserData } from 'types/user';
 import { Colors } from 'utils/color';
 import {
   CALL_STATUS_V2,
@@ -20,7 +20,7 @@ import {
   ZIBOX_MONIT_STATUS,
   PHONE_STATUS,
 } from 'utils/constants';
-import { getHourMinSecV1 } from 'utils/utils';
+import Utils from 'utils/new_utils';
 
 import monitoringIcon from 'images/icon-mnt-red@2x.png';
 import waitingIcon from 'images/icon-mnt-grey@2x.png';
@@ -409,7 +409,7 @@ function Consultant({
           fontWeight={700}
         >
           {consultInfo.calling_time
-            ? getHourMinSecV1(consultInfo.calling_time)
+            ? Utils.getHourMinSecBySecond(consultInfo.calling_time)
             : '00:00:00'}
         </Text>
       </StyledCallStatusArea>

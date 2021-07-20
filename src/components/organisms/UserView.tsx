@@ -266,6 +266,7 @@ function UserView({ location }: UserViewProps) {
   );
 
   const tableContents = useMemo(() => {
+    console.log(userInfo);
     return {
       data: userInfo,
       click: [
@@ -279,6 +280,9 @@ function UserView({ location }: UserViewProps) {
         currentSearchText: form.search,
         currentTeamId: form.team,
         currentLimit: form.userCount,
+      },
+      styles: {
+        tableHeight: 50,
       },
       type: 'user',
     };
@@ -427,7 +431,12 @@ export interface TableContentData {
   click?: Array<any>;
   data: Array<any>;
   option?: TableContentOption;
+  styles?: TableContentStyles;
   type: string;
+}
+
+export interface TableContentStyles {
+  tableHeight: number;
 }
 
 export interface TableContentOption {

@@ -4,10 +4,11 @@ import styled from 'styled-components';
 import { UserProperty } from 'components/molecules';
 import { Colors } from 'utils/color';
 import { TableContentData } from 'components/organisms/UserView';
+import StatisticsProperty from './StatisticsProperty';
 
-const StyledWrapper = styled.tr`
+const StyledWrapper = styled.tr<StyledTableContent>`
   width: 100%;
-  height: 50px;
+  height: ${(props) => props.height}px;
   border-bottom: 1px solid ${Colors.gray7};
 `;
 
@@ -17,9 +18,12 @@ function TableContent({ contents }: TableContentProps) {
       {contents.data.map((data, i) => {
         if (contents.type === 'user') {
           return (
-            <StyledWrapper key={`styled-property-${i}`}>
+            <StyledWrapper
+              key={`styled-user-property-${i}`}
+              height={contents.styles?.tableHeight!}
+            >
               <UserProperty
-                key={`table-property-${i}`}
+                key={`table-user-property-${i}`}
                 userData={data}
                 options={contents.option!}
                 onClickUserDataPopup={contents.click![0]}
@@ -29,11 +33,26 @@ function TableContent({ contents }: TableContentProps) {
             </StyledWrapper>
           );
         } else if (contents.type === 'stat') {
-          return null;
+          return (
+            <StyledWrapper
+              key={`styled-statistics-property-${i}`}
+              height={contents.styles?.tableHeight!}
+            >
+              <StatisticsProperty
+                key={`table-statistics-property-${i}`}
+                statisticsData={data}
+                options={contents.option!}
+              />
+            </StyledWrapper>
+          );
         }
       })}
     </>
   );
+}
+
+interface StyledTableContent {
+  height: number;
 }
 
 interface TableContentProps {

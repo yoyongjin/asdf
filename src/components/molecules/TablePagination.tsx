@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { Image } from 'components/atoms';
 import { PageCount } from 'components/molecules';
-import { getMaxPage } from 'utils/utils';
+import Utils from 'utils/new_utils';
 
 import nextIcon from 'images/list-page-n.png';
 import prevIcon from 'images/list-page-p.png';
@@ -66,7 +66,7 @@ function TablePagination({
       <StyledPage>
         <PageCount
           curPage={curPage}
-          maxPage={getMaxPage(count, divide)}
+          maxPage={Utils.getMaxPage(count, divide)}
           padding={1}
         ></PageCount>
       </StyledPage>

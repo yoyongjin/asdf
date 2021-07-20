@@ -3,7 +3,6 @@ import styled from 'styled-components';
 
 import { TableTitle, TableContent } from 'components/molecules';
 import { Colors } from 'utils/color';
-import { LoginData } from 'types/auth';
 import { TableContentData, TableTitleData } from './UserView';
 
 const StyledWrapper = styled.table`

@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components';
 
 import { Image, Text } from 'components/atoms';
 import { Colors } from 'utils/color';
-import { getYYYYMMDD, getHourMinSecV2 } from 'utils/utils';
+import Utils from 'utils/new_utils';
 
 import timestampImage from 'images/bg-login-time@3x.png';
 
@@ -65,7 +65,8 @@ function UserLog({ loginTime, userName, onClickLogout }: UserLogProps) {
         />
         <StyledText>
           <Text fontColor={Colors.green1} fontSize={12} fontWeight={700}>
-            {`${getYYYYMMDD(loginTime)} ${getHourMinSecV2(loginTime)}`}
+            {`${Utils.getYYYYMMDD(loginTime)} 
+            ${Utils.getHourMinSecByTimestamp(loginTime)}`}
           </Text>
         </StyledText>
       </StyledLoginTime>

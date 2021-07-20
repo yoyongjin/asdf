@@ -101,6 +101,7 @@ function Input({
   placeholder,
   type,
   maxLength,
+  readOnly,
   value,
   onChange,
   onKeyDown,
@@ -119,6 +120,7 @@ function Input({
       onChange={onChange}
       onKeyDown={onKeyDown}
       onKeyUp={onKeyUp}
+      readOnly={readOnly}
       {...rest}
     ></StyledInput>
   );
@@ -152,6 +154,7 @@ interface InputProps extends StyledInputProps {
   readonly placeholder?: string;
   readonly type: string;
   readonly value: string;
+  readonly readOnly: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   onKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
@@ -173,6 +176,7 @@ Input.defaultProps = {
   fontColor: Colors.gray4,
   disabled: false,
   maxLength: 524288,
+  readOnly: false,
 };
 
 export default React.memo(Input);

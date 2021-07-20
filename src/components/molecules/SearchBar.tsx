@@ -9,11 +9,11 @@ import searchIcon from 'images/icon-search.png';
 const StyledWrapper = styled.div``;
 
 const StyledInput = styled.span`
-  padding-right: 0.3rem;
+  padding-right: 5px;
 `;
 
 const StyledButton = styled.span`
-  padding-left: 0.3rem;
+  padding-left: 5px;
 `;
 
 function SearchBar({

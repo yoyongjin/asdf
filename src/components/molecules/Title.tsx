@@ -2,7 +2,13 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 
 import { Button, Select, Text } from 'components/atoms';
-import { SearchBar, PageCount, TextRange } from 'components/molecules';
+import {
+  SearchBar,
+  PageCount,
+  TextRange,
+  TextCalendar,
+} from 'components/molecules';
+import { SetSpecificValue } from 'hooks/useInputForm';
 import { Colors } from 'utils/color';
 import constants, { COMPANY_TYPE } from 'utils/constants';
 import Utils from 'utils/new_utils';
@@ -11,6 +17,9 @@ import DB_prevPageIcon from 'images/bt-page-pre.png';
 import DB_nextPageIcon from 'images/bt-page-next.png';
 import prevPageIcon from 'images/zms/bt-page-pre.png';
 import nextPageIcon from 'images/zms/bt-page-next.png';
+import excelIcon from 'images/bt-add-e-1-nor.png';
+import useExcel from 'hooks/useExcel';
+import { TableTitleData } from 'components/organisms/StatisticsView';
 
 const StyledWrapper = styled.div<StyledWrapperProps>`
   /* Display */
@@ -70,14 +79,30 @@ const StyledButtonSpace = styled.span`
   padding-right: 0.7px;
 `;
 
+const StyledWaveSpace = styled.span`
+  padding-bottom: 6px;
+`;
+
+const StyledWhiteSpace = styled.span`
+  padding-right: 18px;
+`;
+
+const StyledExcelButton = styled.div`
+  padding-left: 10px;
+`;
+
 function Title({
   bottomLineColor,
   bottomLinePixel,
   buttonData,
+  calendarData,
   children,
+  excelData,
   explanData,
   leftBottomPixel,
   isButton,
+  isCalendar,
+  isExcel,
   isExplan,
   isPage,
   isSelect,
@@ -93,6 +118,7 @@ function Title({
   titleFontFamily,
   volumeData,
 }: TitleProps) {
+  const { handleExcelDownload } = useExcel();
   return (
     <StyledWrapper color={bottomLineColor!} pixel={bottomLinePixel}>
       <StyledBorderPostion pixel={leftBottomPixel} float="left">
@@ -141,6 +167,28 @@ function Title({
         ) : null}
       </StyledBorderPostion>
       <StyledBorderPostion pixel={rightBottomPixel} float="right">
+        {isCalendar ? (
+          <>
+            <TextCalendar
+              datePickerOnChange={calendarData?.info[0].change!}
+              inputName={calendarData?.info[0].name!}
+              inputValue={calendarData?.info[0].value!}
+            />
+            <StyledWaveSpace>
+              <Text fontFamily="Dotum" fontSize={14}>
+                ~
+              </Text>
+            </StyledWaveSpace>
+            <TextCalendar
+              // datePickerMaxDate={new Date(calendarData?.info[1].value!)}
+              // datePickerMinDate={new Date(calendarData?.info[0].value!)}
+              datePickerOnChange={calendarData?.info[1].change!}
+              inputName={calendarData?.info[1].name!}
+              inputValue={calendarData?.info[1].value!}
+            />
+            <StyledWhiteSpace />
+          </>
+        ) : null}
         {isVolume ? (
           <>
             {[...Array(volumeData!.count)].map((values, index) => {
@@ -257,6 +305,19 @@ function Title({
             />
           </>
         ) : null}
+        {isExcel ? (
+          <StyledExcelButton>
+            <Button
+              bgColor={Colors.navy1}
+              height={2.6}
+              image={excelIcon}
+              width={7}
+              onClick={() => {
+                handleExcelDownload(excelData?.titles!, excelData?.contents!);
+              }}
+            />
+          </StyledExcelButton>
+        ) : null}
       </StyledBorderPostion>
     </StyledWrapper>
   );
@@ -270,6 +331,19 @@ interface StyledWrapperProps {
 interface StyledBorderPostionProps {
   pixel: number;
   float: string;
+}
+
+interface ExcelData {
+  titles: Array<TableTitleData>;
+  contents: Array<any>;
+}
+
+interface CalendarData {
+  info: Array<{
+    value: string;
+    name: string;
+    change: SetSpecificValue;
+  }>;
 }
 
 interface PageData {
@@ -357,9 +431,13 @@ interface SelectData {
 
 interface TitleProps {
   buttonData?: ButtonData;
+  calendarData?: CalendarData;
   children: string;
+  excelData?: ExcelData;
   explanData?: ExplanData;
   isButton: boolean;
+  isCalendar: boolean;
+  isExcel: boolean;
   isExplan: boolean;
   isPage: boolean;
   isSearch: boolean;
@@ -381,6 +459,8 @@ interface TitleProps {
 
 Title.defaultProps = {
   isButton: false,
+  isCalendar: false,
+  isExcel: false,
   isExplan: false,
   isPage: false,
   isSearch: false,

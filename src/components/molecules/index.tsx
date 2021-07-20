@@ -6,10 +6,13 @@ import Organization from './Organization';
 import PageCount from './PageCount';
 import PhoneData from './PhoneData';
 import SearchBar from './SearchBar';
+import StatisticsProperty from './StatisticsProperty';
+import StatisticsTotal from './StatisticsTotal';
 import ZiboxData from './ZiboxData';
 import TableContent from './TableContent';
 import TableTitle from './TableTitle';
 import TablePagination from './TablePagination';
+import TextCalendar from './TextCalendar';
 import TextInput from './TextInput';
 import TextSelect from './TextSelect';
 import TextRange from './TextRange';
@@ -27,9 +30,12 @@ export {
   PageCount,
   PhoneData,
   SearchBar,
+  StatisticsProperty,
+  StatisticsTotal,
   TableContent,
   TableTitle,
   TablePagination,
+  TextCalendar,
   TextInput,
   TextSelect,
   TextRange,
