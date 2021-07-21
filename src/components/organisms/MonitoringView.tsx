@@ -164,7 +164,7 @@ function Monitoring({ location }: MonitoringProps) {
           step: 0.1,
           min: 0,
           max: 3,
-          text: '고객',
+          text: '상담원',
           change: onChangeInput,
         },
         {
@@ -172,7 +172,7 @@ function Monitoring({ location }: MonitoringProps) {
           step: 0.1,
           min: 0,
           max: 3,
-          text: '상담원',
+          text: '고객',
           change: onChangeInput,
         },
       ],
