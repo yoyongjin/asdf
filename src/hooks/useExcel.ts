@@ -33,7 +33,7 @@ function useExcel() {
         tmp['콜백 건수'] = content.inbound_count;
         tmp['총 통화시간'] = Utils.getHourMinSecBySecond(content.all_call_time);
 
-        data.push(test);
+        data.push(tmp);
       });
 
       const ws = XLSX.utils.json_to_sheet(data, {
