@@ -121,7 +121,10 @@ function* checkLoginProcess(action: ReturnType<typeof requestCheckLogin>) {
     const { error_msg } = response as ResponseFailureData;
     yield put(failureCheckLogin(error_msg));
 
-    alert(error_msg);
+    if (error_msg !== 'No token provided') {
+      // 개선 요망
+      alert(error_msg);
+    }
 
     history.push(ROUTER_TYPE.LOGIN);
   } catch (error) {
