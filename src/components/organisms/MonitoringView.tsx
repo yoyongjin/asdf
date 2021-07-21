@@ -31,7 +31,7 @@ const StyledTitle = styled.div`
 
 const StyledConsultantAreaWrap = styled.div`
   /* Display */
-  height: calc(100% - 6rem - 10px);
+  height: calc(100% - 6rem - 30px);
   display: flex;
   justify-content: center;
   margin-top: 5px;
