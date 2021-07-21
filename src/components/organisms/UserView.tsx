@@ -266,7 +266,6 @@ function UserView({ location }: UserViewProps) {
   );
 
   const tableContents = useMemo(() => {
-    console.log(userInfo);
     return {
       data: userInfo,
       click: [

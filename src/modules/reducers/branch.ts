@@ -421,7 +421,6 @@ const userReducer = createReducer<
     });
   },
   [types.INIT_BRANCH_LIST]: (state, action) => {
-    console.log(action.payload);
     return produce(state, (draft) => {
       draft.branch.user = [action.payload];
     });

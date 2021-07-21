@@ -87,8 +87,6 @@ function OrganizationView() {
     }
   }, [loginInfo, getOrganizations]);
 
-  console.log(organizations);
-
   return (
     <StyledWrapper>
       <StyledTitle>

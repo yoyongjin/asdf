@@ -166,8 +166,6 @@ function* addBranchProcess(action: ReturnType<typeof requestAddBranch>) {
 function* addTeamProcess(action: ReturnType<typeof requestAddTeam>) {
   const { name, branch_id, team_id } = action.payload;
 
-  console.log(name, branch_id, team_id);
-
   try {
     const response: ResponseSuccessData | ResponseFailureData = yield call(
       ZMSOrganization.addTeam,

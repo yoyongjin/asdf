@@ -3,6 +3,7 @@ import * as XLSX from 'xlsx';
 
 import { TableTitleData } from 'components/organisms/UserView';
 import Utils from 'utils/new_utils';
+import _ from 'lodash';
 
 function useExcel() {
   const handleExcelDownload = useCallback(
@@ -21,19 +22,18 @@ function useExcel() {
       const data: any = [];
 
       contents.map((content) => {
-        title['팀명'] = content.team_name;
-        title['법인폰 번호'] = Utils.formatPhoneNumber(content.number);
-        title['OB 총 건수'] = content.outbound_count;
-        title['연결 성공'] = content.success_count;
-        title['연결률'] = `${
+        const tmp = _.cloneDeep(title);
+        tmp['팀명'] = content.team_name;
+        tmp['법인폰 번호'] = Utils.formatPhoneNumber(content.number);
+        tmp['OB 총 건수'] = content.outbound_count;
+        tmp['연결 성공'] = content.success_count;
+        tmp['연결률'] = `${
           content.success_ratio ? content.success_ratio + '%' : '0%'
         }`;
-        title['콜백 건수'] = content.inbound_count;
-        title['총 통화시간'] = Utils.getHourMinSecBySecond(
-          content.all_call_time,
-        );
+        tmp['콜백 건수'] = content.inbound_count;
+        tmp['총 통화시간'] = Utils.getHourMinSecBySecond(content.all_call_time);
 
-        data.push(title);
+        data.push(test);
       });
 
       const ws = XLSX.utils.json_to_sheet(data, {
