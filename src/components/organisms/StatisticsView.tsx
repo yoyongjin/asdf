@@ -176,6 +176,52 @@ function StatisticsView() {
 
   useEffect(() => {
     if (loginInfo.id) {
+      const currentStart = new Date(form.start_date);
+      const currentEnd = new Date(form.end_date);
+      const currentStartYear = currentStart.getFullYear();
+      const currentEndYear = currentEnd.getFullYear();
+      const currentStartMonth = currentStart.getMonth() + 1;
+      const currentEndMonth = currentEnd.getMonth() + 1;
+      const currentStartDate = currentStart.getDate(); // 일
+      const currentEndDate = currentEnd.getDate(); // 일
+
+      if (currentStart > currentEnd) {
+        // 시작 날짜가 끝 날짜보다 큰 경우
+        alert('한달 조회만 가능합니다.');
+        return;
+      }
+
+      if (currentEndYear - currentStartYear > 1) {
+        alert('한달 조회만 가능합니다.');
+        return;
+      }
+
+      if (currentEndYear - currentStartYear === 1) {
+        if (currentEndMonth === 1 && currentStartMonth === 12) {
+          if (currentStartDate < currentEndDate) {
+            alert('한달 조회만 가능합니다.');
+            return;
+          }
+        } else {
+          alert('한달 조회만 가능합니다.');
+          return;
+        }
+      }
+
+      if (currentEndMonth - currentStartMonth === 1) {
+        // 1달 차이가 날 경우
+        if (currentStartDate < currentEndDate) {
+          alert('한달 조회만 가능합니다.');
+          return;
+        }
+      }
+
+      if (currentEndMonth - currentStartMonth > 1) {
+        // 1달 이상 차이가 날 경우
+        alert('한달 조회만 가능합니다.');
+        return;
+      }
+
       handleGetStatistics(form.start_date, form.end_date, subject, search);
     }
   }, [
@@ -186,31 +232,6 @@ function StatisticsView() {
     search,
     subject,
   ]);
-
-  useEffect(() => {
-    // const currentStart = new Date(form.start_date);
-    // const currentEnd = new Date(form.end_date);
-    // const currentStartYear = currentStart.getFullYear();
-    // const currentEndYear = currentEnd.getFullYear();
-    // const currentStartMonth = currentStart.getMonth() + 1;
-    // const currentEndMonth = currentEnd.getMonth() + 1;
-    // const currentStartDate = currentStart.getDate(); // 일
-    // const currentEndDate = currentEnd.getDate(); // 일
-    // console.log(currentStartYear, currentStartMonth, currentStartDate);
-    // console.log(currentEndYear, currentEndMonth, currentEndDate);
-    // if (currentStartYear < currentEndYear) {
-    //   //
-    // }
-    // const yyyymmdd = Utils.getChangedMonthYYYYMMDD(
-    //   currentEndDate.getTime(),
-    //   currentStartMonth - currentEndMonth,
-    // );
-    // console.log(yyyymmdd, currentStartMonth - currentEndMonth);
-    // if (form.end_date === form.start_date) {
-    //   return;
-    // }
-    // setSpecificValue('end_date', yyyymmdd);
-  }, [form.start_date, form.end_date, setSpecificValue]);
 
   return (
     <>

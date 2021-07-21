@@ -36,8 +36,6 @@ function useExcel() {
         data.push(title);
       });
 
-      console.log(data);
-
       const ws = XLSX.utils.json_to_sheet(data, {
         header: titleName,
       });

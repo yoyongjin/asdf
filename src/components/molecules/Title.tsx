@@ -20,6 +20,7 @@ import nextPageIcon from 'images/zms/bt-page-next.png';
 import excelIcon from 'images/bt-add-e-1-nor.png';
 import useExcel from 'hooks/useExcel';
 import { TableTitleData } from 'components/organisms/StatisticsView';
+import _ from 'lodash';
 
 const StyledWrapper = styled.div<StyledWrapperProps>`
   /* Display */
@@ -180,8 +181,6 @@ function Title({
               </Text>
             </StyledWaveSpace>
             <TextCalendar
-              // datePickerMaxDate={new Date(calendarData?.info[1].value!)}
-              // datePickerMinDate={new Date(calendarData?.info[0].value!)}
               datePickerOnChange={calendarData?.info[1].change!}
               inputName={calendarData?.info[1].name!}
               inputValue={calendarData?.info[1].value!}
@@ -312,9 +311,9 @@ function Title({
               height={2.6}
               image={excelIcon}
               width={7}
-              onClick={() => {
+              onClick={_.debounce(() => {
                 handleExcelDownload(excelData?.titles!, excelData?.contents!);
-              }}
+              }, 1000)}
             />
           </StyledExcelButton>
         ) : null}

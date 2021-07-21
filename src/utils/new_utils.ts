@@ -122,28 +122,6 @@ class Utils {
 
     return data;
   }
-
-  static getDiffDate(date1: string, date2: string) {
-    let diffDate_1 = new Date(date1);
-    let diffDate_2 = new Date(date2);
-
-    diffDate_1 = new Date(
-      diffDate_1.getFullYear(),
-      diffDate_1.getMonth() + 1,
-      diffDate_1.getDate(),
-    );
-
-    diffDate_2 = new Date(
-      diffDate_2.getFullYear(),
-      diffDate_2.getMonth() + 1,
-      diffDate_2.getDate(),
-    );
-
-    let diff = Math.abs(diffDate_2.getTime() - diffDate_1.getTime());
-    diff = Math.ceil(diff / (1000 * 3600 * 24));
-
-    return diff;
-  }
 }
 
 export default Utils;
