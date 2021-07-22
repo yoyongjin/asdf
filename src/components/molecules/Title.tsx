@@ -248,10 +248,12 @@ function Title({
             {[...Array(searchData!.count)].map((values, index) => {
               const info = searchData!.info[index];
               const data = searchData!.data[index];
+              const option = searchData!.option;
 
               return (
                 <StyledSearch>
                   <SearchBar
+                    inputPlaceHolder={option?.placeHolder}
                     search={data}
                     onChange={info.change}
                     onClickSearch={info.click}
@@ -357,15 +359,20 @@ interface PageData {
   ) => void;
 }
 
-interface SearchOption {
+interface SearchInfoOption {
   click: () => void;
   change: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+interface SearchOption {
+  placeHolder: string;
 }
 
 interface SearchData {
   count: number;
   data: Array<string>;
-  info: Array<SearchOption>;
+  info: Array<SearchInfoOption>;
+  option?: SearchOption;
 }
 
 interface VolumeOption {

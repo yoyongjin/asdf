@@ -19,6 +19,7 @@ const StyledButton = styled.span`
 function SearchBar({
   inputWidth,
   inputHeight,
+  inputPlaceHolder,
   buttonWidth,
   buttonHeight,
   buttonColor,
@@ -42,8 +43,8 @@ function SearchBar({
       <StyledInput>
         <Input
           value={search!}
-          name={'search'}
-          placeholder={'이름 및 계정'}
+          name="search"
+          placeholder={inputPlaceHolder}
           width={inputWidth}
           height={inputHeight}
           borderColor={borderColor}
@@ -53,7 +54,7 @@ function SearchBar({
           logoImg={searchIcon}
           onChange={onChange}
           onKeyDown={onKeyPress}
-        ></Input>
+        />
       </StyledInput>
       <StyledButton>
         <Button
@@ -77,8 +78,9 @@ function SearchBar({
 }
 
 interface SearchBarProps {
-  inputWidth?: number;
-  inputHeight?: number;
+  inputWidth: number;
+  inputHeight: number;
+  inputPlaceHolder: string;
   buttonWidth?: number;
   buttonHeight?: number;
   buttonColor?: string;
@@ -92,6 +94,7 @@ interface SearchBarProps {
 SearchBar.defaultProps = {
   inputWidth: 17,
   inputHeight: 2.5,
+  inputPlaceHolder: '이름 및 계정',
   buttonWidth: 7,
   buttonHeight: 2.6,
   buttonColor: Colors.gray4,

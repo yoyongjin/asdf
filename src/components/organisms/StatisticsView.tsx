@@ -120,6 +120,9 @@ function StatisticsView() {
           click: onClickSearch,
         },
       ],
+      option: {
+        placeHolder: '전화번호',
+      },
     };
   }, [form.search, onChangeInput, onClickSearch]);
 
