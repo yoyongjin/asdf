@@ -123,6 +123,7 @@ function ChangedPasswordForm() {
                 height={3.2}
                 name={values.name}
                 onChange={onChangeInput}
+                type="password"
                 value={
                   values.name === 'current_password'
                     ? form.current_password
