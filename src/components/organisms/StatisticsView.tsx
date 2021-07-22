@@ -47,23 +47,22 @@ const tableTitles = [
   { title: '총 통화시간', width: 15 },
 ];
 
-const searchSubjectData = [
-  { id: 2, data: '상담원' },
-  { id: 1, data: '법인폰' },
-];
+const searchSubjectData = [{ id: 1, data: '법인폰' }];
 
 function StatisticsView() {
   const [search, setSearch] = useState<string>('');
-  const [subject, setSubject] = useState<number>(2);
+  const [subject, setSubject] = useState<number>(1);
   const { loginInfo } = useAuth();
   const { form, onChangeSelect, onChangeInput, setSpecificValue } =
     useInputForm({
       start_date: Utils.getChangedMonthYYYYMMDD(new Date().getTime()),
       end_date: Utils.getYYYYMMDD(new Date().getTime(), '-'),
       search: '',
-      subject: 2,
+      subject: 1,
     });
   const { statistics, handleGetStatistics } = useStatistics();
+
+  console.log(form.subject, subject);
 
   const selectData = useMemo(() => {
     return {
@@ -169,8 +168,8 @@ function StatisticsView() {
   useEffect(() => {
     if (form.search === '') {
       setSearch(form.search);
-      setSubject(2);
-      setSpecificValue('subject', 2);
+      setSubject(1);
+      setSpecificValue('subject', 1);
     }
   }, [form.search, setSpecificValue]);
 
