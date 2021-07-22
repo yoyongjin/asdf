@@ -224,6 +224,7 @@ function* resetPasswordProcess(
     if (response.status === API_FETCH.SUCCESS) {
       const { data } = response as ResponseSuccessData;
 
+      alert('비밀번호가 초기화되었습니다.');
       yield put(successResetPassword());
 
       return;
