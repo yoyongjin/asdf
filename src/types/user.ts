@@ -11,8 +11,6 @@ export interface UserState {
   consultant: Array<UserData>;
   numberOfUsers: number;
   userCount: number;
-  userList: UsersData;
-  filterUserList: UsersData;
   realTimeStatus: ConsultantAllStatusByNumberV2;
 }
 

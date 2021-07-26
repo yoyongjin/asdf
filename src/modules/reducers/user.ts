@@ -35,16 +35,6 @@ const initialState: UserState = {
   consultant: [],
   numberOfUsers: 0,
   userCount: 0,
-  userList: {
-    users: [],
-    consultants: [],
-    numberOfUsers: 0,
-  },
-  filterUserList: {
-    users: [],
-    consultants: [],
-    numberOfUsers: 0,
-  },
   realTimeStatus: {},
 };
 
@@ -233,68 +223,29 @@ const userReducer = createReducer<UserState, UserAction>(initialState, {
           phone: phoneStatus,
         };
       }
-
-      (draft.realTimeStatus[phoneStatus.number!] as any).consultant =
-        phoneStatus;
     });
   },
   [types.CHANGE_ALL_RESET_STATUS]: (state, action) => {
-    const { number, consultant, call, phone, zibox } = action.payload;
+    // 모든 상태 초기화
+    Logger.log('CHANGE_ALL_RESET_STATUS', action.payload);
 
-    const newUserList = state.userList.consultants.map((consultantData) => {
-      if (number !== consultantData.number) return consultantData;
-
-      const newConsultant = _.cloneDeep(consultantData);
-
-      if (newConsultant.zibox) {
-        newConsultant.zibox = zibox;
-      }
-
-      if (newConsultant.call) {
-        newConsultant.call = call;
-      }
-
-      if (newConsultant.consultant) {
-        newConsultant.consultant = consultant;
-      }
-
-      if (newConsultant.phone) {
-        newConsultant.phone = phone;
-      }
-
-      return newConsultant;
-    });
-
-    const newFilteredUserList = state.filterUserList.consultants.map(
-      (consultantData) => {
-        if (number !== consultantData.number) return consultantData;
-
-        const newConsultant = _.cloneDeep(consultantData);
-
-        if (newConsultant.zibox) {
-          newConsultant.zibox = zibox;
-        }
-
-        if (newConsultant.call) {
-          newConsultant.call = call;
-        }
-
-        if (newConsultant.consultant) {
-          newConsultant.consultant = consultant;
-        }
-
-        if (newConsultant.phone) {
-          newConsultant.phone = phone;
-        }
-
-        return newConsultant;
-      },
+    const { number, consultant, call, phone, zibox } = _.cloneDeep(
+      action.payload,
     );
 
     return produce(state, (draft) => {
-      draft.userList.consultants = newUserList;
-      if (state.filterUserList.consultants.length > 0) {
-        draft.filterUserList.consultants = newFilteredUserList;
+      if (draft.realTimeStatus[number]) {
+        draft.realTimeStatus[number].call = call;
+        draft.realTimeStatus[number].consultant = consultant;
+        draft.realTimeStatus[number].phone = phone;
+        draft.realTimeStatus[number].zibox = zibox;
+      } else {
+        draft.realTimeStatus[number] = {
+          call,
+          consultant,
+          phone,
+          zibox,
+        };
       }
     });
   },
@@ -481,7 +432,6 @@ const userReducer = createReducer<UserState, UserAction>(initialState, {
    */
   [types.SET_MONIT_STATUS]: (state, action) => {
     return produce(state, (draft) => {
-      state.userList.consultants.findIndex((consult) => {});
       switch (action.payload) {
         case 0:
           // 감청 종료
