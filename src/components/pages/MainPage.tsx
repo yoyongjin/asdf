@@ -11,10 +11,12 @@ import constants, { COMPANY_TYPE } from 'utils/constants';
 import dblifeLogo from 'images/db-logo-cont@3x.png';
 import linaLogo from 'images/ln-logo-moni.png';
 import defaultLogo from 'images/zms/sub-gnb-logo.png';
+import SocketEventHandler from 'lib/socketEventHandler';
 
 function MainPage({ location }: MainPageProps) {
   const { loginInfo, onCheckLogin, onClickLogout } = useAuth();
-  const { registerEventHandler } = useCommunicator();
+  const { setChangedStatus, registerEventHandler, setServerData } =
+    useCommunicator();
 
   const backgroundColor = useMemo(() => {
     if (location.pathname === '/main') {
@@ -25,21 +27,33 @@ function MainPage({ location }: MainPageProps) {
   }, [location.pathname]);
 
   useEffect(() => {
+    SocketEventHandler.connectEvent = (
+      connection: number,
+      timestamp: number,
+    ) => {
+      setServerData(connection, timestamp);
+    };
+  }, [setServerData]);
+
+  useEffect(() => {
+    if (loginInfo.id) {
+      SocketEventHandler.changeStatusEvent = (type: string, data: any) => {
+        setChangedStatus(loginInfo.branch_id, loginInfo.admin_id, type, data);
+      };
+    }
+  }, [loginInfo.admin_id, loginInfo.branch_id, loginInfo.id, setChangedStatus]);
+
+  useEffect(() => {
+    if (loginInfo.id) {
+      registerEventHandler();
+    }
+  }, [loginInfo.id, registerEventHandler]);
+
+  useEffect(() => {
     if (!loginInfo.id) {
       onCheckLogin();
     }
   }, [loginInfo.id, onCheckLogin]);
-
-  useEffect(() => {
-    if (loginInfo.id) {
-      registerEventHandler(loginInfo.branch_id, loginInfo.admin_id);
-    }
-  }, [
-    loginInfo.id,
-    loginInfo.branch_id,
-    loginInfo.admin_id,
-    registerEventHandler,
-  ]);
 
   return (
     <MainTemplate

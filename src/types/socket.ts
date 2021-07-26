@@ -1,9 +1,5 @@
 export interface EventHandler {
-  onConnectEventHandler(
-    callback: (connection: number, timestamp: number) => void,
-  ): void;
   onMonitorEventHandler(callback: (parameters: any) => void): void;
-  onChangeStatusEventHandler(callback: (type: string, data: any) => void): void;
   onEmit(name: string, data: any): void;
 }
 
@@ -19,5 +15,5 @@ export interface ConnectOption {
   /**
    * @description ocx 연결 시 unique id
    */
-  key?: number;
+  key: number;
 }

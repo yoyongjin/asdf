@@ -6,7 +6,7 @@ import {
   OCXTappingOption,
   PacketTappingOption,
 } from 'types/zibox';
-import constants, { SOCKET_EVENT_TYPE, ZIBOX_TRANSPORT } from 'utils/constants';
+import constants, { ZIBOX_TRANSPORT } from 'utils/constants';
 import Logger from 'utils/log';
 import Player from './player';
 import _ from 'lodash';
@@ -45,19 +45,14 @@ class Communicator {
    */
   async connectSocket(id: number) {
     const url = constants.SOCKET_SERVER as string;
-    let connectOption = {
+    const connectOption = {
       url,
-      key: 0,
+      key: id,
     };
+
     if (Communicator.socket) {
-      const initData = {
-        user_id: id,
-      };
-      Communicator.socket
-        .connect(connectOption)
-        .onEmit(SOCKET_EVENT_TYPE.INITIALIZE, initData);
+      Communicator.socket.connect(connectOption);
     } else {
-      connectOption.key = id;
       await (Communicator.controller as OCX).connect(connectOption);
     }
   }
@@ -146,7 +141,7 @@ class Communicator {
     } else if (Communicator.transport === ZIBOX_TRANSPORT.PACKET) {
       Communicator.controller = new Player();
       Communicator.socket = new Socket();
-    } else if (Communicator.transport === ZIBOX_TRANSPORT.SERVER) {
+    } else {
       Communicator.controller = new Player();
       Communicator.socket = new Socket();
     }
