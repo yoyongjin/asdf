@@ -69,7 +69,7 @@ class Socket implements WebSocket {
       // 연결 성공 시
       Logger.log(`[WEB SOCKET] connect event`, message);
 
-      Socket.getInstance().onEmit('initialize', {
+      this.onEmit('initialize', {
         user_id: this.key,
       });
     });

@@ -1,6 +1,9 @@
-import Socket from 'lib/socket';
+import _ from 'lodash';
+
 import MQTT from 'lib/mqtt';
 import OCX from 'lib/ocx';
+import Player from 'lib/player';
+import Socket from 'lib/socket';
 import {
   MQTTConnectOption,
   OCXTappingOption,
@@ -8,14 +11,12 @@ import {
 } from 'types/zibox';
 import constants, { ZIBOX_TRANSPORT } from 'utils/constants';
 import Logger from 'utils/log';
-import Player from './player';
-import _ from 'lodash';
 
 class Communicator {
   private static transport = constants.TRANSPORT as string;
   private static instance: Communicator;
   private static controller: MQTT | OCX | Player;
-  private static socket: Socket | undefined;
+  private static socket: Socket;
 
   contructor() {
     if (Communicator.instance) return Communicator.instance;
@@ -113,7 +114,7 @@ class Communicator {
     return instance;
   }
 
-  emitMessage(name: string, data: any) {
+  emitMessage(name: string, data?: any) {
     this.getSocketInstance().onEmit(name, data);
   }
 

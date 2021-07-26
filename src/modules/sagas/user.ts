@@ -33,9 +33,9 @@ import {
 } from 'modules/actions/user';
 import * as API from 'lib/api';
 import ZMSUser from 'lib/api/zms/user';
-import Socket from 'lib/socket';
 import { ResponseFailureData, ResponseSuccessData } from 'types/common';
 import { API_FETCH } from 'utils/constants';
+import Communicator from 'lib/communicator';
 
 function* getUsersProcess(action: ReturnType<typeof requestGetUsers>) {
   const { branch_id, team_id, limit, page, search, url } = action.payload;
@@ -64,7 +64,7 @@ function* getUsersProcess(action: ReturnType<typeof requestGetUsers>) {
       yield put(successGetUsers(payload));
 
       if (url === '/main') {
-        Socket.getInstance().onEmit('state');
+        Communicator.getInstance().emitMessage('state');
       }
 
       return;
