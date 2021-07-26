@@ -15,6 +15,9 @@ import {
 import { setInitSocket } from 'modules/actions/auth';
 import { RootState } from 'modules/reducers';
 
+/**
+ * @deprecated
+ */
 function useOcx() {
   const dispatch = useDispatch();
 

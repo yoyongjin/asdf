@@ -12,6 +12,9 @@ import {
 import { setInitSocket } from 'modules/actions/auth';
 import Logger from 'utils/log';
 
+/**
+ * @deprecated
+ */
 function useSocket() {
   const dispatch = useDispatch();
 
