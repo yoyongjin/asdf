@@ -103,22 +103,22 @@ function ZiboxData({ data }: ZiboxDataProps) {
         >
           {`연결 상태 : ${getZiBoxConnectionStatus()}`}
         </Text>
-        <Text
+        {/* <Text
           fontColor={Colors.gray9}
           fontFamily="NanumBarunGothic"
           fontSize={15}
           fontWeight={600}
         >
           {`녹취 : ${getZiBoxRecordStatus()}`}
-        </Text>
-        <Text
+        </Text> */}
+        {/* <Text
           fontColor={Colors.gray9}
           fontFamily="NanumBarunGothic"
           fontSize={15}
           fontWeight={600}
         >
           {`ATS : ${getZiBoxATSStatus()}`}
-        </Text>
+        </Text> */}
       </StyledZibox>
     </StyledWrapper>
   );
