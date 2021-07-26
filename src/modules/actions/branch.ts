@@ -1,12 +1,6 @@
 import { createAction } from 'typesafe-actions';
 
 import {
-  TemporaryTeam,
-  DelelteData,
-  SuccessDeleteBranch,
-} from 'modules/types/branch';
-
-import {
   OrganizationData,
   TeamData,
   RequestAddBranch,
@@ -24,6 +18,7 @@ import {
   SuccessModifyTeam,
   SuccessRemoveTeam,
   RequestRemoveTeam,
+  AddTemporaryTeam,
 } from 'types/organization';
 
 // 조직 가져오기
@@ -118,7 +113,7 @@ export const failureAddBranch = createAction(FAILURE_ADD_BRANCH)<string>();
 
 // 팀 추가
 export const addTemperatureTeam =
-  createAction(ADD_TEMPERATURE_TEAM)<TemporaryTeam>();
+  createAction(ADD_TEMPERATURE_TEAM)<AddTemporaryTeam>();
 export const requestAddTeam = createAction(REQUEST_ADD_TEAM)<RequestAddTeam>();
 export const successAddTeam = createAction(SUCCESS_ADD_TEAM)<SuccessAddTeam>();
 export const failureAddTeam = createAction(FAILURE_ADD_TEAM)<string>();
@@ -147,7 +142,7 @@ export const requestRemoveBranch = createAction(
 )<RequestRemoveBranch>();
 export const successRemoveBranch = createAction(
   SUCCESS_REMOVE_BRANCH,
-)<SuccessDeleteBranch>();
+)<SuccessRemoveBranch>();
 export const failureRemoveBranch = createAction(
   FAILURE_REMOVE_BRANCH,
 )<string>();

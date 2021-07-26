@@ -1,8 +1,7 @@
 import { ActionType } from 'typesafe-actions';
-import { Location } from 'history';
 
 import * as actions from 'modules/actions/user';
-import * as common from 'modules/types/common';
+import * as common from 'types/common';
 
 export type UserAction = ActionType<typeof actions>;
 

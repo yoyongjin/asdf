@@ -1,7 +1,7 @@
 import { ActionType } from 'typesafe-actions';
 
 import * as actions from 'modules/actions/branch';
-import * as common from 'modules/types/common';
+import * as common from 'types/common';
 
 export type OrganizationAction = ActionType<typeof actions>;
 
@@ -80,7 +80,6 @@ export interface RequestRemoveBranch {
 
 export interface SuccessRemoveBranch {
   branch_id: number;
-  team_id: number;
   count?: number;
 }
 
@@ -112,4 +111,8 @@ export interface RequestRemoveTeam {
 
 export interface SuccessRemoveTeam extends RequestRemoveTeam {
   count?: number;
+}
+
+export interface AddTemporaryTeam {
+  branch_id: number;
 }
