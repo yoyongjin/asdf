@@ -82,6 +82,10 @@ function UserProperty({
           values === 'zibox_spk' ||
           values === 'zibox_ip_type' ||
           values === 'zibox_fw_version' ||
+          values === 'call_available_id' ||
+          values === 'available_time' ||
+          values === 'in_time' ||
+          values === 'out_time' ||
           values === 'login_at'
         ) {
           return '';

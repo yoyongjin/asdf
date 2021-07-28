@@ -6,5 +6,6 @@ import Modal from './Modal';
 import Range from './Range';
 import Select from './Select';
 import Text from './Text';
+import TextArea from './TextArea';
 
-export { Button, Image, Input, Link, Modal, Range, Select, Text };
+export { Button, Image, Input, Link, Modal, Range, Select, Text, TextArea };

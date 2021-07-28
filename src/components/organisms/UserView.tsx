@@ -368,6 +368,12 @@ function UserView({ location }: UserViewProps) {
     onChangeCurrentPage(page, maxUser, form.userCount);
   }, [maxUser, form.userCount, onChangeCurrentPage, page]);
 
+  useEffect(() => {
+    if (!visible) {
+      setSelectedConsultant(undefined);
+    }
+  }, [visible]);
+
   return (
     <>
       <StyledWrapper>

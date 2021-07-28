@@ -1,7 +1,7 @@
 import APIManager from 'lib/api/manager';
 import url from 'lib/api/url';
 import Main from 'lib/api/zms/main';
-import { RequestAddUser } from 'types/user';
+import { RequestAddUser, RequestModifyUser } from 'types/user';
 import Logger from 'utils/log';
 
 class User {
@@ -123,11 +123,15 @@ class User {
     mac?: string,
     mic?: number,
     spk?: number,
+    availableTime?: string,
+    inMessage?: string,
+    outMessage?: string,
   ) {
     try {
       const token = Main.getAccessToken();
 
-      const payload: RequestAddUser = {
+      const payload: RequestModifyUser = {
+        id,
         branch_id: branchId,
         team_id: teamId,
         admin_id: adminId,
@@ -156,6 +160,18 @@ class User {
 
       if (spk) {
         payload.ziboxspk = spk;
+      }
+
+      if (availableTime) {
+        payload.available_time = availableTime;
+      }
+
+      if (inMessage) {
+        payload.in_message = inMessage;
+      }
+
+      if (outMessage) {
+        payload.out_message = outMessage;
       }
 
       const { data } = await APIManager.patch(

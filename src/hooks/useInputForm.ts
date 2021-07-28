@@ -29,6 +29,19 @@ function useInputForm<T>(initialForm: T) {
     [],
   );
 
+  const onChangeTextArea = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      const { name, value } = e.target;
+
+      setForm((form) => {
+        return produce(form, (draft) => {
+          (draft as any)[name] = value;
+        });
+      });
+    },
+    [],
+  );
+
   const setInitializedForm = useCallback((data: T) => {
     setForm(() => data);
   }, []);
@@ -49,6 +62,7 @@ function useInputForm<T>(initialForm: T) {
     onChangeInput,
     setSpecificValue,
     setInitializedForm,
+    onChangeTextArea,
     onChangeSelect,
   };
 }

@@ -138,6 +138,9 @@ function* modifyUserProcess(action: ReturnType<typeof requestModifyUser>) {
     ziboxmac,
     ziboxmic,
     ziboxspk,
+    available_time,
+    in_message,
+    out_message,
   } = action.payload;
 
   try {
@@ -154,6 +157,9 @@ function* modifyUserProcess(action: ReturnType<typeof requestModifyUser>) {
       ziboxmac,
       ziboxmic,
       ziboxspk,
+      available_time,
+      in_message,
+      out_message,
     );
 
     if (response.status === API_FETCH.SUCCESS) {

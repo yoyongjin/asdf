@@ -92,6 +92,9 @@ function useUser() {
       mac?: string,
       mic?: number,
       spk?: number,
+      availableTime?: string,
+      inMessage?: string,
+      outMessage?: string,
     ) => {
       const payload = {
         id,
@@ -105,6 +108,9 @@ function useUser() {
         ziboxmac: mac,
         ziboxmic: mic,
         ziboxspk: spk,
+        available_time: availableTime,
+        in_message: inMessage,
+        out_message: outMessage,
       };
 
       dispatch(requestModifyUser(payload));
@@ -204,6 +210,9 @@ export type OnClickModifyUser = (
   mac?: string,
   mic?: number,
   spk?: number,
+  availableTime?: string,
+  inMessage?: string,
+  outMessage?: string,
 ) => void;
 
 export type OnClickRemoveUser = (

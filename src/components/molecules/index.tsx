@@ -16,6 +16,7 @@ import TextCalendar from './TextCalendar';
 import TextInput from './TextInput';
 import TextSelect from './TextSelect';
 import TextRange from './TextRange';
+import TextTextArea from './TextTextArea';
 import Title from './Title';
 import UserData from './UserData';
 import UserLog from './UserLog';
@@ -39,6 +40,7 @@ export {
   TextInput,
   TextSelect,
   TextRange,
+  TextTextArea,
   Title,
   UserData,
   UserLog,

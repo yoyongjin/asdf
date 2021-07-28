@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { useEffect, useMemo, useCallback } from 'react';
 import styled from 'styled-components';
 
@@ -9,6 +10,7 @@ import {
   ZiboxData,
   PhoneData,
   TextRange,
+  TextTextArea,
 } from 'components/molecules';
 import useOrganization from 'hooks/useOrganization';
 import useInputForm from 'hooks/useInputForm';
@@ -40,13 +42,11 @@ const StyledContent = styled.div`
 `;
 
 const StyledUserInfo = styled.div`
-  height: 40%;
+  height: 70%;
   display: flex;
   flex-wrap: wrap;
-  align-items: stretch;
   justify-content: space-between;
   align-content: flex-start;
-  /* align-content: space-around; */
   border-bottom: 1px solid
     ${constants.COMPANY === COMPANY_TYPE.DBLIFE ? Colors.green1 : Colors.blue3};
   padding-top: 10px;
@@ -55,16 +55,18 @@ const StyledUserInfo = styled.div`
 
 const StyledStatus = styled.div`
   display: flex;
-  height: 60%;
+  height: 30%;
 `;
 
 const StyledZibox = styled.div`
   width: 50%;
+  float: left;
   padding-top: 16px;
 `;
 
 const StyledPhone = styled.div`
   width: 50%;
+  float: right;
   padding-top: 16px;
 `;
 
@@ -88,11 +90,17 @@ const defaultInputData = [
   { id: 2, name: 'number', value: '전화번호' },
   { id: 3, name: 'zibox_ip', value: 'ZiBox IP' },
   { id: 4, name: 'zibox_mac', value: 'ZiBox MAC' },
+  { id: 5, name: 'available_time', value: '업무시간' },
 ];
 
 const defaultRangeData = [
   { id: 0, name: 'zibox_mic', value: 'ZiBox MIC' },
   { id: 1, name: 'zibox_spk', value: 'ZiBox SPK' },
+];
+
+const defaultTextAreaData = [
+  { id: 0, name: 'in_message', value: '업무 내 메시지' },
+  { id: 1, name: 'out_message', value: '업무 외 메시지' },
 ];
 
 function UserData({
@@ -116,11 +124,19 @@ function UserData({
       zibox_mac: userData?.zibox_mac ? userData!.zibox_mac : '',
       zibox_mic: userData?.zibox_mic ? userData!.zibox_mic : 0,
       zibox_spk: userData?.zibox_spk ? userData!.zibox_spk : 0,
+      available_time: userData?.available_time ? userData!.available_time : '',
+      in_message: userData?.in_time ? userData!.in_time : '',
+      out_message: userData?.out_time ? userData!.out_time : '',
     };
   }, [userData]);
 
-  const { form, onChangeInput, onChangeSelect, setInitializedForm } =
-    useInputForm(initializedData);
+  const {
+    form,
+    onChangeInput,
+    onChangeSelect,
+    onChangeTextArea,
+    setInitializedForm,
+  } = useInputForm(initializedData);
 
   const { userBranches, userTeams, getUserBranches, getUserTeams } =
     useOrganization();
@@ -214,6 +230,12 @@ function UserData({
       form.admin === USER_TYPE.CONSULTANT ? form.zibox_mic : undefined;
     const spk =
       form.admin === USER_TYPE.CONSULTANT ? form.zibox_spk : undefined;
+    const availableTime =
+      form.admin === USER_TYPE.CONSULTANT ? form.available_time : undefined;
+    const inMessage =
+      form.admin === USER_TYPE.CONSULTANT ? form.in_message : undefined;
+    const outMessage =
+      form.admin === USER_TYPE.CONSULTANT ? form.out_message : undefined;
 
     const isSuccess = validateForm(
       branchId,
@@ -244,6 +266,9 @@ function UserData({
         mac,
         mic,
         spk,
+        availableTime,
+        inMessage,
+        outMessage,
       );
 
       onClickVisible();
@@ -266,10 +291,13 @@ function UserData({
     }
   }, [
     form.admin,
+    form.available_time,
     form.branch,
     form.id,
+    form.in_message,
     form.name,
     form.number,
+    form.out_message,
     form.team,
     form.zibox_ip,
     form.zibox_mac,
@@ -368,6 +396,7 @@ function UserData({
           {
             <>
               {defaultInputData.map((data, index) => {
+                if (data.id === 5) return null;
                 return (
                   <TextInput
                     inputCustomStyle="float:right;"
@@ -423,10 +452,12 @@ function UserData({
               {defaultRangeData.map((data, index) => {
                 return (
                   <TextRange
+                    isPaddingBottom
                     rangeDisable={
                       data.name === 'zibox_mic'
                         ? true
-                        : form.admin !== USER_TYPE.CONSULTANT
+                        : _.isEmpty(userData) ||
+                          form.admin !== USER_TYPE.CONSULTANT
                     }
                     rangeName={data.name}
                     rangeValue={
@@ -443,6 +474,46 @@ function UserData({
               })}
             </>
           }
+          {loginData.admin_id === USER_TYPE.SUPER_ADMIN && (
+            <>
+              <TextInput
+                inputCustomStyle="float:right;"
+                inputDisabled={_.isEmpty(userData)}
+                inputHeight={2.6}
+                inputMaxLength={11}
+                inputName={defaultInputData[5].name}
+                inputOnChange={onChangeInput}
+                inputSize={13}
+                inputValue={form.available_time}
+                inputWidth={10.8}
+                textSize={13}
+                textValue={defaultInputData[5].value}
+              />
+              {defaultTextAreaData.map((data, index) => {
+                return (
+                  <TextTextArea
+                    isRightFloat={data.name === 'out_message'}
+                    textareaCustomStyle="float:right"
+                    textareaDisabled={_.isEmpty(userData)}
+                    textareaHeight={40}
+                    textareaName={data.name}
+                    textareaOnChange={onChangeTextArea}
+                    textareaSize={13}
+                    textareaValue={
+                      data.name === 'in_message'
+                        ? form.in_message
+                        : data.name === 'out_message'
+                        ? form.out_message
+                        : ''
+                    }
+                    textareaWidth={200}
+                    textSize={13}
+                    textValue={data.value}
+                  />
+                );
+              })}
+            </>
+          )}
         </StyledUserInfo>
         {userData && userData.admin_id === USER_TYPE.CONSULTANT ? (
           <>

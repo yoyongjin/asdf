@@ -150,6 +150,10 @@ export interface UserData extends ConsultantAllStatus_V2 {
   zibox_spk: number | null;
   zibox_ip_type: string | null;
   zibox_fw_version: string | null;
+  call_available_id: number | null;
+  available_time: string | null;
+  in_time: string | null;
+  out_time: string | null;
   login_at: number | null;
 }
 
@@ -195,6 +199,9 @@ export interface RequestAddUser {
 
 export interface RequestModifyUser extends RequestAddUser {
   id: number;
+  available_time?: string;
+  in_message?: string;
+  out_message?: string;
 }
 
 export interface RequestRemoveUser {

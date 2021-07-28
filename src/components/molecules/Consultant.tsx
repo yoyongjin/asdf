@@ -222,7 +222,7 @@ function Consultant({
         consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.STOP_REQUEST
       ) {
         return (
-          <Image src={loadingIcon} alt={'loading'} width={4.6} height={1.6} />
+          <Image src={loadingIcon} alt={'loading'} width={75} height={26} />
         );
       }
 

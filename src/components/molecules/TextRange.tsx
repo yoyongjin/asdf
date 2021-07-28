@@ -4,8 +4,9 @@ import styled from 'styled-components';
 import { Text, Range } from 'components/atoms';
 import { Colors } from 'utils/color';
 
-const StyledWrapper = styled.div`
+const StyledWrapper = styled.div<StyledWrapperProps>`
   line-height: 1.5;
+  padding-bottom: ${(props) => (props.isPaddingBottom ? 20 : 0)}px;
 `;
 
 const StyledWhiteSpace = styled.span<StyledWhiteSpaceProps>`
@@ -14,6 +15,7 @@ const StyledWhiteSpace = styled.span<StyledWhiteSpaceProps>`
 `;
 
 function TextRange({
+  isPaddingBottom,
   rangeDisable,
   rangeMax,
   rangeMin,
@@ -28,7 +30,7 @@ function TextRange({
   textWeight,
 }: TextInputProps) {
   return (
-    <StyledWrapper>
+    <StyledWrapper isPaddingBottom={isPaddingBottom}>
       <Text
         fontColor={textColor}
         fontFamily={textFamily}
@@ -52,11 +54,15 @@ function TextRange({
   );
 }
 
+interface StyledWrapperProps {
+  isPaddingBottom: boolean;
+}
+
 interface StyledWhiteSpaceProps {
   pixel: number;
 }
 
-interface TextInputProps {
+interface TextInputProps extends StyledWrapperProps {
   rangeDisable: boolean;
   rangeMax: number;
   rangeMin: number;
@@ -72,6 +78,7 @@ interface TextInputProps {
 }
 
 TextRange.defaultProps = {
+  isPaddingBottom: false,
   textColor: Colors.gray9,
   textSize: 14,
   textFamily: 'inherit',
