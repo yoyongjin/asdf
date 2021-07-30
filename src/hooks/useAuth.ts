@@ -19,10 +19,23 @@ function useAuth() {
 
   const onClickLogin = useCallback(
     (id: string, password: string) => {
+      if (!id || id.trim().length < 1) {
+        alert('아이디를 입력해주세요.');
+
+        return;
+      }
+
+      if (!password || password.trim().length < 1) {
+        alert('비밀번호를 입력해주세요.');
+
+        return;
+      }
+
       const payload = {
         id,
         password,
       };
+
       dispatch(requestLogin(payload));
     },
     [dispatch],
@@ -42,6 +55,30 @@ function useAuth() {
       newPassword: string,
       newConfirmPassword: string,
     ) => {
+      if (!currentPassword || currentPassword.trim().length < 1) {
+        alert('현재 비밀번호를 입력해주세요.');
+
+        return;
+      }
+
+      if (!newPassword || newPassword.trim().length < 1) {
+        alert('새로운 패스워드를 입력해주세요.');
+
+        return;
+      }
+
+      if (!newConfirmPassword || newConfirmPassword.trim().length < 1) {
+        alert('새로운 패스워드를 입력해주세요.');
+
+        return;
+      }
+
+      if (newPassword !== newConfirmPassword) {
+        alert('변경될 비밀번호가 같지않습니다.');
+
+        return;
+      }
+
       const payload = {
         current_password: currentPassword,
         new_password: newPassword,
