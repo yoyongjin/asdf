@@ -62,8 +62,6 @@ function StatisticsView() {
     });
   const { statistics, handleGetStatistics } = useStatistics();
 
-  console.log(form.subject, subject);
-
   const selectData = useMemo(() => {
     return {
       count: 1,

@@ -24,7 +24,6 @@ class Player implements Play {
   }
 
   public setTappingVolume(type: number, gauge: number) {
-    console.log(type, gauge);
     if (type === 1) {
       // 왼쪽 볼륨
       this.player.setLeftMonitoringVolume(gauge);

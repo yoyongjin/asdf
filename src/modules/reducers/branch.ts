@@ -370,15 +370,11 @@ const userReducer = createReducer<
     });
   },
   [types.SUCCESS_REMOVE_BRANCH]: (state, action) => {
-    const { branch_id, count } = action.payload;
+    const { branch_id } = action.payload;
 
     return produce(state, (draft) => {
       draft.request.removeBranch.fetch = false;
       draft.request.removeBranch.error = '';
-
-      if (count) {
-        return;
-      }
 
       const _draft: any = draft.organizations;
       delete _draft.organizations[branch_id];
@@ -397,16 +393,11 @@ const userReducer = createReducer<
     });
   },
   [types.SUCCESS_REMOVE_TEAM]: (state, action) => {
-    const { branch_id, team_id, count } = action.payload;
+    const { branch_id, team_id } = action.payload;
 
     return produce(state, (draft) => {
       draft.request.removeTeam.fetch = false;
       draft.request.removeTeam.error = '';
-
-      if (count) {
-        return;
-      }
-
       const _draft: any = draft.organizations;
       const newTeamInfo = _draft[branch_id].filter((value: any) => {
         return value.id !== team_id;

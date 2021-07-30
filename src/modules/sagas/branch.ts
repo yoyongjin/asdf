@@ -275,7 +275,6 @@ function* removeBranchProcess(action: ReturnType<typeof requestRemoveBranch>) {
 
       const payload = {
         branch_id: Number(data.id),
-        count: data.count ? data.count : 0,
       };
 
       yield put(successRemoveBranch(payload));

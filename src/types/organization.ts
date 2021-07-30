@@ -80,7 +80,6 @@ export interface RequestRemoveBranch {
 
 export interface SuccessRemoveBranch {
   branch_id: number;
-  count?: number;
 }
 
 export interface RequestAddTeam {
@@ -109,9 +108,7 @@ export interface RequestRemoveTeam {
   team_id: number;
 }
 
-export interface SuccessRemoveTeam extends RequestRemoveTeam {
-  count?: number;
-}
+export interface SuccessRemoveTeam extends RequestRemoveTeam {}
 
 export interface AddTemporaryTeam {
   branch_id: number;
