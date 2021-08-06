@@ -55,7 +55,7 @@ function StatisticsView() {
   const { loginInfo } = useAuth();
   const { form, onChangeSelect, onChangeInput, setSpecificValue } =
     useInputForm({
-      start_date: Utils.getChangedMonthYYYYMMDD(new Date().getTime()),
+      start_date: Utils.getYYYYMMDD(new Date().getTime(), '-'),
       end_date: Utils.getYYYYMMDD(new Date().getTime(), '-'),
       search: '',
       subject: 1,
@@ -222,7 +222,11 @@ function StatisticsView() {
         return;
       }
 
-      handleGetStatistics(form.start_date, form.end_date, subject, search);
+      currentEnd.setDate(currentEnd.getDate() + 1);
+
+      const endDate = Utils.getYYYYMMDD(currentEnd.getTime(), '-');
+
+      handleGetStatistics(form.start_date, endDate, subject, search);
     }
   }, [
     form.end_date,
