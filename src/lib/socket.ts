@@ -102,32 +102,44 @@ class Socket implements WebSocket {
       }
     });
 
-    this.socket?.on('error', (message: string) => {
-      Logger.log('Socket Error Event', message);
-    });
-
     this.socket?.on('connect_error', (message: string) => {
-      Logger.log('Socket Connect Error Event', message);
+      Logger.log('[WEB SOCKET] connect_error event', message);
     });
 
-    this.socket?.on('reconnect', (message: string) => {
-      Logger.log('Socket Reconnect Event', message);
+    this.socket?.io.on('open', (message: string) => {
+      Logger.log('[WEB SOCKET] open event', message);
     });
 
-    this.socket?.on('reconnect_attempt', (message: string) => {
-      Logger.log('Socket Reconnect Attempt Event', message);
+    this.socket?.io.on('error', (message: string) => {
+      Logger.log('[WEB SOCKET] error event', message);
     });
 
-    this.socket?.on('reconnecting', (message: string) => {
-      Logger.log('Socket Reconnecting Event', message);
+    this.socket?.io.on('close', (message: string) => {
+      Logger.log('[WEB SOCKET] close event', message);
     });
 
-    this.socket?.on('reconnect_error', (message: string) => {
-      Logger.log('Socket Reconnect Error Event', message);
+    this.socket?.io.on('ping', (message: string) => {
+      Logger.log('[WEB SOCKET] ping event', message);
     });
 
-    this.socket?.on('reconnect_failed', (message: string) => {
-      Logger.log('Socket Reconnect Failed Event', message);
+    this.socket?.io.on('packet', (message: string) => {
+      Logger.log('[WEB SOCKET] packet event', message);
+    });
+
+    this.socket?.io.on('reconnect_attempt', (message: string) => {
+      Logger.log('[WEB SOCKET] reconnect_attempt event', message);
+    });
+
+    this.socket?.io.on('reconnect', (message: string) => {
+      Logger.log('[WEB SOCKET] reconnect event', message);
+    });
+
+    this.socket?.io.on('reconnect_error', (message: string) => {
+      Logger.log('[WEB SOCKET] reconnect_error event', message);
+    });
+
+    this.socket?.io.on('reconnect_failed', (message: string) => {
+      Logger.log('[WEB SOCKET] reconnect_failed event', message);
     });
   }
 
