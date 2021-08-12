@@ -252,15 +252,9 @@ const userReducer = createReducer<UserState, UserAction>(initialState, {
   [types.ADD_USER]: (state, action) => {
     Logger.log('ADD_USER', action.payload);
 
-    const branchId = action.payload.branch_id;
     const newUser = _.cloneDeep(action.payload.userInfo);
 
     return produce(state, (draft) => {
-      if (newUser.branch_id !== branchId) {
-        // 추가된 유저의 지점과 현재 로그인된 관리자의 지점이 다른 경우
-        return;
-      }
-
       if (state.user.length >= state.userCount) {
         // 페이지가 넘어갈 경우
         draft.user.unshift(newUser);
@@ -296,15 +290,9 @@ const userReducer = createReducer<UserState, UserAction>(initialState, {
   [types.MODIFY_USER]: (state, action) => {
     Logger.log('MODIFY_USER', action.payload);
 
-    const branchId = action.payload.branch_id;
     const newUser = _.cloneDeep(action.payload.userInfo);
 
     return produce(state, (draft) => {
-      if (newUser.branch_id !== branchId) {
-        // 추가된 유저의 지점과 현재 로그인된 관리자의 지점이 다른 경우
-        return;
-      }
-
       const index = state.user.findIndex((values) => {
         return values.id === newUser.id;
       });

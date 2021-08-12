@@ -114,7 +114,6 @@ export interface ConsultantInfoType extends UserInfo {
 }
 
 export interface ChangeUser {
-  branch_id: number;
   userInfo: UserData;
 }
 

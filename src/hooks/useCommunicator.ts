@@ -35,6 +35,7 @@ import {
   RESPONSE_STATUS_V2,
   ZIBOX_MONIT_STATUS,
   SOCKET_EVENT_TYPE,
+  USER_TYPE,
 } from 'utils/constants';
 
 import Player from 'lib/player';
@@ -51,7 +52,13 @@ function useCommunicator() {
   );
 
   const setChangedStatus = useCallback(
-    (branchId: number, adminId: number, type: string, data: any) => {
+    (
+      branchId: number,
+      teamId: number,
+      adminId: number,
+      type: string,
+      data: any,
+    ) => {
       Logger.log('onChangeStatusEventHandler', { type, data });
       let parseData: ConsultantAllStatusByNumber = {};
       let payload: ChangeUser;
@@ -102,16 +109,48 @@ function useCommunicator() {
         case 'signup':
           // 회원 추가 시 회원 정보 전달
           userInfo = JSON.parse(data);
+
+          if (
+            adminId === USER_TYPE.BRANCH_ADMIN &&
+            branchId !== userInfo.branch_id
+          ) {
+            // 같은 지점의 사용자가 아닌 경우
+            break;
+          }
+
+          if (
+            adminId === USER_TYPE.TEAM_ADMIN &&
+            (branchId !== userInfo.branch_id || teamId !== userInfo.team_id)
+          ) {
+            // 같은 지점의 같은 팀의 사용자가 아닌 경우
+            break;
+          }
+
           payload = {
-            branch_id: adminId === 2 ? userInfo.branch_id : branchId,
             userInfo,
           };
           dispatch(addUser(payload));
           break;
         case 'update':
           userInfo = JSON.parse(data);
+
+          if (
+            adminId === USER_TYPE.BRANCH_ADMIN &&
+            branchId !== userInfo.branch_id
+          ) {
+            // 같은 지점의 사용자가 아닌 경우
+            break;
+          }
+
+          if (
+            adminId === USER_TYPE.TEAM_ADMIN &&
+            (branchId === userInfo.branch_id || teamId === userInfo.team_id)
+          ) {
+            // 같은 지점의 같은 팀의 사용자가 아닌 경우
+            break;
+          }
+
           payload = {
-            branch_id: adminId === 2 ? userInfo.branch_id : branchId,
             userInfo,
           };
           dispatch(modifyUser(payload));

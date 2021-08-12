@@ -38,10 +38,22 @@ function MainPage({ location }: MainPageProps) {
   useEffect(() => {
     if (loginInfo.id) {
       SocketEventHandler.changeStatusEvent = (type: string, data: any) => {
-        setChangedStatus(loginInfo.branch_id, loginInfo.admin_id, type, data);
+        setChangedStatus(
+          loginInfo.branch_id,
+          loginInfo.team_id,
+          loginInfo.admin_id,
+          type,
+          data,
+        );
       };
     }
-  }, [loginInfo.admin_id, loginInfo.branch_id, loginInfo.id, setChangedStatus]);
+  }, [
+    loginInfo.admin_id,
+    loginInfo.branch_id,
+    loginInfo.id,
+    loginInfo.team_id,
+    setChangedStatus,
+  ]);
 
   useEffect(() => {
     if (loginInfo.id) {
