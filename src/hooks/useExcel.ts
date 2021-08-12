@@ -23,6 +23,7 @@ function useExcel() {
 
       contents.map((content) => {
         const tmp = _.cloneDeep(title);
+        tmp['No.'] = content.id;
         tmp['팀명'] = content.team_name;
         tmp['법인폰 번호'] = Utils.formatPhoneNumber(content.number);
         tmp['OB 총 건수'] = content.outbound_count;
