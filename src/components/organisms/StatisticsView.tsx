@@ -120,7 +120,7 @@ function StatisticsView() {
         },
       ],
       option: {
-        placeHolder: '전화번호',
+        placeHolder: '이름 및 전화번호',
       },
     };
   }, [form.search, onChangeInput, onClickSearch]);

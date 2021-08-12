@@ -255,6 +255,9 @@ function UserView({ location }: UserViewProps) {
           click: onClickSearch,
         },
       ],
+      option: {
+        placeHolder: '이름, 전화번호, 계정',
+      },
     };
   }, [form.search, onChangeInput, onClickSearch]);
 
