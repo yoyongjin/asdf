@@ -102,6 +102,13 @@ class Socket implements WebSocket {
       }
     });
 
+    this.socket?.on('monit_error', (message: string) => {
+      // 감청 명령 시 에러 응답 리스너
+      Logger.log(`[WEB SOCKET] monit_error event`, message);
+
+      alert('감청 에러 : ' + message);
+    });
+
     this.socket?.on('connect_error', (message: string) => {
       Logger.log('[WEB SOCKET] connect_error event', message);
     });
