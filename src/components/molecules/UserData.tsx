@@ -521,7 +521,9 @@ function UserData({
             <>
               <TextInput
                 inputCustomStyle="float:right;"
-                inputDisabled={_.isEmpty(userData)}
+                inputDisabled={
+                  _.isEmpty(userData) || form.admin !== USER_TYPE.CONSULTANT
+                }
                 inputHeight={2.6}
                 inputMaxLength={11}
                 inputName={defaultInputData[5].name}
@@ -537,7 +539,9 @@ function UserData({
                   <TextTextArea
                     isRightFloat={data.name === 'out_message'}
                     textareaCustomStyle="float:right"
-                    textareaDisabled={_.isEmpty(userData)}
+                    textareaDisabled={
+                      _.isEmpty(userData) || form.admin !== USER_TYPE.CONSULTANT
+                    }
                     textareaHeight={40}
                     textareaName={data.name}
                     textareaOnChange={onChangeTextArea}
