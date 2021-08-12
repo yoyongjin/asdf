@@ -102,8 +102,14 @@ function UserProperty({
               {values === 'admin_id'
                 ? userData[values] === USER_TYPE.CONSULTANT
                   ? '상담원'
+                  : userData[values] === USER_TYPE.TEAM_ADMIN
+                  ? '팀관리자'
+                  : userData[values] === USER_TYPE.BRANCH_ADMIN
+                  ? '지점관리자'
                   : userData[values] === USER_TYPE.ADMIN
                   ? '관리자'
+                  : userData[values] === USER_TYPE.SUPER_ADMIN
+                  ? '슈퍼관리자'
                   : ''
                 : values === 'number' && userData[values]
                 ? Utils.formatPhoneNumber(userData[values]!)

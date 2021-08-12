@@ -46,11 +46,6 @@ const StyledUserPage = styled.div`
   padding-top: 46px;
 `;
 
-const adminList = [
-  { id: 0, data: '상담원' },
-  { id: 1, data: '관리자' },
-];
-
 const tableTitles = [
   // { title: 'No.', width: 7 },
   { title: '지점명', width: 10 },
@@ -115,7 +110,30 @@ function UserView({ location }: UserViewProps) {
       };
     });
 
-    if (loginInfo.admin_id === USER_TYPE.ADMIN) {
+    if (loginInfo.admin_id === USER_TYPE.TEAM_ADMIN) {
+      return {
+        count: 1,
+        data: [userCountData],
+        style: [
+          {
+            width: 50,
+            height: 25,
+            borderRadius: 12.5,
+            borderColor: Colors.gray7,
+            fontColor: Colors.gray4,
+          },
+        ],
+        info: [
+          {
+            id: form.userCount,
+            name: 'userCount',
+            click: onChangeSelect,
+          },
+        ],
+      };
+    }
+
+    if (loginInfo.admin_id === USER_TYPE.BRANCH_ADMIN) {
       return {
         count: 2,
         data: [userCountData, _teams],
@@ -186,7 +204,7 @@ function UserView({ location }: UserViewProps) {
           click: onChangeSelect,
         },
         {
-          id: loginInfo.admin_id === 1 ? loginInfo.branch_id : form.branch,
+          id: form.branch,
           name: 'branch',
           click: onChangeSelect,
         },
@@ -203,7 +221,6 @@ function UserView({ location }: UserViewProps) {
     form.team,
     form.userCount,
     loginInfo.admin_id,
-    loginInfo.branch_id,
     onChangeSelect,
     teams,
   ]);
@@ -298,8 +315,11 @@ function UserView({ location }: UserViewProps) {
   ]);
 
   useEffect(() => {
-    if (loginInfo.admin_id === USER_TYPE.SUPER_ADMIN) {
-      // 슈퍼관리자
+    if (
+      loginInfo.admin_id === USER_TYPE.SUPER_ADMIN ||
+      loginInfo.admin_id === USER_TYPE.ADMIN
+    ) {
+      // 슈퍼 관리자 / 일반 관리자
       getUsers2(
         form.branch,
         form.team,
@@ -309,11 +329,22 @@ function UserView({ location }: UserViewProps) {
         search,
         loginInfo.admin_id,
       );
-    } else if (loginInfo.admin_id === USER_TYPE.ADMIN) {
+    } else if (loginInfo.admin_id === USER_TYPE.BRANCH_ADMIN) {
       // 일반 관리자
       getUsers2(
         loginInfo.branch_id,
         form.team,
+        form.userCount,
+        page,
+        location.pathname,
+        search,
+        loginInfo.admin_id,
+      );
+    } else if (loginInfo.admin_id === USER_TYPE.TEAM_ADMIN) {
+      // 일반 관리자
+      getUsers2(
+        loginInfo.branch_id,
+        loginInfo.team_id,
         form.userCount,
         page,
         location.pathname,
@@ -331,10 +362,14 @@ function UserView({ location }: UserViewProps) {
     loginInfo.admin_id,
     loginInfo.branch_id,
     page,
+    loginInfo.team_id,
   ]);
 
   useEffect(() => {
-    if (loginInfo.admin_id === USER_TYPE.SUPER_ADMIN) {
+    if (
+      loginInfo.admin_id === USER_TYPE.SUPER_ADMIN ||
+      loginInfo.admin_id === USER_TYPE.ADMIN
+    ) {
       // 슈퍼관리자일 경우에만 지점명 리스트 가져오기
       getBranches();
     }
@@ -342,9 +377,12 @@ function UserView({ location }: UserViewProps) {
 
   useEffect(() => {
     // 관리자의 권한에 따라 팀명 리스트 다르게 가져오기
-    if (loginInfo.admin_id === USER_TYPE.SUPER_ADMIN) {
+    if (
+      loginInfo.admin_id === USER_TYPE.SUPER_ADMIN ||
+      loginInfo.admin_id === USER_TYPE.ADMIN
+    ) {
       getTeams(form.branch);
-    } else if (loginInfo.admin_id === USER_TYPE.ADMIN) {
+    } else if (loginInfo.admin_id === USER_TYPE.BRANCH_ADMIN) {
       getTeams(loginInfo.branch_id);
     }
   }, [form.branch, getTeams, loginInfo.admin_id, loginInfo.branch_id]);
@@ -409,7 +447,6 @@ function UserView({ location }: UserViewProps) {
         isVisible={visible}
         Component={
           <UserData
-            adminList={adminList}
             loginData={loginInfo}
             isVisible={visible}
             onClickAddUser={onClickAddUser}

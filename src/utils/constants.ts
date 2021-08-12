@@ -104,8 +104,10 @@ export enum CONSULTANT_STATUS {
 
 export enum USER_TYPE {
   CONSULTANT = 0,
-  ADMIN = 1,
-  SUPER_ADMIN = 2,
+  TEAM_ADMIN = 1,
+  BRANCH_ADMIN = 2,
+  ADMIN = 3,
+  SUPER_ADMIN = 4,
 }
 
 export enum PHONE_STATUS {

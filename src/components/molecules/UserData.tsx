@@ -103,8 +103,9 @@ const defaultTextAreaData = [
   { id: 1, name: 'out_message', value: '업무 외 메시지' },
 ];
 
+const defaultUserPermission = [{ id: 0, data: '상담원' }];
+
 function UserData({
-  adminList,
   loginData,
   isVisible,
   onClickAddUser,
@@ -114,8 +115,8 @@ function UserData({
 }: UserDataProps) {
   const initializedData = useMemo(() => {
     return {
-      branch: userData?.branch_id ? userData!.branch_id : -1,
-      team: userData?.team_id ? userData!.team_id : -1,
+      branch: userData?.branch_id ? userData!.branch_id : loginData.branch_id,
+      team: userData?.team_id ? userData!.team_id : loginData.team_id,
       admin: userData?.admin_id ? userData!.admin_id : 0,
       name: userData?.name ? userData!.name : '',
       id: userData?.user_name ? userData!.user_name : '',
@@ -128,7 +129,7 @@ function UserData({
       in_message: userData?.in_time ? userData!.in_time : '',
       out_message: userData?.out_time ? userData!.out_time : '',
     };
-  }, [userData]);
+  }, [loginData.branch_id, loginData.team_id, userData]);
 
   const {
     form,
@@ -159,6 +160,30 @@ function UserData({
     });
   }, [userTeams]);
 
+  const admins = useMemo(() => {
+    const userPermission = _.cloneDeep(defaultUserPermission);
+
+    if (
+      loginData.admin_id === USER_TYPE.SUPER_ADMIN ||
+      loginData.admin_id === USER_TYPE.ADMIN
+    ) {
+      userPermission.push(
+        { id: 1, data: '팀관리자' },
+        { id: 2, data: '지점관리자' },
+        { id: 3, data: '관리자' },
+      );
+    } else if (loginData.admin_id === USER_TYPE.BRANCH_ADMIN) {
+      userPermission.push(
+        { id: 1, data: '팀관리자' },
+        { id: 2, data: '지점관리자' },
+      );
+    } else if (loginData.admin_id === USER_TYPE.TEAM_ADMIN) {
+      userPermission.push({ id: 1, data: '팀관리자' });
+    }
+
+    return userPermission;
+  }, [loginData.admin_id]);
+
   const validateForm = useCallback(
     (
       branchId: number,
@@ -170,13 +195,13 @@ function UserData({
       ip?: string,
       mac?: string,
     ) => {
-      if (branchId === -1) {
+      if (adminId === USER_TYPE.CONSULTANT && branchId === -1) {
         alert('지점을 선택해주세요.');
 
         return false;
       }
 
-      if (teamId === -1) {
+      if (adminId === USER_TYPE.CONSULTANT && teamId === -1) {
         alert('팀을 선택해주세요.');
 
         return false;
@@ -213,11 +238,20 @@ function UserData({
 
   const setUserData = useCallback(() => {
     const branchId =
-      loginData.admin_id === USER_TYPE.SUPER_ADMIN
-        ? form.branch
+      loginData.admin_id === USER_TYPE.SUPER_ADMIN ||
+      loginData.admin_id === USER_TYPE.ADMIN
+        ? form.admin === USER_TYPE.SUPER_ADMIN || form.admin === USER_TYPE.ADMIN
+          ? -1
+          : form.branch
         : loginData.branch_id;
 
-    const teamId = form.team;
+    const teamId =
+      loginData.admin_id === USER_TYPE.TEAM_ADMIN
+        ? loginData.team_id
+        : form.admin === USER_TYPE.CONSULTANT ||
+          form.admin === USER_TYPE.TEAM_ADMIN
+        ? form.team
+        : -1;
     const adminId = form.admin;
     const name = form.name;
     const id = form.admin === USER_TYPE.CONSULTANT ? undefined : form.id;
@@ -305,6 +339,7 @@ function UserData({
     form.zibox_spk,
     loginData.admin_id,
     loginData.branch_id,
+    loginData.team_id,
     onClickAddUser,
     onClickModifyUser,
     onClickVisible,
@@ -316,21 +351,17 @@ function UserData({
     if (isVisible) {
       getUserBranches();
     }
-  }, [
-    getUserBranches,
-    isVisible,
-    loginData.admin_id,
-    loginData.branch_id,
-    loginData.branch_name,
-  ]);
+  }, [getUserBranches, isVisible]);
 
   useEffect(() => {
     if (isVisible) {
-      if (loginData.admin_id === USER_TYPE.SUPER_ADMIN) {
-        getUserTeams(form.branch);
-      } else {
-        getUserTeams(loginData.branch_id!);
-      }
+      const branchId =
+        loginData.admin_id === USER_TYPE.SUPER_ADMIN ||
+        loginData.admin_id === USER_TYPE.ADMIN
+          ? form.branch
+          : loginData.branch_id;
+
+      getUserTeams(branchId);
     }
   }, [
     form.branch,
@@ -359,9 +390,21 @@ function UserData({
                 return (
                   <TextSelect
                     selectDisabled={
-                      data.name === 'branch' &&
-                      loginData.admin_id !== USER_TYPE.SUPER_ADMIN
-                        ? true
+                      data.name === 'branch'
+                        ? loginData.admin_id === USER_TYPE.SUPER_ADMIN ||
+                          loginData.admin_id === USER_TYPE.ADMIN
+                          ? form.admin === USER_TYPE.SUPER_ADMIN ||
+                            form.admin === USER_TYPE.ADMIN
+                            ? true
+                            : false
+                          : true
+                        : data.name === 'team'
+                        ? loginData.admin_id === USER_TYPE.TEAM_ADMIN
+                          ? true
+                          : form.admin === USER_TYPE.CONSULTANT ||
+                            form.admin === USER_TYPE.TEAM_ADMIN
+                          ? false
+                          : true
                         : false
                     }
                     selectDefaultValue={
@@ -382,7 +425,7 @@ function UserData({
                         : data.name === 'team'
                         ? teams
                         : data.name === 'admin'
-                        ? adminList
+                        ? admins
                         : []
                     }
                     selectWidth={108}
@@ -581,18 +624,12 @@ function UserData({
 }
 
 interface UserDataProps {
-  adminList: Array<SelectDataType>;
   loginData: LoginData;
   isVisible?: boolean;
   userData?: UserDataV2;
   onClickVisible: OnClickVisible;
   onClickAddUser?: OnClickAddUser;
   onClickModifyUser?: OnClickModifyUser;
-}
-
-interface SelectDataType {
-  id: number;
-  data: string;
 }
 
 UserData.defaultProps = {};

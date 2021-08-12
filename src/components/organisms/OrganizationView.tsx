@@ -60,7 +60,11 @@ function OrganizationView() {
           click: onClickAddTempBranch,
         },
       ],
-      hidden: loginInfo.admin_id !== USER_TYPE.SUPER_ADMIN ? true : false,
+      hidden:
+        loginInfo.admin_id === USER_TYPE.SUPER_ADMIN ||
+        loginInfo.admin_id === USER_TYPE.ADMIN
+          ? false
+          : true,
     };
   }, [loginInfo.admin_id, onClickAddTempBranch]);
 
