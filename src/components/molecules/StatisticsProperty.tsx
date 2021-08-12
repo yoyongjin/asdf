@@ -14,7 +14,7 @@ function StatisticsProperty({ options, statisticsData }: TableContentProps) {
   return (
     <>
       {Object.keys(statisticsData).map((values, i) => {
-        if (values === 'id' || values === 'branch_name' || values === 'name') {
+        if (values === 'branch_name' || values === 'name') {
           return '';
         }
 

@@ -49,17 +49,17 @@ function StatisticsTotal({ titles, contents }: StatisticsTotalProps) {
                 >
                   {i === 0
                     ? '합계'
-                    : i === 2
-                    ? contents.outboundCount
                     : i === 3
-                    ? contents.successCount
+                    ? contents.outboundCount
                     : i === 4
+                    ? contents.successCount
+                    : i === 5
                     ? `${
                         Math.floor(contents.successRatio / contents.count) || 0
                       }%`
-                    : i === 5
-                    ? contents.inboundCount
                     : i === 6
+                    ? contents.inboundCount
+                    : i === 7
                     ? Utils.getHourMinSecBySecond(contents.allCallTime)
                     : ''}
                 </Text>

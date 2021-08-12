@@ -38,6 +38,7 @@ const StyledTotal = styled.div`
 `;
 
 const tableTitles = [
+  { title: 'No.', width: 5 },
   { title: '팀명', width: 15 },
   { title: '법인폰 번호', width: 15 },
   { title: 'OB 총 건수', width: 10 },
