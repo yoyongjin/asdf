@@ -27,7 +27,7 @@ function StatisticsProperty({ options, statisticsData }: TableContentProps) {
               fontWeight={400}
             >
               {values === 'team_name' && statisticsData[values]
-                ? statisticsData[values]
+                ? `${statisticsData['branch_name']} / ${statisticsData[values]}`
                 : values === 'number'
                 ? Utils.formatPhoneNumber(statisticsData[values])
                 : values === 'all_call_time'
