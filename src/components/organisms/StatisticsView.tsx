@@ -104,6 +104,67 @@ function StatisticsView() {
     };
   }, [form.end_date, form.start_date, setSpecificValue]);
 
+  const onClickGetStatistics = useCallback(() => {
+    const currentStart = new Date(form.start_date);
+    const currentEnd = new Date(form.end_date);
+    const currentStartYear = currentStart.getFullYear();
+    const currentEndYear = currentEnd.getFullYear();
+    const currentStartMonth = currentStart.getMonth() + 1;
+    const currentEndMonth = currentEnd.getMonth() + 1;
+    const currentStartDate = currentStart.getDate(); // 일
+    const currentEndDate = currentEnd.getDate(); // 일
+
+    if (currentStart > currentEnd) {
+      // 시작 날짜가 끝 날짜보다 큰 경우
+      alert('한달 조회만 가능합니다.');
+      return;
+    }
+
+    if (currentEndYear - currentStartYear > 1) {
+      alert('한달 조회만 가능합니다.');
+      return;
+    }
+
+    if (currentEndYear - currentStartYear === 1) {
+      if (currentEndMonth === 1 && currentStartMonth === 12) {
+        if (currentStartDate < currentEndDate) {
+          alert('한달 조회만 가능합니다.');
+          return;
+        }
+      } else {
+        alert('한달 조회만 가능합니다.');
+        return;
+      }
+    }
+
+    if (currentEndMonth - currentStartMonth === 1) {
+      // 1달 차이가 날 경우
+      if (currentStartDate < currentEndDate) {
+        alert('한달 조회만 가능합니다.');
+        return;
+      }
+    }
+
+    if (currentEndMonth - currentStartMonth > 1) {
+      // 1달 이상 차이가 날 경우
+      alert('한달 조회만 가능합니다.');
+      return;
+    }
+
+    currentEnd.setDate(currentEnd.getDate() + 1);
+
+    const endDate = Utils.getYYYYMMDD(currentEnd.getTime(), '-');
+
+    handleGetStatistics(form.start_date, endDate, subject, search);
+  }, [form.end_date, form.start_date, handleGetStatistics, search, subject]);
+
+  const syncData = useMemo(() => {
+    return {
+      count: 1,
+      click: [onClickGetStatistics],
+    };
+  }, [onClickGetStatistics]);
+
   const onClickSearch = useCallback(() => {
     setSearch(form.search);
     setSubject(form.subject);
@@ -177,66 +238,9 @@ function StatisticsView() {
 
   useEffect(() => {
     if (loginInfo.id) {
-      const currentStart = new Date(form.start_date);
-      const currentEnd = new Date(form.end_date);
-      const currentStartYear = currentStart.getFullYear();
-      const currentEndYear = currentEnd.getFullYear();
-      const currentStartMonth = currentStart.getMonth() + 1;
-      const currentEndMonth = currentEnd.getMonth() + 1;
-      const currentStartDate = currentStart.getDate(); // 일
-      const currentEndDate = currentEnd.getDate(); // 일
-
-      if (currentStart > currentEnd) {
-        // 시작 날짜가 끝 날짜보다 큰 경우
-        alert('한달 조회만 가능합니다.');
-        return;
-      }
-
-      if (currentEndYear - currentStartYear > 1) {
-        alert('한달 조회만 가능합니다.');
-        return;
-      }
-
-      if (currentEndYear - currentStartYear === 1) {
-        if (currentEndMonth === 1 && currentStartMonth === 12) {
-          if (currentStartDate < currentEndDate) {
-            alert('한달 조회만 가능합니다.');
-            return;
-          }
-        } else {
-          alert('한달 조회만 가능합니다.');
-          return;
-        }
-      }
-
-      if (currentEndMonth - currentStartMonth === 1) {
-        // 1달 차이가 날 경우
-        if (currentStartDate < currentEndDate) {
-          alert('한달 조회만 가능합니다.');
-          return;
-        }
-      }
-
-      if (currentEndMonth - currentStartMonth > 1) {
-        // 1달 이상 차이가 날 경우
-        alert('한달 조회만 가능합니다.');
-        return;
-      }
-
-      currentEnd.setDate(currentEnd.getDate() + 1);
-
-      const endDate = Utils.getYYYYMMDD(currentEnd.getTime(), '-');
-
-      handleGetStatistics(form.start_date, endDate, subject, search);
+      onClickGetStatistics();
     }
-  }, [
-    form.end_date,
-    form.start_date,
-    handleGetStatistics,
-    loginInfo.id,
-    search,
-    subject,
-  ]);
+  }, [loginInfo.id, onClickGetStatistics]);
 
   return (
     <>
@@ -247,11 +251,13 @@ function StatisticsView() {
             isCalendar
             isExcel
             isSearch
-            isSelect
+            // isSelect
+            isSync
             rightBottomPixel={9}
             excelData={excelData}
             searchData={searchData}
-            selectData={selectData}
+            // selectData={selectData}
+            syncData={syncData}
           >
             법인폰 통계
           </Title>

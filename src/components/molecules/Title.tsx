@@ -1,4 +1,5 @@
 import React from 'react';
+import { GoSync } from 'react-icons/go';
 import styled, { css } from 'styled-components';
 
 import { Button, Select, Text } from 'components/atoms';
@@ -92,6 +93,15 @@ const StyledExcelButton = styled.div`
   padding-left: 10px;
 `;
 
+const StyledSyncButton = styled(GoSync)`
+  cursor: pointer;
+  color: ${Colors.gray4};
+
+  :hover {
+    color: ${Colors.red};
+  }
+`;
+
 function Title({
   bottomLineColor,
   bottomLinePixel,
@@ -108,11 +118,13 @@ function Title({
   isPage,
   isSelect,
   isSearch,
+  isSync,
   isVolume,
   pageData,
   rightBottomPixel,
   searchData,
   selectData,
+  syncData,
   titleFontColor,
   titleFontSize,
   titleFontWeight,
@@ -133,6 +145,9 @@ function Title({
             {children}
           </Text>
         </StyleTitle>
+        {isSync ? (
+          <StyledSyncButton size={20} onClick={syncData?.click[0]} />
+        ) : null}
         {isButton ? (
           <>
             {[...Array(buttonData!.count)].map((values, index) => {
@@ -334,6 +349,11 @@ interface StyledBorderPostionProps {
   float: string;
 }
 
+interface SyncData {
+  count: number;
+  click: Array<any>;
+}
+
 interface ExcelData {
   titles: Array<TableTitleData>;
   contents: Array<any>;
@@ -448,10 +468,12 @@ interface TitleProps {
   isPage: boolean;
   isSearch: boolean;
   isSelect: boolean;
+  isSync: boolean;
   isVolume: boolean;
   pageData?: PageData;
   searchData?: SearchData;
   selectData?: SelectData;
+  syncData?: SyncData;
   volumeData?: VolumeData;
   titleFontColor: string;
   titleFontFamily: string;
@@ -471,6 +493,7 @@ Title.defaultProps = {
   isPage: false,
   isSearch: false,
   isSelect: false,
+  isSync: false,
   isVolume: false,
   leftBottomPixel: 13,
   rightBottomPixel: 4,
