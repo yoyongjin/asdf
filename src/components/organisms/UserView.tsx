@@ -294,10 +294,17 @@ function UserView({ location }: UserViewProps) {
         onClickRemoveUser,
       ],
       option: {
-        currentBranchId: form.branch,
+        currentBranchId:
+          loginInfo.admin_id === USER_TYPE.ADMIN ||
+          loginInfo.admin_id === USER_TYPE.SUPER_ADMIN
+            ? form.branch
+            : loginInfo.admin_id,
         currentPage: page,
         currentSearchText: form.search,
-        currentTeamId: form.team,
+        currentTeamId:
+          loginInfo.admin_id === USER_TYPE.TEAM_ADMIN
+            ? loginInfo.admin_id
+            : form.team,
         currentLimit: form.userCount,
       },
       styles: {
@@ -310,6 +317,7 @@ function UserView({ location }: UserViewProps) {
     form.search,
     form.team,
     form.userCount,
+    loginInfo.admin_id,
     onClickRemoveUser,
     onClickResetPassword,
     page,
