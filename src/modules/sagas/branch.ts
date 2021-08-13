@@ -235,6 +235,7 @@ function* modifyTeamProcess(action: ReturnType<typeof requestModifyTeam>) {
     const response: ResponseSuccessData | ResponseFailureData = yield call(
       ZMSOrganization.modifyTeam,
       team_id,
+      branch_id,
       name,
     );
 

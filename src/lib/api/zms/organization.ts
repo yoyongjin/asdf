@@ -186,13 +186,14 @@ class Organization {
    * @param name 팀명
    * @returns
    */
-  static async modifyTeam(id: number, name: string) {
+  static async modifyTeam(id: number, branchId: number, name: string) {
     try {
       const token = Main.getAccessToken();
 
       const { data } = await APIManager.put(
         `${url.zms.api.path.modify_team}/${id}`,
         {
+          branch_id: branchId,
           team_name: name,
         },
         {
