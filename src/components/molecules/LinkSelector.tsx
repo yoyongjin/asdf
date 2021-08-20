@@ -4,6 +4,7 @@ import { Location } from 'history';
 
 import { Link, Text } from 'components/atoms';
 import { Colors } from 'utils/color';
+import { USER_TYPE } from 'utils/constants';
 
 const StyledWrapper = styled.div`
   /* Display   */
@@ -36,7 +37,7 @@ export const StyledCommonWhiteSpace = styled.span<StyledCommonWhiteSpaceProps>`
   padding-right: ${(props) => props.pixel}px;
 `;
 
-function LinkSelector({ location }: LinkSelectorProps) {
+function LinkSelector({ location, permission }: LinkSelectorProps) {
   const [visible, setVisible] = useState<number>(1);
 
   useEffect(() => {
@@ -62,22 +63,31 @@ function LinkSelector({ location }: LinkSelectorProps) {
           </Text>
         </Link>
       </StyledLink>
-      <StyledCommonWhiteSpace pixel={23.5} />
-      <StyledLink visible={visible} type={2}>
-        <Link path="/main/manage/organization">
-          <Text fontColor={Colors.white} fontSize={16} fontWeight={700}>
-            조직 관리
-          </Text>
-        </Link>
-      </StyledLink>
-      <StyledCommonWhiteSpace pixel={18} />
-      <StyledLink visible={visible} type={3}>
-        <Link path="/main/manage/user">
-          <Text fontColor={Colors.white} fontSize={16} fontWeight={700}>
-            사용자 관리
-          </Text>
-        </Link>
-      </StyledLink>
+      {permission === USER_TYPE.CONSULTANT ? null : (
+        <>
+          <StyledCommonWhiteSpace pixel={23.5} />
+          <StyledLink visible={visible} type={2}>
+            <Link path="/main/manage/organization">
+              <Text fontColor={Colors.white} fontSize={16} fontWeight={700}>
+                조직 관리
+              </Text>
+            </Link>
+          </StyledLink>
+        </>
+      )}
+      {permission === USER_TYPE.CONSULTANT ? null : (
+        <>
+          <StyledCommonWhiteSpace pixel={18} />
+          <StyledLink visible={visible} type={3}>
+            <Link path="/main/manage/user">
+              <Text fontColor={Colors.white} fontSize={16} fontWeight={700}>
+                사용자 관리
+              </Text>
+            </Link>
+          </StyledLink>
+        </>
+      )}
+
       <StyledCommonWhiteSpace pixel={18} />
       <StyledLink visible={visible} type={4}>
         <Link path="/main/manage/stat">
@@ -101,6 +111,7 @@ interface StyledCommonWhiteSpaceProps {
 
 interface LinkSelectorProps {
   location: Location;
+  permission: number;
 }
 
 export default LinkSelector;

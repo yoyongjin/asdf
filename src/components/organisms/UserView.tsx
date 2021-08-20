@@ -269,10 +269,9 @@ function UserView({ location }: UserViewProps) {
       page: number,
       path: string,
       search = '',
-      adminId: number,
     ) => {
       // 서버로부터 데이터 요청
-      getUsers(branchId, teamId, count, page, search, path, adminId);
+      getUsers(branchId, teamId, count, page, search, path);
     },
     [getUsers],
   );
@@ -338,7 +337,6 @@ function UserView({ location }: UserViewProps) {
         page,
         location.pathname,
         search,
-        loginInfo.admin_id,
       );
     } else if (loginInfo.admin_id === USER_TYPE.BRANCH_ADMIN) {
       // 일반 관리자
@@ -349,7 +347,6 @@ function UserView({ location }: UserViewProps) {
         page,
         location.pathname,
         search,
-        loginInfo.admin_id,
       );
     } else if (loginInfo.admin_id === USER_TYPE.TEAM_ADMIN) {
       // 일반 관리자
@@ -360,20 +357,19 @@ function UserView({ location }: UserViewProps) {
         page,
         location.pathname,
         search,
-        loginInfo.admin_id,
       );
     }
   }, [
     form.branch,
-    search,
     form.team,
     form.userCount,
     getUsers2,
     location.pathname,
     loginInfo.admin_id,
     loginInfo.branch_id,
-    page,
     loginInfo.team_id,
+    page,
+    search,
   ]);
 
   useEffect(() => {

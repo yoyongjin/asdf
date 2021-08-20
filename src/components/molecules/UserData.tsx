@@ -213,10 +213,23 @@ function UserData({
         return false;
       }
 
-      if (id && !REG_EXR.id.test(id)) {
-        alert('관리자 ID는 숫자와 영어만 입력가능합니다.');
+      if (id) {
+        if (id.length < 4) {
+          alert('ID는 공백없이 4자리 이상입니다.');
 
-        return false;
+          return false;
+        }
+
+        if (!REG_EXR.id.test(id)) {
+          alert('ID는 숫자와 영어만 입력가능합니다.');
+
+          return false;
+        }
+      } else {
+        if (adminId !== USER_TYPE.CONSULTANT) {
+          alert('ID를 입력해주세요.');
+          return false;
+        }
       }
 
       if (ip && !REG_EXR.ip.test(ip)) {
@@ -254,7 +267,7 @@ function UserData({
         : -1;
     const adminId = form.admin;
     const name = form.name;
-    const id = form.admin === USER_TYPE.CONSULTANT ? undefined : form.id;
+    const id = form.id;
     const number =
       form.admin === USER_TYPE.CONSULTANT ? form.number : undefined;
     const ip = form.admin === USER_TYPE.CONSULTANT ? form.zibox_ip : undefined;
@@ -399,12 +412,15 @@ function UserData({
                             : false
                           : true
                         : data.name === 'team'
-                        ? loginData.admin_id === USER_TYPE.TEAM_ADMIN
+                        ? loginData.admin_id === USER_TYPE.TEAM_ADMIN ||
+                          loginData.admin_id === USER_TYPE.CONSULTANT
                           ? true
                           : form.admin === USER_TYPE.CONSULTANT ||
                             form.admin === USER_TYPE.TEAM_ADMIN
                           ? false
                           : true
+                        : loginData.admin_id === USER_TYPE.CONSULTANT
+                        ? true
                         : false
                     }
                     selectDefaultValue={
@@ -444,12 +460,16 @@ function UserData({
                   <TextInput
                     inputCustomStyle="float:right;"
                     inputDisabled={
-                      data.name === 'name'
+                      loginData.admin_id === USER_TYPE.CONSULTANT
+                        ? true
+                        : data.name === 'name'
                         ? false
                         : data.name === 'zibox_ip'
                         ? true
                         : data.name === 'id'
-                        ? form.admin === USER_TYPE.CONSULTANT
+                        ? userData?.user_name
+                          ? true
+                          : false
                         : form.admin !== USER_TYPE.CONSULTANT
                     }
                     inputHeight={2.6}
@@ -497,7 +517,9 @@ function UserData({
                   <TextRange
                     isPaddingBottom
                     rangeDisable={
-                      data.name === 'zibox_mic'
+                      loginData.admin_id === USER_TYPE.CONSULTANT
+                        ? true
+                        : data.name === 'zibox_mic'
                         ? true
                         : _.isEmpty(userData) ||
                           form.admin !== USER_TYPE.CONSULTANT
@@ -581,28 +603,31 @@ function UserData({
         ) : null}
       </StyledContent>
       <StyledFooter>
-        <Button
-          bgColor={
-            constants.COMPANY === COMPANY_TYPE.DBLIFE
-              ? Colors.green1
-              : constants.COMPANY === COMPANY_TYPE.LINA
-              ? Colors.blue1
-              : Colors.blue4
-          }
-          customStyle="float:right;"
-          height={2.6}
-          onClick={setUserData}
-          width={7}
-        >
-          <Text
-            fontColor={Colors.white}
-            fontFamily="NanumBarunGothic"
-            fontSize={14}
-            fontWeight={700}
+        {loginData.admin_id === USER_TYPE.CONSULTANT ? null : (
+          <Button
+            bgColor={
+              constants.COMPANY === COMPANY_TYPE.DBLIFE
+                ? Colors.green1
+                : constants.COMPANY === COMPANY_TYPE.LINA
+                ? Colors.blue1
+                : Colors.blue4
+            }
+            customStyle="float:right;"
+            height={2.6}
+            onClick={setUserData}
+            width={7}
           >
-            저장
-          </Text>
-        </Button>
+            <Text
+              fontColor={Colors.white}
+              fontFamily="NanumBarunGothic"
+              fontSize={14}
+              fontWeight={700}
+            >
+              저장
+            </Text>
+          </Button>
+        )}
+
         <Button
           width={7}
           height={2.6}

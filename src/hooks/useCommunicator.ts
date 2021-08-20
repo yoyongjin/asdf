@@ -144,7 +144,7 @@ function useCommunicator() {
 
           if (
             adminId === USER_TYPE.TEAM_ADMIN &&
-            (branchId === userInfo.branch_id || teamId === userInfo.team_id)
+            (branchId !== userInfo.branch_id || teamId !== userInfo.team_id)
           ) {
             // 같은 지점의 같은 팀의 사용자가 아닌 경우
             break;

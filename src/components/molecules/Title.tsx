@@ -145,9 +145,6 @@ function Title({
             {children}
           </Text>
         </StyleTitle>
-        {isSync ? (
-          <StyledSyncButton size={20} onClick={syncData?.click[0]} />
-        ) : null}
         {isButton ? (
           <>
             {[...Array(buttonData!.count)].map((values, index) => {
@@ -257,6 +254,11 @@ function Title({
               );
             })}
           </>
+        ) : null}
+        {isSync ? (
+          <div title="통계 동기화하기">
+            <StyledSyncButton size={30} onClick={syncData?.click[0]} />
+          </div>
         ) : null}
         {isSearch ? (
           <>

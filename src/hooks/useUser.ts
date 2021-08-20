@@ -29,8 +29,6 @@ function useUser() {
       page = 0,
       search = '',
       url?: string,
-      adminId?: number,
-      loginId?: number,
     ) => {
       const payload = {
         branch_id: branchId,
@@ -39,8 +37,6 @@ function useUser() {
         page: page || PAGE,
         search,
         url: url!,
-        adminId,
-        loginId,
       };
 
       dispatch(requestGetUsers(payload));

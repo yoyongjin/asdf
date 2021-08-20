@@ -90,7 +90,10 @@ function Monitoring({ location }: MonitoringProps) {
       };
     });
 
-    if (loginInfo.admin_id === USER_TYPE.TEAM_ADMIN) {
+    if (
+      loginInfo.admin_id === USER_TYPE.TEAM_ADMIN ||
+      loginInfo.admin_id === USER_TYPE.CONSULTANT
+    ) {
       return {
         count: 0,
         data: [],
@@ -170,6 +173,15 @@ function Monitoring({ location }: MonitoringProps) {
   ]);
 
   const volumeData = useMemo(() => {
+    if (loginInfo.admin_id === USER_TYPE.CONSULTANT) {
+      return {
+        count: 0,
+        data: [],
+        info: [],
+        style: [],
+      };
+    }
+
     return {
       count: 2,
       data: [Number(form.left), Number(form.right)],
@@ -202,7 +214,7 @@ function Monitoring({ location }: MonitoringProps) {
         },
       ],
     };
-  }, [form.left, form.right, onChangeInput]);
+  }, [form.left, form.right, loginInfo.admin_id, onChangeInput]);
 
   const setSeletedConsultantData = useCallback(
     (consultantInfo: UserDataV2) => {
@@ -219,10 +231,8 @@ function Monitoring({ location }: MonitoringProps) {
       count: number,
       page: number,
       path: string,
-      adminId?: number,
-      loginId?: number,
     ) => {
-      getUsers(branchId, teamId, count, page, '', path, adminId, loginId);
+      getUsers(branchId, teamId, count, page, '', path);
     },
     [getUsers],
   );
@@ -236,7 +246,7 @@ function Monitoring({ location }: MonitoringProps) {
           <Consultant
             key={`${loginInfo.admin_id}-${form.branch}-${form.team}-consultant-${consultant.id}`}
             consultInfo={consultant}
-            loginId={loginInfo.id}
+            loginData={loginInfo}
             setSeletedConsultantData={setSeletedConsultantData}
             connectZibox={connectZibox}
             changeTappingData={changeTappingData}
@@ -251,8 +261,7 @@ function Monitoring({ location }: MonitoringProps) {
       );
     },
     [
-      loginInfo.admin_id,
-      loginInfo.id,
+      loginInfo,
       form.branch,
       form.team,
       setSeletedConsultantData,
@@ -284,41 +293,33 @@ function Monitoring({ location }: MonitoringProps) {
   useEffect(() => {
     if (socketConnection !== SOCKET_CONNECTION.SUCCESS) return;
 
+    console.log(loginInfo.admin_id);
     if (
       loginInfo.admin_id === USER_TYPE.SUPER_ADMIN ||
       loginInfo.admin_id === USER_TYPE.ADMIN
     ) {
       // 슈퍼 관리자
-      getUsers2(
-        form.branch,
-        form.team,
-        2000,
-        1,
-        location.pathname,
-        loginInfo.admin_id,
-        loginInfo.id,
-      );
+      getUsers2(form.branch, form.team, 2000, 1, location.pathname);
     } else if (loginInfo.admin_id === USER_TYPE.BRANCH_ADMIN) {
-      // 일반 관리자
-      getUsers2(
-        loginInfo.branch_id,
-        form.team,
-        2000,
-        1,
-        location.pathname,
-        loginInfo.admin_id,
-        loginInfo.id,
-      );
+      // 지점 관리자
+      getUsers2(loginInfo.branch_id, form.team, 2000, 1, location.pathname);
     } else if (loginInfo.admin_id === USER_TYPE.TEAM_ADMIN) {
-      // 일반 관리자
+      // 팀 관리자
       getUsers2(
         loginInfo.branch_id,
         loginInfo.team_id,
         2000,
         1,
         location.pathname,
-        loginInfo.admin_id,
-        loginInfo.id,
+      );
+    } else if (loginInfo.admin_id === USER_TYPE.CONSULTANT) {
+      // 상담원
+      getUsers2(
+        loginInfo.branch_id,
+        loginInfo.team_id,
+        2000,
+        1,
+        location.pathname,
       );
     }
   }, [
@@ -398,6 +399,14 @@ function Monitoring({ location }: MonitoringProps) {
             style={{ maxWidth: calculateMaxWidth() + 'px' }}
           >
             {consultantInfo.map((consultant, i) => {
+              if (loginInfo.admin_id === USER_TYPE.CONSULTANT) {
+                if (consultant.id === loginInfo.id) {
+                  return consultantView(consultant);
+                }
+
+                return null;
+              }
+
               return consultantView(consultant);
             })}
           </StyledConsultantArea>

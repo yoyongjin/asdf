@@ -9,6 +9,7 @@ import { Colors } from 'utils/color';
 import useStatistics from 'hooks/useStatistics';
 import useAuth from 'hooks/useAuth';
 import Utils from 'utils/new_utils';
+import { USER_TYPE } from 'utils/constants';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -250,7 +251,7 @@ function StatisticsView() {
             calendarData={calendarData}
             isCalendar
             isExcel
-            isSearch
+            isSearch={loginInfo.admin_id !== USER_TYPE.CONSULTANT}
             // isSelect
             isSync
             rightBottomPixel={9}

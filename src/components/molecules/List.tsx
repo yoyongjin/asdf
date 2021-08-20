@@ -56,7 +56,7 @@ function List({
   return (
     <StyledWrapper>
       {menus.map((values) => {
-        if (userData.admin_id === USER_TYPE.CONSULTANT && values.id === 1) {
+        if (!userData.user_name && values.id === 1) {
           // 상담원일 경우 비밀번호 초기화 부분 삭제
           return null;
         }

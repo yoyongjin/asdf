@@ -10,7 +10,7 @@ import {
   stopTapping,
 } from 'hooks/useZibox';
 import Communicator from 'lib/communicator';
-import { TappingTarget } from 'types/auth';
+import { LoginData, TappingTarget } from 'types/auth';
 import { UserData } from 'types/user';
 import { Colors } from 'utils/color';
 import {
@@ -19,6 +19,7 @@ import {
   ZIBOX_TRANSPORT,
   ZIBOX_MONIT_STATUS,
   PHONE_STATUS,
+  USER_TYPE,
 } from 'utils/constants';
 import Utils from 'utils/new_utils';
 
@@ -66,17 +67,38 @@ function Consultant({
   changeTappingData,
   tappingStatus,
   consultInfo,
-  loginId,
+  loginData,
   setSeletedConsultantData,
   requestTapping,
   changeTappingStatus,
   tappingTarget,
 }: ConsultantProps) {
   useEffect(() => {
+    if (loginData.admin_id === USER_TYPE.CONSULTANT) {
+      if (
+        consultInfo.id === loginData.id &&
+        consultInfo.call?.status === CALL_STATUS_V2.CONNECT
+      ) {
+        document.title = consultInfo.calling_time
+          ? Utils.getHourMinSecBySecond(consultInfo.calling_time)
+          : '00:00:00';
+      } else {
+        document.title = '00:00:00';
+      }
+    }
+  }, [
+    consultInfo.call,
+    consultInfo.calling_time,
+    consultInfo.id,
+    loginData.admin_id,
+    loginData.id,
+  ]);
+
+  useEffect(() => {
     if (
       consultInfo.call?.status === CALL_STATUS_V2.IDLE &&
       consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.ENABLE &&
-      consultInfo.zibox?.monit_user === loginId
+      consultInfo.zibox?.monit_user === loginData.id
     ) {
       // 감청하고 있는 상담원이 통화 종료 했을 때 감청 종료 명령 날려주는 부분
       const mode = Communicator.getInstance().getMode();
@@ -84,7 +106,7 @@ function Consultant({
       if (mode === ZIBOX_TRANSPORT.SERVER) {
         requestTapping(
           consultInfo.number!,
-          loginId,
+          loginData.id,
           consultInfo.zibox?.monit_user === -1 ? 1 : 0,
           consultInfo.zibox_ip!,
         );
@@ -97,7 +119,7 @@ function Consultant({
     consultInfo.number,
     consultInfo.zibox,
     consultInfo.zibox_ip,
-    loginId,
+    loginData.id,
     requestTapping,
     stopTapping,
   ]);
@@ -105,7 +127,7 @@ function Consultant({
   useEffect(() => {
     if (
       consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.ENABLE &&
-      consultInfo.zibox?.monit_user === loginId &&
+      consultInfo.zibox?.monit_user === loginData.id &&
       tappingStatus !== 2
     ) {
       // 감청 중인 경우
@@ -118,7 +140,7 @@ function Consultant({
     } else if (
       (consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.START_REQUEST ||
         consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.STOP_REQUEST) &&
-      consultInfo.zibox?.monit_user === loginId &&
+      consultInfo.zibox?.monit_user === loginData.id &&
       tappingStatus !== 1
     ) {
       // 감청을 요청한 경우
@@ -141,7 +163,7 @@ function Consultant({
     consultInfo.number,
     consultInfo.zibox,
     consultInfo.zibox_ip,
-    loginId,
+    loginData.id,
     tappingStatus,
     tappingTarget.id,
   ]);
@@ -150,7 +172,7 @@ function Consultant({
     async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       requestTapping(
         consultInfo.number!,
-        loginId,
+        loginData.id,
         consultInfo.zibox?.monit_user === -1 ? 1 : 0,
         consultInfo.zibox_ip!,
       );
@@ -158,7 +180,7 @@ function Consultant({
       const mode = Communicator.getInstance().getMode();
 
       if (consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.ENABLE) {
-        if (consultInfo.zibox.monit_user !== loginId) {
+        if (consultInfo.zibox.monit_user !== loginData.id) {
           // 내가 감청을 하는 대상이 아닌 경우
           return;
         }
@@ -188,12 +210,12 @@ function Consultant({
           console.log(error);
         }
       } else if (mode === ZIBOX_TRANSPORT.OCX) {
-        startTapping(consultInfo.number!, loginId, {
+        startTapping(consultInfo.number!, loginData.id, {
           mode: 1,
           ip: consultInfo.zibox?.pc_ip!,
         });
       } else if (mode === ZIBOX_TRANSPORT.PACKET) {
-        startTapping(consultInfo.number!, loginId, {
+        startTapping(consultInfo.number!, loginData.id, {
           key: consultInfo.number!,
           ip: consultInfo.zibox?.zibox_ip!,
         });
@@ -207,7 +229,7 @@ function Consultant({
       consultInfo.zibox_ip,
       consultInfo.zibox_mic,
       consultInfo.zibox_spk,
-      loginId,
+      loginData.id,
       requestTapping,
       startTapping,
       stopTapping,
@@ -216,6 +238,8 @@ function Consultant({
 
   const handleButtonView = useCallback(
     (consultInfo: UserData) => {
+      if (loginData.admin_id === USER_TYPE.CONSULTANT) return null;
+
       if (
         // 감청 요청 상태로 변경 시
         consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.START_REQUEST ||
@@ -266,7 +290,7 @@ function Consultant({
           if (consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.ENABLE) {
             // 내가 감청 중인 상담원일 경우
 
-            if (consultInfo.zibox?.monit_user === loginId) {
+            if (consultInfo.zibox?.monit_user === loginData.id) {
               return (
                 <Button
                   width={7.5}
@@ -301,7 +325,7 @@ function Consultant({
         }
       }
     },
-    [handleTapping, loginId, tappingStatus],
+    [handleTapping, loginData.admin_id, loginData.id, tappingStatus],
   );
 
   const handleConsultantStatus = useCallback(
@@ -474,7 +498,7 @@ interface ConsultantProps {
   requestTapping: requestTapping;
   tappingStatus: number;
   consultInfo: UserData;
-  loginId: number;
+  loginData: LoginData;
   changeTappingStatus: changeTappingStatus;
   tappingTarget: TappingTarget;
   setSeletedConsultantData: SetSeletedConsultantData;

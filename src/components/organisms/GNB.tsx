@@ -74,7 +74,7 @@ function GNB({ loginInfo, location, logoImage, onClickLogout }: GNBProps) {
         </Link>
       </StyledLogo>
       <StyledLink>
-        <LinkSelector location={location} />
+        <LinkSelector permission={loginInfo.admin_id} location={location} />
       </StyledLink>
       <StyledUserLog>
         <UserLog
