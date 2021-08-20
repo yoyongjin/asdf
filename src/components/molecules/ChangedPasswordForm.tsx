@@ -72,6 +72,7 @@ function ChangedPasswordForm() {
   });
 
   const validateForm = useCallback(() => {
+    const currentPW = form.current_password;
     const newPW = form.new_password;
     const confirmPW = form.new_confirm_password;
 
@@ -81,14 +82,18 @@ function ChangedPasswordForm() {
       return false;
     }
 
-    if (!REG_EXR.password.test(newPW) || !REG_EXR.password.test(confirmPW)) {
+    if (
+      !REG_EXR.password.test(currentPW) ||
+      !REG_EXR.password.test(newPW) ||
+      !REG_EXR.password.test(confirmPW)
+    ) {
       alert('8자리 이상 32자리 이하, 영어/숫자/특수문자가 포함되어야 합니다.');
 
       return false;
     }
 
     return true;
-  }, [form.new_confirm_password, form.new_password]);
+  }, [form.current_password, form.new_confirm_password, form.new_password]);
 
   return (
     <StyledWrapper>
