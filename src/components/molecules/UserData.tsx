@@ -195,13 +195,22 @@ function UserData({
       ip?: string,
       mac?: string,
     ) => {
-      if (adminId === USER_TYPE.CONSULTANT && branchId === -1) {
+      if (
+        (adminId === USER_TYPE.BRANCH_ADMIN ||
+          adminId === USER_TYPE.TEAM_ADMIN ||
+          adminId === USER_TYPE.CONSULTANT) &&
+        branchId === -1
+      ) {
         alert('지점을 선택해주세요.');
 
         return false;
       }
 
-      if (adminId === USER_TYPE.CONSULTANT && teamId === -1) {
+      if (
+        (adminId === USER_TYPE.TEAM_ADMIN ||
+          adminId === USER_TYPE.CONSULTANT) &&
+        teamId === -1
+      ) {
         alert('팀을 선택해주세요.');
 
         return false;
