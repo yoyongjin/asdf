@@ -2,15 +2,18 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { Text } from 'components/atoms';
+import { TableContentOption } from 'components/organisms/UserView';
+import { StatisticsData } from 'types/statistics';
 import { Colors } from 'utils/color';
 import Utils from 'utils/new_utils';
 
-import { TableContentOption } from 'components/organisms/UserView';
-import { StatisticsData } from 'types/statistics';
-
 const StyledWrapper = styled.td``;
 
-function StatisticsProperty({ options, statisticsData }: TableContentProps) {
+function StatisticsProperty({
+  options,
+  orderId,
+  statisticsData,
+}: TableContentProps) {
   return (
     <>
       {Object.keys(statisticsData).map((values, i) => {
@@ -36,6 +39,8 @@ function StatisticsProperty({ options, statisticsData }: TableContentProps) {
                 ? statisticsData[values]
                   ? `${statisticsData[values]}%`
                   : '0%'
+                : values === 'id'
+                ? orderId
                 : (statisticsData as any)[values]}
             </Text>
           </StyledWrapper>
@@ -46,8 +51,9 @@ function StatisticsProperty({ options, statisticsData }: TableContentProps) {
 }
 
 interface TableContentProps {
-  statisticsData: StatisticsData;
   options: TableContentOption;
+  orderId: number;
+  statisticsData: StatisticsData;
 }
 
 StatisticsProperty.defaultProps = {};

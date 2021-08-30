@@ -1,8 +1,8 @@
-import { Text } from 'components/atoms';
-import { TableTitleData } from 'components/organisms/UserView';
 import React from 'react';
 import styled from 'styled-components';
 
+import { Text } from 'components/atoms';
+import { TableTitleData } from 'components/organisms/UserView';
 import { Colors } from 'utils/color';
 import Utils from 'utils/new_utils';
 
@@ -55,7 +55,9 @@ function StatisticsTotal({ titles, contents }: StatisticsTotalProps) {
                     ? contents.successCount
                     : i === 5
                     ? `${
-                        Math.floor(contents.successRatio / contents.count) || 0
+                        Math.floor(
+                          contents.successCount / contents.outboundCount,
+                        ) * 100 || 0
                       }%`
                     : i === 6
                     ? contents.inboundCount

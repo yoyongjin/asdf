@@ -1,10 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { UserProperty } from 'components/molecules';
-import { Colors } from 'utils/color';
+import { StatisticsProperty, UserProperty } from 'components/molecules';
 import { TableContentData } from 'components/organisms/UserView';
-import StatisticsProperty from './StatisticsProperty';
+import { Colors } from 'utils/color';
 
 const StyledWrapper = styled.tr<StyledTableContent>`
   width: 100%;
@@ -42,6 +41,7 @@ function TableContent({ contents }: TableContentProps) {
                 key={`table-statistics-property-${i}`}
                 statisticsData={data}
                 options={contents.option!}
+                orderId={i + 1}
               />
             </StyledWrapper>
           );
