@@ -56,8 +56,9 @@ function StatisticsTotal({ titles, contents }: StatisticsTotalProps) {
                     : i === 5
                     ? `${
                         Math.floor(
-                          contents.successCount / contents.outboundCount,
-                        ) * 100 || 0
+                          (contents.successCount / contents.outboundCount) *
+                            100,
+                        ) || 0
                       }%`
                     : i === 6
                     ? contents.inboundCount
