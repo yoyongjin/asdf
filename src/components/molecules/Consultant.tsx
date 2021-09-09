@@ -376,10 +376,10 @@ function Consultant({
                 ? '로그아웃'
                 : consultantStatus === CONSULTANT_STATUS.AFTER
                 ? '후처리'
-                : consultantStatus === CONSULTANT_STATUS.AWAY
-                ? '이석'
                 : consultantStatus === CONSULTANT_STATUS.REST
                 ? '휴식'
+                : consultantStatus === CONSULTANT_STATUS.AWAY
+                ? '이석'
                 : '대기중'}
             </Text>
           );

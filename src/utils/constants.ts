@@ -98,8 +98,8 @@ export enum CONSULTANT_STATUS {
   WAIT = 0,
   CALL = 1,
   AFTER = 2,
-  AWAY = 3,
-  REST = 4,
+  REST = 3,
+  AWAY = 4,
 }
 
 export enum USER_TYPE {
