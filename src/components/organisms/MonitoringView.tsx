@@ -72,8 +72,7 @@ function Monitoring({ location }: MonitoringProps) {
   } = useMonitoring();
   const { consultantInfo, getUsers, onClickModifyUser } = useUser();
   const { visible, onClickVisible } = useVisible();
-  const { connectZibox, requestTapping, startTapping, stopTapping, setVolume } =
-    useZibox();
+  const { requestTapping, startTapping, stopTapping, setVolume } = useZibox();
 
   const selectData = useMemo(() => {
     const _branches = branches!.map((values) => {
@@ -248,7 +247,6 @@ function Monitoring({ location }: MonitoringProps) {
             consultInfo={consultant}
             loginData={loginInfo}
             setSeletedConsultantData={setSeletedConsultantData}
-            connectZibox={connectZibox}
             changeTappingData={changeTappingData}
             tappingStatus={tappingStatus}
             requestTapping={requestTapping}
@@ -265,7 +263,6 @@ function Monitoring({ location }: MonitoringProps) {
       form.branch,
       form.team,
       setSeletedConsultantData,
-      connectZibox,
       changeTappingData,
       tappingStatus,
       requestTapping,

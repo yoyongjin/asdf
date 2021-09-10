@@ -12,15 +12,21 @@ import {
   TextRange,
   TextTextArea,
 } from 'components/molecules';
-import useOrganization from 'hooks/useOrganization';
 import useInputForm from 'hooks/useInputForm';
+import useOrganization from 'hooks/useOrganization';
+import { OnClickAddUser, OnClickModifyUser } from 'hooks/useUser';
+import { OnClickVisible } from 'hooks/useVisible';
+import Communicator from 'lib/communicator';
+import { LoginData } from 'types/auth';
 import { UserData as UserDataV2 } from 'types/user';
 import { Colors } from 'utils/color';
-import constants, { COMPANY_TYPE, REG_EXR, USER_TYPE } from 'utils/constants';
+import constants, {
+  COMPANY_TYPE,
+  REG_EXR,
+  USER_TYPE,
+  ZIBOX_TRANSPORT,
+} from 'utils/constants';
 import Utils from 'utils/new_utils';
-import { OnClickAddUser, OnClickModifyUser } from 'hooks/useUser';
-import { LoginData } from 'types/auth';
-import { OnClickVisible } from 'hooks/useVisible';
 
 const StyledWrapper = styled.div`
   width: 100%;
@@ -474,7 +480,15 @@ function UserData({
                         : data.name === 'name'
                         ? false
                         : data.name === 'zibox_ip'
-                        ? true
+                        ? Communicator.getInstance().getMode() ===
+                          ZIBOX_TRANSPORT.SERVER
+                          ? true
+                          : false
+                        : data.name === 'zibox_mac'
+                        ? Communicator.getInstance().getMode() ===
+                          ZIBOX_TRANSPORT.SERVER
+                          ? false
+                          : true
                         : data.name === 'id'
                         ? userData?.user_name
                           ? true
@@ -529,7 +543,12 @@ function UserData({
                       loginData.admin_id === USER_TYPE.CONSULTANT
                         ? true
                         : data.name === 'zibox_mic'
-                        ? true
+                        ? Communicator.getInstance().getMode() ===
+                          ZIBOX_TRANSPORT.MQTT
+                          ? _.isEmpty(userData)
+                            ? true
+                            : false
+                          : true
                         : _.isEmpty(userData) ||
                           form.admin !== USER_TYPE.CONSULTANT
                     }

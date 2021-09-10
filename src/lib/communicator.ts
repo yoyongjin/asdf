@@ -10,10 +10,9 @@ import {
   PacketTappingOption,
 } from 'types/zibox';
 import constants, { ZIBOX_TRANSPORT } from 'utils/constants';
-import Logger from 'utils/log';
 
 class Communicator {
-  private static transport = constants.TRANSPORT as string;
+  private static transport = constants.TRANSPORT;
   private static instance: Communicator;
   private static controller: MQTT | OCX | Player;
   private static socket: Socket;
@@ -45,7 +44,7 @@ class Communicator {
    * @param id unique id
    */
   async connectSocket(id: number) {
-    const url = constants.SOCKET_SERVER as string;
+    const url = constants.SOCKET_SERVER;
     const connectOption = {
       url,
       key: id,
@@ -53,23 +52,21 @@ class Communicator {
 
     if (Communicator.socket) {
       Communicator.socket.connect(connectOption);
-    } else {
-      await (Communicator.controller as OCX).connect(connectOption);
+
+      return;
+    }
+
+    if (Communicator.controller instanceof OCX) {
+      Communicator.controller.connect(connectOption);
     }
   }
 
-  /**
-   * @description 지박스 연결하기
-   * @param options MQTT 연결 옵션
-   */
-  async connectZibox(options: MQTTConnectOption) {
-    Logger.log('Connect Zibox');
-    await (Communicator.controller as MQTT).connect(options);
-  }
-
-  startTappingZibox(options?: OCXTappingOption | PacketTappingOption) {
+  startTappingZibox(
+    options?: MQTTConnectOption | OCXTappingOption | PacketTappingOption,
+  ) {
     if (Communicator.controller instanceof MQTT) {
-      return Communicator.controller.startTapping();
+      const option = _.cloneDeep(options) as MQTTConnectOption;
+      return Communicator.controller.connect(option);
     } else if (Communicator.controller instanceof OCX) {
       const option = _.cloneDeep(options) as OCXTappingOption;
       return Communicator.controller.startTapping(option);

@@ -1,9 +1,10 @@
-import { useDispatch } from 'react-redux';
 import { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 
 import Communicator from 'lib/communicator';
 import MQTT from 'lib/mqtt';
 import OCX from 'lib/ocx';
+import Player from 'lib/player';
 import {
   setServerTime,
   setSocketStatus,
@@ -19,6 +20,7 @@ import {
   changeAllResetStatus,
   changePhoneStatus,
 } from 'modules/actions/user';
+import { ResponseType } from 'types/common';
 import {
   ConsultantAllStatusByNumber,
   ConsultantAllStatus,
@@ -29,16 +31,13 @@ import {
   PhoneStatus,
   UserData,
 } from 'types/user';
-import Logger from 'utils/log';
 import {
-  ZIBOX_EVENT_TYPE,
-  RESPONSE_STATUS_V2,
   ZIBOX_MONIT_STATUS,
   SOCKET_EVENT_TYPE,
   USER_TYPE,
+  RESPONSE_STATUS_V2,
 } from 'utils/constants';
-
-import Player from 'lib/player';
+import Logger from 'utils/log';
 
 function useCommunicator() {
   const dispatch = useDispatch();
@@ -162,55 +161,107 @@ function useCommunicator() {
     [dispatch],
   );
 
-  const registerEventHandler = useCallback(() => {
-    const socket = Communicator.getInstance().getSocketInstance();
-
+  const ziboxEvnetHandler = useCallback(() => {
     const zibox = Communicator.getInstance().getZiboxInstance();
 
     if (zibox instanceof MQTT) {
-      zibox.onChangeAllStatusEventHandler((type: string, data: any) => {
-        Logger.log('onChangeAllStatusEventHandler', { type, data });
+      window.addEventListener('beforeunload', function (event) {
+        const targetData = zibox.getTargetData();
+        if (targetData.id > -1) {
+          zibox.disconnect();
+        }
+      });
 
-        switch (type) {
-          case ZIBOX_EVENT_TYPE.CONNECTION_INFO:
-            if (data.data === 'con') {
-              // dispatch(changeMonitStatus(2));
-            } else if (data.data === 'discon') {
-              // dispatch(changeMonitStatus(0));
-            }
+      zibox.onChangeProtocolEventHandler((data: string) => {
+        switch (data) {
+          case 'close': {
+            const targetData = zibox.getTargetData();
+            const data = {
+              monitoring_state: ZIBOX_MONIT_STATUS.DISABLE,
+              number: targetData.key,
+              user_id: -1,
+              zibox_ip: targetData.ip,
+            };
+            Communicator.getInstance().emitMessage(
+              SOCKET_EVENT_TYPE.MONITORING,
+              data,
+            );
+
+            zibox.setInitTargetData();
             break;
-          case ZIBOX_EVENT_TYPE.VOLUME_INFO:
-            if (data.mic && data.spk) {
-              // const param = {
-              //   id: user_id,
-              //   ziboxmic: Number(data.mic),
-              //   ziboxspk: Number(data.spk),
-              // };
-              // dispatch(requestZiboxVolume(param));
-            }
-            break;
-          case ZIBOX_EVENT_TYPE.MONITORING_INFO:
-            if (data.data === 'start') {
-              // socket.onEmit('monitoring', {
-              //   monitoring_state: RESPONSE_STATUS_V2.YES,
-              //   number: tappingTargetNumber,
-              //   user_id: tappingTargetId,
-              // });
-            } else if (data.data === 'stop') {
-              // Socket.getInstance().onEmit('monitoring', {
-              //   monitoring_state: 'n',
-              //   number: phone_number,
-              //   user_id: -1,
-              // });
-            } else if (data.data === 'on') {
-              zibox.startTapping();
-            }
-            break;
+          }
           default:
             break;
         }
       });
+
+      zibox.onChangeAllStatusEventHandler(async (response: ResponseType) => {
+        const { status, data, type } = response;
+
+        if (status === 'y') {
+          switch (type) {
+            case 'connection_info':
+              if (data.data === 'connection') {
+                zibox.initialize();
+              }
+
+              break;
+            case 'vol_info':
+              if (data.mic && data.spk) {
+                // const id = zibox.getTargetId();
+                // const param = {
+                //   id,
+                //   ziboxmic: Number(data.mic),
+                //   ziboxspk: Number(data.spk),
+                // };
+                // dispatch(requestZiboxVolume(param));
+              }
+              break;
+            case 'mon_info':
+              if (data.data === 'start') {
+                const targetData = zibox.getTargetData();
+                const data = {
+                  monitoring_state: ZIBOX_MONIT_STATUS.ENABLE,
+                  number: targetData.key,
+                  user_id: targetData.id,
+                  zibox_ip: targetData.ip,
+                };
+                Communicator.getInstance().emitMessage(
+                  SOCKET_EVENT_TYPE.MONITORING,
+                  data,
+                );
+              } else if (data.data === 'stop') {
+              } else if (data.data === 'on') {
+                zibox.startTapping();
+              }
+              break;
+            case 'rec_info':
+              if (data.data === 'stop') {
+                zibox.disconnect();
+              }
+              break;
+            default:
+              break;
+          }
+        } else {
+          if (type === 'connection_info') {
+            if (data.data === 'connection' && data.error === 'ret2') {
+              zibox.disconnect();
+            }
+          } else {
+            console.log(
+              `해당 type[${type}]에서 ${data.data} / ${data.error} 문제가 발생하여 지박스 연결을 끊습니다.`,
+            );
+            zibox.disconnect();
+          }
+        }
+      });
     }
+  }, []);
+
+  const registerEventHandler = useCallback(() => {
+    const socket = Communicator.getInstance().getSocketInstance();
+    const zibox = Communicator.getInstance().getZiboxInstance();
 
     if (zibox instanceof Player) {
       socket.onMonitorEventHandler((packet: any) => {
@@ -284,6 +335,7 @@ function useCommunicator() {
     registerEventHandler,
     setChangedStatus,
     setServerData,
+    ziboxEvnetHandler,
   };
 }
 

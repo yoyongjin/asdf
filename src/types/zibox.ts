@@ -15,15 +15,23 @@ export interface MQTTConnectOption {
   /**
    * @description 지박스 ip
    */
-  ip?: string;
+  ip: string;
   /**
    * @description 지박스 마이크 볼륨
    */
-  mic_vol?: number;
+  mic_vol: number;
   /**
    * @description 지박스 스피커 볼륨
    */
-  spk_vol?: number;
+  spk_vol: number;
+  /**
+   * @description 전화번호
+   */
+  key: string;
+  /**
+   * @description 감청 주체
+   */
+  target_id: number;
 }
 
 export interface OCXTappingOption {

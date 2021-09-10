@@ -3,12 +3,7 @@ import styled from 'styled-components';
 
 import { Button, Image, Text } from 'components/atoms';
 import { changeTappingData, changeTappingStatus } from 'hooks/useMonitoring';
-import {
-  connectZibox,
-  requestTapping,
-  startTapping,
-  stopTapping,
-} from 'hooks/useZibox';
+import { requestTapping, startTapping, stopTapping } from 'hooks/useZibox';
 import Communicator from 'lib/communicator';
 import { LoginData, TappingTarget } from 'types/auth';
 import { UserData } from 'types/user';
@@ -61,7 +56,6 @@ const StyledWhiteSpace = styled.div<StyledWhiteSpaceProps>`
 `;
 
 function Consultant({
-  connectZibox,
   startTapping,
   stopTapping,
   changeTappingData,
@@ -111,7 +105,7 @@ function Consultant({
           consultInfo.zibox_ip!,
         );
       } else {
-        stopTapping(consultInfo.number!);
+        stopTapping();
       }
     }
   }, [
@@ -188,42 +182,38 @@ function Consultant({
         // 감청 대상인 경우
         // 연결 끊기
         if (mode !== ZIBOX_TRANSPORT.SERVER) {
-          stopTapping(consultInfo.number!);
+          stopTapping();
         }
         return;
       }
 
       if (mode === ZIBOX_TRANSPORT.MQTT) {
-        try {
-          const isSuccess = await connectZibox(
-            consultInfo.zibox_ip!,
-            consultInfo.zibox_mic!,
-            consultInfo.zibox_spk!,
-            consultInfo.id,
-            consultInfo.number!,
-          );
+        const options = {
+          ip: consultInfo.zibox_ip!,
+          mic_vol: consultInfo.zibox_mic!,
+          spk_vol: consultInfo.zibox_spk!,
+          target_id: loginData.id!,
+          key: consultInfo.number!,
+        };
 
-          if (!isSuccess) {
-            alert('ZiBox 연결에 실패하였습니다.');
-          }
-        } catch (error) {
-          console.log(error);
-        }
+        startTapping(options);
       } else if (mode === ZIBOX_TRANSPORT.OCX) {
-        startTapping(consultInfo.number!, loginData.id, {
+        const options = {
           mode: 1,
           ip: consultInfo.zibox?.pc_ip!,
-        });
+        };
+
+        startTapping(options);
       } else if (mode === ZIBOX_TRANSPORT.PACKET) {
-        startTapping(consultInfo.number!, loginData.id, {
+        const options = {
           key: consultInfo.number!,
           ip: consultInfo.zibox?.zibox_ip!,
-        });
+        };
+
+        startTapping(options);
       }
     },
     [
-      connectZibox,
-      consultInfo.id,
       consultInfo.number,
       consultInfo.zibox,
       consultInfo.zibox_ip,
@@ -491,7 +481,6 @@ function Consultant({
 }
 
 interface ConsultantProps {
-  connectZibox: connectZibox;
   changeTappingData: changeTappingData;
   startTapping: startTapping;
   stopTapping: stopTapping;

@@ -1,31 +1,32 @@
 import { ResponseType } from 'types/common';
 import { Zibox, MQTTConnectOption } from 'types/zibox';
-import { RESPONSE_STATUS_V2 } from 'utils/constants';
 import Logger from 'utils/log';
 
 class MQTT implements Zibox {
   private zibox: any;
+  private id: number = 0;
+  private ip: string = '';
+  private number: string = '';
+  private mic: number = 0;
+  private spk: number = 0;
 
   /**
    * @description 지박스 연결하기
    * @param options 연결 옵션
    */
   public async connect(options: MQTTConnectOption) {
-    Logger.log('[MQTT] Connect ZiBox');
+    Logger.log('[MQTT] Connect ZiBox', options);
     try {
+      this.id = options.target_id;
+      this.ip = options.ip;
+      this.number = options.key;
+      this.mic = options.mic_vol;
+      this.spk = options.spk_vol;
+
       await this.zibox.connect(options.ip);
-      this.zibox.ftpOff();
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      this.zibox.monIP('127.0.0.1');
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      this.zibox.monOn();
-      if (options.mic_vol && options.spk_vol) {
-        this.setVolume(options.mic_vol, options.spk_vol);
-      }
-      this.getVolume();
+
       return true;
     } catch (error) {
-      console.log(error);
       return false;
     }
   }
@@ -40,13 +41,57 @@ class MQTT implements Zibox {
     return true;
   }
 
+  async disconnect() {
+    try {
+      await this.zibox.disconnect();
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  setInitTargetData() {
+    this.id = -1;
+    this.ip = '';
+    this.number = '';
+    this.mic = 0;
+    this.spk = 0;
+  }
+
+  async initialize() {
+    try {
+      await this.zibox.ftpOff();
+
+      if (this.mic !== 0 && this.spk !== 0) {
+        this.zibox.micVolume(this.mic);
+        this.zibox.spkVolume(this.spk);
+      }
+
+      await this.zibox.monIP('127.0.0.1');
+      this.zibox.monOn();
+
+      this.zibox.disitalVolumeInfo();
+
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
   /**
    * @description 감청 시작
    */
-  public startTapping() {
+  public async startTapping() {
     Logger.log('[MQTT] Start Tapping');
-    this.zibox.recStart();
-    this.zibox.monStart();
+
+    try {
+      await this.zibox.recStart();
+      await this.zibox.monStart();
+
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 
   /**
@@ -56,6 +101,19 @@ class MQTT implements Zibox {
     Logger.log('[MQTT] Stop Tapping');
     await this.zibox.monStop();
     return this.zibox.recStop();
+  }
+
+  /**
+   * @description 감청 대상 정보
+   */
+  public getTargetData() {
+    return {
+      id: this.id,
+      key: this.number,
+      ip: this.ip,
+      mic: this.mic,
+      spk: this.spk,
+    };
   }
 
   /**
@@ -87,7 +145,15 @@ class MQTT implements Zibox {
     this.zibox.spkVolume(spk);
   }
 
-  onChangeAllStatusEventHandler(callback: (type: string, data: any) => void) {
+  onChangeProtocolEventHandler(callback: (data: string) => void) {
+    Logger.log('[MQTT] Register Protocol Event');
+    this.zibox.onProtocolEvnetListener = (response: string) => {
+      Logger.log(`[MQTT] onProtocolEvnetListener`, response);
+      callback(response);
+    };
+  }
+
+  onChangeAllStatusEventHandler(callback: (data: ResponseType) => void) {
     Logger.log('[MQTT] Register All Status Event');
     this.zibox.onCommandEventListener = (
       cmd: string,
@@ -97,11 +163,7 @@ class MQTT implements Zibox {
 
       if (typeof response !== 'object') return;
 
-      const { type, status, data } = response;
-
-      if (status === RESPONSE_STATUS_V2.YES) {
-        callback(type, data);
-      }
+      callback(response);
     };
   }
 }
