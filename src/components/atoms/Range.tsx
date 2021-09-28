@@ -1,12 +1,12 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
-import { darken, lighten } from 'polished';
-import { Colors } from 'utils/color';
+import styled from 'styled-components';
 
 const StyledInputRange = styled.input<StyledRangeProps>`
   /* Initialized */
   border: none;
   outline: none;
+
+  width: ${(props) => props.width}px;
 `;
 
 function Range({
@@ -17,6 +17,7 @@ function Range({
   min,
   max,
   onChange,
+  ...rest
 }: InputRangeProps) {
   return (
     <StyledInputRange
@@ -28,11 +29,14 @@ function Range({
       step={step}
       type="range"
       value={value}
+      {...rest}
     />
   );
 }
 
-interface StyledRangeProps {}
+interface StyledRangeProps {
+  width: number;
+}
 
 interface InputRangeProps extends StyledRangeProps {
   readonly disabled: boolean;
@@ -50,6 +54,7 @@ Range.defaultProps = {
   step: 1,
   min: 0,
   max: 60,
+  width: 100,
 };
 
 export default React.memo(Range);
