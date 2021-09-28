@@ -1,10 +1,14 @@
-export interface Zibox {
-  // connect?(options: MQTTConnectOption): Promise<unknown>;
-  create(): boolean;
-  // setVolume?(mic: number, spk: number): void;
-  // getVolume?(): void;
-  startTapping(options?: OCXTappingOption | PacketTappingOption): void;
-  stopTapping(): void;
+export interface ExternalObject {
+  create(): boolean; // 객체 생성하기
+}
+
+export interface Zibox extends ExternalObject {
+  disconnect?(): void;
+  getVolume?(): void;
+  startTapping(options?: OCXTappingOption | PacketTappingOption): void; // 감청 시작
+  stopTapping(): void; // 감청 종료
+  setTappingVolume?(type: number, gauge: number): void;
+  setVolume?(mic: number, spk: number): void;
 }
 
 export interface Play extends Zibox {
@@ -40,9 +44,13 @@ export interface OCXTappingOption {
    */
   ip: string;
   /**
-   * @description 감청 모드
+   * @description 전화번호
    */
-  mode: number;
+  key: string;
+  /**
+   * @description 감청 주체
+   */
+  target_id: number;
 }
 
 export interface PacketTappingOption {

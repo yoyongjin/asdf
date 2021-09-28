@@ -45,10 +45,10 @@ export const setHeader = (token: string) => {
 //   instance.get('/api/auth', {
 //     params: payload,
 //   }); // 상담원 정보 가져오기
-export const resetPassword = (id: number) =>
-  instance.patch('api/auth/password', {
-    user_id: id,
-  }); // 비밀번호 초기화
+// export const resetPassword = (id: number) =>
+//   instance.patch('api/auth/password', {
+//     user_id: id,
+//   }); // 비밀번호 초기화
 
 // export const getBranchInfo = () => instance.get('/api/branch'); // 지점 + 팀 목록 가져오기
 
@@ -145,12 +145,12 @@ export const resetPassword = (id: number) =>
 
 // export const deleteBranch = (id: number) => instance.delete(`api/branch/${id}`);
 
-export const updateZiboxVolume = (id: number, mic: number, spk: number) =>
-  instance.patch('/api/auth/zibox_vol', {
-    user_id: id,
-    ziboxmic: mic,
-    ziboxspk: spk,
-  });
+// export const updateZiboxVolume = (id: number, mic: number, spk: number) =>
+//   instance.patch('/api/auth/zibox_vol', {
+//     user_id: id,
+//     ziboxmic: mic,
+//     ziboxspk: spk,
+//   });
 
 export const changeStatus = (
   route: string,

@@ -20,6 +20,7 @@ export interface RequestType {
   modifyUser: common.FetchType;
   removeUser: common.FetchType;
   resetPassword: common.FetchType;
+  modifyZiBoxVolume: common.FetchType;
 }
 
 export interface UsersData {
@@ -142,6 +143,7 @@ export interface UserData extends ConsultantAllStatus_V2 {
   name: string;
   user_name: string | null;
   number: string | null;
+  pc_ip: string | null;
   zibox_id: number | null;
   zibox_ip: string | null;
   zibox_mac: string | null;
@@ -172,6 +174,12 @@ export interface SuccessGetUsers {
 
 export interface ConsultantAllStatusByNumberV2 {
   [number: string]: ConsultantAllStatus_V2;
+}
+
+export interface RequestZiBoxVolume {
+  number: string;
+  ziboxmic: number;
+  ziboxspk: number;
 }
 
 export interface RequestGetUsers {

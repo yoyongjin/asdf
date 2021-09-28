@@ -11,7 +11,7 @@ import {
   changeUsersCount,
 } from 'modules/actions/user';
 import { RootState } from 'modules/reducers';
-import { LIMIT, PAGE } from 'utils/constants';
+import constants from 'utils/constants';
 
 function useUser() {
   const userInfo = useSelector((state: RootState) => state.user.user); // 전체 유저 정보
@@ -33,8 +33,8 @@ function useUser() {
       const payload = {
         branch_id: branchId,
         team_id: teamId,
-        limit: limit || LIMIT,
-        page: page || PAGE,
+        limit: limit || constants.LIMIT,
+        page: page || constants.PAGE,
         search,
         url: url!,
       };

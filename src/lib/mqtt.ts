@@ -11,10 +11,10 @@ class MQTT implements Zibox {
   private spk: number = 0;
 
   /**
-   * @description 지박스 연결하기
+   * @description 연결하기
    * @param options 연결 옵션
    */
-  public async connect(options: MQTTConnectOption) {
+  async connect(options: MQTTConnectOption) {
     Logger.log('[MQTT] Connect ZiBox', options);
     try {
       this.id = options.target_id;
@@ -32,16 +32,21 @@ class MQTT implements Zibox {
   }
 
   /**
-   * @description zibox 객체 생성하기
+   * @description 객체 생성하기
    */
-  public create() {
+  create() {
     Logger.log('[MQTT] Create Zibox');
     this.zibox = new (window as any).Zibox();
 
     return true;
   }
 
+  /**
+   * @description 연결끊기
+   */
   async disconnect() {
+    Logger.log('[MQTT] Disconnect ZiBox');
+
     try {
       await this.zibox.disconnect();
       return true;
@@ -50,7 +55,36 @@ class MQTT implements Zibox {
     }
   }
 
-  setInitTargetData() {
+  /**
+   * @description 감청 대상 정보
+   */
+  getTargetData() {
+    Logger.log('[MQTT] Get Target Data');
+
+    return {
+      id: this.id,
+      key: this.number,
+      ip: this.ip,
+      mic: this.mic,
+      spk: this.spk,
+    };
+  }
+
+  /**
+   * @description 볼륨 정보 가져오기
+   */
+  getVolume() {
+    Logger.log('[MQTT] Get Volume');
+
+    this.zibox.disitalVolumeInfo();
+  }
+
+  /**
+   * @description 감청 대상 초기화
+   */
+  setInitialTargetData() {
+    Logger.log('[MQTT] Set Initial Target Data');
+
     this.id = -1;
     this.ip = '';
     this.number = '';
@@ -58,7 +92,12 @@ class MQTT implements Zibox {
     this.spk = 0;
   }
 
-  async initialize() {
+  /**
+   * @description 초기 지박스 설정
+   */
+  async setInitialZiBox() {
+    Logger.log('[MQTT] Set Initial ZiBox');
+
     try {
       await this.zibox.ftpOff();
 
@@ -79,9 +118,36 @@ class MQTT implements Zibox {
   }
 
   /**
+   * @description 감청 볼륨 설정
+   * @param type 왼쪽 : 1 / 오른쪽 : 2
+   * @param gauge 값
+   */
+  setTappingVolume(type: number, gauge: number) {
+    Logger.log('[MQTT] Set Tapping Volume', { type, gauge });
+
+    if (type === 1) {
+      this.zibox.leftMonVolume(gauge);
+    } else if (type === 2) {
+      this.zibox.rightMonVolume(gauge);
+    }
+  }
+
+  /**
+   * @description 볼륨 설정하기
+   * @param mic 마이크 볼륨값
+   * @param spk 스피커 볼륨값
+   */
+  setVolume(mic: number, spk: number) {
+    Logger.log('[MQTT] Set Volume', { mic, spk });
+
+    this.zibox.micVolume(mic);
+    this.zibox.spkVolume(spk);
+  }
+
+  /**
    * @description 감청 시작
    */
-  public async startTapping() {
+  async startTapping() {
     Logger.log('[MQTT] Start Tapping');
 
     try {
@@ -97,52 +163,17 @@ class MQTT implements Zibox {
   /**
    * @description 감청 종료
    */
-  public async stopTapping() {
+  async stopTapping() {
     Logger.log('[MQTT] Stop Tapping');
-    await this.zibox.monStop();
-    return this.zibox.recStop();
-  }
 
-  /**
-   * @description 감청 대상 정보
-   */
-  public getTargetData() {
-    return {
-      id: this.id,
-      key: this.number,
-      ip: this.ip,
-      mic: this.mic,
-      spk: this.spk,
-    };
-  }
+    try {
+      await this.zibox.monStop();
+      await this.zibox.recStop();
 
-  /**
-   * @description 볼륨 정보 가져오기
-   */
-  getVolume() {
-    Logger.log('[MQTT] Get Volume');
-    this.zibox.disitalVolumeInfo();
-  }
-
-  setTappingVolume(type: number, gauge: number) {
-    if (type === 1) {
-      // 왼쪽 볼륨
-      this.zibox.leftMonVolume(gauge);
-    } else if (type === 2) {
-      // 오른쪽 볼륨
-      this.zibox.rightMonVolume(gauge);
+      return true;
+    } catch (error) {
+      return false;
     }
-  }
-
-  /**
-   * @description 볼륨 설정하기
-   * @param mic 마이크 볼륨 값
-   * @param spk 스피커 볼륨 값
-   */
-  setVolume(mic: number, spk: number) {
-    Logger.log('[MQTT] Set Volume', { mic, spk });
-    this.zibox.micVolume(mic);
-    this.zibox.spkVolume(spk);
   }
 
   onChangeProtocolEventHandler(callback: (data: string) => void) {

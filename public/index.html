@@ -11,15 +11,15 @@
     />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <script language="javascript" for="ZiBoxMonitor" event="DevConnect(flag)">
-      DevConnect(flag);
+    <script language="javascript" for="IRSocketIOw" event="OnConnect(flag)">
+      OnConnect(flag);
     </script>
     <script
       language="javascript"
-      for="ZiBoxMonitor"
-      event="DevPeerStatus(value)"
+      for="IRSocketIOw"
+      event="OnMessage(name, data)"
     >
-      DevPeerStatus(value);
+      OnMessage(name, data);
     </script>
     <script
       language="javascript"
@@ -41,7 +41,14 @@
       width="0"
       height="0"
       classid="CLSID:151AB8D3-0684-407E-962B-A6EF971027E2"
-      codebase="./lib/ZiBoxMonitor.cab#version=1,0,0,1"
+      codebase="./lib/ZiBoxMonitor.ocx#version=1,0,0,2"
+    ></object>
+    <object
+      id="IRSocketIOw"
+      width="0"
+      height="0"
+      classid="CLSID:02ae85e0-d6b0-4d0e-a518-9073f9428c16"
+      codebase="./lib/IRSocketIOw.ocx#version=1,0,0,1"
     ></object>
     <!--
       This HTML file is a template.

@@ -13,7 +13,11 @@ import useAuth from 'hooks/useAuth';
 import useVisible from 'hooks/useVisible';
 import useZibox from 'hooks/useZibox';
 
-import { SOCKET_CONNECTION, USER_TYPE } from 'utils/constants';
+import constants, {
+  SOCKET_CONNECTION,
+  USER_TYPE,
+  ZIBOX_TRANSPORT,
+} from 'utils/constants';
 
 const AREA_MAGIN = 27; //상담사 박스 영역 마진
 const BOX_MAGIN = 5; //상담사 박스 마진
@@ -384,7 +388,7 @@ function Monitoring({ location }: MonitoringProps) {
         <StyledTitle>
           <Title
             isSelect
-            isVolume
+            isVolume={constants.TRANSPORT !== ZIBOX_TRANSPORT.OCX}
             selectData={selectData}
             volumeData={volumeData}
           >

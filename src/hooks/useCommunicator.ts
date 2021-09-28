@@ -3,8 +3,8 @@ import { useDispatch } from 'react-redux';
 
 import Communicator from 'lib/communicator';
 import MQTT from 'lib/mqtt';
-import OCX from 'lib/ocx';
 import Player from 'lib/player';
+import Socket from 'lib/socket';
 import {
   setServerTime,
   setSocketStatus,
@@ -19,6 +19,7 @@ import {
   changeConsultantStatus,
   changeAllResetStatus,
   changePhoneStatus,
+  requestZiboxVolume,
 } from 'modules/actions/user';
 import { ResponseType } from 'types/common';
 import {
@@ -38,6 +39,9 @@ import {
   RESPONSE_STATUS_V2,
 } from 'utils/constants';
 import Logger from 'utils/log';
+import SocketOCX from 'lib/socketOCX';
+import MonitorOcx from 'lib/monitorOCX';
+import _ from 'lodash';
 
 function useCommunicator() {
   const dispatch = useDispatch();
@@ -161,17 +165,75 @@ function useCommunicator() {
     [dispatch],
   );
 
+  const beforeUnloadEvent = useCallback(() => {
+    const zibox = Communicator.getInstance().getZiboxInstance();
+
+    window.addEventListener('beforeunload', function (event) {
+      if (zibox instanceof MQTT) {
+        const targetData = zibox.getTargetData();
+        if (targetData.id > -1) {
+          Communicator.getInstance().disconnectAll();
+        }
+      } else {
+        Communicator.getInstance().disconnectAll();
+      }
+    });
+  }, []);
+
   const ziboxEvnetHandler = useCallback(() => {
     const zibox = Communicator.getInstance().getZiboxInstance();
 
-    if (zibox instanceof MQTT) {
-      window.addEventListener('beforeunload', function (event) {
+    if (zibox instanceof MonitorOcx) {
+      zibox.onChangeMonitorEventHandler((status: number, message: string) => {
         const targetData = zibox.getTargetData();
-        if (targetData.id > -1) {
-          zibox.disconnect();
+
+        let data = {};
+
+        switch (status) {
+          case 0:
+            // 감청 종료
+            data = {
+              monitoring_state: ZIBOX_MONIT_STATUS.DISABLE,
+              number: targetData.key,
+              user_id: targetData.id,
+              zibox_ip: targetData.ip,
+            };
+
+            zibox.setInitialTargetData();
+            break;
+          case 1:
+            // 감청 시작
+            data = {
+              monitoring_state: ZIBOX_MONIT_STATUS.ENABLE,
+              number: targetData.key,
+              user_id: targetData.id,
+              zibox_ip: targetData.ip,
+            };
+            break;
+          case 2:
+            // 버퍼링 시작
+            break;
+          case 3:
+            // 버퍼링 종료
+            break;
+          case 4:
+            // 타임아웃
+            alert(`${status}, ${message}`);
+            break;
+          default:
+            break;
+        }
+
+        if (!_.isEmpty(data)) {
+          Communicator.getInstance().emitMessage(
+            SOCKET_EVENT_TYPE.MONITORING,
+            data,
+          );
         }
       });
+    }
 
+    if (zibox instanceof MQTT) {
       zibox.onChangeProtocolEventHandler((data: string) => {
         switch (data) {
           case 'close': {
@@ -187,7 +249,7 @@ function useCommunicator() {
               data,
             );
 
-            zibox.setInitTargetData();
+            zibox.setInitialTargetData();
             break;
           }
           default:
@@ -202,19 +264,25 @@ function useCommunicator() {
           switch (type) {
             case 'connection_info':
               if (data.data === 'connection') {
-                zibox.initialize();
+                zibox.setInitialZiBox();
               }
 
               break;
             case 'vol_info':
               if (data.mic && data.spk) {
-                // const id = zibox.getTargetId();
-                // const param = {
-                //   id,
-                //   ziboxmic: Number(data.mic),
-                //   ziboxspk: Number(data.spk),
-                // };
-                // dispatch(requestZiboxVolume(param));
+                const targetData = zibox.getTargetData();
+
+                if (
+                  targetData.mic !== Number(data.mic) ||
+                  targetData.spk !== Number(data.spk)
+                ) {
+                  const payload = {
+                    number: targetData.key,
+                    ziboxmic: Number(data.mic),
+                    ziboxspk: Number(data.spk),
+                  };
+                  dispatch(requestZiboxVolume(payload));
+                }
               }
               break;
             case 'mon_info':
@@ -263,7 +331,7 @@ function useCommunicator() {
     const socket = Communicator.getInstance().getSocketInstance();
     const zibox = Communicator.getInstance().getZiboxInstance();
 
-    if (zibox instanceof Player) {
+    if (zibox instanceof Player && socket instanceof Socket) {
       socket.onMonitorEventHandler((packet: any) => {
         Communicator.getInstance().play(packet);
       });
@@ -323,16 +391,10 @@ function useCommunicator() {
         }
       });
     }
-
-    window.addEventListener('beforeunload', (e) => {
-      if (socket instanceof OCX) {
-        Communicator.getInstance().disconnectAll();
-      }
-    });
   }, [dispatch]);
 
   return {
-    registerEventHandler,
+    beforeUnloadEvent,
     setChangedStatus,
     setServerData,
     ziboxEvnetHandler,

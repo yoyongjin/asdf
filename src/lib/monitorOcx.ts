@@ -1,112 +1,78 @@
-import { ziboxPort } from 'utils/constants';
+import { ExternalObject, OCXTappingOption } from 'types/zibox';
+import constants from 'utils/constants';
+import Logger from 'utils/log';
 
-class MonitorOcx {
-  private address?: string;
-  private socket!: any;
-  private number?: string;
-  private user?: number;
-  private static instance: MonitorOcx;
+class MonitorOcx implements ExternalObject {
+  private static _port: number = constants.ZIBOX_MONIT_OCX_PORT;
+  private static _mode: number = constants.ZIBOX_MONIT_OCX_MODE;
+  private _ocx: any;
+  private id: number = -1;
+  private ip: string = '';
+  private number: string = '';
 
-  constructor() {
-    if (MonitorOcx.instance) return MonitorOcx.instance;
-    else MonitorOcx.instance = this;
+  /**
+   * @description 객체 생성하기
+   */
+  create() {
+    Logger.log('[MORNITOR OCX] Create Monitor OCX');
+
+    this._ocx = (window as any).ZiBoxMonitor;
+
+    return true;
   }
 
-  static getInstance(): MonitorOcx {
-    if (!MonitorOcx.instance) {
-      MonitorOcx.instance = new MonitorOcx();
-    }
+  /**
+   * @description 감청 대상 정보
+   */
+  getTargetData() {
+    Logger.log('[MORNITOR OCX] Get Target Data');
 
-    return MonitorOcx.instance;
-  }
-
-  url(address: string): Promise<unknown> {
-    return new Promise((resolve, reject) => {
-      if (!address) return this;
-
-      this.address = address;
-      this.socket = (window as any).ZiBoxMonitor;
-      resolve(this);
-    });
-  }
-
-  getNumber(): string {
-    return this.number!;
-  }
-
-  connect(key: number): MonitorOcx {
-    console.log('Create Socket');
-    setTimeout(() => {
-      try {
-        this.socket.SocketCreate(this.address, key);
-      } catch (error) {
-        console.log('ZiboxMonitor Create Socket ERROR');
-        console.log(error);
-      }
-    }, 1000);
-
-    return this;
-  }
-
-  disconnect() {
-    console.log('Disconnect Socket');
-    try {
-      this.socket.SocketClose();
-      this.socket = null;
-      this.number = '';
-      this.user = 0;
-    } catch (error) {
-      console.log('ZiboxMonitor Disconnect Socket ERROR');
-      console.log(error);
-    }
-
-    return this.number;
-  }
-
-  onMessageConnect(callback: (parameters: number) => void) {
-    console.log('Register Connect Event');
-    this.socket.DevConnect = (message: string) => {
-      console.log('@@@@@ DevConnect Event Response @@@@@');
-      console.log(message);
-      /**
-       * -3 서버를 찾을 수 없음
-       * -2 비정상 종료
-       * -1 사용자 종료
-       * 0  연결 실패
-       * 1  연결 성공
-       */
-      callback(Number(message));
+    return {
+      id: this.id,
+      key: this.number,
+      ip: this.ip,
     };
   }
 
-  onMessageStatus(callback: (parameter: string) => void) {
-    console.log('Register Status Event');
-    this.socket.DevPeerStatus = (message: string) => {
-      console.log('@@@@@ DevPeerStatus Event Response @@@@@');
-      console.log(message);
+  /**
+   * @description 감청 대상 초기화
+   */
+  setInitialTargetData() {
+    Logger.log('[MORNITOR OCX] Set Initial Target Data');
 
-      const data = JSON.parse(message);
-      const { status } = data;
-
-      if (status === 'Y') {
-        callback(data);
-      } else {
-        callback('Type ERROR');
-      }
-    };
+    this.id = -1;
+    this.ip = '';
+    this.number = '';
   }
 
-  onMessageMonitorStatus(
-    callback: (parameter: {
-      status: number;
-      number: string;
-      user_id: number;
-    }) => void,
+  /**
+   * @description 감청 시작하기
+   * @param options 감청 옵션
+   */
+  startTapping(options: OCXTappingOption) {
+    Logger.log('[MORNITOR OCX] Start Monitoring');
+
+    this.ip = options.ip;
+    this.id = options.target_id;
+    this.number = options.key;
+
+    this._ocx.StartMonitor(options.ip, MonitorOcx._port, MonitorOcx._mode);
+  }
+
+  /**
+   * @description 감청 종료하기
+   */
+  stopTapping() {
+    Logger.log('[MORNITOR OCX] Stop Monitoring');
+
+    this._ocx.StopMonitor();
+  }
+
+  onChangeMonitorEventHandler(
+    callback: (status: number, message: string) => void,
   ) {
-    console.log('Register Monit Status Event');
-    this.socket.DevMonitorStatus = (status: string, message: string) => {
-      console.log('@@@@@ DevMonitorStatus Event Response @@@@@');
-      console.log(status, message);
+    this._ocx.DevMonitorStatus = (status: number, message: string) => {
+      Logger.log('[MORNITOR OCX] Stop Monitoring', status, message);
       /**
        * 0 감청 종료
        * 1 감청 시작
@@ -114,40 +80,8 @@ class MonitorOcx {
        * 3 버퍼링 종료
        * 4 타임아웃
        */
-
-      callback({
-        status: Number(status),
-        number: this.number!,
-        user_id: Number(status) === 1 ? this.user! : 0,
-      });
+      callback(status, message);
     };
-  }
-
-  startMonitor(
-    ip: string,
-    number: string,
-    userId: number,
-    port: number = Number(ziboxPort),
-    mode = 1,
-  ) {
-    console.log('Start Monitoring');
-    console.log(
-      `ip: ${ip}`,
-      `port: ${port}`,
-      `mode: ${mode}`,
-      `number: ${number}`,
-      `user id: ${userId}`,
-    );
-    this.socket.StartMonitor(ip, port, mode);
-    this.number = number;
-    this.user = userId;
-  }
-
-  stopMonitor() {
-    console.log('Stop Monitoring');
-    if (this.number) {
-      this.socket.stopMonitor();
-    }
   }
 }
 

@@ -40,7 +40,7 @@ function useZibox() {
       options?: MQTTConnectOption | OCXTappingOption | PacketTappingOption,
     ) => {
       try {
-        await Communicator.getInstance().startTappingZibox(options!);
+        await Communicator.getInstance().startTappingZibox(options);
       } catch (error) {
         console.log(error);
       }

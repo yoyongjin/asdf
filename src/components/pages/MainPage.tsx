@@ -15,8 +15,12 @@ import SocketEventHandler from 'lib/socketEventHandler';
 
 function MainPage({ location }: MainPageProps) {
   const { loginInfo, onCheckLogin, onClickLogout } = useAuth();
-  const { setChangedStatus, setServerData, ziboxEvnetHandler } =
-    useCommunicator();
+  const {
+    beforeUnloadEvent,
+    setChangedStatus,
+    setServerData,
+    ziboxEvnetHandler,
+  } = useCommunicator();
 
   const backgroundColor = useMemo(() => {
     if (location.pathname === '/main') {
@@ -34,6 +38,10 @@ function MainPage({ location }: MainPageProps) {
       setServerData(connection, timestamp);
     };
   }, [setServerData]);
+
+  useEffect(() => {
+    beforeUnloadEvent();
+  }, [beforeUnloadEvent]);
 
   useEffect(() => {
     if (loginInfo.id) {

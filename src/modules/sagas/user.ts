@@ -25,9 +25,6 @@ import {
   requestZiboxVolume,
   successZiboxVolume,
   failureZiboxVolume,
-  changeMonitStatus,
-  CHANGE_MONIT_STATUS,
-  setMonitStatus,
   disconnectForce,
   DISCONNECT_FORCE,
 } from 'modules/actions/user';
@@ -64,7 +61,7 @@ function* getUsersProcess(action: ReturnType<typeof requestGetUsers>) {
       yield put(successGetUsers(payload));
 
       if (url === '/main') {
-        Communicator.getInstance().emitMessage('state');
+        Communicator.getInstance().emitMessage('state', '');
       }
 
       return;
@@ -245,41 +242,33 @@ function* resetPasswordProcess(
   }
 }
 
-function* updateZiboxVolumeProcess(
+function* modifyZiboxVolumeProcess(
   action: ReturnType<typeof requestZiboxVolume>,
 ) {
+  const { number, ziboxmic, ziboxspk } = action.payload;
+
   try {
-    const { id, ziboxmic, ziboxspk } = action.payload;
-    const response = yield call(API.updateZiboxVolume, id, ziboxmic, ziboxspk);
-
-    yield put(successZiboxVolume(action.payload));
-  } catch (error) {
-    console.log(error);
-    yield put(failureZiboxVolume(error));
-  }
-}
-
-function* changeMonitProcess(action: ReturnType<typeof changeMonitStatus>) {
-  try {
-    const { number, status, user_id } = action.payload as {
-      status: number;
-      number: string;
-      user_id: number;
-    };
-
-    const response = yield call(
-      API.changeStatus,
-      'zibox',
+    const response: ResponseSuccessData | ResponseFailureData = yield call(
+      ZMSUser.modifyZiBoxVolume,
       number,
-      'monitoring_status',
-      status,
-      user_id,
+      ziboxmic,
+      ziboxspk,
     );
 
-    console.log(JSON.stringify(response));
-    yield put(setMonitStatus(status));
+    if (response.status === API_FETCH.SUCCESS) {
+      const { data } = response as ResponseSuccessData;
+
+      yield put(successZiboxVolume());
+
+      return;
+    }
+
+    const { error_msg } = response as ResponseFailureData;
+    yield put(failureZiboxVolume(error_msg));
+
+    alert(error_msg);
   } catch (error) {
-    console.log(error);
+    yield put(failureZiboxVolume(error.message));
   }
 }
 
@@ -321,12 +310,8 @@ function* watchResetPassword() {
   yield takeLatest(REQUEST_RESET_PASSWORD, resetPasswordProcess);
 }
 
-function* watchUpdateZiboxVolume() {
-  yield takeLatest(REQUEST_ZIBOX_VOLUME, updateZiboxVolumeProcess);
-}
-
-function* watchChangeMonit() {
-  yield takeLatest(CHANGE_MONIT_STATUS, changeMonitProcess);
+function* watchModifyZiboxVolume() {
+  yield takeLatest(REQUEST_ZIBOX_VOLUME, modifyZiboxVolumeProcess);
 }
 
 function* watchDisconnectForce() {
@@ -340,8 +325,7 @@ function* userSaga() {
     fork(watchModifyUser),
     fork(watchRemoveUser),
     fork(watchResetPassword),
-    fork(watchUpdateZiboxVolume),
-    fork(watchChangeMonit),
+    fork(watchModifyZiboxVolume),
     fork(watchDisconnectForce),
   ]);
 }

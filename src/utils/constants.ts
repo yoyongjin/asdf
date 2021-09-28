@@ -1,9 +1,5 @@
 export const apiServer = process.env.REACT_APP_API_SERVER;
-export const socketServer = process.env.REACT_APP_SOCKET_SERVER;
 export const celeringServer = process.env.REACT_APP_CELERING_SERVER;
-export const ziboxPort = process.env.REACT_APP_ZIBOX_PORT;
-export const LIMIT = 30;
-export const PAGE = 1;
 
 export const ZIBOX_TYPE = {
   ZIBOX_CONNECTION: '연결',
@@ -15,9 +11,6 @@ export const ZIBOX_TYPE = {
   RECORD_START: '녹취 시작',
   RECORD_STOP: '녹취 종료',
   RECORD_ERROR: '녹취 오류',
-  MONIT_START: '감청 시작',
-  MONIT_STOP: '감청 종료',
-  MONIT_ERROR: '감청 오류',
 };
 
 export const PHONE_TYPE = {
@@ -123,6 +116,11 @@ export enum ZIBOX_EVENT_TYPE {
   MONITORING_INFO = 'mon_info',
 }
 
+export enum ZIBOX_VERSION {
+  ZIBOX = 'zibox',
+  ZIBOX2 = 'zibox2',
+}
+
 export const REG_EXR = {
   ip: /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
   mac: /([0-9a-fA-F]{2}-){5}[0-9a-fA-F]{2}/,
@@ -137,10 +135,12 @@ export default {
   SOCKET_SERVER: process.env.REACT_APP_SOCKET_SERVER,
   CELERING_SERVER: process.env.REACT_APP_CELERING_SERVER,
   COMPANY: process.env.REACT_APP_COMPANY,
-  ZIBOX_PORT: process.env.REACT_APP_ZIBOX_PORT,
   TRANSPORT: process.env.REACT_APP_MODE,
   ZIBOX_SERVER: process.env.REACT_APP_ZIBOX_SERVER,
+  ZIBOX_VERSION: process.env.REACT_APP_ZIBOX_VERSION,
   LIMIT: 30,
   PAGE: 1,
   COOKIE_NAME: '4d751c5adb209285c49f2140e1cfb01c',
+  ZIBOX_MONIT_OCX_PORT: 50014,
+  ZIBOX_MONIT_OCX_MODE: 3,
 };

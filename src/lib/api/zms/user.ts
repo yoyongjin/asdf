@@ -244,6 +244,37 @@ class User {
       throw new Error(error);
     }
   }
+
+  static async modifyZiBoxVolume(number: string, mic: number, spk: number) {
+    try {
+      const token = Main.getAccessToken();
+
+      const params = {
+        number,
+        ziboxmic: mic,
+        ziboxspk: spk,
+      };
+
+      const { data } = await APIManager.patch(
+        url.zms.api.path.modify_zibox_volume,
+        params,
+        {
+          token,
+        },
+      );
+      Logger.log('Modify ZiBox Volume', JSON.stringify(data));
+
+      return data;
+    } catch (error) {
+      if (error.response?.data) {
+        Logger.log(JSON.stringify(error.response.data));
+
+        return error.response.data;
+      }
+
+      throw new Error(error);
+    }
+  }
 }
 
 export default User;

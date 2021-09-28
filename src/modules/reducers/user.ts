@@ -30,6 +30,10 @@ const initialState: UserState = {
       fetch: false,
       error: '',
     },
+    modifyZiBoxVolume: {
+      fetch: false,
+      error: '',
+    },
   },
   user: [],
   consultant: [],
@@ -154,6 +158,24 @@ const userReducer = createReducer<UserState, UserAction>(initialState, {
     return produce(state, (draft) => {
       draft.request.resetPassword.fetch = false;
       draft.request.resetPassword.error = action.payload;
+    });
+  },
+  [types.REQUEST_ZIBOX_VOLUME]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.request.modifyZiBoxVolume.fetch = false;
+      draft.request.modifyZiBoxVolume.error = '';
+    });
+  },
+  [types.SUCCESS_ZIBOX_VOLUME]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.request.modifyZiBoxVolume.fetch = false;
+      draft.request.modifyZiBoxVolume.error = '';
+    });
+  },
+  [types.FAILURE_ZIBOX_VOLUME]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.request.modifyZiBoxVolume.fetch = false;
+      draft.request.modifyZiBoxVolume.error = action.payload;
     });
   },
   [types.SET_USER_STATUS]: (state, action) => {

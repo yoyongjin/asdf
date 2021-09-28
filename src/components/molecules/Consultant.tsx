@@ -8,7 +8,7 @@ import Communicator from 'lib/communicator';
 import { LoginData, TappingTarget } from 'types/auth';
 import { UserData } from 'types/user';
 import { Colors } from 'utils/color';
-import {
+import constants, {
   CALL_STATUS_V2,
   CONSULTANT_STATUS,
   ZIBOX_TRANSPORT,
@@ -95,7 +95,7 @@ function Consultant({
       consultInfo.zibox?.monit_user === loginData.id
     ) {
       // 감청하고 있는 상담원이 통화 종료 했을 때 감청 종료 명령 날려주는 부분
-      const mode = Communicator.getInstance().getMode();
+      const mode = constants.TRANSPORT;
 
       if (mode === ZIBOX_TRANSPORT.SERVER) {
         requestTapping(
@@ -168,10 +168,12 @@ function Consultant({
         consultInfo.number!,
         loginData.id,
         consultInfo.zibox?.monit_user === -1 ? 1 : 0,
-        consultInfo.zibox_ip!,
+        constants.TRANSPORT === ZIBOX_TRANSPORT.OCX
+          ? consultInfo.pc_ip!
+          : consultInfo.zibox_ip!,
       );
 
-      const mode = Communicator.getInstance().getMode();
+      const mode = constants.TRANSPORT;
 
       if (consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.ENABLE) {
         if (consultInfo.zibox.monit_user !== loginData.id) {
@@ -199,8 +201,9 @@ function Consultant({
         startTapping(options);
       } else if (mode === ZIBOX_TRANSPORT.OCX) {
         const options = {
-          mode: 1,
-          ip: consultInfo.zibox?.pc_ip!,
+          ip: consultInfo.pc_ip!,
+          target_id: loginData.id!,
+          key: consultInfo.number!,
         };
 
         startTapping(options);
@@ -215,6 +218,7 @@ function Consultant({
     },
     [
       consultInfo.number,
+      consultInfo.pc_ip,
       consultInfo.zibox,
       consultInfo.zibox_ip,
       consultInfo.zibox_mic,

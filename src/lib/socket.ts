@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 
 import SocketEventHandler from 'lib/socketEventHandler';
 import { ResponseType } from 'types/common';
-import { ConnectOption, Socket as WebSocket } from 'types/socket';
+import { Socket as WebSocket, SocketConnectOption } from 'types/socket';
 import { SOCKET_EVENT_TYPE, SOCKET_RESPONSE_STATUS } from 'utils/constants';
 import Logger from 'utils/log';
 
@@ -29,21 +29,22 @@ class Socket implements WebSocket {
    * @description 연결하기
    * @param options 연결 옵션
    */
-  connect(options: ConnectOption): Socket {
+  connect(options: SocketConnectOption): Socket {
     Logger.log('[WEB SOCKET] Connect', options);
-    if (!options.url) return this;
 
     this.key = options.key;
-
     this.socket = io.connect(options.url, {
       transports: ['websocket'],
     });
 
-    this.socketEventHandler();
+    this._socketEventHandler();
 
     return this;
   }
 
+  /**
+   * @description 연결끊기
+   */
   disconnect() {
     if (this.socket) {
       this.socket.close();
@@ -55,21 +56,25 @@ class Socket implements WebSocket {
    * @param name 이벤트명
    * @param data 전송 데이터
    */
-  onEmit(name: string, data?: any) {
-    try {
-      Logger.log(`[WEB SOCKET] Emit Message ${name}`, data);
-      this.socket?.emit(name, data!);
-    } catch (error) {
-      Logger.log(error);
-    }
+  emit(name: string, data: any) {
+    Logger.log(`[WEB SOCKET] Emit Message ${name}`, data);
+    this.socket?.emit(name, data!);
   }
 
-  socketEventHandler() {
+  onMonitorEventHandler(callback: (packet: any) => void) {
+    this.socket?.on(SOCKET_EVENT_TYPE.MONITORING, (message: string) => {
+      Logger.log(`[WEB SOCKET] ${SOCKET_EVENT_TYPE.MONITORING}`, message);
+
+      callback(message);
+    });
+  }
+
+  private _socketEventHandler() {
     this.socket?.on('connect', (message: string) => {
       // 연결 성공 시
       Logger.log(`[WEB SOCKET] connect event`, message);
 
-      this.onEmit('initialize', {
+      this.emit('initialize', {
         user_id: this.key,
       });
     });
@@ -147,21 +152,6 @@ class Socket implements WebSocket {
 
     this.socket?.io.on('reconnect_failed', (message: string) => {
       Logger.log('[WEB SOCKET] reconnect_failed event', message);
-    });
-  }
-
-  onMonitorEventHandler(callback: (packet: any) => void) {
-    this.socket?.on(SOCKET_EVENT_TYPE.MONITORING, (message: string) => {
-      Logger.log(`[WEB SOCKET] ${SOCKET_EVENT_TYPE.MONITORING}`, message);
-
-      callback(message);
-      // const data = JSON.parse(message);
-      // const { status } = data;
-      // if (status === 'Y') {
-      //   callback(data);
-      // } else {
-      //   callback('error');
-      // }
     });
   }
 }

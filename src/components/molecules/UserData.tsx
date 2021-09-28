@@ -16,7 +16,6 @@ import useInputForm from 'hooks/useInputForm';
 import useOrganization from 'hooks/useOrganization';
 import { OnClickAddUser, OnClickModifyUser } from 'hooks/useUser';
 import { OnClickVisible } from 'hooks/useVisible';
-import Communicator from 'lib/communicator';
 import { LoginData } from 'types/auth';
 import { UserData as UserDataV2 } from 'types/user';
 import { Colors } from 'utils/color';
@@ -25,6 +24,7 @@ import constants, {
   REG_EXR,
   USER_TYPE,
   ZIBOX_TRANSPORT,
+  ZIBOX_VERSION,
 } from 'utils/constants';
 import Utils from 'utils/new_utils';
 
@@ -96,7 +96,8 @@ const defaultInputData = [
   { id: 2, name: 'number', value: '전화번호' },
   { id: 3, name: 'zibox_ip', value: 'ZiBox IP' },
   { id: 4, name: 'zibox_mac', value: 'ZiBox MAC' },
-  { id: 5, name: 'available_time', value: '업무시간' },
+  { id: 5, name: 'pc_ip', value: 'PC IP' },
+  { id: 6, name: 'available_time', value: '업무시간' },
 ];
 
 const defaultRangeData = [
@@ -127,6 +128,7 @@ function UserData({
       name: userData?.name ? userData!.name : '',
       id: userData?.user_name ? userData!.user_name : '',
       number: userData?.number ? userData!.number : '',
+      pc_ip: userData?.pc_ip ? userData!.pc_ip : '',
       zibox_ip: userData?.zibox_ip ? userData!.zibox_ip : '',
       zibox_mac: userData?.zibox_mac ? userData!.zibox_mac : '',
       zibox_mic: userData?.zibox_mic ? userData!.zibox_mic : 0,
@@ -417,6 +419,7 @@ function UserData({
               {defaultSelectData.map((data, index) => {
                 return (
                   <TextSelect
+                    key={`text-select-${data.name}`}
                     selectDisabled={
                       data.name === 'branch'
                         ? loginData.admin_id === USER_TYPE.SUPER_ADMIN ||
@@ -470,23 +473,38 @@ function UserData({
           {
             <>
               {defaultInputData.map((data, index) => {
-                if (data.id === 5) return null;
+                if (data.id === 6) return null;
+
+                if (constants.TRANSPORT === ZIBOX_TRANSPORT.OCX) {
+                  if (constants.ZIBOX_VERSION === ZIBOX_VERSION.ZIBOX2) {
+                    if (data.name === 'zibox_ip' || data.name === 'zibox_mac') {
+                      return null;
+                    }
+                  }
+                } else {
+                  if (data.name === 'pc_ip') {
+                    return null;
+                  }
+                }
+
                 return (
                   <TextInput
+                    key={`text-input-${data.name}`}
                     inputCustomStyle="float:right;"
                     inputDisabled={
                       loginData.admin_id === USER_TYPE.CONSULTANT
                         ? true
                         : data.name === 'name'
                         ? false
+                        : data.name === 'pc_ip'
+                        ? true
                         : data.name === 'zibox_ip'
-                        ? Communicator.getInstance().getMode() ===
-                          ZIBOX_TRANSPORT.SERVER
+                        ? constants.TRANSPORT === ZIBOX_TRANSPORT.SERVER ||
+                          constants.TRANSPORT === ZIBOX_TRANSPORT.OCX
                           ? true
                           : false
                         : data.name === 'zibox_mac'
-                        ? Communicator.getInstance().getMode() ===
-                          ZIBOX_TRANSPORT.SERVER
+                        ? constants.TRANSPORT === ZIBOX_TRANSPORT.SERVER
                           ? false
                           : true
                         : data.name === 'id'
@@ -500,6 +518,8 @@ function UserData({
                       data.name === 'number'
                         ? 13
                         : data.name === 'zibox_ip'
+                        ? 15
+                        : data.name === 'pc_ip'
                         ? 15
                         : data.name === 'zibox_mac'
                         ? 17
@@ -519,10 +539,14 @@ function UserData({
                         ? form.zibox_ip
                         : data.name === 'zibox_mac'
                         ? Utils.formatMacAddress(form.zibox_mac)
+                        : data.name === 'pc_ip'
+                        ? form.pc_ip
                         : ''
                     }
                     inputWidth={
-                      data.name === 'zibox_ip' || data.name === 'zibox_mac'
+                      data.name === 'zibox_ip' ||
+                      data.name === 'zibox_mac' ||
+                      data.name === 'pc_ip'
                         ? 18.8
                         : 10.8
                     }
@@ -536,15 +560,20 @@ function UserData({
           {
             <>
               {defaultRangeData.map((data, index) => {
+                if (constants.TRANSPORT === ZIBOX_TRANSPORT.OCX) {
+                  if (data.name === 'zibox_mic' || data.name === 'zibox_spk') {
+                    return null;
+                  }
+                }
                 return (
                   <TextRange
+                    key={`text-range-${data.name}`}
                     isPaddingBottom
                     rangeDisable={
                       loginData.admin_id === USER_TYPE.CONSULTANT
                         ? true
                         : data.name === 'zibox_mic'
-                        ? Communicator.getInstance().getMode() ===
-                          ZIBOX_TRANSPORT.MQTT
+                        ? constants.TRANSPORT === ZIBOX_TRANSPORT.MQTT
                           ? _.isEmpty(userData)
                             ? true
                             : false
@@ -570,24 +599,31 @@ function UserData({
           {loginData.admin_id === USER_TYPE.SUPER_ADMIN && (
             <>
               <TextInput
+                key={`text-input-${defaultInputData[6].name}`}
                 inputCustomStyle="float:right;"
                 inputDisabled={
                   _.isEmpty(userData) || form.admin !== USER_TYPE.CONSULTANT
                 }
                 inputHeight={2.6}
                 inputMaxLength={11}
-                inputName={defaultInputData[5].name}
+                inputPlaceHolder="00:00-00:00"
+                inputName={defaultInputData[6].name}
                 inputOnChange={onChangeInput}
                 inputSize={13}
                 inputValue={form.available_time}
                 inputWidth={10.8}
                 textSize={13}
-                textValue={defaultInputData[5].value}
+                textValue={defaultInputData[6].value}
               />
               {defaultTextAreaData.map((data, index) => {
                 return (
                   <TextTextArea
-                    isRightFloat={data.name === 'out_message'}
+                    key={`text-text-area-${data.name}`}
+                    isRightFloat={
+                      constants.TRANSPORT === ZIBOX_TRANSPORT.OCX
+                        ? true
+                        : data.name === 'out_message'
+                    }
                     textareaCustomStyle="float:right"
                     textareaDisabled={
                       _.isEmpty(userData) || form.admin !== USER_TYPE.CONSULTANT
@@ -595,6 +631,7 @@ function UserData({
                     textareaHeight={40}
                     textareaName={data.name}
                     textareaOnChange={onChangeTextArea}
+                    textareaPlaceHolder="'---'는 상담원 이름으로 치환됩니다."
                     textareaSize={13}
                     textareaValue={
                       data.name === 'in_message'

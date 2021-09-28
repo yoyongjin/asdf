@@ -16,6 +16,7 @@ import {
   RequestGetUsers,
   RequestRemoveUser,
   RequestResetPassword,
+  RequestZiBoxVolume,
 } from 'types/user';
 
 // 유저 정보 가져오기
@@ -44,6 +45,7 @@ export const REQUEST_RESET_PASSWORD = 'REQUEST_RESET_PASSWORD';
 export const SUCCESS_RESET_PASSWORD = 'SUCCESS_RESET_PASSWORD';
 export const FAILURE_RESET_PASSWORD = 'FAILURE_RESET_PASSWORD';
 
+// 지박스 볼륨 변경
 export const REQUEST_ZIBOX_VOLUME = 'REQUEST_ZIBOX_VOLUME';
 export const SUCCESS_ZIBOX_VOLUME = 'SUCCESS_ZIBOX_VOLUME';
 export const FAILURE_ZIBOX_VOLUME = 'FAILURE_ZIBOX_VOLUME';
@@ -114,16 +116,9 @@ export const failureResetPassword = createAction(
 )<string>();
 
 // 지박스 볼륨 변경하기
-export const requestZiboxVolume = createAction(REQUEST_ZIBOX_VOLUME)<{
-  id: number;
-  ziboxmic: number;
-  ziboxspk: number;
-}>();
-export const successZiboxVolume = createAction(SUCCESS_ZIBOX_VOLUME)<{
-  id: number;
-  ziboxmic: number;
-  ziboxspk: number;
-}>();
+export const requestZiboxVolume =
+  createAction(REQUEST_ZIBOX_VOLUME)<RequestZiBoxVolume>();
+export const successZiboxVolume = createAction(SUCCESS_ZIBOX_VOLUME)();
 export const failureZiboxVolume = createAction(FAILURE_ZIBOX_VOLUME)<string>();
 
 // 실시간 상태 변경하기

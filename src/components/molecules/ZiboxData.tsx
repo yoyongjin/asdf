@@ -71,22 +71,6 @@ function ZiboxData({ data }: ZiboxDataProps) {
     }
   }, [data]);
 
-  const getZiBoxMonitoringStatus = useCallback(() => {
-    switch (data?.monitoring) {
-      case -1:
-        // 감청 에러
-        return ZIBOX_TYPE.MONIT_ERROR;
-      case 0:
-        // 감청 종료
-        return ZIBOX_TYPE.MONIT_STOP;
-      case 1:
-        // 감청 시작
-        return ZIBOX_TYPE.MONIT_START;
-      default:
-        return '';
-    }
-  }, [data]);
-
   return (
     <StyledWrapper>
       <StyledTitle>
