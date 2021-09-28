@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { darken } from 'polished';
+import { darken, lighten } from 'polished';
 
 import { Colors } from 'utils/color';
 
@@ -48,7 +48,14 @@ const StyledTextArea = styled.textarea<StyledTextAreaProps>`
   }
   ::placeholder {
     /* Display */
-    color: ${(props) => props.phColor};
+    color: ${(props) => {
+      if (props.phColor) {
+        return props.phColor;
+      }
+
+      return lighten(0.25, props.fontColor);
+    }};
+    font-weight: 400;
   }
 
   ${(props) => props.customStyle};
