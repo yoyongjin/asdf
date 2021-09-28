@@ -5,12 +5,11 @@ import MainRouter from 'MainRouter';
 
 const StyledWrapper = styled.div`
   /* Display */
-  display: flex;
   height: 100vh;
-  justify-content: center;
   max-width: 200rem;
   min-width: 80rem;
   width: 100vw;
+  text-align: center;
 
   /* Color */
   background-color: ${(props) => props.theme.color.login};
@@ -21,8 +20,6 @@ const StyledContent = styled.div`
   align-items: center;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  width: 80rem;
 `;
 
 const StyledMainImage = styled.div`
@@ -34,12 +31,16 @@ const StyledLoginForm = styled.div`
   /* Position */
   position: absolute;
   top: 380px;
+  left: 50%;
+  transform: translate(-50%, -50%);
 `;
 
 const StyledSubLogo = styled.div`
   /* Position */
   position: absolute;
   top: 634px;
+  left: 50%;
+  transform: translate(-50%, -50%);
 `;
 
 function LoginTemplate({ mainLogo, subLogo }: LoginTemplateProps) {
