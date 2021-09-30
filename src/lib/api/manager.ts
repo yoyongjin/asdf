@@ -9,6 +9,12 @@ class API {
     withCredentials: true,
   });
 
+  private static relayApi = axios.create({
+    baseURL: url.relay.api.host,
+    timeout: 5000,
+    withCredentials: true,
+  });
+
   /**
    * @description GET 요청
    * @param endpoint path
@@ -112,6 +118,8 @@ class API {
     switch (type) {
       case 'zms':
         return this.zmsApi;
+      case 'relay':
+        return this.relayApi;
       default:
         return null;
     }

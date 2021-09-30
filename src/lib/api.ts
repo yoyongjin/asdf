@@ -12,9 +12,9 @@ export const instance = axios.create({
  * @description 헤더 설정
  * @param token 토큰
  */
-export const setHeader = (token: string) => {
-  instance.defaults.headers.common['token'] = token;
-};
+// export const setHeader = (token: string) => {
+//   instance.defaults.headers.common['token'] = token;
+// };
 
 /**
  * @description 로그인
@@ -152,22 +152,22 @@ export const setHeader = (token: string) => {
 //     ziboxspk: spk,
 //   });
 
-export const changeStatus = (
-  route: string,
-  number: string,
-  type: string,
-  status?: number,
-  userId?: number,
-) =>
-  instance.post(`api/state/${route}`, {
-    number,
-    type,
-    status,
-    user_id: userId,
-  });
+// export const changeStatus = (
+//   route: string,
+//   number: string,
+//   type: string,
+//   status?: number,
+//   userId?: number,
+// ) =>
+//   instance.post(`api/state/${route}`, {
+//     number,
+//     type,
+//     status,
+//     user_id: userId,
+//   });
 
-export const disconnectForce = (number: string) => {
-  return axios.post(`${celeringServer}/v1/auth/logout`, {
-    number,
-  });
-};
+// export const disconnectForce = (number: string) => {
+//   return axios.post(`${celeringServer}/v1/auth/logout`, {
+//     number,
+//   });
+// };

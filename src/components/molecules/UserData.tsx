@@ -14,7 +14,11 @@ import {
 } from 'components/molecules';
 import useInputForm from 'hooks/useInputForm';
 import useOrganization from 'hooks/useOrganization';
-import { OnClickAddUser, OnClickModifyUser } from 'hooks/useUser';
+import {
+  OnClickAddUser,
+  OnClickDisconnect,
+  OnClickModifyUser,
+} from 'hooks/useUser';
 import { OnClickVisible } from 'hooks/useVisible';
 import { LoginData } from 'types/auth';
 import { UserData as UserDataV2 } from 'types/user';
@@ -116,6 +120,7 @@ function UserData({
   loginData,
   isVisible,
   onClickAddUser,
+  onClickDisconnect,
   onClickModifyUser,
   onClickVisible,
   userData,
@@ -657,7 +662,6 @@ function UserData({
                   <ZiboxData data={userData.zibox!} />
                 </StyledZibox>
               ) : null}
-
               {userData.phone ? (
                 <StyledPhone>
                   <PhoneData data={userData.phone!} />
@@ -668,6 +672,26 @@ function UserData({
         ) : null}
       </StyledContent>
       <StyledFooter>
+        {userData && userData.admin_id === USER_TYPE.CONSULTANT ? (
+          <Button
+            width={10}
+            height={2.6}
+            bgColor={Colors.red}
+            onClick={() => {
+              onClickDisconnect(userData?.number!);
+            }}
+            customStyle="float:left;"
+          >
+            <Text
+              fontColor={Colors.white}
+              fontFamily="NanumBarunGothic"
+              fontSize={14}
+              fontWeight={700}
+            >
+              연결 끊기
+            </Text>
+          </Button>
+        ) : null}
         {loginData.admin_id === USER_TYPE.CONSULTANT ? null : (
           <Button
             bgColor={
@@ -721,6 +745,7 @@ interface UserDataProps {
   loginData: LoginData;
   isVisible?: boolean;
   userData?: UserDataV2;
+  onClickDisconnect: OnClickDisconnect;
   onClickVisible: OnClickVisible;
   onClickAddUser?: OnClickAddUser;
   onClickModifyUser?: OnClickModifyUser;

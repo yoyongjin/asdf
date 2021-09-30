@@ -155,9 +155,6 @@ function useUser() {
     [dispatch],
   );
 
-  /**
-   * @deprecated
-   */
   const onClickDisconnect = useCallback(
     (number: string) => {
       const payload = {
@@ -221,5 +218,7 @@ export type OnClickRemoveUser = (
 ) => void;
 
 export type OnClickResetPassword = (id: number) => void;
+
+export type OnClickDisconnect = (number: string) => void;
 
 export default useUser;

@@ -74,7 +74,8 @@ function Monitoring({ location }: MonitoringProps) {
     changeTappingStatus,
     tappingTarget,
   } = useMonitoring();
-  const { consultantInfo, getUsers, onClickModifyUser } = useUser();
+  const { consultantInfo, getUsers, onClickDisconnect, onClickModifyUser } =
+    useUser();
   const { visible, onClickVisible } = useVisible();
   const { requestTapping, startTapping, stopTapping, setVolume } = useZibox();
 
@@ -294,7 +295,6 @@ function Monitoring({ location }: MonitoringProps) {
   useEffect(() => {
     if (socketConnection !== SOCKET_CONNECTION.SUCCESS) return;
 
-    console.log(loginInfo.admin_id);
     if (
       loginInfo.admin_id === USER_TYPE.SUPER_ADMIN ||
       loginInfo.admin_id === USER_TYPE.ADMIN
@@ -419,6 +419,7 @@ function Monitoring({ location }: MonitoringProps) {
           <UserData
             loginData={loginInfo}
             isVisible={visible}
+            onClickDisconnect={onClickDisconnect}
             onClickModifyUser={onClickModifyUser}
             onClickVisible={onClickVisible}
             userData={selectedConsultant}

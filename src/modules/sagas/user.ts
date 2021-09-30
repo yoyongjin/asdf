@@ -28,8 +28,8 @@ import {
   disconnectForce,
   DISCONNECT_FORCE,
 } from 'modules/actions/user';
-import * as API from 'lib/api';
 import ZMSUser from 'lib/api/zms/user';
+import RelayAuth from 'lib/api/relay/auth';
 import { ResponseFailureData, ResponseSuccessData } from 'types/common';
 import { API_FETCH } from 'utils/constants';
 import Communicator from 'lib/communicator';
@@ -273,21 +273,40 @@ function* modifyZiboxVolumeProcess(
 }
 
 function* disconnectForceProcess(action: ReturnType<typeof disconnectForce>) {
-  try {
-    const { number } = action.payload;
-    console.log(number);
+  const { number } = action.payload;
 
-    const response = yield call(API.disconnectForce, number);
-    const { data } = response;
+  try {
+    const response: ResponseSuccessData | ResponseFailureData = yield call(
+      RelayAuth.disconnect,
+      number,
+    );
+
+    const { data } = response as ResponseSuccessData;
+
+    console.log(data);
 
     if (data.success) {
-      yield call(API.changeStatus, 'reset', number, 'reset_status');
-    } else {
-      alert('연결 끊기 실패');
+      // yield call(API.changeStatus, 'reset', number, 'reset_status');
     }
   } catch (error) {
-    console.log(error);
+    yield put(failureZiboxVolume(error.message));
   }
+
+  // try {
+  //   const { number } = action.payload;
+  //   console.log(number);
+
+  //   const response = yield call(API.disconnectForce, number);
+  //   const { data } = response;
+
+  //   if (data.success) {
+  //     // yield call(API.changeStatus, 'reset', number, 'reset_status');
+  //   } else {
+  //     alert('연결 끊기 실패');
+  //   }
+  // } catch (error) {
+  //   console.log(error);
+  // }
 }
 
 function* watchGetUsers() {

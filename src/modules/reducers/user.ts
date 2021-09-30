@@ -249,24 +249,22 @@ const userReducer = createReducer<UserState, UserAction>(initialState, {
   },
   [types.CHANGE_ALL_RESET_STATUS]: (state, action) => {
     // 모든 상태 초기화
-    Logger.log('CHANGE_ALL_RESET_STATUS', action.payload);
-
-    const { number, consultant, call, phone, zibox } = _.cloneDeep(
-      action.payload,
-    );
+    const resetStatus = _.cloneDeep(action.payload);
+    Logger.log('CHANGE_ALL_RESET_STATUS', resetStatus);
 
     return produce(state, (draft) => {
-      if (draft.realTimeStatus[number]) {
-        draft.realTimeStatus[number].call = call;
-        draft.realTimeStatus[number].consultant = consultant;
-        draft.realTimeStatus[number].phone = phone;
-        draft.realTimeStatus[number].zibox = zibox;
+      if (draft.realTimeStatus[resetStatus.number]) {
+        draft.realTimeStatus[resetStatus.number].call = resetStatus.call;
+        draft.realTimeStatus[resetStatus.number].consultant =
+          resetStatus.consultant;
+        draft.realTimeStatus[resetStatus.number].phone = resetStatus.phone;
+        draft.realTimeStatus[resetStatus.number].zibox = resetStatus.zibox;
       } else {
-        draft.realTimeStatus[number] = {
-          call,
-          consultant,
-          phone,
-          zibox,
+        draft.realTimeStatus[resetStatus.number] = {
+          call: resetStatus.call,
+          consultant: resetStatus.consultant,
+          phone: resetStatus.phone,
+          zibox: resetStatus.zibox,
         };
       }
     });
