@@ -54,6 +54,7 @@ const tableTitles = [
   { title: '이름.', width: 5 },
   { title: '아이디.', width: 15 },
   { title: '전화번호.', width: 15 },
+  { title: 'PC IP.', width: 15 },
   { title: 'ZiBox IP.', width: 15 },
   { title: 'ZiBox Mac.', width: 15 },
   { title: '', width: 10 },
@@ -82,6 +83,7 @@ function UserView({ location }: UserViewProps) {
     getUsers,
     onChangeUserCount,
     onClickAddUser,
+    onClickDisconnect,
     onClickModifyUser,
     onClickRemoveUser,
     onClickResetPassword,
@@ -457,6 +459,7 @@ function UserView({ location }: UserViewProps) {
             loginData={loginInfo}
             isVisible={visible}
             onClickAddUser={onClickAddUser}
+            onClickDisconnect={onClickDisconnect}
             onClickModifyUser={onClickModifyUser}
             onClickVisible={onClickVisible}
             userData={selectedConsultant}

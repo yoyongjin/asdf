@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import { Text } from 'components/atoms';
 import { Colors } from 'utils/color';
+import constants, { ZIBOX_TRANSPORT, ZIBOX_VERSION } from 'utils/constants';
 
 const StyledWrapper = styled.tr`
   /* Display */
@@ -19,6 +20,18 @@ function TableTitle({ titles, fontColor, fontSize }: TableTitleProps) {
   return (
     <StyledWrapper>
       {titles.map((titleData, i) => {
+        if (constants.TRANSPORT === ZIBOX_TRANSPORT.OCX) {
+          if (constants.ZIBOX_VERSION === ZIBOX_VERSION.ZIBOX2) {
+            if (
+              titleData.title === 'ZiBox IP.' ||
+              titleData.title === 'ZiBox Mac.'
+            )
+              return '';
+          }
+        } else {
+          if (titleData.title === 'PC IP.') return '';
+        }
+
         return (
           <StyledTitle key={`styled-title-${i}`} width={titleData.width}>
             <Text

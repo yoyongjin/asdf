@@ -4,9 +4,13 @@ import styled from 'styled-components';
 
 import { Image, Text } from 'components/atoms';
 import { List } from 'components/molecules';
-import { Colors } from 'utils/color';
 import { UserData } from 'types/user';
-import { USER_TYPE } from 'utils/constants';
+import { Colors } from 'utils/color';
+import constants, {
+  USER_TYPE,
+  ZIBOX_TRANSPORT,
+  ZIBOX_VERSION,
+} from 'utils/constants';
 import Utils from 'utils/new_utils';
 
 import optionIcon from 'images/bt-user-modi-nor.png';
@@ -16,7 +20,6 @@ import {
   SetSeletedConsultantData,
   TableContentOption,
 } from 'components/organisms/UserView';
-import { LoginData } from 'types/auth';
 
 const StyledWrapper = styled.td``;
 
@@ -89,6 +92,14 @@ function UserProperty({
           values === 'login_at'
         ) {
           return '';
+        }
+
+        if (constants.TRANSPORT === ZIBOX_TRANSPORT.OCX) {
+          if (constants.ZIBOX_VERSION === ZIBOX_VERSION.ZIBOX2) {
+            if (values === 'zibox_ip' || values === 'zibox_mac') return '';
+          }
+        } else {
+          if (values === 'pc_ip') return '';
         }
 
         return (
