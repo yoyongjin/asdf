@@ -3,9 +3,8 @@ import _ from 'lodash';
 import SocketEventHandler from 'lib/socketEventHandler';
 import { ResponseType } from 'types/common';
 import { Socket, SocketConnectOption } from 'types/socket';
-import { SOCKET_RESPONSE_STATUS } from 'utils/constants';
-import Logger from 'utils/log';
 import { ExternalObject } from 'types/zibox';
+import { SOCKET_RESPONSE_STATUS } from 'utils/constants';
 
 class SocketOCX implements Socket, ExternalObject {
   private _socket: any;
@@ -16,7 +15,7 @@ class SocketOCX implements Socket, ExternalObject {
    * @param options 연결 옵션
    */
   connect(options: SocketConnectOption) {
-    Logger.log('[SOCKET OCX] Socket Connect OCX', JSON.stringify(options));
+    console.log('[SOCKET OCX] Socket Connect OCX', JSON.stringify(options));
 
     this._socket.Connect(options.url);
 
@@ -29,7 +28,7 @@ class SocketOCX implements Socket, ExternalObject {
    * @description 객체 생성하기
    */
   create() {
-    Logger.log('[SOCKET OCX] Create Socket OCX');
+    console.log('[SOCKET OCX] Create Socket OCX');
     this._socket = (window as any).IRSocketIOw;
 
     return true;
@@ -39,7 +38,7 @@ class SocketOCX implements Socket, ExternalObject {
    * @description 소켓 연결 끊기
    */
   disconnect() {
-    Logger.log('[SOCKET OCX] Disconnect OCX');
+    console.log('[SOCKET OCX] Disconnect OCX');
     this._socket.Disconnect();
   }
 
@@ -49,14 +48,14 @@ class SocketOCX implements Socket, ExternalObject {
    * @param data 전송 데이터
    */
   emit(name: string, data: any) {
-    Logger.log(`[SOCKET OCX] Emit Message ${name}`, JSON.stringify(data!));
+    console.log(`[SOCKET OCX] Emit Message ${name}`, JSON.stringify(data!));
     this._socket.Emit(name, JSON.stringify(data!));
   }
 
   private _socketEventHandler() {
     this._socket.OnConnect = (flag: number) => {
       // 연결 성공 시
-      Logger.log(`[SOCKET OCX] connect event`, flag);
+      console.log(`[SOCKET OCX] connect event`, flag);
 
       if (flag === 1) {
         this.emit('initialize', {
@@ -66,7 +65,7 @@ class SocketOCX implements Socket, ExternalObject {
     };
 
     this._socket.OnMessage = (name: string, message: any) => {
-      Logger.log(`[SOCKET OCX] message event`, name, message);
+      console.log(`[SOCKET OCX] message event`, name, JSON.stringify(message));
       const { status, data, type } = JSON.parse(message) as ResponseType;
 
       if (status === SOCKET_RESPONSE_STATUS.YES) {
