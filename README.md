@@ -1,44 +1,38 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# ZMS 웹 클라이언트
 
-## Available Scripts
+## 브랜치 설명
+master : 배포 할 수 있는 버전
 
-In the project directory, you can run:
+develop : 개발
 
-### `npm start`
+release-* : 실제 배포된 버전(*는 해당 업체명)
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## 지박스 버전
+지박스 버전은 현재 zibox, zibox2가 있습니다.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+zibox1은 mqtt / ocx / packet / server 만 가능합니다.
 
-### `npm test`
+zibox2는 ocx 만 가능합니다.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 지박스 통신 방법
+지박스의 통신 방법에는 mqtt / ocx / packet / server 가 있습니다.
 
-### `npm run build`
+mqtt, ocx 방식은 **ZiBox - 서버, 웹 - 클라이언트** 입니다.
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+따라서 해당 웹에서 ZiBox를 ***제어***합니다.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+server 방식은 **ZiBox는 클라이언트이고 서버는 따로 있으며, 웹은 제 3자** 입니다.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+따라서 해당 웹은 제공해주는 기능만 사용할 수 있습니다. (감청)
 
-### `npm run eject`
+packet 방식은 **ZiBox는 서버이고 클라이언트 웹은 따로 있으며, 해당 웹은 제 3자** 입니다.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+따라서 해당 웹은 제공해주는 기능만 사용할 수 있습니다. (감청)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## UI
+현재 UI는 DB life, lina, zms가 있습니다.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+기본 zms 디자인으로 애플리케이션을 출시하며, 현재 **DB생명**만 커스텀된 UI로 출시하였습니다.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+___
+## **2021.11.01 최지환 작성**
