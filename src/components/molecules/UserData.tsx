@@ -205,6 +205,7 @@ function UserData({
       name: string,
       id?: string,
       number?: string,
+      pcip?: string,
       ip?: string,
       mac?: string,
     ) => {
@@ -254,6 +255,12 @@ function UserData({
         }
       }
 
+      if (pcip && !REG_EXR.ip.test(pcip)) {
+        alert('IP주소 형식에 맞게 입력해주세요.');
+
+        return false;
+      }
+
       if (ip && !REG_EXR.ip.test(ip)) {
         alert('IP주소 형식에 맞게 입력해주세요.');
 
@@ -292,6 +299,7 @@ function UserData({
     const id = form.id;
     const number =
       form.admin === USER_TYPE.CONSULTANT ? form.number : undefined;
+    const pcip = form.admin === USER_TYPE.CONSULTANT ? form.pc_ip : undefined;
     const ip = form.admin === USER_TYPE.CONSULTANT ? form.zibox_ip : undefined;
     const mac =
       form.admin === USER_TYPE.CONSULTANT ? form.zibox_mac : undefined;
@@ -313,6 +321,7 @@ function UserData({
       name,
       id,
       number,
+      pcip,
       ip,
       mac,
     );
@@ -331,6 +340,7 @@ function UserData({
         name,
         id,
         number,
+        pcip,
         ip,
         mac,
         mic,
@@ -350,6 +360,7 @@ function UserData({
         name,
         id,
         number,
+        pcip,
         ip,
         mac,
         mic,
@@ -367,6 +378,7 @@ function UserData({
     form.name,
     form.number,
     form.out_message,
+    form.pc_ip,
     form.team,
     form.zibox_ip,
     form.zibox_mac,
@@ -502,7 +514,7 @@ function UserData({
                         : data.name === 'name'
                         ? false
                         : data.name === 'pc_ip'
-                        ? true
+                        ? false
                         : data.name === 'zibox_ip'
                         ? constants.TRANSPORT === ZIBOX_TRANSPORT.SERVER ||
                           constants.TRANSPORT === ZIBOX_TRANSPORT.OCX

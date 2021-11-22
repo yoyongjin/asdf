@@ -198,6 +198,7 @@ export interface RequestAddUser {
   name: string;
   user_name?: string;
   number?: string;
+  pc_ip?: string;
   ziboxip?: string;
   ziboxmac?: string;
   ziboxmic?: number;

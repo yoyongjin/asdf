@@ -51,6 +51,7 @@ class User {
     name: string,
     userName?: string,
     number?: string,
+    pcip?: string,
     ip?: string,
     mac?: string,
     mic?: number,
@@ -72,6 +73,10 @@ class User {
 
       if (number) {
         payload.number = number;
+      }
+
+      if (pcip) {
+        payload.pc_ip = pcip;
       }
 
       if (ip) {
@@ -119,6 +124,7 @@ class User {
     name: string,
     userName?: string,
     number?: string,
+    pcip?: string,
     ip?: string,
     mac?: string,
     mic?: number,
@@ -144,6 +150,10 @@ class User {
 
       if (number) {
         payload.number = number;
+      }
+
+      if (pcip) {
+        payload.pc_ip = pcip;
       }
 
       if (ip) {
