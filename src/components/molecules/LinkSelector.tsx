@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components';
 import { Location } from 'history';
 
 import { Link, Text } from 'components/atoms';
+import { StyledCommonBothWhiteSpace } from 'styles/common';
 import { Colors } from 'utils/color';
 import { USER_TYPE } from 'utils/constants';
 
@@ -32,70 +33,79 @@ const StyledLink = styled.span<StyledLinkProps>`
   }}
 `;
 
-export const StyledCommonWhiteSpace = styled.span<StyledCommonWhiteSpaceProps>`
-  padding-left: ${(props) => props.pixel}px;
-  padding-right: ${(props) => props.pixel}px;
-`;
+const LINK_DATA = [
+  {
+    name: '모니터링',
+    path: '/main',
+    pixel: 0,
+  },
+  {
+    name: '조직 관리',
+    path: '/main/manage/organization',
+    pixel: 23.5,
+  },
+  {
+    name: '사용자 관리',
+    path: '/main/manage/user',
+    pixel: 18,
+  },
+  {
+    name: '통 계',
+    path: '/main/manage/stat',
+    pixel: 23.5,
+  },
+  {
+    name: '알림 문자',
+    path: '/main/manage/noti',
+    pixel: 23.5,
+  },
+];
 
 function LinkSelector({ location, permission }: LinkSelectorProps) {
-  const [visible, setVisible] = useState<number>(1);
+  const [visible, setVisible] = useState<number>(0);
 
   useEffect(() => {
+    const [monitoring, organization, user, statistics, notification] =
+      LINK_DATA;
     const { pathname } = location;
 
-    if (pathname === '/main/manage/stat') {
+    if (pathname === notification.path) {
       setVisible(4);
-    } else if (pathname === '/main/manage/user') {
+    } else if (pathname === statistics.path) {
       setVisible(3);
-    } else if (pathname === '/main/manage/organization') {
+    } else if (pathname === user.path) {
       setVisible(2);
-    } else if (pathname === '/main') {
+    } else if (pathname === organization.path) {
       setVisible(1);
+    } else if (pathname === monitoring.path) {
+      setVisible(0);
     }
   }, [location]);
 
   return (
     <StyledWrapper>
-      <StyledLink visible={visible} type={1}>
-        <Link path="/main">
-          <Text fontColor={Colors.white} fontSize={16} fontWeight={700}>
-            모니터링
-          </Text>
-        </Link>
-      </StyledLink>
-      {permission === USER_TYPE.CONSULTANT ? null : (
-        <>
-          <StyledCommonWhiteSpace pixel={23.5} />
-          <StyledLink visible={visible} type={2}>
-            <Link path="/main/manage/organization">
-              <Text fontColor={Colors.white} fontSize={16} fontWeight={700}>
-                조직 관리
-              </Text>
-            </Link>
-          </StyledLink>
-        </>
-      )}
-      {permission === USER_TYPE.CONSULTANT ? null : (
-        <>
-          <StyledCommonWhiteSpace pixel={18} />
-          <StyledLink visible={visible} type={3}>
-            <Link path="/main/manage/user">
-              <Text fontColor={Colors.white} fontSize={16} fontWeight={700}>
-                사용자 관리
-              </Text>
-            </Link>
-          </StyledLink>
-        </>
-      )}
-
-      <StyledCommonWhiteSpace pixel={18} />
-      <StyledLink visible={visible} type={4}>
-        <Link path="/main/manage/stat">
-          <Text fontColor={Colors.white} fontSize={16} fontWeight={700}>
-            법인폰 통계
-          </Text>
-        </Link>
-      </StyledLink>
+      {LINK_DATA.map((data, i) => {
+        return (
+          <>
+            {permission === USER_TYPE.CONSULTANT ? null : (
+              <>
+                <StyledCommonBothWhiteSpace pixel={data.pixel} />
+                <StyledLink visible={visible} type={i}>
+                  <Link path={data.path}>
+                    <Text
+                      fontColor={Colors.white}
+                      fontSize={16}
+                      fontWeight={700}
+                    >
+                      {data.name}
+                    </Text>
+                  </Link>
+                </StyledLink>
+              </>
+            )}
+          </>
+        );
+      })}
     </StyledWrapper>
   );
 }
@@ -103,10 +113,6 @@ function LinkSelector({ location, permission }: LinkSelectorProps) {
 interface StyledLinkProps {
   visible: number;
   type: number;
-}
-
-interface StyledCommonWhiteSpaceProps {
-  pixel: number;
 }
 
 interface LinkSelectorProps {
