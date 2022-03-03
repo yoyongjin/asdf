@@ -5,25 +5,6 @@ import { TabTitle, Title } from 'components/molecules';
 import { Table } from 'components/organisms';
 import { Colors } from 'utils/color';
 
-const StyledWrapper = styled.div`
-  height: 100%;
-`;
-
-const StyledTitle = styled.div`
-  height: 6rem;
-  width: 100%;
-`;
-
-const StyledStatisticsArea = styled.div`
-  height: calc(100% - 6rem - 20px);
-  overflow: auto;
-  width: 100%;
-`;
-
-const StyledTableContent = styled.div`
-  padding-top: 20px;
-`;
-
 const callStatisticsByConsultantTableTitles = [
   {
     borderColor: Colors.gray14,
@@ -199,7 +180,7 @@ const notificationStatisticsTableTitles = [
     paddingLeft: 10,
     textAlign: 'left',
     title: '일자',
-    width: 10,
+    width: 5,
   },
   {
     fontFamily: 'MalgunGothic',
@@ -209,7 +190,7 @@ const notificationStatisticsTableTitles = [
     paddingLeft: 10,
     textAlign: 'left',
     title: '센터',
-    width: 15,
+    width: 10,
   },
   {
     fontFamily: 'MalgunGothic',
@@ -219,7 +200,7 @@ const notificationStatisticsTableTitles = [
     paddingLeft: 10,
     textAlign: 'left',
     title: '팀',
-    width: 15,
+    width: 10,
   },
   {
     fontFamily: 'MalgunGothic',
@@ -229,7 +210,7 @@ const notificationStatisticsTableTitles = [
     paddingLeft: 10,
     textAlign: 'left',
     title: 'TMR 코드',
-    width: 15,
+    width: 10,
   },
   {
     fontFamily: 'MalgunGothic',
@@ -239,7 +220,7 @@ const notificationStatisticsTableTitles = [
     paddingLeft: 10,
     textAlign: 'left',
     title: 'TMR 명',
-    width: 10,
+    width: 5,
   },
   {
     fontFamily: 'MalgunGothic',
@@ -259,7 +240,7 @@ const notificationStatisticsTableTitles = [
     paddingLeft: 10,
     textAlign: 'left',
     title: '발송 조건',
-    width: 20,
+    width: 25,
   },
   {
     fontFamily: 'MalgunGothic',
@@ -269,7 +250,7 @@ const notificationStatisticsTableTitles = [
     paddingLeft: 10,
     textAlign: 'left',
     title: '발송 건수',
-    width: 10,
+    width: 5,
   },
 ];
 
@@ -652,6 +633,25 @@ const tabTitle = [
     name: '알림 문자 통계',
   },
 ];
+
+const StyledWrapper = styled.div`
+  height: 100%;
+`;
+
+const StyledTitle = styled.div`
+  height: 6rem;
+  width: 100%;
+`;
+
+const StyledStatisticsArea = styled.div`
+  height: calc(100% - 6rem - 20px);
+  overflow: auto;
+  width: 100%;
+`;
+
+const StyledTableContent = styled.div`
+  padding-top: 20px;
+`;
 
 function StatisticsV2View() {
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
