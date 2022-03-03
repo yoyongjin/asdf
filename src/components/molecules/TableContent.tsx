@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { StatisticsProperty, UserProperty } from 'components/molecules';
-import { TableContentData } from 'components/organisms/UserView';
+import { TableContentData } from 'components/organisms/Table';
 import { Colors } from 'utils/color';
 
 const StyledWrapper = styled.tr<StyledTableContent>`

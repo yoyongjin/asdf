@@ -1,13 +1,13 @@
 import { useCallback } from 'react';
 import * as XLSX from 'xlsx';
 
-import { TableTitleData } from 'components/organisms/UserView';
+import { ITableTitleData } from 'components/molecules/TableTitle';
 import Utils from 'utils/new_utils';
 import _ from 'lodash';
 
 function useExcel() {
   const handleExcelDownload = useCallback(
-    (titles: Array<TableTitleData>, contents: Array<any>) => {
+    (titles: Array<ITableTitleData>, contents: Array<any>) => {
       const titleName: Array<string> = [];
       const titleWidth: Array<{ width: number }> = [];
 

@@ -16,10 +16,8 @@ import Utils from 'utils/new_utils';
 import optionIcon from 'images/bt-user-modi-nor.png';
 import optionHoverIcon from 'images/bt-user-modi-over.png';
 import { OnClickRemoveUser, OnClickResetPassword } from 'hooks/useUser';
-import {
-  SetSeletedConsultantData,
-  TableContentOption,
-} from 'components/organisms/UserView';
+import { SetSeletedConsultantData } from 'components/organisms/UserView';
+import { TableContentOption } from 'components/organisms/Table';
 
 const StyledWrapper = styled.td``;
 

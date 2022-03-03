@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { Text } from 'components/atoms';
-import { TableTitleData } from 'components/organisms/UserView';
+import { ITableTitleData } from 'components/molecules/TableTitle';
 import { Colors } from 'utils/color';
 import Utils from 'utils/new_utils';
 
@@ -80,7 +80,7 @@ interface StyledDataProps {
 }
 
 interface StatisticsTotalProps {
-  titles: Array<TableTitleData>;
+  titles: Array<ITableTitleData>;
   contents: {
     outboundCount: number;
     successCount: number;

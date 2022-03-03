@@ -135,16 +135,22 @@ function Title({
   return (
     <StyledWrapper color={bottomLineColor!} pixel={bottomLinePixel}>
       <StyledBorderPostion pixel={leftBottomPixel} float="left">
-        <StyleTitle>
-          <Text
-            fontColor={titleFontColor}
-            fontFamily={titleFontFamily}
-            fontSize={titleFontSize}
-            fontWeight={titleFontWeight}
-          >
-            {children}
-          </Text>
-        </StyleTitle>
+        {children ? (
+          <StyleTitle>
+            {typeof children === 'string' ? (
+              <Text
+                fontColor={titleFontColor}
+                fontFamily={titleFontFamily}
+                fontSize={titleFontSize}
+                fontWeight={titleFontWeight}
+              >
+                {children}
+              </Text>
+            ) : (
+              children
+            )}
+          </StyleTitle>
+        ) : null}
         {isButton ? (
           <>
             {[...Array(buttonData!.count)].map((values, index) => {
@@ -326,14 +332,20 @@ function Title({
         {isExcel ? (
           <StyledExcelButton>
             <Button
-              bgColor={Colors.navy1}
-              height={2.6}
-              image={excelIcon}
-              width={7}
+              bgColor={Colors.white}
+              borderRadius={8}
+              borderWidth={1}
+              customStyle={`border-color: ${Colors.gray14};border-style: solid;`}
+              height={2.8}
+              width={12.4}
               onClick={_.debounce(() => {
                 handleExcelDownload(excelData?.titles!, excelData?.contents!);
               }, 1000)}
-            />
+            >
+              <Text fontColor={Colors.gray13} fontSize={12} fontWeight={800}>
+                엑셀파일 다운로드
+              </Text>
+            </Button>
           </StyledExcelButton>
         ) : null}
       </StyledBorderPostion>
@@ -460,7 +472,7 @@ interface SelectData {
 interface TitleProps {
   buttonData?: ButtonData;
   calendarData?: CalendarData;
-  children: string;
+  children?: string | React.ReactChild;
   excelData?: ExcelData;
   explanData?: ExplanData;
   isButton: boolean;

@@ -13,7 +13,12 @@ import useInputForm from 'hooks/useInputForm';
 import useAuth from 'hooks/useAuth';
 import { UserData as UserDataV2 } from 'types/user';
 import { Colors } from 'utils/color';
-import constants, { COMPANY_TYPE, USER_TYPE } from 'utils/constants';
+import constants, {
+  COMPANY_TYPE,
+  USER_TYPE,
+  ZIBOX_TRANSPORT,
+  ZIBOX_VERSION,
+} from 'utils/constants';
 
 import DB_addUserImage from 'images/bt-add-u-1-nor.png';
 import addUserImage from 'images/zms/bt-add-u-1-nor.png';
@@ -46,18 +51,92 @@ const StyledUserPage = styled.div`
   padding-top: 46px;
 `;
 
-const tableTitles = [
-  // { title: 'No.', width: 7 },
-  { title: '지점명', width: 10 },
-  { title: '팀명', width: 10 },
-  { title: '권한', width: 5 },
-  { title: '이름.', width: 5 },
-  { title: '아이디.', width: 15 },
-  { title: '전화번호.', width: 15 },
-  { title: 'PC IP.', width: 15 },
-  { title: 'ZiBox IP.', width: 15 },
-  { title: 'ZiBox Mac.', width: 15 },
-  { title: '', width: 10 },
+const userInfoTableTitles = [
+  {
+    fontColor: Colors.white,
+    fontSize: 13,
+    isNotShow: true,
+    isWidthPercent: true,
+    title: 'No.',
+    width: 7,
+  },
+  {
+    fontColor: Colors.white,
+    fontSize: 13,
+    isWidthPercent: true,
+    title: '지점명',
+    width: 10,
+  },
+  {
+    fontColor: Colors.white,
+    fontSize: 13,
+    isWidthPercent: true,
+    title: '팀명',
+    width: 10,
+  },
+  {
+    fontColor: Colors.white,
+    fontSize: 13,
+    isWidthPercent: true,
+    title: '권한',
+    width: 5,
+  },
+  {
+    fontColor: Colors.white,
+    fontSize: 13,
+    isWidthPercent: true,
+    title: '이름',
+    width: 5,
+  },
+  {
+    fontColor: Colors.white,
+    fontSize: 13,
+    isWidthPercent: true,
+    title: '아이디.',
+    width: 15,
+  },
+  {
+    fontColor: Colors.white,
+    fontSize: 13,
+    isWidthPercent: true,
+    title: '전화번호.',
+    width: 15,
+  },
+  {
+    fontColor: Colors.white,
+    fontSize: 13,
+    isWidthPercent: true,
+    isNotShow: constants.TRANSPORT !== ZIBOX_TRANSPORT.OCX, // ocx인 경우만 보여야 함
+    title: 'PC IP.',
+    width: 15,
+  },
+  {
+    fontColor: Colors.white,
+    fontSize: 13,
+    isWidthPercent: true,
+    isNotShow:
+      constants.TRANSPORT === ZIBOX_TRANSPORT.OCX &&
+      constants.ZIBOX_VERSION === ZIBOX_VERSION.ZIBOX2, // zibox2 ocx 버전인 경우 안 보여야함
+    title: 'ZiBox IP',
+    width: 15,
+  },
+  {
+    fontColor: Colors.white,
+    fontSize: 13,
+    isWidthPercent: true,
+    isNotShow:
+      constants.TRANSPORT === ZIBOX_TRANSPORT.OCX &&
+      constants.ZIBOX_VERSION === ZIBOX_VERSION.ZIBOX2, // zibox2 ocx 버전인 경우 안 보여야함
+    title: 'ZiBox Mac.',
+    width: 15,
+  },
+  {
+    fontColor: Colors.white,
+    fontSize: 13,
+    isWidthPercent: true,
+    title: '',
+    width: 10,
+  },
 ];
 
 const userCountData = [
@@ -439,7 +518,7 @@ function UserView({ location }: UserViewProps) {
         </StyledTitle>
         <StyledUserListArea>
           <StyledUserList>
-            <Table contents={tableContents} titles={tableTitles} />
+            <Table contents={tableContents} titles={userInfoTableTitles} />
           </StyledUserList>
           <StyledUserPage>
             <TablePagination
@@ -474,30 +553,6 @@ interface UserViewProps extends RouteComponentProps {}
 
 export type SetSeletedConsultantData = (consultantData: UserDataV2) => void;
 
-export interface TableTitleData {
-  title: string;
-  width: number;
-}
-
-export interface TableContentData {
-  click?: Array<any>;
-  data: Array<any>;
-  option?: TableContentOption;
-  styles?: TableContentStyles;
-  type: string;
-}
-
-export interface TableContentStyles {
-  tableHeight: number;
-}
-
-export interface TableContentOption {
-  currentBranchId?: number;
-  currentPage?: number;
-  currentSearchText?: string;
-  currentTeamId?: number;
-  currentLimit?: number;
-}
 UserView.defaultProps = {};
 
 export default UserView;

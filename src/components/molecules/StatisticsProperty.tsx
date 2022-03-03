@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { Text } from 'components/atoms';
-import { TableContentOption } from 'components/organisms/UserView';
+import { TableContentOption } from 'components/organisms/Table';
 import { StatisticsData } from 'types/statistics';
 import { Colors } from 'utils/color';
 import Utils from 'utils/new_utils';

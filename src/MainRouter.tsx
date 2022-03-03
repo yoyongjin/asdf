@@ -1,15 +1,16 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
-import { NotFound } from 'components/pages';
-
 import {
   LoginForm,
   MonitoringView,
   OrganizationView,
+  StatisticsV2View,
   StatisticsView,
   UserView,
 } from 'components/organisms';
+import { NotFound } from 'components/pages';
+import constants, { STATISTICS_VERSION } from 'utils/constants';
 
 function MainRouter() {
   return (
@@ -22,7 +23,15 @@ function MainRouter() {
         component={OrganizationView}
       />
       <Route exact path="/main/manage/user" component={UserView} />
-      <Route exact path="/main/manage/stat" component={StatisticsView} />
+      <Route
+        exact
+        path="/main/manage/stat"
+        component={
+          constants.STATISTICS_VERSION === STATISTICS_VERSION.TWO
+            ? StatisticsV2View
+            : StatisticsView
+        }
+      />
       <Route component={NotFound} />
     </Switch>
   );

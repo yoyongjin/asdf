@@ -3,41 +3,51 @@ import styled from 'styled-components';
 
 import { Text } from 'components/atoms';
 import { Colors } from 'utils/color';
-import constants, { ZIBOX_TRANSPORT, ZIBOX_VERSION } from 'utils/constants';
 
 const StyledWrapper = styled.tr`
-  /* Display */
-  width: 100%;
   height: 100%;
+  width: 100%;
 `;
 
-const StyledTitle = styled.th<StyledProps>`
-  width: ${(props) => props.width}%;
+const StyledTitle = styled.th<IStyledTitle>`
+  background-color: ${(props) => props.backgroundColor};
+  border-width: ${(props) => props.borderWidth}px;
+  border-style: ${(props) => props.borderStyle};
+  border-color: ${(props) => props.borderColor};
+  padding-left: ${(props) => props.paddingLeft}px;
+  text-align: ${(props) => props.textAlign};
   vertical-align: middle;
+  width: ${(props) => props.width}${(props) => (props.isWidthPercent ? '%' : 'px')};
 `;
 
-function TableTitle({ titles, fontColor, fontSize }: TableTitleProps) {
+function TableTitle({ titles }: ITableTitleProps) {
   return (
     <StyledWrapper>
       {titles.map((titleData, i) => {
-        if (constants.TRANSPORT === ZIBOX_TRANSPORT.OCX) {
-          if (constants.ZIBOX_VERSION === ZIBOX_VERSION.ZIBOX2) {
-            if (
-              titleData.title === 'ZiBox IP.' ||
-              titleData.title === 'ZiBox Mac.'
-            )
-              return '';
-          }
-        } else {
-          if (titleData.title === 'PC IP.') return '';
+        if (titleData.isNotShow) {
+          return '';
         }
 
         return (
-          <StyledTitle key={`styled-title-${i}`} width={titleData.width}>
+          <StyledTitle
+            key={`styled-title-${i}`}
+            backgroundColor={titleData.backgroundColor}
+            borderColor={titleData.borderColor}
+            borderStyle={titleData.borderStyle}
+            borderWidth={titleData.borderWidth}
+            colSpan={titleData.colSpan}
+            isWidthPercent={titleData.isWidthPercent}
+            paddingLeft={titleData.paddingLeft}
+            rowSpan={titleData.rowSpan}
+            textAlign={titleData.textAlign}
+            width={titleData.width}
+          >
             <Text
-              fontColor={fontColor}
-              fontFamily="NanumBarunGothic"
-              fontSize={fontSize}
+              fontColor={titleData.fontColor || Colors.navy2}
+              fontFamily={titleData.fontFamily || 'NanumBarunGothic'}
+              fontSize={titleData.fontSize}
+              fontWeight={titleData.fontWeight || 800}
+              letterSpacing={titleData.letterSpacing}
             >
               {titleData.title}
             </Text>
@@ -48,24 +58,33 @@ function TableTitle({ titles, fontColor, fontSize }: TableTitleProps) {
   );
 }
 
-interface StyledProps {
+interface IStyledTitle {
+  backgroundColor?: string;
+  borderColor?: string;
+  borderStyle?: string;
+  borderWidth?: number;
+  textAlign?: string;
+  paddingLeft?: number;
+  isWidthPercent?: boolean; // width 고정/비고정 여부
   width: number;
 }
 
-interface TitleProps extends StyledProps {
-  title: string;
+export interface ITableTitleData extends IStyledTitle {
+  colSpan?: number;
+  fontColor?: string;
+  fontFamily?: string;
+  fontWeight?: number;
+  fontSize?: number;
+  isNotShow?: boolean; // 화면에 표시 여부
+  letterSpacing?: number;
+  rowSpan?: number;
+  title: string; // 화면에 보여질 텍스트
 }
 
-interface TableTitleProps {
-  titles: Array<TitleProps>;
-  fontColor: string;
-  fontSize: number;
+interface ITableTitleProps {
+  titles: Array<ITableTitleData>;
 }
 
-TableTitle.defaultProps = {
-  bgColor: Colors.gray4,
-  fontColor: Colors.white,
-  fontSize: 13,
-};
+TableTitle.defaultProps = {};
 
 export default TableTitle;

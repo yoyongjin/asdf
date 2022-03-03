@@ -38,6 +38,66 @@ const StyledTotal = styled.div`
   padding-top: 50px;
 `;
 
+const statisticsTableTitle = [
+  {
+    fontColor: Colors.white,
+    fontSize: 13,
+    isNotShow: true,
+    isWidthPercent: true,
+    title: 'No.',
+    width: 5,
+  },
+  {
+    fontColor: Colors.white,
+    fontSize: 13,
+    isWidthPercent: true,
+    title: '팀명',
+    width: 15,
+  },
+  {
+    fontColor: Colors.white,
+    fontSize: 13,
+    isWidthPercent: true,
+    title: '법인폰 번호',
+    width: 15,
+  },
+  {
+    fontColor: Colors.white,
+    fontSize: 13,
+    isWidthPercent: true,
+    title: 'OB 총 건수',
+    width: 10,
+  },
+  {
+    fontColor: Colors.white,
+    fontSize: 13,
+    isWidthPercent: true,
+    title: '연결 성공',
+    width: 10,
+  },
+  {
+    fontColor: Colors.white,
+    fontSize: 13,
+    isWidthPercent: true,
+    title: '연결률',
+    width: 10,
+  },
+  {
+    fontColor: Colors.white,
+    fontSize: 13,
+    isWidthPercent: true,
+    title: '콜백 건수',
+    width: 10,
+  },
+  {
+    fontColor: Colors.white,
+    fontSize: 13,
+    isWidthPercent: true,
+    title: '총 통화시간',
+    width: 15,
+  },
+];
+
 const tableTitles = [
   { title: 'No.', width: 5 },
   { title: '팀명', width: 15 },
@@ -224,7 +284,7 @@ function StatisticsView() {
 
   const excelData = useMemo(() => {
     return {
-      titles: tableTitles,
+      titles: statisticsTableTitle,
       contents: statistics,
     };
   }, [statistics]);
@@ -265,10 +325,13 @@ function StatisticsView() {
         </StyledTitle>
         <StyledUserListArea>
           <StyledUserList>
-            <Table contents={tableContents} titles={tableTitles} />
+            <Table contents={tableContents} titles={statisticsTableTitle} />
           </StyledUserList>
           <StyledTotal>
-            <StatisticsTotal titles={tableTitles} contents={totalStatistics} />
+            <StatisticsTotal
+              titles={statisticsTableTitle}
+              contents={totalStatistics}
+            />
           </StyledTotal>
         </StyledUserListArea>
       </StyledWrapper>
