@@ -30,7 +30,7 @@ function TableTitle({ titles }: ITableTitleProps) {
 
         return (
           <StyledTitle
-            key={`styled-title-${i}`}
+            key={`styled-table-title-${titleData.title}-${i}`}
             backgroundColor={titleData.backgroundColor}
             borderColor={titleData.borderColor}
             borderStyle={titleData.borderStyle}
