@@ -121,6 +121,11 @@ export enum ZIBOX_VERSION {
   ZIBOX2 = 'zibox2',
 }
 
+export enum STATISTICS_VERSION {
+  ONE = 1,
+  TWO = 2,
+}
+
 export const REG_EXR = {
   ip: /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
   mac: /([0-9a-fA-F]{2}-){5}[0-9a-fA-F]{2}/,
@@ -138,6 +143,7 @@ export default {
   TRANSPORT: process.env.REACT_APP_MODE,
   ZIBOX_SERVER: process.env.REACT_APP_ZIBOX_SERVER,
   ZIBOX_VERSION: process.env.REACT_APP_ZIBOX_VERSION,
+  STATISTICS_VERSION: Number(process.env.REACT_APP_STATISTICS_VERSION) || 1,
   LIMIT: 30,
   PAGE: 1,
   COOKIE_NAME: '4d751c5adb209285c49f2140e1cfb01c',
