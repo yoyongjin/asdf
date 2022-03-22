@@ -17,7 +17,11 @@ class SocketOCX implements Socket, ExternalObject {
   connect(options: SocketConnectOption) {
     console.log('[SOCKET OCX] Socket Connect OCX', JSON.stringify(options));
 
-    this._socket.Connect(options.url);
+    try {
+      this._socket.Connect(options.url);
+    } catch (error) {
+      console.log(error);
+    }
 
     this._key = options.key;
 
