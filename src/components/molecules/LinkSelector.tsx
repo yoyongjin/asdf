@@ -5,7 +5,7 @@ import { Location } from 'history';
 import { Link, Text } from 'components/atoms';
 import { StyledCommonBothWhiteSpace } from 'styles/common';
 import { Colors } from 'utils/color';
-import { USER_TYPE } from 'utils/constants';
+import constants, { AUTO_MESSAGE_VERSION, USER_TYPE } from 'utils/constants';
 
 const StyledWrapper = styled.div`
   /* Display   */
@@ -35,26 +35,31 @@ const StyledLink = styled.span<StyledLinkProps>`
 
 const LINK_DATA = [
   {
+    isVisible: true,
     name: '모니터링',
     path: '/main',
     pixel: 0,
   },
   {
+    isVisible: !constants.IS_AUTO_ORGANISMS,
     name: '조직 관리',
     path: '/main/manage/organization',
     pixel: 23.5,
   },
   {
+    isVisible: true,
     name: '사용자 관리',
     path: '/main/manage/user',
     pixel: 18,
   },
   {
+    isVisible: true,
     name: '통 계',
     path: '/main/manage/stat',
     pixel: 23.5,
   },
   {
+    isVisible: constants.AUTO_MESSAGE_VERSION !== AUTO_MESSAGE_VERSION.ONE,
     name: '알림 문자',
     path: '/main/manage/noti',
     pixel: 23.5,
@@ -85,6 +90,11 @@ function LinkSelector({ location, permission }: LinkSelectorProps) {
   return (
     <StyledWrapper>
       {LINK_DATA.map((data, i) => {
+        if (!data.isVisible) {
+          // 화면에서 보이지 않도록 하기
+          return null;
+        }
+
         return (
           <>
             {permission === USER_TYPE.CONSULTANT ? null : (

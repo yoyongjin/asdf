@@ -126,6 +126,11 @@ export enum STATISTICS_VERSION {
   TWO = 2,
 }
 
+export enum AUTO_MESSAGE_VERSION {
+  ONE = 1,
+  TWO = 2,
+}
+
 export const REG_EXR = {
   ip: /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
   mac: /([0-9a-fA-F]{2}-){5}[0-9a-fA-F]{2}/,
@@ -147,4 +152,7 @@ export default {
   LIMIT: 30,
   PAGE: 1,
   COOKIE_NAME: '4d751c5adb209285c49f2140e1cfb01c',
+  AUTO_MESSAGE_VERSION: Number(process.env.REACT_APP_AUTO_MESSAGE_VERSION) || 1,
+  IS_AUTO_ORGANISMS: process.env.REACT_APP_IS_AUTO_ORGANISMS === 'true',
+  IS_AUTO_USER: process.env.REACT_APP_IS_AUTO_USER === 'true',
 };

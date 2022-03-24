@@ -156,6 +156,9 @@ export interface UserData extends ConsultantAllStatus_V2 {
   in_time: string | null;
   out_time: string | null;
   login_at: number | null;
+  telecom: string | null;
+  plan: string | null;
+  used: number | null;
 }
 
 export interface ConsultantAllStatus_V2 {
