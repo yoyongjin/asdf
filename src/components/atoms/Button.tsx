@@ -9,7 +9,9 @@ const StyledButton = styled.button<ButtonProps>`
   outline: none;
 
   /* Display */
+  border-color: ${(props) => props.borderColor};
   border-radius: ${(props) => props.borderRadius}px;
+  border-style: ${(props) => props.borderStyle};
   border-width: ${(props) => props.borderWidth}px;
   height: ${(props) => props.height}rem;
   width: ${(props) => props.width}rem;
@@ -60,7 +62,9 @@ function Button({ children, onClick, ...rest }: ButtonProps) {
 
 interface StyledButtonProps {
   readonly bgColor?: string;
+  readonly borderColor?: string;
   readonly borderRadius: number;
+  readonly borderStyle?: string;
   readonly borderWidth?: number;
   readonly customStyle?: string;
   readonly fontColor: string;
@@ -82,6 +86,7 @@ interface ButtonProps extends StyledButtonProps {
 
 Button.defaultProps = {
   borderRadius: 16,
+  borderStyle: 'none',
   fontColor: Colors.white,
   fontSize: 1,
   height: 2.3,
