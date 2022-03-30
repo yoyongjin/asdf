@@ -78,11 +78,16 @@ interface StyledOptionProps {
   optionFontColor: string;
 }
 
+export interface IOption {
+  id: number;
+  data: string;
+}
+
 interface SelectProps extends StyledSelectProps {
   disabled: boolean;
   defaultValue?: number;
   name: string;
-  options?: Array<{ id: number; data: string }>;
+  options?: Array<IOption>;
   onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
