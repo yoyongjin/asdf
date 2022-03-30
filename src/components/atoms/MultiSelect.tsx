@@ -2,37 +2,50 @@ import React from 'react';
 import { MultiSelect as MSelect } from 'react-multi-select-component';
 import styled from 'styled-components';
 
-const StyledMultiSelect = styled(MSelect)``;
+const StyledMultiSelect = styled(MSelect)<IStyledMultiSelect>`
+  width: ${(props) => props.width}rem;
+
+  --rmsc-h: ${(props) => props.height}rem;
+`;
 
 function MultiSelect({
   disabled,
+  height,
   isLoading,
   isSelectAll,
   labelledBy,
   onChange,
   options,
   value,
+  width,
 }: IMultiSelect) {
   return (
     <StyledMultiSelect
       disabled={disabled}
+      height={height}
       isLoading={isLoading}
       hasSelectAll={isSelectAll}
       labelledBy={labelledBy}
       onChange={onChange}
       options={options}
       value={value}
+      width={width}
     />
   );
 }
 
-interface IOption {
+interface IStyledMultiSelect {
+  height: number;
+  width: number;
+}
+
+export interface IOption {
   disabled?: boolean;
   label: string;
   value: any;
 }
 
-interface IMultiSelect {
+interface IMultiSelect extends IStyledMultiSelect {
   disabled?: boolean; // 아예 선택 못하게 막기
   isLoading?: boolean; // 로딩 UI 여부
   isSelectAll: boolean; // 전체 선택 가능 여부
@@ -43,7 +56,9 @@ interface IMultiSelect {
 }
 
 MultiSelect.defaultProps = {
+  height: 2.8,
   isSelectAll: true,
+  width: 18,
 };
 
 export default MultiSelect;
