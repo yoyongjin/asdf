@@ -57,6 +57,10 @@ function useUser() {
       mac?: string,
       mic?: number,
       spk?: number,
+      telecom?: string,
+      plan?: string,
+      usedPhone?: number,
+      serialNumber?: string,
     ) => {
       const payload = {
         branch_id: branchId,
@@ -70,6 +74,10 @@ function useUser() {
         ziboxmac: mac,
         ziboxmic: mic,
         ziboxspk: spk,
+        telecom,
+        plan,
+        used: usedPhone,
+        serial_number: serialNumber,
       };
 
       dispatch(requestAddUser(payload));
@@ -79,13 +87,14 @@ function useUser() {
 
   const onClickModifyUser = useCallback(
     (
-      id: number,
+      key: number,
       branchId: number,
       teamId: number,
       adminId: number,
       name: string,
-      userName?: string,
+      id?: string,
       number?: string,
+      originNumber?: string,
       pcip?: string,
       ip?: string,
       mac?: string,
@@ -94,15 +103,20 @@ function useUser() {
       availableTime?: string,
       inMessage?: string,
       outMessage?: string,
+      telecom?: string,
+      plan?: string,
+      usedPhone?: number,
+      serialNumber?: string,
     ) => {
       const payload = {
-        id,
+        id: key,
         branch_id: branchId,
         team_id: teamId,
         admin_id: adminId,
         name,
-        user_name: userName,
+        user_name: id,
         number: number?.replace(/-/g, ''),
+        origin_number: originNumber,
         pc_ip: pcip,
         ziboxip: ip,
         ziboxmac: mac,
@@ -111,6 +125,10 @@ function useUser() {
         available_time: availableTime,
         in_message: inMessage,
         out_message: outMessage,
+        telecom,
+        plan,
+        used: usedPhone,
+        serial_number: serialNumber,
       };
 
       dispatch(requestModifyUser(payload));
@@ -182,7 +200,7 @@ function useUser() {
   };
 }
 
-export type OnClickAddUser = (
+export type TOnClickAddUser = (
   branchId: number,
   teamId: number,
   adminId: number,
@@ -194,16 +212,21 @@ export type OnClickAddUser = (
   mac?: string,
   mic?: number,
   spk?: number,
+  telecom?: string,
+  plan?: string,
+  usedPhone?: number,
+  serialNumber?: string,
 ) => void;
 
-export type OnClickModifyUser = (
-  id: number,
+export type TOnClickModifyUser = (
+  key: number,
   branchId: number,
   teamId: number,
   adminId: number,
   name: string,
-  userName?: string,
+  id?: string,
   number?: string,
+  origin_number?: string,
   pcip?: string,
   ip?: string,
   mac?: string,
@@ -212,6 +235,10 @@ export type OnClickModifyUser = (
   availableTime?: string,
   inMessage?: string,
   outMessage?: string,
+  telecom?: string,
+  plan?: string,
+  usedPhone?: number,
+  serialNumber?: string,
 ) => void;
 
 export type OnClickRemoveUser = (

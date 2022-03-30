@@ -18,6 +18,7 @@ function TextSelect({
   selectDisabled,
   selectDefaultValue,
   selectHeight,
+  selectIsUsedId,
   selectName,
   selectOnChange,
   selectOptions,
@@ -41,6 +42,7 @@ function TextSelect({
         defaultValue={selectDefaultValue}
         fontColor={textColor}
         height={selectHeight}
+        isUsedId={selectIsUsedId}
         name={selectName}
         onChange={selectOnChange}
         options={selectOptions}
@@ -54,8 +56,9 @@ interface TextSelectProps {
   selectBorderRadius: number;
   selectBorderWidth: number;
   selectDisabled: boolean;
-  selectDefaultValue?: number;
+  selectDefaultValue?: number | string;
   selectHeight: number;
+  selectIsUsedId: boolean;
   selectName: string;
   selectOnChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   selectOptions: Array<SelectDataType>;
@@ -77,6 +80,7 @@ TextSelect.defaultProps = {
   selectDisabled: false,
   selectDefaultValue: '기본값',
   selectHeight: 30,
+  selectIsUsedId: true,
   selectWidth: 100,
   textColor: Colors.gray9,
   textWeight: 700,

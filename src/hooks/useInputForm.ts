@@ -39,7 +39,7 @@ function useInputForm<T>(initialForm: T) {
 
       setForm((form) => {
         return produce(form, (draft) => {
-          (draft as any)[name] = Number(value);
+          (draft as any)[name] = Number(value) || value;
         });
       });
     },

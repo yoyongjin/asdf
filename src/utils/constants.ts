@@ -131,6 +131,14 @@ export enum AUTO_MESSAGE_VERSION {
   TWO = 2,
 }
 
+export enum USED_PHONE_STATUS {
+  DEFAULT = -1, // 클라이언트에서만 사용하는 값(값이 없을 경우 대체)
+  OPEN = 0, // 개통
+  PAUSE = 1, // 일시정지
+  TERMINATION = 2, // 해지
+  DISPOSE = 3, // 폐기
+}
+
 export const REG_EXR = {
   ip: /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
   mac: /([0-9a-fA-F]{2}-){5}[0-9a-fA-F]{2}/,

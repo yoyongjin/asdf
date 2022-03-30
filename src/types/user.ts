@@ -156,9 +156,6 @@ export interface UserData extends ConsultantAllStatus_V2 {
   in_time: string | null;
   out_time: string | null;
   login_at: number | null;
-  telecom: string | null;
-  plan: string | null;
-  used: number | null;
 }
 
 export interface ConsultantAllStatus_V2 {
@@ -206,10 +203,15 @@ export interface RequestAddUser {
   ziboxmac?: string;
   ziboxmic?: number;
   ziboxspk?: number;
+  telecom?: string;
+  plan?: string;
+  used?: number;
+  serial_number?: string;
 }
 
 export interface RequestModifyUser extends RequestAddUser {
   id: number;
+  origin_number?: string;
   available_time?: string;
   in_message?: string;
   out_message?: string;

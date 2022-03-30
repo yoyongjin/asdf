@@ -34,6 +34,7 @@ const StyledOption = styled.option<StyledOptionProps>`
 function Select({
   disabled,
   defaultValue,
+  isUsedId,
   name,
   options,
   onChange,
@@ -45,14 +46,19 @@ function Select({
       value={defaultValue}
       onChange={onChange}
       disabled={disabled}
+      isUsedId={isUsedId}
       {...rest}
     >
       {options?.map((option, i) => {
         return (
           <StyledOption
             key={`option-${i}`}
-            value={option.id}
-            selected={option.id === defaultValue}
+            value={isUsedId ? option.id : option.data}
+            selected={
+              isUsedId
+                ? option.id === defaultValue
+                : option.data === defaultValue
+            }
             {...rest}
           >
             {option.data}
@@ -85,7 +91,8 @@ export interface IOption {
 
 interface SelectProps extends StyledSelectProps {
   disabled: boolean;
-  defaultValue?: number;
+  defaultValue?: number | string;
+  isUsedId: boolean; // id를 key로 사용할지에 대한 여부
   name: string;
   options?: Array<IOption>;
   onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
@@ -96,6 +103,7 @@ Select.defaultProps = {
   borderWidth: 1,
   disabled: false,
   height: 30,
+  isUsedId: true,
   optionFontColor: Colors.gray10,
   paddingLeft: 6,
   width: 100,

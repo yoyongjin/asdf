@@ -14,10 +14,11 @@ import {
 } from 'components/molecules';
 import useInputForm from 'hooks/useInputForm';
 import useOrganization from 'hooks/useOrganization';
+import usePhone from 'hooks/usePhone';
 import {
-  OnClickAddUser,
   OnClickDisconnect,
-  OnClickModifyUser,
+  TOnClickAddUser,
+  TOnClickModifyUser,
 } from 'hooks/useUser';
 import { OnClickVisible } from 'hooks/useVisible';
 import { LoginData } from 'types/auth';
@@ -95,17 +96,18 @@ const selectData = [
   { id: 2, name: 'admin', value: '권한' },
   { id: 3, name: 'telecom', value: '통신사' },
   { id: 4, name: 'plan', value: '요금제' },
-  { id: 5, name: 'used', value: '사용여부' },
+  { id: 5, name: 'used_phone', value: '사용여부' },
 ];
 
 const inputData = [
   { id: 0, name: 'name', value: '이름' },
   { id: 1, name: 'id', value: '아이디' },
   { id: 2, name: 'number', value: '전화번호' },
-  { id: 3, name: 'zibox_ip', value: 'ZiBox IP' },
-  { id: 4, name: 'zibox_mac', value: 'ZiBox MAC' },
-  { id: 5, name: 'pc_ip', value: 'PC IP' },
-  { id: 6, name: 'available_time', value: '업무시간' },
+  { id: 3, name: 'serial_number', value: '일련번호' },
+  { id: 4, name: 'zibox_ip', value: 'ZiBox IP' },
+  { id: 5, name: 'zibox_mac', value: 'ZiBox MAC' },
+  { id: 6, name: 'pc_ip', value: 'PC IP' },
+  { id: 7, name: 'available_time', value: '업무시간' },
 ];
 
 const rangeData = [
@@ -136,6 +138,16 @@ function UserData({
   onClickVisible,
   userData,
 }: UserDataProps) {
+  const {
+    getPhoneInfo,
+    getPlan,
+    getTelecom,
+    onEventInitializePhoneInfo,
+    phoneInfo,
+    plans,
+    telecoms,
+  } = usePhone();
+
   const initializedData = useMemo(() => {
     return {
       branch: userData?.branch_id ? userData!.branch_id : loginData.branch_id,
@@ -152,11 +164,20 @@ function UserData({
       available_time: userData?.available_time ? userData!.available_time : '',
       in_message: userData?.in_time ? userData!.in_time : '',
       out_message: userData?.out_time ? userData!.out_time : '',
-      telecom: userData?.telecom ? userData!.telecom : '',
-      plan: userData?.plan ? userData!.plan : '',
-      used: userData?.used ? userData!.used : 0,
+      telecom: phoneInfo.telecom,
+      plan: phoneInfo.plan,
+      used_phone: phoneInfo.used,
+      serial_number: phoneInfo.serial_number,
     };
-  }, [loginData.branch_id, loginData.team_id, userData]);
+  }, [
+    loginData.branch_id,
+    loginData.team_id,
+    phoneInfo.plan,
+    phoneInfo.serial_number,
+    phoneInfo.telecom,
+    phoneInfo.used,
+    userData,
+  ]);
 
   const {
     form,
@@ -190,10 +211,6 @@ function UserData({
   const userPermistionSelectOption = useMemo(() => {
     const userPermission = _.cloneDeep(defaultUserPermistionSelectOption);
 
-    if (constants.IS_AUTO_USER) {
-      userPermission.pop();
-    }
-
     if (
       loginData.admin_id === USER_TYPE.SUPER_ADMIN ||
       loginData.admin_id === USER_TYPE.ADMIN
@@ -215,24 +232,51 @@ function UserData({
     return userPermission;
   }, [loginData.admin_id]);
 
+  /**
+   * @description 통신사 select option
+   */
+  const telecomSelectOption = useMemo(() => {
+    return telecoms.map((values) => {
+      return {
+        id: values.id,
+        data: values.telecom,
+      };
+    });
+  }, [telecoms]);
+
+  /**
+   * @description 요금제 select option
+   */
+  const planSelectOption = useMemo(() => {
+    return plans.map((values) => {
+      return {
+        id: values.id,
+        data: values.plan,
+      };
+    });
+  }, [plans]);
+
+  /**
+   * @description validate check
+   */
   const isValidationValue = useCallback(
     (
+      admin: number,
       branchId: number,
       teamId: number,
-      adminId: number,
       name: string,
-      id?: string,
-      pcip?: string,
-      ip?: string,
-      mac?: string,
+      id: string,
+      pcip: string,
+      ziBoxIp: string,
+      ziBoxMac: string,
     ) => {
-      if (adminId < USER_TYPE.ADMIN && branchId === -1) {
+      if (admin < USER_TYPE.ADMIN && branchId === -1) {
         alert('지점을 선택해주세요.');
 
         return false;
       }
 
-      if (adminId < USER_TYPE.BRANCH_ADMIN && teamId === -1) {
+      if (admin < USER_TYPE.BRANCH_ADMIN && teamId === -1) {
         alert('팀을 선택해주세요.');
 
         return false;
@@ -257,7 +301,7 @@ function UserData({
           return false;
         }
       } else {
-        if (adminId !== USER_TYPE.CONSULTANT) {
+        if (admin !== USER_TYPE.CONSULTANT) {
           alert('ID를 입력해주세요.');
           return false;
         }
@@ -269,13 +313,13 @@ function UserData({
         return false;
       }
 
-      if (ip && !REG_EXR.ip.test(ip)) {
+      if (ziBoxIp && !REG_EXR.ip.test(ziBoxIp)) {
         alert('IP주소 형식에 맞게 입력해주세요.');
 
         return false;
       }
 
-      if (mac && !REG_EXR.mac.test(mac)) {
+      if (ziBoxMac && !REG_EXR.mac.test(ziBoxMac)) {
         alert('MAC주소 형식에 맞게 입력해주세요.');
 
         return false;
@@ -286,51 +330,77 @@ function UserData({
     [],
   );
 
+  /**
+   * @description 유저 정보 추가/업데이트
+   */
   const setUserData = useCallback(() => {
-    const branchId =
-      loginData.admin_id === USER_TYPE.SUPER_ADMIN ||
-      loginData.admin_id === USER_TYPE.ADMIN
-        ? form.admin === USER_TYPE.SUPER_ADMIN || form.admin === USER_TYPE.ADMIN
-          ? -1
-          : form.branch
-        : loginData.branch_id;
+    const adminId = form.admin; // 권한
+    const name = form.name; // 이름
+    const id = form.id; // 아이디
 
-    const teamId =
-      loginData.admin_id === USER_TYPE.TEAM_ADMIN
-        ? loginData.team_id
-        : form.admin === USER_TYPE.CONSULTANT ||
-          form.admin === USER_TYPE.TEAM_ADMIN
-        ? form.team
-        : -1;
-    const adminId = form.admin;
-    const name = form.name;
-    const id = form.id;
-    const number =
-      form.admin === USER_TYPE.CONSULTANT ? form.number : undefined;
-    const pcip = form.admin === USER_TYPE.CONSULTANT ? form.pc_ip : undefined;
-    const ip = form.admin === USER_TYPE.CONSULTANT ? form.zibox_ip : undefined;
-    const mac =
-      form.admin === USER_TYPE.CONSULTANT ? form.zibox_mac : undefined;
-    const mic =
-      form.admin === USER_TYPE.CONSULTANT ? form.zibox_mic : undefined;
-    const spk =
-      form.admin === USER_TYPE.CONSULTANT ? form.zibox_spk : undefined;
-    const availableTime =
-      form.admin === USER_TYPE.CONSULTANT ? form.available_time : undefined;
-    const inMessage =
-      form.admin === USER_TYPE.CONSULTANT ? form.in_message : undefined;
-    const outMessage =
-      form.admin === USER_TYPE.CONSULTANT ? form.out_message : undefined;
+    let branchId = loginData.branch_id; // 지점
+    let teamId = loginData.team_id; // 팀
+    let number = ''; // 전화번호
+    let originNumber = ''; // 변경 전 전화번호
+    let pcIp = ''; // 상담원 pc IP
+    let ziBoxIp = ''; // 지박스 IP
+    let ziBoxMac = ''; // 지박스 MAC
+    let ziBoxMic = 0; // 지박스 MIC 볼륨
+    let ziBoxSpk = 0; // 지박스 SPK 볼륨
+    let availableTime = ''; // 업무 이용 가능 시간
+    let inMessage = ''; // 업무 내 메시지 내용
+    let outMessage = ''; // 업무 외 메시지 내용
+    let telecom = ''; // 통신사
+    let plan = ''; // 요금제
+    let usedPhone = -1; // 폰 사용 여부
+    let serialNumber = ''; // 일련번호
+
+    if (form.admin === USER_TYPE.CONSULTANT) {
+      number = form.number;
+      originNumber = userData?.number || '';
+      ziBoxMac = form.zibox_mac;
+      pcIp = form.pc_ip;
+      ziBoxIp = form.zibox_ip;
+      ziBoxMic = form.zibox_mic;
+      ziBoxSpk = form.zibox_spk;
+      availableTime = form.available_time;
+      inMessage = form.in_message;
+      outMessage = form.out_message;
+      telecom = form.telecom;
+      plan = form.plan;
+      usedPhone = form.used_phone;
+      serialNumber = form.serial_number;
+    }
+
+    if (loginData.admin_id > USER_TYPE.BRANCH_ADMIN) {
+      // 로그인한 유저의 권한이 지점관리자보다 높을 경우
+      if (form.admin > USER_TYPE.BRANCH_ADMIN) {
+        // 선택한 유저의 권한이 지점관리자보다 높을 경우
+        branchId = -1;
+      } else {
+        branchId = form.branch;
+      }
+    }
+
+    if (loginData.admin_id > USER_TYPE.TEAM_ADMIN) {
+      // 로그인한 유저의 권한이 팀관리자보다 높을 경우
+      if (form.admin < USER_TYPE.BRANCH_ADMIN) {
+        // 선택한 유저의 권한이 지점관리자보다 낮은 경우
+        teamId = form.team;
+      } else {
+        teamId = -1;
+      }
+    }
 
     const isSuccess = isValidationValue(
+      adminId,
       branchId,
       teamId,
-      adminId,
       name,
       id,
-      pcip,
-      ip,
-      mac,
+      pcIp,
+      ziBoxIp,
+      ziBoxMac,
     );
 
     if (!isSuccess) {
@@ -339,6 +409,7 @@ function UserData({
     }
 
     if (userData && userData!.id) {
+      // 사용자 정보가 있을 경우 업데이트
       onClickModifyUser!(
         userData.id,
         branchId,
@@ -347,19 +418,24 @@ function UserData({
         name,
         id,
         number,
-        pcip,
-        ip,
-        mac,
-        mic,
-        spk,
+        originNumber,
+        pcIp,
+        ziBoxIp,
+        ziBoxMac,
+        ziBoxMic,
+        ziBoxSpk,
         availableTime,
         inMessage,
         outMessage,
+        telecom,
+        plan,
+        usedPhone,
+        serialNumber,
       );
 
       onClickVisible();
     } else {
-      // 추가
+      // 사용자 정보가 없을 경우 추가
       onClickAddUser!(
         branchId,
         teamId,
@@ -367,11 +443,15 @@ function UserData({
         name,
         id,
         number,
-        pcip,
-        ip,
-        mac,
-        mic,
-        spk,
+        pcIp,
+        ziBoxIp,
+        ziBoxMac,
+        ziBoxMic,
+        ziBoxSpk,
+        telecom,
+        plan,
+        usedPhone,
+        serialNumber,
       );
 
       onClickVisible();
@@ -386,7 +466,11 @@ function UserData({
     form.number,
     form.out_message,
     form.pc_ip,
+    form.plan,
+    form.serial_number,
     form.team,
+    form.telecom,
+    form.used_phone,
     form.zibox_ip,
     form.zibox_mac,
     form.zibox_mic,
@@ -426,7 +510,8 @@ function UserData({
           name === 'out_message' ||
           name === 'telecom' ||
           name === 'plan' ||
-          name === 'used'
+          name === 'used_phone' ||
+          name === 'serial_number'
         ) {
           return true;
         }
@@ -504,10 +589,18 @@ function UserData({
 
           break;
         }
+        case 'telecom':
+        case 'plan':
+        case 'used_phone':
+        case 'serial_number':
         case 'zibox_spk':
         case 'in_message':
         case 'out_message':
         case 'available_time': {
+          // 통신사
+          // 요금제
+          // 휴대폰 사용 여부
+          // 일련번호
           // 지박스 스피커 볼륨
           // 이용 가능시간 설정
           // 업무시간 내 메시지
@@ -566,20 +659,23 @@ function UserData({
         case 'zibox_spk': {
           return form.zibox_spk;
         }
+        case 'in_message': {
+          return form.in_message;
+        }
+        case 'out_message': {
+          return form.out_message;
+        }
         case 'telecom': {
           return form.telecom;
         }
         case 'plan': {
           return form.plan;
         }
-        case 'used': {
-          return form.used;
+        case 'used_phone': {
+          return form.used_phone;
         }
-        case 'in_message': {
-          return form.in_message;
-        }
-        case 'out_message': {
-          return form.out_message;
+        case 'serial_number': {
+          return form.serial_number;
         }
       }
     },
@@ -593,9 +689,10 @@ function UserData({
       form.out_message,
       form.pc_ip,
       form.plan,
+      form.serial_number,
       form.team,
       form.telecom,
-      form.used,
+      form.used_phone,
       form.zibox_ip,
       form.zibox_mac,
       form.zibox_mic,
@@ -633,6 +730,59 @@ function UserData({
     }
   }, [initializedData, isVisible, setInitializedForm]);
 
+  /**
+   * @description 팝업이 켜질 때 통신사 정보 가져오기
+   */
+  useEffect(() => {
+    if (isVisible) {
+      getTelecom();
+    }
+  }, [getTelecom, isVisible]);
+
+  /**
+   * @description 팝업이 켜져있고, 통신사 정보가 선택되었을 경우 해당 통신사의 요금제 정보 가져오기
+   */
+  useEffect(() => {
+    if (isVisible && form.telecom) {
+      const index = telecoms.findIndex(
+        (values) => values.telecom === form.telecom,
+      );
+
+      if (index < 1) {
+        return;
+      }
+
+      const telecomName = telecoms[index].telecom;
+
+      getPlan(telecomName);
+    }
+  }, [
+    form.telecom,
+    getPlan,
+    getTelecom,
+    isVisible,
+    telecomSelectOption,
+    telecoms,
+  ]);
+
+  /**
+   * @description 팝업이 켜져있고, 유저의 전화번호가 있을 경우 전화번호의 정보 가져오기
+   */
+  useEffect(() => {
+    if (isVisible && userData?.number) {
+      getPhoneInfo(userData.number);
+    }
+  }, [getPhoneInfo, isVisible, userData]);
+
+  /**
+   * @description 팝업이 켜졌을 때 userData의 값이 없으면 사용자 추가로 간주
+   */
+  useEffect(() => {
+    if (isVisible && _.isEmpty(userData)) {
+      onEventInitializePhoneInfo();
+    }
+  }, [isVisible, onEventInitializePhoneInfo, userData]);
+
   return (
     <StyledWrapper>
       <StyledTitle>
@@ -652,7 +802,7 @@ function UserData({
                   <TextSelect
                     key={`text-select-${data.name}`}
                     selectDisabled={isDisabledBox(data.name)}
-                    selectDefaultValue={Number(boxValue(data.name))}
+                    selectDefaultValue={boxValue(data.name)}
                     selectHeight={26}
                     selectName={data.name}
                     selectOnChange={onChangeSelect}
@@ -712,16 +862,17 @@ function UserData({
                   <TextSelect
                     key={`text-select-${data.name}`}
                     selectDisabled={isDisabledBox(data.name)}
-                    selectDefaultValue={Number(boxValue(data.name))}
+                    selectDefaultValue={boxValue(data.name)}
                     selectHeight={26}
+                    selectIsUsedId={data.name === 'used_phone'}
                     selectName={data.name}
                     selectOnChange={onChangeSelect}
                     selectOptions={
-                      data.name === 'branch'
-                        ? branchSelectOption
-                        : data.name === 'team'
-                        ? teamSelectOption
-                        : data.name === 'used'
+                      data.name === 'telecom'
+                        ? telecomSelectOption
+                        : data.name === 'plan'
+                        ? planSelectOption
+                        : data.name === 'used_phone'
                         ? phoneUsedSelectOption
                         : []
                     }
@@ -736,7 +887,7 @@ function UserData({
           {
             <>
               {inputData.map((data, index) => {
-                if (data.id < 3 || data.id === 6) {
+                if (data.id < 3 || data.id === 7) {
                   return null;
                 }
 
@@ -759,12 +910,12 @@ function UserData({
                     inputDisabled={isDisabledBox(data.name)}
                     inputHeight={2.6}
                     inputMaxLength={
-                      data.name === 'zibox_ip'
-                        ? 15
-                        : data.name === 'pc_ip'
+                      data.name === 'zibox_ip' || data.name === 'pc_ip'
                         ? 15
                         : data.name === 'zibox_mac'
                         ? 17
+                        : data.name === 'serial_number'
+                        ? 30
                         : 0
                     }
                     inputName={data.name}
@@ -774,7 +925,8 @@ function UserData({
                     inputWidth={
                       data.name === 'zibox_ip' ||
                       data.name === 'zibox_mac' ||
-                      data.name === 'pc_ip'
+                      data.name === 'pc_ip' ||
+                      data.name === 'serial_number'
                         ? 18.8
                         : 10.8
                     }
@@ -811,19 +963,19 @@ function UserData({
             loginData.admin_id === USER_TYPE.SUPER_ADMIN && (
               <>
                 <TextInput
-                  key={`text-input-${inputData[6].name}`}
+                  key={`text-input-${inputData[7].name}`}
                   inputCustomStyle="float:right;"
-                  inputDisabled={isDisabledBox(inputData[6].name)}
+                  inputDisabled={isDisabledBox(inputData[7].name)}
                   inputHeight={2.6}
                   inputMaxLength={11}
                   inputPlaceHolder="00:00-00:00"
-                  inputName={inputData[6].name}
+                  inputName={inputData[7].name}
                   inputOnChange={onChangeInput}
                   inputSize={13}
                   inputValue={form.available_time}
                   inputWidth={10.8}
                   textSize={13}
-                  textValue={inputData[6].value}
+                  textValue={inputData[7].value}
                 />
                 {textAreaData.map((data, index) => {
                   return (
@@ -869,7 +1021,7 @@ function UserData({
         ) : null}
       </StyledContent>
       <StyledFooter>
-        {userData && userData.admin_id === USER_TYPE.CONSULTANT ? (
+        {/* {userData && userData.admin_id === USER_TYPE.CONSULTANT ? (
           <Button
             width={10}
             height={2.6}
@@ -888,7 +1040,7 @@ function UserData({
               연결 끊기
             </Text>
           </Button>
-        ) : null}
+        ) : null} */}
         {loginData.admin_id === USER_TYPE.CONSULTANT ? null : (
           <Button
             bgColor={
@@ -944,8 +1096,8 @@ interface UserDataProps {
   userData?: UserDataV2;
   onClickDisconnect: OnClickDisconnect;
   onClickVisible: OnClickVisible;
-  onClickAddUser?: OnClickAddUser;
-  onClickModifyUser?: OnClickModifyUser;
+  onClickAddUser?: TOnClickAddUser;
+  onClickModifyUser?: TOnClickModifyUser;
 }
 
 UserData.defaultProps = {};
