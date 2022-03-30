@@ -1,5 +1,6 @@
 import Button from './Button';
 import CheckBox from './CheckBox';
+import DatePicker from './DatePicker';
 import Input from './Input';
 import Image from './Image';
 import Link from './Link';
@@ -13,6 +14,7 @@ import TextArea from './TextArea';
 export {
   Button,
   CheckBox,
+  DatePicker,
   Image,
   Input,
   Link,
