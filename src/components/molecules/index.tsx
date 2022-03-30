@@ -14,6 +14,7 @@ import TableTitle from './TableTitle';
 import TablePagination from './TablePagination';
 import TabTitle from './TabTitle';
 import TextCalendar from './TextCalendar';
+import TextCheckBox from './TextCheckBox';
 import TextInput from './TextInput';
 import TextSelect from './TextSelect';
 import TextRange from './TextRange';
@@ -39,6 +40,7 @@ export {
   TablePagination,
   TabTitle,
   TextCalendar,
+  TextCheckBox,
   TextInput,
   TextSelect,
   TextRange,
