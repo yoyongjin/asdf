@@ -32,6 +32,7 @@ function MainRouter() {
             : StatisticsView
         }
       />
+      <Route exact path="/main/manage/sms" />
       <Route component={NotFound} />
     </Switch>
   );

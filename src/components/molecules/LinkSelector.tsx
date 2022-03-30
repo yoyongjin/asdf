@@ -60,8 +60,8 @@ const LINK_DATA = [
   },
   {
     isVisible: constants.AUTO_MESSAGE_VERSION !== AUTO_MESSAGE_VERSION.ONE,
-    name: '알림 문자',
-    path: '/main/manage/noti',
+    name: '문자 설정',
+    path: '/main/manage/sms',
     pixel: 23.5,
   },
 ];
@@ -70,11 +70,10 @@ function LinkSelector({ location, permission }: LinkSelectorProps) {
   const [visible, setVisible] = useState<number>(0);
 
   useEffect(() => {
-    const [monitoring, organization, user, statistics, notification] =
-      LINK_DATA;
+    const [monitoring, organization, user, statistics, sms] = LINK_DATA;
     const { pathname } = location;
 
-    if (pathname === notification.path) {
+    if (pathname === sms.path) {
       setVisible(4);
     } else if (pathname === statistics.path) {
       setVisible(3);
