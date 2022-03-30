@@ -3,6 +3,23 @@ import { useState, useCallback } from 'react';
 
 function useInputForm<T>(initialForm: T) {
   const [form, setForm] = useState<T>(initialForm);
+
+  /**
+   * @description 체크박스 onchange 이벤트
+   */
+  const onChangeCheckBox = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, checked } = e.target;
+
+      setForm((form) => {
+        return produce(form, (draft) => {
+          (draft as any)[name] = checked;
+        });
+      });
+    },
+    [],
+  );
+
   const onChangeInput = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target;
@@ -59,6 +76,7 @@ function useInputForm<T>(initialForm: T) {
 
   return {
     form,
+    onChangeCheckBox,
     onChangeInput,
     setSpecificValue,
     setInitializedForm,
@@ -68,5 +86,9 @@ function useInputForm<T>(initialForm: T) {
 }
 
 export type SetSpecificValue = (name: string, value: string | number) => void;
+
+export type TonChangeCheckBox = (
+  e: React.ChangeEvent<HTMLInputElement>,
+) => void;
 
 export default useInputForm;

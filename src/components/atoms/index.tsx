@@ -1,4 +1,5 @@
 import Button from './Button';
+import CheckBox from './CheckBox';
 import Input from './Input';
 import Image from './Image';
 import Link from './Link';
@@ -11,6 +12,7 @@ import TextArea from './TextArea';
 
 export {
   Button,
+  CheckBox,
   Image,
   Input,
   Link,
