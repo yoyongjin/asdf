@@ -28,6 +28,7 @@ import constants, {
   AUTO_MESSAGE_VERSION,
   COMPANY_TYPE,
   REG_EXR,
+  USED_PHONE_STATUS,
   USER_TYPE,
   ZIBOX_TRANSPORT,
   ZIBOX_VERSION,
@@ -352,7 +353,7 @@ function UserData({
     let outMessage = ''; // 업무 외 메시지 내용
     let telecom = ''; // 통신사
     let plan = ''; // 요금제
-    let usedPhone = -1; // 폰 사용 여부
+    let usedPhone = USED_PHONE_STATUS.DEFAULT; // 폰 사용 여부
     let serialNumber = ''; // 일련번호
 
     if (form.admin === USER_TYPE.CONSULTANT) {
@@ -368,7 +369,10 @@ function UserData({
       outMessage = form.out_message;
       telecom = form.telecom;
       plan = form.plan;
-      usedPhone = form.used_phone;
+      usedPhone =
+        form.used_phone === USED_PHONE_STATUS.DEFAULT
+          ? USED_PHONE_STATUS.OPEN
+          : form.used_phone; // 초기 정보가 없을 때 미선택 시, 무조건 개통 상태로 보내도록 예외처리
       serialNumber = form.serial_number;
     }
 
