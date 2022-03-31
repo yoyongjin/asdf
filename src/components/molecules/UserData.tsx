@@ -448,10 +448,6 @@ function UserData({
         ziBoxMac,
         ziBoxMic,
         ziBoxSpk,
-        telecom,
-        plan,
-        usedPhone,
-        serialNumber,
       );
 
       onClickVisible();

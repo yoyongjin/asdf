@@ -57,10 +57,6 @@ class User {
     mac?: string,
     mic?: number,
     spk?: number,
-    telecom?: string,
-    plan?: string,
-    used?: number,
-    serialNumber?: string,
   ) {
     try {
       const token = Main.getAccessToken();
@@ -98,22 +94,6 @@ class User {
 
       if (spk) {
         payload.ziboxspk = spk;
-      }
-
-      if (telecom) {
-        payload.telecom = telecom;
-      }
-
-      if (serialNumber) {
-        payload.serial_number = serialNumber;
-      }
-
-      if (plan) {
-        payload.plan = plan;
-      }
-
-      if (used !== USED_PHONE_STATUS.DEFAULT) {
-        payload.used = used;
       }
 
       const { data } = await APIManager.post(

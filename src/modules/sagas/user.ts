@@ -89,10 +89,6 @@ function* addUserProcess(action: ReturnType<typeof requestAddUser>) {
     ziboxmac,
     ziboxmic,
     ziboxspk,
-    telecom,
-    plan,
-    used,
-    serial_number,
   } = action.payload;
 
   try {
@@ -109,10 +105,6 @@ function* addUserProcess(action: ReturnType<typeof requestAddUser>) {
       ziboxmac,
       ziboxmic,
       ziboxspk,
-      telecom,
-      plan,
-      used,
-      serial_number,
     );
 
     if (response.status === API_FETCH.SUCCESS) {

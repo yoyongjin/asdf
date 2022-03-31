@@ -203,10 +203,6 @@ export interface RequestAddUser {
   ziboxmac?: string;
   ziboxmic?: number;
   ziboxspk?: number;
-  telecom?: string;
-  plan?: string;
-  used?: number;
-  serial_number?: string;
 }
 
 export interface RequestModifyUser extends RequestAddUser {
@@ -215,6 +211,10 @@ export interface RequestModifyUser extends RequestAddUser {
   available_time?: string;
   in_message?: string;
   out_message?: string;
+  telecom?: string;
+  plan?: string;
+  used?: number;
+  serial_number?: string;
 }
 
 export interface RequestRemoveUser {

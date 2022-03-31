@@ -57,10 +57,6 @@ function useUser() {
       mac?: string,
       mic?: number,
       spk?: number,
-      telecom?: string,
-      plan?: string,
-      usedPhone?: number,
-      serialNumber?: string,
     ) => {
       const payload = {
         branch_id: branchId,
@@ -74,10 +70,6 @@ function useUser() {
         ziboxmac: mac,
         ziboxmic: mic,
         ziboxspk: spk,
-        telecom,
-        plan,
-        used: usedPhone,
-        serial_number: serialNumber,
       };
 
       dispatch(requestAddUser(payload));
@@ -212,10 +204,6 @@ export type TOnClickAddUser = (
   mac?: string,
   mic?: number,
   spk?: number,
-  telecom?: string,
-  plan?: string,
-  usedPhone?: number,
-  serialNumber?: string,
 ) => void;
 
 export type TOnClickModifyUser = (
