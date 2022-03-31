@@ -39,7 +39,13 @@ function useInputForm<T>(initialForm: T) {
 
       setForm((form) => {
         return produce(form, (draft) => {
-          (draft as any)[name] = Number(value) || value;
+          let _value: string | number = value;
+
+          if (typeof Number(value) === 'number' && !isNaN(Number(value))) {
+            _value = Number(value);
+          }
+
+          (draft as any)[name] = _value;
         });
       });
     },
