@@ -5,9 +5,9 @@ import { StatisticsProperty, UserProperty } from 'components/molecules';
 import { Colors } from 'utils/color';
 
 const StyledWrapper = styled.tr<StyledTableContent>`
-  width: 100%;
-  height: ${(props) => props.height}px;
   border-bottom: 1px solid ${Colors.gray7};
+  height: ${(props) => props.height}px;
+  width: 100%;
 `;
 
 function TableContent({ contents }: ITableContentProps) {
