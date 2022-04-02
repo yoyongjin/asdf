@@ -99,4 +99,6 @@ export type TonChangeCheckBox = (
 
 export type TonChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => void;
 
+export type TonChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => void;
+
 export default useInputForm;

@@ -13,6 +13,7 @@ import ZiboxData from './ZiboxData';
 import TableContent from './TableContent';
 import TableTitle from './TableTitle';
 import TablePagination from './TablePagination';
+import TableProperty from './TableProperty';
 import TabTitle from './TabTitle';
 import TextCalendar from './TextCalendar';
 import TextCheckBox from './TextCheckBox';
@@ -41,6 +42,7 @@ export {
   TableContent,
   TableTitle,
   TablePagination,
+  TableProperty,
   TabTitle,
   TextCalendar,
   TextCheckBox,
