@@ -28,6 +28,7 @@ export default {
         get_telecom: '/api/phone/telecom',
         get_plan: '/api/phone/plan',
         get_info: '/api/phone/info',
+        get_sms_count: '/api/message/sms-count',
       },
     },
   },

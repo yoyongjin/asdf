@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 
 import auth from './auth';
 import branch from './branch';
+import message from './message';
 import phone from './phone';
 import statistics from './statistics';
 import user from './user';
@@ -9,6 +10,7 @@ import user from './user';
 const rootReducer = combineReducers({
   auth,
   branch,
+  message,
   phone,
   statistics,
   user,
