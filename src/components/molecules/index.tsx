@@ -21,6 +21,7 @@ import TextSelect from './TextSelect';
 import TextRange from './TextRange';
 import TextTextArea from './TextTextArea';
 import Title from './Title';
+import TitleV2 from './TitleV2';
 import UserData from './UserData';
 import UserLog from './UserLog';
 import UserProperty from './UserProperty';
@@ -48,6 +49,7 @@ export {
   TextRange,
   TextTextArea,
   Title,
+  TitleV2,
   UserData,
   UserLog,
   UserProperty,

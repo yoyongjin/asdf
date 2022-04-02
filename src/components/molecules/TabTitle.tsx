@@ -55,7 +55,7 @@ function TabTitle({
   );
 }
 
-interface ITabItem {
+export interface ITabItem {
   name: string;
 }
 
