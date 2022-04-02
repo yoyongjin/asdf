@@ -5,7 +5,7 @@ import { Text } from 'components/atoms';
 import { StyledCommonBothWhiteSpace } from 'styles/common';
 import { Colors } from 'utils/color';
 
-const StyledWrapper = styled.table`
+const StyledWrapper = styled.div`
   width: 100%;
 `;
 
