@@ -388,7 +388,7 @@ function UserView({ location }: UserViewProps) {
         currentLimit: form.userCount,
       },
       styles: {
-        tableHeight: 50,
+        rowHeight: 50,
       },
       type: 'user',
     };

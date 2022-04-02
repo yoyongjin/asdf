@@ -18,7 +18,7 @@ function TableContent({ contents }: ITableContentProps) {
           return (
             <StyledWrapper
               key={`styled-user-property-${i}`}
-              height={contents.styles?.tableHeight!}
+              height={contents.styles?.rowHeight!}
             >
               <UserProperty
                 key={`table-user-property-${i}`}
@@ -34,7 +34,7 @@ function TableContent({ contents }: ITableContentProps) {
           return (
             <StyledWrapper
               key={`styled-statistics-property-${i}`}
-              height={contents.styles?.tableHeight!}
+              height={contents.styles?.rowHeight!}
             >
               <StatisticsProperty
                 key={`table-statistics-property-${i}`}
@@ -63,7 +63,7 @@ export interface ITableContentOption {
 }
 
 export interface ITableContentStyles {
-  tableHeight: number;
+  rowHeight: number;
 }
 
 export interface ITableContentData {

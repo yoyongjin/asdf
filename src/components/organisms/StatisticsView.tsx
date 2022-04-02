@@ -251,7 +251,7 @@ function StatisticsView() {
     return {
       data: statistics,
       styles: {
-        tableHeight: 30,
+        rowHeight: 30,
       },
       type: 'stat',
     };

@@ -858,7 +858,7 @@ function StatisticsV2View() {
     return {
       data: [],
       styles: {
-        tableHeight: 30,
+        rowHeight: 30,
       },
       type: 'stat',
     };
