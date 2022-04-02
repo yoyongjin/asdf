@@ -2,6 +2,7 @@ import GNB from './GNB';
 import LoginForm from './LoginForm';
 import MonitoringView from './MonitoringView';
 import OrganizationView from './OrganizationView';
+import SMSView from './SMSView';
 import StatisticsV2View from './StatisticsV2View';
 import StatisticsView from './StatisticsView';
 import Table from './Table';
@@ -12,6 +13,7 @@ export {
   LoginForm,
   MonitoringView,
   OrganizationView,
+  SMSView,
   StatisticsV2View,
   StatisticsView,
   Table,
