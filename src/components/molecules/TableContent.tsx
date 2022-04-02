@@ -1,7 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { StatisticsProperty, UserProperty } from 'components/molecules';
+import {
+  StatisticsProperty,
+  TableProperty,
+  UserProperty,
+} from 'components/molecules';
 import { Colors } from 'utils/color';
 
 const StyledWrapper = styled.tr<StyledTableContent>`
@@ -45,6 +49,16 @@ function TableContent({ contents }: ITableContentProps) {
             </StyledWrapper>
           );
         }
+
+        return (
+          <StyledWrapper key={`styled-table-content-${i}`} height={45}>
+            <TableProperty
+              contents={data}
+              contentType={contents.type}
+              originItem={contents.originData![i]}
+            />
+          </StyledWrapper>
+        );
       })}
     </>
   );
