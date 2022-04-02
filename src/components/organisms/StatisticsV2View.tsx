@@ -1,8 +1,11 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import styled from 'styled-components';
 
-import { TabTitle, Title } from 'components/molecules';
+import { TitleV2 } from 'components/molecules';
 import { Table } from 'components/organisms';
+import useDatePicker from 'hooks/useDatePicker';
+import useInputForm from 'hooks/useInputForm';
+import useTab from 'hooks/useTab';
 import { Colors } from 'utils/color';
 
 const callStatisticsByConsultantTableTitles = [
@@ -168,6 +171,139 @@ const callStatisticsByTeamTableTitles = [
     colSpan: 11,
     title: '수신',
     width: 727,
+  },
+];
+
+const smsStatisticsTableTitles = [
+  {
+    fontFamily: 'MalgunGothic',
+    fontSize: 12,
+    isWidthPercent: true,
+    letterSpacing: -0.6,
+    paddingLeft: 10,
+    textAlign: 'left',
+    title: '일자',
+    width: 10,
+  },
+  {
+    fontFamily: 'MalgunGothic',
+    fontSize: 12,
+    isWidthPercent: true,
+    letterSpacing: -0.6,
+    paddingLeft: 10,
+    textAlign: 'left',
+    title: '센터',
+    width: 15,
+  },
+  {
+    fontFamily: 'MalgunGothic',
+    fontSize: 12,
+    isWidthPercent: true,
+    letterSpacing: -0.6,
+    paddingLeft: 10,
+    textAlign: 'left',
+    title: '팀',
+    width: 15,
+  },
+  {
+    fontFamily: 'MalgunGothic',
+    fontSize: 12,
+    isWidthPercent: true,
+    letterSpacing: -0.6,
+    paddingLeft: 10,
+    textAlign: 'left',
+    title: 'TMR 코드',
+    width: 15,
+  },
+  {
+    fontFamily: 'MalgunGothic',
+    fontSize: 12,
+    isWidthPercent: true,
+    letterSpacing: -0.6,
+    paddingLeft: 10,
+    textAlign: 'left',
+    title: 'TMR 명',
+    width: 5,
+  },
+  {
+    fontFamily: 'MalgunGothic',
+    fontSize: 12,
+    isWidthPercent: true,
+    letterSpacing: -0.6,
+    paddingLeft: 10,
+    textAlign: 'left',
+    title: '일 최대발송수량',
+    width: 5,
+  },
+  {
+    fontFamily: 'MalgunGothic',
+    fontSize: 12,
+    isWidthPercent: true,
+    letterSpacing: -0.6,
+    paddingLeft: 10,
+    textAlign: 'left',
+    title: '일 총사용량',
+    width: 5,
+  },
+  {
+    fontFamily: 'MalgunGothic',
+    fontSize: 12,
+    isWidthPercent: true,
+    letterSpacing: -0.6,
+    paddingLeft: 10,
+    textAlign: 'left',
+    title: '일 알림문자',
+    width: 5,
+  },
+  {
+    fontFamily: 'MalgunGothic',
+    fontSize: 12,
+    isWidthPercent: true,
+    letterSpacing: -0.6,
+    paddingLeft: 10,
+    textAlign: 'left',
+    title: '일 MMS',
+    width: 5,
+  },
+  {
+    fontFamily: 'MalgunGothic',
+    fontSize: 12,
+    isWidthPercent: true,
+    letterSpacing: -0.6,
+    paddingLeft: 10,
+    textAlign: 'left',
+    title: '당월 최대발송수량',
+    width: 5,
+  },
+  {
+    fontFamily: 'MalgunGothic',
+    fontSize: 12,
+    isWidthPercent: true,
+    letterSpacing: -0.6,
+    paddingLeft: 10,
+    textAlign: 'left',
+    title: '당월 총사용량',
+    width: 5,
+  },
+  {
+    fontFamily: 'MalgunGothic',
+    fontSize: 12,
+    isWidthPercent: true,
+    letterSpacing: -0.6,
+    paddingLeft: 10,
+    textAlign: 'left',
+    title: '당월 알림문자',
+    width: 5,
+  },
+  {
+    fontFamily: 'MalgunGothic',
+    fontSize: 12,
+    isWidthPercent: true,
+    letterSpacing: -0.6,
+    paddingLeft: 10,
+    textAlign: 'left',
+    title: '당월 MMS',
+    width: 5,
   },
 ];
 
@@ -630,7 +766,37 @@ const tabTitle = [
     name: '팀별 통화 통계',
   },
   {
+    name: '문자 통계',
+  },
+  {
     name: '알림 문자 통계',
+  },
+];
+
+const selectBoxConditionOption = [
+  {
+    id: 1,
+    data: '일별',
+  },
+  {
+    id: 2,
+    data: '월별',
+  },
+  {
+    id: 3,
+    data: '시간별',
+  },
+  {
+    id: 4,
+    data: '15분',
+  },
+  {
+    id: 5,
+    data: '30분',
+  },
+  {
+    id: 6,
+    data: '일+시간',
   },
 ];
 
@@ -639,22 +805,39 @@ const StyledWrapper = styled.div`
 `;
 
 const StyledTitle = styled.div`
-  height: 6rem;
+  height: 4.275rem;
   width: 100%;
 `;
 
 const StyledStatisticsArea = styled.div`
-  height: calc(100% - 6rem - 20px);
+  height: calc(100% - 8.5rem);
   overflow: auto;
   width: 100%;
 `;
 
-const StyledTableContent = styled.div`
-  padding-top: 20px;
-`;
+const StyledTableContent = styled.div``;
 
 function StatisticsV2View() {
-  const [selectedTabIndex, setSelectedTabIndex] = useState(0);
+  const { form, onChangeCheckBox } = useInputForm({
+    break_up: false,
+  });
+  const {
+    datePicker: startDatePicker,
+    onChangeDatePicker: onChangeStartDatePicker,
+  } = useDatePicker();
+  const {
+    onChangeDatePicker: onChangeEndDatePicker,
+    datePicker: endDatePicker,
+  } = useDatePicker();
+  const {
+    datePicker: startTimePicker,
+    onChangeDatePicker: onChangeStartTimePicker,
+  } = useDatePicker();
+  const {
+    datePicker: endTimePicker,
+    onChangeDatePicker: onChangeEndTimePicker,
+  } = useDatePicker();
+  const { onChangeSelectedTabIndex, selectedTabIndex } = useTab();
 
   const borderItem = useMemo(() => {
     return {
@@ -681,17 +864,338 @@ function StatisticsV2View() {
     };
   }, []);
 
+  /**
+   * @description 타이틀에 들어갈 버튼 정보들
+   */
+  const buttonData = useMemo(() => {
+    const buttonConfig1 = {
+      type: 'button',
+      data: {
+        text: '엑셀파일 다운로드',
+      },
+      styles: {
+        backgroundColor: Colors.white,
+        borderColor: Colors.gray14,
+        borderRadius: 8,
+        borderStyle: 'solid',
+        borderWidth: 1,
+        fontColor: Colors.gray13,
+        fontSize: 12,
+        fontWeight: 800,
+        height: 2.8,
+        width: 12.4,
+      },
+    };
+
+    const buttonConfig2 = {
+      type: 'button',
+      data: {
+        text: '조회',
+      },
+      styles: {
+        backgroundColor: Colors.blue4,
+        borderRadius: 8,
+        fontColor: Colors.white,
+        fontSize: 12,
+        fontWeight: 800,
+        height: 2.8,
+        width: 6.4,
+      },
+    };
+
+    return [buttonConfig1, buttonConfig2];
+  }, []);
+
+  /**
+   * @description 타이틀에 들어갈 date picker 정보들
+   */
+  const dateRangePickerData = useMemo(() => {
+    const dateRangePickerConfig1 = {
+      type: 'date-range-picker',
+      data: {
+        format: 'yyyy년 MM월 dd일',
+        endSelectedDate: endDatePicker,
+        endOnChange: onChangeEndDatePicker,
+        startOnChange: onChangeStartDatePicker,
+        startSelectedDate: startDatePicker,
+      },
+      styles: {
+        borderStyle: 'solid',
+        height: 2.8,
+        width: 11.9,
+      },
+    };
+
+    const dateRangePickerConfig2 = {
+      type: 'date-range-picker',
+      data: {
+        endOnChange: onChangeEndTimePicker,
+        endSelectedDate: endTimePicker,
+        format: 'HH:mm',
+        isShowTime: true,
+        isShowTimeOnly: true,
+        startOnChange: onChangeStartTimePicker,
+        startSelectedDate: startTimePicker,
+      },
+      styles: {
+        borderStyle: 'solid',
+        height: 2.8,
+        width: 6.4,
+      },
+    };
+
+    return [dateRangePickerConfig1, dateRangePickerConfig2];
+  }, [
+    endDatePicker,
+    endTimePicker,
+    onChangeEndDatePicker,
+    onChangeEndTimePicker,
+    onChangeStartDatePicker,
+    onChangeStartTimePicker,
+    startDatePicker,
+    startTimePicker,
+  ]);
+
+  /**
+   * @description 타이틀에 들어갈 multi selectbox 정보들
+   */
+  const multiSelectData = useMemo(() => {
+    const multiSelectConfig1 = {
+      type: 'multi-select',
+      data: {
+        labelledBy: 'test1',
+        selectedOptions: [
+          {
+            label: 'test',
+            value: 'test1',
+          },
+        ],
+        options: [],
+      },
+    };
+
+    const multiSelectConfig2 = {
+      type: 'multi-select',
+      data: {
+        labelledBy: 'test2',
+        selectedOptions: [
+          {
+            label: 'test',
+            value: 'test1',
+          },
+        ],
+        options: [],
+      },
+    };
+
+    const multiSelectConfig3 = {
+      type: 'multi-select',
+      data: {
+        labelledBy: 'test3',
+        selectedOptions: [
+          {
+            label: 'test',
+            value: 'test1',
+          },
+        ],
+        options: [
+          {
+            label: 'test',
+            value: 'test1',
+          },
+        ],
+      },
+    };
+
+    return [multiSelectConfig1, multiSelectConfig2, multiSelectConfig3];
+  }, []);
+
+  /**
+   * @description 타이틀에 들어갈 selectbox 정보들
+   */
+  const selectData = useMemo(() => {
+    const selectConfig = {
+      type: 'select',
+      data: {
+        name: 'test111',
+        options: selectBoxConditionOption,
+      },
+      styles: {
+        borderColor: Colors.gray13,
+        borderRadius: 0,
+        fontColor: Colors.navy2,
+      },
+    };
+
+    return [selectConfig];
+  }, []);
+
+  /**
+   * @description 타이틀에 들어갈 tab 정보들
+   */
+  const tabData = useMemo(() => {
+    const tabConfig = {
+      type: 'tab',
+      data: {
+        onclick: onChangeSelectedTabIndex,
+        selected: selectedTabIndex,
+        tabs: tabTitle,
+      },
+    };
+
+    return [tabConfig];
+  }, [onChangeSelectedTabIndex, selectedTabIndex]);
+
+  /**
+   * @description 타이틀에 들어갈 text + checkbox 정보들
+   */
+  const textCheckBoxData = useMemo(() => {
+    const textCheckBoxConfig = {
+      type: 'text-checkbox',
+      data: {
+        isChecked: form.break_up,
+        isReverse: true,
+        name: 'break_up',
+        onChange: onChangeCheckBox,
+        text: '해촉 포함',
+      },
+      styles: {
+        fontColor: Colors.navy2,
+        fontFamily: 'MalgunGothic',
+        fontSize: 12,
+        fontWeight: 800,
+      },
+    };
+
+    return [textCheckBoxConfig];
+  }, [form.break_up, onChangeCheckBox]);
+
+  /**
+   * @description 타이틀 왼쪽 요소 가져오기
+   * @param {number} type 요소 위치 순서
+   */
+  const getRenderLeft = useCallback(
+    (type: number) => {
+      if (type === 1) {
+        const renderData = [];
+
+        renderData.push(...tabData);
+
+        return {
+          renderConfig: renderData,
+        };
+      } else if (type === 2) {
+        const renderData = [];
+
+        const [dataPickerConfig1, dataPickerConfig2] = dateRangePickerData;
+
+        const [buttonConfig1, ...buttonConfig] = buttonData;
+
+        renderData.push(...multiSelectData);
+        renderData.push(...textCheckBoxData);
+        renderData.push(dataPickerConfig1);
+        renderData.push(...selectData);
+        renderData.push(dataPickerConfig2);
+        renderData.push(...buttonConfig);
+
+        const renderStyle = [];
+
+        for (let i = 0; i < renderData.length; i++) {
+          const defaultRenderStyle = {
+            paddingRight: 0,
+          };
+
+          if (i === 0 || i === 1) {
+            defaultRenderStyle.paddingRight = 4;
+          }
+
+          if (i === 2) {
+            defaultRenderStyle.paddingRight = 12;
+          }
+
+          if (i === 3 || i === 5 || i === 6) {
+            defaultRenderStyle.paddingRight = 20;
+          }
+
+          if (i === 4) {
+            defaultRenderStyle.paddingRight = 10;
+          }
+
+          renderStyle.push(defaultRenderStyle);
+        }
+
+        return {
+          renderConfig: renderData,
+          renderStyle: renderStyle,
+        };
+      }
+    },
+    [
+      buttonData,
+      dateRangePickerData,
+      multiSelectData,
+      selectData,
+      tabData,
+      textCheckBoxData,
+    ],
+  );
+
+  /**
+   * @description 타이틀 오른쪽 요소 가져오기
+   * @param {number} type 요소 위치 순서
+   */
+  const getRenderRight = useCallback(
+    (type: number) => {
+      if (type === 1) {
+        const renderData = [];
+
+        const [buttonConfig1] = buttonData;
+
+        renderData.push(buttonConfig1);
+
+        return {
+          renderConfig: renderData,
+        };
+      }
+    },
+    [buttonData],
+  );
+
+  /**
+   * @description 타이틀 style 가져오기
+   * @param {number} type 요소 위치 순서
+   */
+  const getTitleStyle = useCallback((type: number) => {
+    if (type === 1) {
+      return {
+        borderBottomStyle: 'none',
+        borderBottomWidth: 0,
+        rightMarginTop: 10,
+      };
+    } else if (type === 2) {
+      return {
+        borderBottomStyle: 'none',
+        borderBottomWidth: 0,
+        leftMarginTop: 7,
+      };
+    }
+  }, []);
+
   return (
     <>
       <StyledWrapper>
         <StyledTitle>
-          <Title bottomLinePixel={0} isExcel>
-            <TabTitle
-              selectedItem={selectedTabIndex}
-              setSelectedItem={setSelectedTabIndex}
-              tabs={tabTitle}
-            />
-          </Title>
+          <TitleV2
+            renderLeft={getRenderLeft(1)}
+            renderRight={getRenderRight(1)}
+            titleStyle={getTitleStyle(1)}
+          />
+        </StyledTitle>
+        <StyledTitle>
+          <TitleV2
+            renderLeft={getRenderLeft(2)}
+            titleStyle={getTitleStyle(2)}
+          />
         </StyledTitle>
         <StyledStatisticsArea>
           <StyledTableContent>
@@ -715,13 +1219,22 @@ function StatisticsV2View() {
                 headHeight={52}
                 titles={callStatisticsByTeamTableTitles}
               />
-            ) : (
-              // 알림 문자 통곈
+            ) : selectedTabIndex === 2 ? (
+              // 문자 통계
               <Table
                 borderItem={borderItem}
                 contents={tableContents}
                 headColor={Colors.white}
                 headHeight={52}
+                titles={smsStatisticsTableTitles}
+              />
+            ) : (
+              // 알림 문자 통계
+              <Table
+                borderItem={borderItem}
+                contents={tableContents}
+                headColor={Colors.white}
+                headHeight={33}
                 titles={notificationStatisticsTableTitles}
               />
             )}
