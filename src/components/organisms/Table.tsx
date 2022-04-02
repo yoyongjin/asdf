@@ -4,6 +4,7 @@ import styled, { css } from 'styled-components';
 import { TableTitle, TableContent } from 'components/molecules';
 import { ITableTitleData } from 'components/molecules/TableTitle';
 import { Colors } from 'utils/color';
+import { ITableContentData } from 'components/molecules/TableContent';
 
 const StyledWrapper = styled.table`
   border-collapse: collapse;
@@ -171,29 +172,9 @@ interface IStyledHeadProps {
   height: number;
 }
 
-export interface TableContentOption {
-  currentBranchId?: number;
-  currentPage?: number;
-  currentSearchText?: string;
-  currentTeamId?: number;
-  currentLimit?: number;
-}
-
-export interface TableContentStyles {
-  tableHeight: number;
-}
-
-export interface TableContentData {
-  click?: Array<any>;
-  data: Array<any>;
-  option?: TableContentOption;
-  styles?: TableContentStyles;
-  type: string;
-}
-
 interface ITableProps {
   borderItem?: IStyledCustomBorder;
-  contents: TableContentData;
+  contents: ITableContentData;
   dependencyTitles?: ITableTitleData[][];
   headColor: string;
   headHeight: number;

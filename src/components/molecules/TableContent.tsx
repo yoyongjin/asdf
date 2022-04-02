@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { StatisticsProperty, UserProperty } from 'components/molecules';
-import { TableContentData } from 'components/organisms/Table';
 import { Colors } from 'utils/color';
 
 const StyledWrapper = styled.tr<StyledTableContent>`
@@ -11,7 +10,7 @@ const StyledWrapper = styled.tr<StyledTableContent>`
   border-bottom: 1px solid ${Colors.gray7};
 `;
 
-function TableContent({ contents }: TableContentProps) {
+function TableContent({ contents }: ITableContentProps) {
   return (
     <>
       {contents.data.map((data, i) => {
@@ -55,8 +54,29 @@ interface StyledTableContent {
   height: number;
 }
 
-interface TableContentProps {
-  contents: TableContentData;
+export interface ITableContentOption {
+  currentBranchId?: number;
+  currentPage?: number;
+  currentSearchText?: string;
+  currentTeamId?: number;
+  currentLimit?: number;
+}
+
+export interface ITableContentStyles {
+  tableHeight: number;
+}
+
+export interface ITableContentData {
+  originData?: Array<any>;
+  click?: Array<any>;
+  data: Array<any>;
+  option?: ITableContentOption;
+  styles?: ITableContentStyles;
+  type: string;
+}
+
+interface ITableContentProps {
+  contents: ITableContentData;
 }
 
 TableContent.defaultProps = {};

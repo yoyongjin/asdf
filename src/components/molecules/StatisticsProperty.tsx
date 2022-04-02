@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { Text } from 'components/atoms';
-import { TableContentOption } from 'components/organisms/Table';
+import { ITableContentOption } from 'components/molecules/TableContent';
 import { StatisticsData } from 'types/statistics';
 import { Colors } from 'utils/color';
 import Utils from 'utils/new_utils';
@@ -51,7 +51,7 @@ function StatisticsProperty({
 }
 
 interface TableContentProps {
-  options: TableContentOption;
+  options: ITableContentOption;
   orderId: number;
   statisticsData: StatisticsData;
 }

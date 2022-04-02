@@ -346,26 +346,6 @@ export interface TableTitleData {
   width: number;
 }
 
-export interface TableContentData {
-  click?: Array<any>;
-  data: Array<any>;
-  option?: TableContentOption;
-  styles?: TableContentStyles;
-  type: string;
-}
-
-export interface TableContentStyles {
-  tableHeight: number;
-}
-
-export interface TableContentOption {
-  currentBranchId?: number;
-  currentPage?: number;
-  currentSearchText?: string;
-  currentTeamId?: number;
-  currentLimit?: number;
-}
-
 StatisticsView.defaultProps = {};
 
 export default StatisticsView;

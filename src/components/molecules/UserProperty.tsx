@@ -17,7 +17,7 @@ import optionIcon from 'images/bt-user-modi-nor.png';
 import optionHoverIcon from 'images/bt-user-modi-over.png';
 import { OnClickRemoveUser, OnClickResetPassword } from 'hooks/useUser';
 import { SetSeletedConsultantData } from 'components/organisms/UserView';
-import { TableContentOption } from 'components/organisms/Table';
+import { ITableContentOption } from 'components/molecules/TableContent';
 
 const StyledWrapper = styled.td``;
 
@@ -160,7 +160,7 @@ interface TableContentProps {
   onClickUserDataPopup: SetSeletedConsultantData;
   onClickRemoveUser: OnClickRemoveUser;
   onClickResetPassword: OnClickResetPassword;
-  options: TableContentOption;
+  options: ITableContentOption;
 }
 
 UserProperty.defaultProps = {};
