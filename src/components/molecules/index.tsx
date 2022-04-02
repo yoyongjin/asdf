@@ -1,5 +1,6 @@
 import ChangedPasswordForm from './ChangedPasswordForm';
 import Consultant from './Consultant';
+import DateRangePicker from './DateRangePikcer';
 import LinkSelector from './LinkSelector';
 import List from './List';
 import Organization from './Organization';
@@ -27,6 +28,7 @@ import UserProperty from './UserProperty';
 export {
   ChangedPasswordForm,
   Consultant,
+  DateRangePicker,
   LinkSelector,
   List,
   Organization,
