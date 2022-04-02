@@ -1,17 +1,8 @@
 import React, { useCallback } from 'react';
-import styled from 'styled-components';
 
 import { Text, CheckBox } from 'components/atoms';
 import { TonChangeCheckBox } from 'hooks/useInputForm';
-
-const StyledWrapper = styled.div`
-  min-width: 170px;
-`;
-
-const StyledBlank = styled.span`
-  padding-left: 4px;
-  padding-right: 4px;
-`;
+import { StyledCommonBothWhiteSpace } from 'styles/common';
 
 /**
  * @description text + checkbox 컴포넌트
@@ -61,7 +52,7 @@ function TextCheckBox({
       return (
         <>
           {CheckBoxView()}
-          <StyledBlank />
+          <StyledCommonBothWhiteSpace pixel={6} />
           {TextView()}
         </>
       );
@@ -70,13 +61,13 @@ function TextCheckBox({
     return (
       <>
         {TextView()}
-        <StyledBlank />
+        <StyledCommonBothWhiteSpace pixel={6} />
         {CheckBoxView()}
       </>
     );
   }, [CheckBoxView, TextView, isReverse]);
 
-  return <StyledWrapper>{RenderView()}</StyledWrapper>;
+  return <div>{RenderView()}</div>;
 }
 
 /**
