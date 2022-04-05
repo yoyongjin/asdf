@@ -121,12 +121,10 @@ const StyledTitle = styled.div`
   width: 100%;
 `;
 
-const StyledSMSArea = styled.div`
+const StyledContent = styled.div`
   height: calc(100% - 4.275rem);
   overflow-x: auto;
 `;
-
-const StyledTableContent = styled.div``;
 
 function SMSView() {
   const { onChangeSelectedTabIndex, selectedTabIndex } = useTab();
@@ -425,8 +423,8 @@ function SMSView() {
             titleStyle={getTitleStyle(2)}
           />
         </StyledTitle>
-        <StyledSMSArea>
-          <StyledTableContent>
+        <StyledContent>
+          <div>
             {selectedTabIndex === 0 ? (
               // 상담원별 통화 통계
               <Table
@@ -446,8 +444,8 @@ function SMSView() {
                 titles={settingMessageCountTableTitles}
               />
             )}
-          </StyledTableContent>
-        </StyledSMSArea>
+          </div>
+        </StyledContent>
       </StyledWrapper>
     </>
   );
