@@ -2,6 +2,7 @@ import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 
+import { Modal } from 'components/atoms';
 import { TitleV2 } from 'components/molecules';
 import { IProperty as ITableProperty } from 'components/molecules/TableProperty';
 import { Table } from 'components/organisms';
@@ -10,6 +11,7 @@ import useInputForm from 'hooks/useInputForm';
 import useMessage from 'hooks/useMessage';
 import useOrganization from 'hooks/useOrganization';
 import useTab from 'hooks/useTab';
+import useVisible from 'hooks/useVisible';
 import { Colors } from 'utils/color';
 import constants, { USER_TYPE } from 'utils/constants';
 
@@ -139,6 +141,7 @@ function SMSView() {
   });
   const { branches, getBranches } = useOrganization();
   const { getSmsCount, maxCountData, modifySmsCount } = useMessage();
+  const { visible, onClickVisible } = useVisible();
 
   const branchSelectOption = useMemo(() => {
     return branches!.map((values) => {
@@ -271,6 +274,7 @@ function SMSView() {
       type: 'button',
       data: {
         image: AUTO_MESSAGE_IMAGE,
+        onClick: onClickVisible,
       },
       styles: {
         height: 2.5,
@@ -279,7 +283,7 @@ function SMSView() {
     };
 
     return [buttonConfig1];
-  }, []);
+  }, [onClickVisible]);
 
   /**
    * @description 타이틀에 들어갈 select 정보들
@@ -456,6 +460,7 @@ function SMSView() {
           </div>
         </StyledContent>
       </StyledWrapper>
+      <Modal isVisible={visible} Component={<></>} />
     </>
   );
 }

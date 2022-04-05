@@ -14,6 +14,7 @@ import { DateRangePicker, TabTitle, TextCheckBox } from 'components/molecules';
 import { ITabItem } from 'components/molecules/TabTitle';
 import { TonChangeDatePicker } from 'hooks/useDatePicker';
 import { TonChangeCheckBox, TonChangeSelect } from 'hooks/useInputForm';
+import { TOnClickVisible } from 'hooks/useVisible';
 import { StyledCommonBothWhiteSpace } from 'styles/common';
 import { Colors } from 'utils/color';
 
@@ -51,6 +52,7 @@ function TitleV2({ renderLeft, renderRight, titleStyle }: ITitleProps) {
             borderStyle={styles?.borderStyle}
             borderWidth={styles?.borderWidth}
             height={styles?.height}
+            onClick={data.onClick}
             width={styles?.width}
           >
             <Text
@@ -68,6 +70,7 @@ function TitleV2({ renderLeft, renderRight, titleStyle }: ITitleProps) {
         <Button
           image={data.image}
           height={styles?.height}
+          onClick={data.onClick}
           width={styles?.width}
         />
       );
@@ -355,6 +358,7 @@ interface ITextCheckBoxStyle extends ITextItemStyle {}
 interface IButtonItem {
   text?: string;
   image?: string;
+  onClick?: TOnClickVisible;
 }
 
 // muli select 요소 정보
