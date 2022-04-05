@@ -62,6 +62,14 @@ class Utils {
     return mac || '';
   }
 
+  /**
+   * @description 숫자만 필터링하는 함수
+   * @param str 문자열
+   */
+  static formatNumber(str = '') {
+    return str.replace(/[^0-9]/gi, '');
+  }
+
   static formatPhoneNumber(str = '', delim = '-') {
     const clean = str.replace(/[^\d]+/gi, '').substr(0, 13);
     let r = krPhone.input(clean);

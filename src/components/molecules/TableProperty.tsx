@@ -7,6 +7,7 @@ import { Colors } from 'utils/color';
 import { TModifySmsCount } from 'hooks/useMessage';
 import { DynamicJSON } from 'types/common';
 import { IMaxMessageItem } from 'types/message';
+import Utils from 'utils/new_utils';
 
 const StyledWrapper = styled.td<IStyledWrapper>`
   text-align: ${(props) => props.textAlign};
@@ -98,7 +99,7 @@ function TableProperty({
         name={name}
         onChange={onChangeInput}
         textAlign={styles?.textAlign}
-        value={value}
+        value={data.isNumber ? Utils.formatNumber(String(value)) : value}
         width={styles?.width}
         disabled={data.disabled}
       />
@@ -197,6 +198,7 @@ interface IButtonItem {
 // input 요소 정보
 interface IInputItem {
   disabled?: boolean;
+  isNumber?: boolean;
   name?: string;
   onChange?: TonChangeInput;
   value?: string;

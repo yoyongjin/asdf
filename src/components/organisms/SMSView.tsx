@@ -179,6 +179,7 @@ function SMSView() {
             return {
               data: {
                 disabled: loginInfo.admin_id < USER_TYPE.BRANCH_ADMIN, // 지점관리자보다 낮을 경우 수정 불가
+                isNumber: true,
                 value: maxCountValues[index],
               },
               styles: {
