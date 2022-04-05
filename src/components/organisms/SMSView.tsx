@@ -205,6 +205,7 @@ function SMSView() {
         type: 'button',
         propertyStyles: {
           textAlign: 'right',
+          paddingRight: 10,
         },
       };
 

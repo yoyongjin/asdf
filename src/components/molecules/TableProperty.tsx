@@ -11,6 +11,7 @@ import { IMaxMessageItem } from 'types/message';
 const StyledWrapper = styled.td<IStyledWrapper>`
   text-align: ${(props) => props.textAlign};
   padding-left: ${(props) => props.paddingLeft}px;
+  padding-right: ${(props) => props.paddingRight}px;
 `;
 
 /**
@@ -145,6 +146,7 @@ function TableProperty({
           <StyledWrapper
             key={`styled-table-property-wrapper-${index}`}
             paddingLeft={values.propertyStyles?.paddingLeft || 0}
+            paddingRight={values.propertyStyles?.paddingRight || 0}
             textAlign={values.propertyStyles?.textAlign || 'left'}
           >
             {RenderView(values, index)}
@@ -206,6 +208,7 @@ interface ITextItem {
 
 interface ITdStyle {
   paddingLeft?: number;
+  paddingRight?: number;
   textAlign?: string;
 }
 
