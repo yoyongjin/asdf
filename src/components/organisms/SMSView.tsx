@@ -122,7 +122,7 @@ const StyledTitle = styled.div`
 `;
 
 const StyledContent = styled.div`
-  height: calc(100% - 4.275rem);
+  height: calc(100% - 4.275rem - 100px);
   overflow-x: auto;
 `;
 
