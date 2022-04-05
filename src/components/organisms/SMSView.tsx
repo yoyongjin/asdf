@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 
@@ -148,7 +149,16 @@ function SMSView() {
    * @description 발송 수량 설정 테이블 상세 내용 정보들
    */
   const tablePropertyMaxCount = useMemo(() => {
-    return maxCountData.map((values) => {
+    let _maxCountData = _.cloneDeep(maxCountData);
+
+    if (form.branch !== -1) {
+      // 지점이 선택된 경우
+      _maxCountData = maxCountData.filter(
+        (values) => values.branch_id === form.branch,
+      );
+    }
+
+    return _maxCountData.map((values: any) => {
       const maxCountKeys = Object.keys(values);
       const maxCountValues = Object.values(values);
 
@@ -213,7 +223,7 @@ function SMSView() {
 
       return maxCountItems;
     });
-  }, [maxCountData, modifySmsCount]);
+  }, [form.branch, maxCountData, modifySmsCount]);
 
   /**
    * @description 테이블 내용 정보들
