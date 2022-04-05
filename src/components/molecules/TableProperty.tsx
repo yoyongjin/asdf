@@ -100,6 +100,7 @@ function TableProperty({
         textAlign={styles?.textAlign}
         value={value}
         width={styles?.width}
+        disabled={data.disabled}
       />
     );
   };
@@ -195,6 +196,7 @@ interface IButtonItem {
 
 // input 요소 정보
 interface IInputItem {
+  disabled?: boolean;
   name?: string;
   onChange?: TonChangeInput;
   value?: string;

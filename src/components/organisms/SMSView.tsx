@@ -12,6 +12,8 @@ import useInputForm from 'hooks/useInputForm';
 import AUTO_MESSAGE_IMAGE from 'images/bt-add-auto-msg.png';
 import useMessage from 'hooks/useMessage';
 import { IProperty as ITableProperty } from 'components/molecules/TableProperty';
+import useAuth from 'hooks/useAuth';
+import { USER_TYPE } from 'utils/constants';
 
 const tabTitle = [
   {
@@ -133,6 +135,7 @@ function SMSView() {
   });
   const { branches, getBranches } = useOrganization();
   const { getSmsCount, maxCountData, modifySmsCount } = useMessage();
+  const { loginInfo } = useAuth();
 
   const branchSelectOption = useMemo(() => {
     return branches!.map((values) => {
@@ -175,6 +178,7 @@ function SMSView() {
           } else if (key === 'max_count_date' || key === 'max_count_month') {
             return {
               data: {
+                disabled: loginInfo.admin_id < USER_TYPE.BRANCH_ADMIN, // 지점관리자보다 낮을 경우 수정 불가
                 value: maxCountValues[index],
               },
               styles: {
@@ -221,7 +225,7 @@ function SMSView() {
 
       return maxCountItems;
     });
-  }, [form.branch, maxCountData, modifySmsCount]);
+  }, [form.branch, loginInfo.admin_id, maxCountData, modifySmsCount]);
 
   /**
    * @description 테이블 내용 정보들
