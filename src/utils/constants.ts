@@ -163,4 +163,5 @@ export default {
   AUTO_MESSAGE_VERSION: Number(process.env.REACT_APP_AUTO_MESSAGE_VERSION) || 1,
   IS_AUTO_ORGANISMS: process.env.REACT_APP_IS_AUTO_ORGANISMS === 'true',
   IS_AUTO_USER: process.env.REACT_APP_IS_AUTO_USER === 'true',
+  DEFAULT_ID: -1,
 };
