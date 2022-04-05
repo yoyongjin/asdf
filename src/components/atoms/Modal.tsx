@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { Colors } from 'utils/color';
 
-const StyledWrapper = styled.div<ModalProps>`
+const StyledWrapper = styled.div<IStyleWrapper>`
   /* Position */
   position: fixed;
   top: 0;
@@ -21,15 +21,15 @@ const StyledWrapper = styled.div<ModalProps>`
   background-color: rgba(0, 0, 0, 0.6);
 `;
 
-const StyledInner = styled.div`
+const StyledInner = styled.div<IStyledInner>`
   /* Position */
   position: relative;
   top: 50%;
 
   /* Display */
   box-sizing: border-box;
-  width: 640px;
-  height: 570px;
+  width: ${(props) => props.width}px;
+  height: ${(props) => props.height}px;
   padding-left: 51px;
   padding-top: 42px;
   padding-right: 51px;
@@ -39,22 +39,47 @@ const StyledInner = styled.div`
   transform: translateY(-50%);
 
   /* Color */
-  background-color: ${Colors.gray8};
+  background-color: ${(props) => props.backgroundColor};
 `;
 
-function Modal({ isVisible, Component }: ModalProps) {
+function Modal({
+  backgroundColor,
+  Component,
+  height,
+  isVisible,
+  width,
+}: IModalProps) {
   return (
     <StyledWrapper isVisible={isVisible}>
-      <StyledInner>{Component}</StyledInner>
+      <StyledInner
+        backgroundColor={backgroundColor}
+        height={height}
+        width={width}
+      >
+        {Component}
+      </StyledInner>
     </StyledWrapper>
   );
 }
 
-interface ModalProps {
+interface IStyleWrapper {
   isVisible: boolean;
+}
+
+interface IStyledInner {
+  backgroundColor: string;
+  height: number;
+  width: number;
+}
+
+interface IModalProps extends IStyleWrapper, IStyledInner {
   Component?: React.ReactChild;
 }
 
-Modal.defaultProps = {};
+Modal.defaultProps = {
+  backgroundColor: Colors.gray8,
+  height: 570,
+  width: 640,
+};
 
 export default React.memo(Modal);
