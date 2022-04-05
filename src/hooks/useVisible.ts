@@ -12,6 +12,6 @@ function useVisible() {
   };
 }
 
-export type OnClickVisible = () => void;
+export type TOnClickVisible = () => void;
 
 export default useVisible;

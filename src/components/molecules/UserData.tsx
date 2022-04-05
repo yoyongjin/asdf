@@ -20,7 +20,7 @@ import {
   TOnClickAddUser,
   TOnClickModifyUser,
 } from 'hooks/useUser';
-import { OnClickVisible } from 'hooks/useVisible';
+import { TOnClickVisible } from 'hooks/useVisible';
 import { LoginData } from 'types/auth';
 import { UserData as UserDataV2 } from 'types/user';
 import { Colors } from 'utils/color';
@@ -1095,7 +1095,7 @@ interface UserDataProps {
   isVisible?: boolean;
   userData?: UserDataV2;
   onClickDisconnect: OnClickDisconnect;
-  onClickVisible: OnClickVisible;
+  onClickVisible: TOnClickVisible;
   onClickAddUser?: TOnClickAddUser;
   onClickModifyUser?: TOnClickModifyUser;
 }
