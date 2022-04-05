@@ -127,6 +127,7 @@ function TitleV2({ renderLeft, renderRight, titleStyle }: ITitleProps) {
     (data: ISelectItem, styles?: ISelectItemStyle) => {
       return (
         <Select
+          disabled={data.disabled}
           name={data.name}
           borderColor={styles?.borderColor}
           borderRadius={styles?.borderRadius}
@@ -365,6 +366,7 @@ interface IMultiSelectItem {
 
 // select 요소 정보
 interface ISelectItem {
+  disabled?: boolean;
   name: string;
   options?: Array<ISelectOption>;
   onChange?: TonChangeSelect;

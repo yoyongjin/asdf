@@ -13,7 +13,7 @@ import AUTO_MESSAGE_IMAGE from 'images/bt-add-auto-msg.png';
 import useMessage from 'hooks/useMessage';
 import { IProperty as ITableProperty } from 'components/molecules/TableProperty';
 import useAuth from 'hooks/useAuth';
-import { USER_TYPE } from 'utils/constants';
+import constants, { USER_TYPE } from 'utils/constants';
 
 const tabTitle = [
   {
@@ -129,13 +129,16 @@ const StyledContent = styled.div`
 `;
 
 function SMSView() {
+  const { loginInfo } = useAuth();
   const { onChangeSelectedTabIndex, selectedTabIndex } = useTab();
   const { form, onChangeSelect } = useInputForm({
-    branch: -1,
+    branch:
+      loginInfo.admin_id < USER_TYPE.ADMIN
+        ? loginInfo.branch_id
+        : constants.DEFAULT_ID, // 지점 관리자부터 하위 관리자들은 자신의 지점만 볼 수 있다.
   });
   const { branches, getBranches } = useOrganization();
   const { getSmsCount, maxCountData, modifySmsCount } = useMessage();
-  const { loginInfo } = useAuth();
 
   const branchSelectOption = useMemo(() => {
     return branches!.map((values) => {
@@ -152,7 +155,7 @@ function SMSView() {
   const tablePropertyMaxCount = useMemo(() => {
     let _maxCountData = _.cloneDeep(maxCountData);
 
-    if (form.branch !== -1) {
+    if (form.branch !== constants.DEFAULT_ID) {
       // 지점이 선택된 경우
       _maxCountData = maxCountData.filter(
         (values) => values.branch_id === form.branch,
@@ -285,6 +288,7 @@ function SMSView() {
     const selectConfig1 = {
       type: 'select',
       data: {
+        disabled: loginInfo.admin_id < USER_TYPE.ADMIN,
         value: form.branch,
         name: 'branch',
         onChange: onChangeSelect,
@@ -299,7 +303,7 @@ function SMSView() {
     };
 
     return [selectConfig1];
-  }, [branchSelectOption, form.branch, onChangeSelect]);
+  }, [branchSelectOption, form.branch, loginInfo.admin_id, onChangeSelect]);
 
   /**
    * @description 타이틀에 들어갈 tab 정보들
