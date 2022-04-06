@@ -1,8 +1,14 @@
 import React, { useCallback } from 'react';
+import styled from 'styled-components';
 
 import { Text, CheckBox } from 'components/atoms';
 import { TonChangeCheckBox } from 'hooks/useInputForm';
 import { StyledCommonBothWhiteSpace } from 'styles/common';
+
+const StyledWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+`;
 
 /**
  * @description text + checkbox 컴포넌트
@@ -68,7 +74,7 @@ function TextCheckBox({
     );
   }, [CheckBoxView, TextView, distance, isReverse]);
 
-  return <div>{RenderView()}</div>;
+  return <StyledWrapper>{RenderView()}</StyledWrapper>;
 }
 
 /**
