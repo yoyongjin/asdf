@@ -3,6 +3,7 @@ import { createGlobalStyle } from 'styled-components';
 import FranklinGothicCondensed from 'fonts/Franklin Gothic Condensed.otf';
 import NanumBarunGothic from 'fonts/NanumBarunGothic.ttf';
 import NanumGothic from 'fonts/NanumGothic.ttf';
+import MalgunGothic from 'fonts/MalgunGothic.ttf';
 
 export const GlobalFonts = createGlobalStyle`
     @font-face {
@@ -17,5 +18,9 @@ export const GlobalFonts = createGlobalStyle`
     @font-face {
         font-family: 'NanumGothic';
         src: url(${NanumGothic})
+    }
+    @font-face {
+        font-family: 'MalgunGothic';
+        src: url(${MalgunGothic})
     }
 `;
