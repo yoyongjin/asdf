@@ -183,6 +183,7 @@ function TitleV2({ renderLeft, renderRight, titleStyle }: ITitleProps) {
         fontFamily={styles?.fontFamily || 'NanumGothic'}
         fontSize={styles?.fontSize || 18}
         fontWeight={styles?.fontWeight || 800}
+        onClick={data.onClick}
       >
         {data.text}
       </Text>
@@ -395,6 +396,7 @@ interface ICheckBoxItem {
 // text 요소 정보
 interface ITextItem {
   text: string;
+  onClick?: () => void;
 }
 
 // checkbox + text 요소 정보
