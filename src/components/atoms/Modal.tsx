@@ -30,10 +30,10 @@ const StyledInner = styled.div<IStyledInner>`
   box-sizing: border-box;
   width: ${(props) => props.width}px;
   height: ${(props) => props.height}px;
-  padding-left: 51px;
-  padding-top: 42px;
-  padding-right: 51px;
-  padding-bottom: 30px;
+  padding-left: ${(props) => props.paddingLeft}px;
+  padding-top: ${(props) => props.paddingTop}px;
+  padding-right: ${(props) => props.paddingRight}px;
+  padding-bottom: ${(props) => props.paddingBottom}px;
   box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
   margin: 0 auto;
   transform: translateY(-50%);
@@ -47,6 +47,10 @@ function Modal({
   Component,
   height,
   isVisible,
+  paddingBottom,
+  paddingLeft,
+  paddingRight,
+  paddingTop,
   width,
 }: IModalProps) {
   return (
@@ -54,6 +58,10 @@ function Modal({
       <StyledInner
         backgroundColor={backgroundColor}
         height={height}
+        paddingBottom={paddingBottom}
+        paddingLeft={paddingLeft}
+        paddingRight={paddingRight}
+        paddingTop={paddingTop}
         width={width}
       >
         {Component}
@@ -69,6 +77,10 @@ interface IStyleWrapper {
 interface IStyledInner {
   backgroundColor: string;
   height: number;
+  paddingBottom: number;
+  paddingLeft: number;
+  paddingRight: number;
+  paddingTop: number;
   width: number;
 }
 
@@ -79,6 +91,10 @@ interface IModalProps extends IStyleWrapper, IStyledInner {
 Modal.defaultProps = {
   backgroundColor: Colors.gray8,
   height: 570,
+  paddingBottom: 30,
+  paddingLeft: 51,
+  paddingRight: 51,
+  paddingTop: 42,
   width: 640,
 };
 
