@@ -256,7 +256,7 @@ function TitleV2({ renderLeft, renderRight, titleStyle }: ITitleProps) {
       borderBottomWidth={titleStyle?.borderBottomWidth}
     >
       {renderLeft && (
-        <StyledPostion float="left" marginTop={titleStyle?.leftMarginTop || 15}>
+        <StyledPostion float="left" marginTop={titleStyle?.leftMarginTop ?? 15}>
           {renderLeft.renderConfig.map((config, index) => {
             const paddingLeft =
               renderLeft.renderStyle &&
@@ -286,7 +286,7 @@ function TitleV2({ renderLeft, renderRight, titleStyle }: ITitleProps) {
       {renderRight && (
         <StyledPostion
           float="right"
-          marginTop={titleStyle?.rightMarginTop || 15}
+          marginTop={titleStyle?.rightMarginTop ?? 15}
         >
           {renderRight.renderConfig.map((config) => {
             return RenderView(config);
