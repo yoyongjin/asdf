@@ -16,7 +16,7 @@ const StyledInput = styled.input<StyledInputProps>`
       if (props.logoImg) {
         return 30;
       } else {
-        return 22;
+        return props.paddingLeft;
       }
     } else {
       return 0;
@@ -145,6 +145,7 @@ interface StyledInputProps {
   readonly fontWeight: number | string;
   readonly height: number;
   readonly logoImg?: string;
+  readonly paddingLeft: number;
   readonly phColor?: string;
   readonly textAlign: number;
   readonly width: number;
@@ -184,6 +185,7 @@ Input.defaultProps = {
   disabled: false,
   maxLength: 524288,
   readOnly: false,
+  paddingLeft: 22,
 };
 
 export default React.memo(Input);

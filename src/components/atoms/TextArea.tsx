@@ -11,7 +11,8 @@ const StyledTextArea = styled.textarea<StyledTextAreaProps>`
   resize: none;
 
   /* Position */
-  padding-left: 10px;
+  padding-left: ${(props) => props.paddingLeft}px;
+  padding-top: ${(props) => props.paddingTop}px;
 
   /* Display */
   border-radius: ${(props) => props.borderRadius}px;
@@ -97,6 +98,8 @@ interface StyledTextAreaProps {
   readonly fontWeight: number | string;
   readonly height: number;
   readonly logoImg?: string;
+  readonly paddingLeft: number;
+  readonly paddingTop: number;
   readonly phColor?: string;
   readonly textAlign: number;
   readonly width: number;
@@ -128,6 +131,8 @@ TextArea.defaultProps = {
   disabled: false,
   maxLength: 524288,
   readOnly: false,
+  paddingLeft: 10,
+  paddingTop: 0,
 };
 
 export default React.memo(TextArea);

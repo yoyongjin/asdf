@@ -15,7 +15,7 @@ const StyledSelect = styled.select<SelectProps>`
   width: ${(props) => props.width}px;
 
   /* Text */
-  font-size: 14px;
+  font-size: ${(props) => props.fontSize}px;
 
   /* Color */
   border-color: ${(props) => props.borderColor || props.theme.color.main};
@@ -29,6 +29,7 @@ const StyledSelect = styled.select<SelectProps>`
 const StyledOption = styled.option<StyledOptionProps>`
   /* Color */
   color: ${(props) => props.optionFontColor};
+  font-size: ${(props) => props.optionFontSize}px;
 `;
 
 function Select({
@@ -74,6 +75,7 @@ interface StyledSelectProps extends StyledOptionProps {
   borderRadius: number;
   borderWidth: number;
   fontColor?: string;
+  fontSize: number;
   height: number;
   paddingLeft: number;
   width: number;
@@ -82,6 +84,7 @@ interface StyledSelectProps extends StyledOptionProps {
 
 interface StyledOptionProps {
   optionFontColor: string;
+  optionFontSize: number;
 }
 
 export interface IOption {
@@ -102,9 +105,11 @@ Select.defaultProps = {
   borderRadius: 6,
   borderWidth: 1,
   disabled: false,
+  fontSize: 14,
   height: 30,
   isUsedId: true,
   optionFontColor: Colors.gray10,
+  optionFontSize: 14,
   paddingLeft: 6,
   width: 100,
   bgColor: Colors.white,
