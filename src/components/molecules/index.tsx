@@ -1,3 +1,4 @@
+import AutoMessagePopup from './AutoMessagePopup';
 import ChangedPasswordForm from './ChangedPasswordForm';
 import Consultant from './Consultant';
 import DateRangePicker from './DateRangePikcer';
@@ -28,6 +29,7 @@ import UserLog from './UserLog';
 import UserProperty from './UserProperty';
 
 export {
+  AutoMessagePopup,
   ChangedPasswordForm,
   Consultant,
   DateRangePicker,

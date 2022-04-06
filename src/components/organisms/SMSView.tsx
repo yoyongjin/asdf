@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 
 import { Modal } from 'components/atoms';
-import { TitleV2 } from 'components/molecules';
+import { AutoMessagePopup, TitleV2 } from 'components/molecules';
 import { IProperty as ITableProperty } from 'components/molecules/TableProperty';
 import { Table } from 'components/organisms';
 import useAuth from 'hooks/useAuth';
@@ -460,7 +460,17 @@ function SMSView() {
           </div>
         </StyledContent>
       </StyledWrapper>
-      <Modal isVisible={visible} Component={<></>} />
+      <Modal
+        backgroundColor={Colors.white}
+        Component={<AutoMessagePopup onClickVisible={onClickVisible} />}
+        height={643}
+        isVisible={visible}
+        paddingBottom={21}
+        paddingLeft={36}
+        paddingRight={36}
+        paddingTop={24}
+        width={400}
+      />
     </>
   );
 }
