@@ -11,6 +11,7 @@ import constants, { COMPANY_TYPE } from 'utils/constants';
 import dblifeLogo from 'images/db-logo-cont@3x.png';
 import linaLogo from 'images/ln-logo-moni.png';
 import defaultLogo from 'images/zms/sub-gnb-logo.png';
+import defaultLogoV2 from 'images/zms/sub-gnb-logo-v2.png';
 import SocketEventHandler from 'lib/socketEventHandler';
 
 function MainPage({ location }: MainPageProps) {
@@ -87,7 +88,7 @@ function MainPage({ location }: MainPageProps) {
               ? dblifeLogo
               : constants.COMPANY === COMPANY_TYPE.LINA
               ? linaLogo
-              : defaultLogo
+              : defaultLogoV2
           }
           onClickLogout={onClickLogout}
         />

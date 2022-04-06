@@ -7,6 +7,7 @@ import constants, { COMPANY_TYPE } from 'utils/constants';
 import dblifeLogo from 'images/logo/db-logo-login@3x.png';
 import ziboxLogo from 'images/logo/zibox-sn@3x.png';
 import defaultLoginImage from 'images/main/main-visual.png';
+import defaultLoginImageV2 from 'images/main/main-visual-v2.png';
 import linaLoginImage from 'images/login-bg.png';
 import { Colors } from 'utils/color';
 
@@ -41,7 +42,7 @@ function AuthPage() {
                 src={
                   constants.COMPANY === COMPANY_TYPE.LINA
                     ? linaLoginImage
-                    : defaultLoginImage
+                    : defaultLoginImageV2
                 }
                 height={480}
                 width={800}
