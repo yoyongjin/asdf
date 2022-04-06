@@ -10,6 +10,7 @@ import Range from './Range';
 import Select from './Select';
 import Text from './Text';
 import TextArea from './TextArea';
+import Toggle from './Toggle';
 
 export {
   Button,
@@ -24,4 +25,5 @@ export {
   Select,
   Text,
   TextArea,
+  Toggle,
 };
