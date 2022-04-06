@@ -11,6 +11,7 @@ function TextCheckBox({
   checkBoxIsChecked,
   checkBoxName,
   checkBoxOnChange,
+  distance,
   isReverse,
   textTitle,
   textFontColor,
@@ -52,7 +53,7 @@ function TextCheckBox({
       return (
         <>
           {CheckBoxView()}
-          <StyledCommonBothWhiteSpace pixel={6} />
+          <StyledCommonBothWhiteSpace pixel={distance} />
           {TextView()}
         </>
       );
@@ -61,11 +62,11 @@ function TextCheckBox({
     return (
       <>
         {TextView()}
-        <StyledCommonBothWhiteSpace pixel={6} />
+        <StyledCommonBothWhiteSpace pixel={distance} />
         {CheckBoxView()}
       </>
     );
-  }, [CheckBoxView, TextView, isReverse]);
+  }, [CheckBoxView, TextView, distance, isReverse]);
 
   return <div>{RenderView()}</div>;
 }
@@ -79,6 +80,7 @@ interface ITextCheckBox {
   checkBoxIsChecked: boolean;
   checkBoxName: string;
   checkBoxOnChange: TonChangeCheckBox;
+  distance: number; // Text와 CheckBox의 거리
   isReverse: boolean; // 뒤집을지에 대한 여부
   textFontColor?: string;
   textFontFamily?: string;
@@ -88,6 +90,7 @@ interface ITextCheckBox {
 }
 
 TextCheckBox.defaultProps = {
+  distance: 6,
   isReverse: false,
 };
 
