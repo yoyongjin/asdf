@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
+
 function useVisible() {
   const [visible, setVisible] = useState<boolean>(false);
 
-  const onClickVisible = () => {
+  const onClickVisible = useCallback(() => {
     setVisible(!visible);
-  };
+  }, [visible]);
 
   return {
     visible,
