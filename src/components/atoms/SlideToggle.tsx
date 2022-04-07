@@ -66,6 +66,7 @@ function SlideToggle({
   id,
   isChecked,
   onChange,
+  onClick,
   ...rest
 }: ISlideToggle) {
   return (
@@ -76,7 +77,7 @@ function SlideToggle({
         onChange={onChange}
         type="checkbox"
       />
-      <StyledLabel htmlFor={id} {...rest}>
+      <StyledLabel htmlFor={id} onClick={onClick} {...rest}>
         <StyledBall size={rest.height - 5} ballColor={ballColor}>
           {emoji && (
             <StyledEmoji>
@@ -110,6 +111,7 @@ interface ISlideToggle extends IStyledLabel {
   id: string;
   isChecked: boolean;
   onChange?: TonChangeCheckBox;
+  onClick?: () => void;
 }
 
 SlideToggle.defaultProps = {

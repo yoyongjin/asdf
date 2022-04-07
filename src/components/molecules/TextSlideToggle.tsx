@@ -21,6 +21,7 @@ function TextSlideToggle({
   slideToggleId,
   slideToggleIsChecked,
   slideToggleOnChange,
+  slideToggleOnClick,
   slideToggleWidth,
   distance,
   isReverse,
@@ -43,6 +44,7 @@ function TextSlideToggle({
         isChecked={slideToggleIsChecked}
         width={slideToggleWidth}
         onChange={slideToggleOnChange}
+        onClick={slideToggleOnClick}
       />
     );
   }, [
@@ -52,6 +54,7 @@ function TextSlideToggle({
     slideToggleId,
     slideToggleIsChecked,
     slideToggleOnChange,
+    slideToggleOnClick,
     slideToggleWidth,
   ]);
 
@@ -108,6 +111,7 @@ interface ITextSlideToggle {
   slideToggleId: string;
   slideToggleIsChecked: boolean;
   slideToggleOnChange?: TonChangeCheckBox;
+  slideToggleOnClick?: () => void;
   slideToggleWidth: number;
   textFontColor?: string;
   textFontFamily?: string;
