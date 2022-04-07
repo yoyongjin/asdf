@@ -20,6 +20,7 @@ import TextCalendar from './TextCalendar';
 import TextCheckBox from './TextCheckBox';
 import TextInput from './TextInput';
 import TextSelect from './TextSelect';
+import TextSlideToggle from './TextSlideToggle';
 import TextRange from './TextRange';
 import TextTextArea from './TextTextArea';
 import Title from './Title';
@@ -50,6 +51,7 @@ export {
   TextCheckBox,
   TextInput,
   TextSelect,
+  TextSlideToggle,
   TextRange,
   TextTextArea,
   Title,

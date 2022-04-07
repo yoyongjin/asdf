@@ -8,6 +8,7 @@ import Modal from './Modal';
 import MultiSelect from './MultiSelect';
 import Range from './Range';
 import Select from './Select';
+import SlideToggle from './SlideToggle';
 import Text from './Text';
 import TextArea from './TextArea';
 import Toggle from './Toggle';
@@ -23,6 +24,7 @@ export {
   MultiSelect,
   Range,
   Select,
+  SlideToggle,
   Text,
   TextArea,
   Toggle,
