@@ -4,6 +4,7 @@ import {
   IMaxMessageItem,
   IRequestGetAutoMessage,
   IRequestModifySmsCount,
+  IRequestRemoveAutoMessage,
   IRequestSetUsedAutoMessage,
   IResponseGetAutoMessage,
   IResponseSetUsedAutoMessage,
@@ -65,4 +66,20 @@ export const successSetUsedAutoMessage = createAction(
 )<IResponseSetUsedAutoMessage>();
 export const failureSetUsedAutoMessage = createAction(
   FAILURE_SET_USED_AUTO_MESSAGE,
+)<string>();
+
+// 자동 문자 삭제하기
+export const REQUEST_REMOVE_AUTO_MESSAGE = 'REQUEST_REMOVE_AUTO_MESSAGE';
+export const SUCCESS_REMOVE_AUTO_MESSAGE = 'SUCCESS_REMOVE_AUTO_MESSAGE';
+export const FAILURE_REMOVE_AUTO_MESSAGE = 'FAILURE_REMOVE_AUTO_MESSAGE';
+
+// 자동 문자 삭제 Action
+export const requestRemoveAutoMessage = createAction(
+  REQUEST_REMOVE_AUTO_MESSAGE,
+)<IRequestRemoveAutoMessage>();
+export const successRemoveAutoMessage = createAction(
+  SUCCESS_REMOVE_AUTO_MESSAGE,
+)();
+export const failureRemoveAutoMessage = createAction(
+  FAILURE_REMOVE_AUTO_MESSAGE,
 )<string>();

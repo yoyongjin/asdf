@@ -5,7 +5,11 @@ import { Button, Input, Text } from 'components/atoms';
 import { TextSlideToggle } from 'components/molecules';
 import useInputForm, { TonChangeInput } from 'hooks/useInputForm';
 import { Colors } from 'utils/color';
-import { TModifySmsCount, TSetUsedAutoMessage } from 'hooks/useMessage';
+import {
+  TModifySmsCount,
+  TRemoveAutoMessage,
+  TSetUsedAutoMessage,
+} from 'hooks/useMessage';
 import { TOnClickToggle } from 'hooks/useToggle';
 import { DynamicJSON } from 'types/common';
 import { IAutoMessageItem, IMaxMessageItem } from 'types/message';
@@ -37,7 +41,7 @@ function TableProperty({
   >;
 
   const ButtonView = useCallback(
-    (data: IButtonItem, styles?: IButtonItemStyle) => {
+    (key: number, data: IButtonItem, styles?: IButtonItemStyle) => {
       const onClickButton = () => {
         if (data.onClick) {
           if (contentType === 'sms-count') {
@@ -49,7 +53,18 @@ function TableProperty({
               },
             );
 
-            data.onClick(_originItem.branch_id, value1, value2);
+            (data.onClick as TModifySmsCount)(
+              _originItem.branch_id,
+              value1,
+              value2,
+            );
+          } else if (contentType === 'auto-message') {
+            const _originItem = originItem as IAutoMessageItem;
+
+            if (key === 4) {
+              // 5번째 요소(삭제)
+              (data.onClick as TRemoveAutoMessage)(_originItem.id);
+            }
           }
         }
       };
@@ -193,7 +208,7 @@ function TableProperty({
       case 'button': {
         const buttonData = data as IButtonItem;
         const buttonStyles = styles as IButtonItemStyle;
-        return ButtonView(buttonData, buttonStyles);
+        return ButtonView(tablePropertyKey, buttonData, buttonStyles);
       }
       case 'text': {
         const textData = data as ITextItem;
@@ -274,7 +289,7 @@ interface ITextSlideToggleStyle extends ISlideToggleStyle, ITextItemStyle {}
 // button 요소 정보
 interface IButtonItem {
   image?: string;
-  onClick?: TModifySmsCount;
+  onClick?: TModifySmsCount | TRemoveAutoMessage;
   text?: string;
 }
 

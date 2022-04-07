@@ -17,6 +17,7 @@ import constants, { ANSWER_VALUE, USER_TYPE } from 'utils/constants';
 import Utils from 'utils/new_utils';
 
 import AUTO_MESSAGE_IMAGE from 'images/bt-add-auto-msg.png';
+import useFetch from 'hooks/useFetch';
 
 const tabTitle = [
   {
@@ -146,10 +147,12 @@ function SMSView() {
     getAutoMessage,
     getSmsCount,
     setUsedAutoMessage,
+    removeAutoMessage,
     maxCountData,
     modifySmsCount,
   } = useMessage();
   const { visible, onClickVisible } = useVisible();
+  const { removeAutoMessageStatus } = useFetch();
 
   const branchSelectOption = useMemo(() => {
     return branches!.map((values) => {
@@ -274,6 +277,7 @@ function SMSView() {
       const removeData = {
         data: {
           text: '삭제',
+          onClick: removeAutoMessage,
         },
         styles: {
           backgroundColor: Colors.white,
@@ -311,7 +315,7 @@ function SMSView() {
 
       return autoMessageItems;
     });
-  }, [autoMessageData, setUsedAutoMessage]);
+  }, [autoMessageData, removeAutoMessage, setUsedAutoMessage]);
 
   /**
    * @description 발송 수량 설정 테이블 상세 내용 정보들
@@ -603,7 +607,9 @@ function SMSView() {
         branchId = loginInfo.branch_id;
       }
 
-      getAutoMessage(branchId, page, 15);
+      if (!removeAutoMessageStatus) {
+        getAutoMessage(branchId, page, 15);
+      }
     } else if (selectedTabIndex === 1) {
       // 발송 수량 설정 화면
       getSmsCount();
@@ -615,6 +621,7 @@ function SMSView() {
     loginInfo.admin_id,
     loginInfo.branch_id,
     page,
+    removeAutoMessageStatus,
     selectedTabIndex,
   ]);
 

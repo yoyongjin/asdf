@@ -42,6 +42,10 @@ const initialState: IMessageState = {
       fetch: false,
       error: '',
     },
+    removeAutoMessage: {
+      fetch: false,
+      error: '',
+    },
     setUsedAutoMessage: {
       fetch: false,
       error: '',
@@ -148,6 +152,26 @@ const userReducer = createReducer<IMessageState, TMessageAction>(initialState, {
       autoMessageData[index].use_yn = action.payload.use_yn;
 
       draft.autoMessageData = autoMessageData;
+    });
+  },
+  [types.FAILURE_REMOVE_AUTO_MESSAGE]: (state, action) => {
+    // 자동 문자 삭제하기 실패
+    return produce(state, (draft) => {
+      draft.request.removeAutoMessage.fetch = false;
+      draft.request.removeAutoMessage.error = action.payload;
+    });
+  },
+  [types.REQUEST_REMOVE_AUTO_MESSAGE]: (state, action) => {
+    // 자동 문자 삭제하기 요청
+    return produce(state, (draft) => {
+      draft.request.removeAutoMessage.fetch = true;
+    });
+  },
+  [types.SUCCESS_REMOVE_AUTO_MESSAGE]: (state, action) => {
+    // 자동 문자 삭제하기 성공
+    return produce(state, (draft) => {
+      draft.request.removeAutoMessage.fetch = false;
+      draft.request.removeAutoMessage.error = '';
     });
   },
 });

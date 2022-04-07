@@ -16,6 +16,7 @@ export interface IRequestType {
   getAutoMessage: common.FetchType;
   getSmsCount: common.FetchType;
   modifySmsCount: common.FetchType;
+  removeAutoMessage: common.FetchType;
   setUsedAutoMessage: common.FetchType;
 }
 
@@ -57,6 +58,10 @@ export interface IRequestGetAutoMessage {
 export interface IRequestSetUsedAutoMessage {
   id: number; // 자동 문자 ID
   use_yn: string; // 사용 유무 (Y/N)
+}
+
+export interface IRequestRemoveAutoMessage {
+  id: number; // 자동 문자 ID
 }
 
 export interface IResponseGetAutoMessage {

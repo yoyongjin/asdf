@@ -6,6 +6,7 @@ import {
   requestGetAutoMessage,
   requestGetSmsCount,
   requestModifySmsCount,
+  requestRemoveAutoMessage,
   requestSetUsedAutoMessage,
 } from 'modules/actions/message';
 
@@ -59,6 +60,20 @@ function useMessage() {
   );
 
   /**
+   * @description 자동 문자 삭제하기
+   */
+  const removeAutoMessage = useCallback(
+    (id: number) => {
+      const payload = {
+        id,
+      };
+
+      dispatch(requestRemoveAutoMessage(payload));
+    },
+    [dispatch],
+  );
+
+  /**
    * @description 자동 문자 사용 유무 설정하기
    */
   const setUsedAutoMessage = useCallback(
@@ -79,6 +94,7 @@ function useMessage() {
     getSmsCount,
     maxCountData,
     modifySmsCount,
+    removeAutoMessage,
     setUsedAutoMessage,
   };
 }
@@ -90,5 +106,7 @@ export type TModifySmsCount = (
   maxCountDate: number,
   maxCountMonth: number,
 ) => void;
+
+export type TRemoveAutoMessage = (id: number) => void;
 
 export type TSetUsedAutoMessage = (id: number, used: string) => void;

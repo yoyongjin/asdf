@@ -4,18 +4,22 @@ import {
   failureGetAutoMessage,
   failureGetSmsCount,
   failureModifySmsCount,
+  failureRemoveAutoMessage,
   failureSetUsedAutoMessage,
   requestGetAutoMessage,
   requestGetSmsCount,
   requestModifySmsCount,
+  requestRemoveAutoMessage,
   requestSetUsedAutoMessage,
   REQUEST_GET_AUTO_MESSAGE,
   REQUEST_GET_SMS_COUNT,
   REQUEST_MODIFY_SMS_COUNT,
+  REQUEST_REMOVE_AUTO_MESSAGE,
   REQUEST_SET_USED_AUTO_MESSAGE,
   successGetAutoMessage,
   successGetSmsCount,
   successModifySmsCount,
+  successRemoveAutoMessage,
   successSetUsedAutoMessage,
 } from 'modules/actions/message';
 import ZMSMessage from 'lib/api/zms/message';
@@ -97,6 +101,32 @@ function* modifySmsCountProcess(
   }
 }
 
+function* removeAutoMessageProcess(
+  action: ReturnType<typeof requestRemoveAutoMessage>,
+) {
+  try {
+    const { id } = action.payload;
+
+    const response: ResponseSuccessData | ResponseFailureData = yield call(
+      ZMSMessage.removeAutoMessage,
+      id,
+    );
+
+    if (response.status === API_FETCH.SUCCESS) {
+      const { data } = response as ResponseSuccessData;
+
+      yield put(successRemoveAutoMessage());
+
+      return;
+    }
+
+    const { error_msg } = response as ResponseFailureData;
+    yield put(failureRemoveAutoMessage(error_msg));
+  } catch (error) {
+    yield put(failureRemoveAutoMessage(error.message));
+  }
+}
+
 function* setUsedAutoMessageProcess(
   action: ReturnType<typeof requestSetUsedAutoMessage>,
 ) {
@@ -136,6 +166,10 @@ function* watchModifySmsCount() {
   yield takeLatest(REQUEST_MODIFY_SMS_COUNT, modifySmsCountProcess);
 }
 
+function* watchRemoveAutoMessage() {
+  yield takeLatest(REQUEST_REMOVE_AUTO_MESSAGE, removeAutoMessageProcess);
+}
+
 function* watchSetUsedAutoMessage() {
   yield takeLatest(REQUEST_SET_USED_AUTO_MESSAGE, setUsedAutoMessageProcess);
 }
@@ -145,6 +179,7 @@ function* messageSaga() {
     fork(watchGetAutoMessage),
     fork(watchGetSmsCount),
     fork(watchModifySmsCount),
+    fork(watchRemoveAutoMessage),
     fork(watchSetUsedAutoMessage),
   ]);
 }
