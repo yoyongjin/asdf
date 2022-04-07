@@ -139,6 +139,11 @@ export enum USED_PHONE_STATUS {
   DISPOSE = 3, // 폐기
 }
 
+export enum ANSWER_VALUE {
+  YES = 'Y',
+  NO = 'N',
+}
+
 export const REG_EXR = {
   ip: /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
   mac: /([0-9a-fA-F]{2}-){5}[0-9a-fA-F]{2}/,
@@ -164,4 +169,5 @@ export default {
   IS_AUTO_ORGANISMS: process.env.REACT_APP_IS_AUTO_ORGANISMS === 'true',
   IS_AUTO_USER: process.env.REACT_APP_IS_AUTO_USER === 'true',
   DEFAULT_ID: -1,
+  PARSING_KEY: 'YxAdwk22Fx',
 };

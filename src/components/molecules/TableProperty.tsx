@@ -9,12 +9,18 @@ import { TModifySmsCount } from 'hooks/useMessage';
 import { TOnClickToggle } from 'hooks/useToggle';
 import { DynamicJSON } from 'types/common';
 import { IMaxMessageItem } from 'types/message';
+import constants from 'utils/constants';
 import Utils from 'utils/new_utils';
 
 const StyledWrapper = styled.td<IStyledWrapper>`
   text-align: ${(props) => props.textAlign};
   padding-left: ${(props) => props.paddingLeft}px;
   padding-right: ${(props) => props.paddingRight}px;
+`;
+
+// text 요소가 여러 줄 일 경우
+const StyledTextWrapper = styled.div`
+  padding-bottom: 4px;
 `;
 
 /**
@@ -109,7 +115,24 @@ function TableProperty({
   };
 
   const TextView = useCallback((data: ITextItem, styles?: ITextItemStyle) => {
-    return (
+    return data.count ? (
+      [...Array(data.count)].map((values, index) => {
+        const realTexts = data.text.split(constants.PARSING_KEY);
+
+        return (
+          <StyledTextWrapper>
+            <Text
+              fontColor={styles?.fontColor || Colors.gray4}
+              fontFamily={styles?.fontFamily || 'NanumGothic'}
+              fontSize={styles?.fontSize || 12}
+              fontWeight={styles?.fontWeight}
+            >
+              {realTexts[index]}
+            </Text>
+          </StyledTextWrapper>
+        );
+      })
+    ) : (
       <Text
         fontColor={styles?.fontColor || Colors.gray4}
         fontFamily={styles?.fontFamily || 'NanumGothic'}
@@ -262,6 +285,7 @@ interface ISlideToggleItem {
 
 // text 요소 정보
 interface ITextItem {
+  count?: number; // 렌더 횟수
   text: string;
 }
 

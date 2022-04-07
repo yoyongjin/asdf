@@ -13,7 +13,8 @@ import useOrganization from 'hooks/useOrganization';
 import useTab from 'hooks/useTab';
 import useVisible from 'hooks/useVisible';
 import { Colors } from 'utils/color';
-import constants, { USER_TYPE } from 'utils/constants';
+import constants, { ANSWER_VALUE, USER_TYPE } from 'utils/constants';
+import Utils from 'utils/new_utils';
 
 import AUTO_MESSAGE_IMAGE from 'images/bt-add-auto-msg.png';
 
@@ -140,7 +141,13 @@ function SMSView() {
         : constants.DEFAULT_ID, // 지점 관리자부터 하위 관리자들은 자신의 지점만 볼 수 있다.
   });
   const { branches, getBranches } = useOrganization();
-  const { getSmsCount, maxCountData, modifySmsCount } = useMessage();
+  const {
+    autoMessageData,
+    getAutoMessage,
+    getSmsCount,
+    maxCountData,
+    modifySmsCount,
+  } = useMessage();
   const { visible, onClickVisible } = useVisible();
 
   const branchSelectOption = useMemo(() => {
@@ -151,6 +158,158 @@ function SMSView() {
       };
     });
   }, [branches]);
+
+  /**
+   * @description 자동 메시지 테이블 상세 내용 정보들
+   */
+  const tablePropertyAutoMessage = useMemo(() => {
+    let _autoMessageData = _.cloneDeep(autoMessageData);
+
+    return _autoMessageData.map((values) => {
+      const {
+        branch_id,
+        code,
+        content,
+        created_at,
+        days,
+        end_date,
+        end_time,
+        id,
+        priority,
+        start_date,
+        start_time,
+        title,
+        use_yn,
+      } = values;
+
+      let startYear = '';
+      let startMonth = '';
+      let startDay = '';
+      let startDate = '';
+      let endYear = '';
+      let endMonth = '';
+      let endDay = '';
+      let endDate = '';
+
+      if (start_date) {
+        const { year, month, day } = Utils.parsingYYYYMMDD(start_date);
+        startYear = year;
+        startMonth = month;
+        startDay = day;
+        startDate = `${startYear}년 ${startMonth}월 ${startDay}일`;
+      }
+
+      if (end_date) {
+        const { year, month, day } = Utils.parsingYYYYMMDD(end_date);
+        endYear = year;
+        endMonth = month;
+        endDay = day;
+        endDate = `${endYear}년 ${endMonth}월 ${endDay}일`;
+      }
+
+      const createdAtfullDate = Utils.getFullDate(
+        new Date(created_at).getTime(),
+        '.',
+        '.',
+      );
+
+      const fullDate = startDate && endDate && `[${startDate} ~ ${endDate}]`;
+      const fullTime =
+        start_time && end_time && `[${start_time} ~ ${end_time}]`;
+
+      let fullDays = '';
+      if (days) {
+        fullDays = Utils.parsingDays(days).join(', ');
+        fullDays = `[${fullDays}]`;
+      }
+
+      const autoMessageValues = [
+        `${createdAtfullDate}${constants.PARSING_KEY}${id}`,
+        title,
+        `${fullDate} ${fullTime} ${fullDays}${constants.PARSING_KEY}${content}`,
+        use_yn,
+      ];
+
+      const autoMessageItems: Array<ITableProperty> = autoMessageValues.map(
+        (value, index) => {
+          if (index === 3) {
+            const commonColor =
+              value.toUpperCase() === ANSWER_VALUE.YES
+                ? Colors.blue4
+                : Colors.gray13; // 공통 색상
+
+            return {
+              data: {
+                isReverse: true,
+                isChecked: value.toUpperCase() === ANSWER_VALUE.YES,
+                text:
+                  value.toUpperCase() === ANSWER_VALUE.YES
+                    ? '사용중'
+                    : '미사용',
+              },
+              styles: {
+                ballColor: commonColor,
+                borderColor: commonColor,
+                fontColor: commonColor,
+              },
+              type: 'text-slide-toggle',
+            };
+          }
+
+          return {
+            data: {
+              count: 2,
+              text: String(value),
+            },
+            type: 'text',
+            propertyStyles: {
+              paddingLeft: index === 0 ? 10 : 0, // 처음 요소만 padding left 적용
+            },
+          };
+        },
+      );
+
+      const removeData = {
+        data: {
+          text: '삭제',
+        },
+        styles: {
+          backgroundColor: Colors.white,
+          borderColor: Colors.gray13,
+          borderRadius: 12,
+          borderStyle: 'solid',
+          borderWidth: 1,
+          fontColor: Colors.gray13,
+          fontSize: 12,
+          height: 2.4,
+          width: 6.8,
+        },
+        type: 'button',
+      };
+
+      const modifyData = {
+        data: {
+          text: '수정',
+        },
+        styles: {
+          backgroundColor: Colors.white,
+          borderColor: Colors.gray13,
+          borderRadius: 12,
+          borderStyle: 'solid',
+          borderWidth: 1,
+          fontColor: Colors.gray13,
+          fontSize: 12,
+          height: 2.4,
+          width: 6.8,
+        },
+        type: 'button',
+      };
+
+      autoMessageItems.push(removeData, modifyData);
+
+      return autoMessageItems;
+    });
+  }, [autoMessageData]);
 
   /**
    * @description 발송 수량 설정 테이블 상세 내용 정보들
@@ -233,6 +392,20 @@ function SMSView() {
       return maxCountItems;
     });
   }, [form.branch, loginInfo.admin_id, maxCountData, modifySmsCount]);
+
+  /**
+   * @description 자동 메시지 테이블 내용 정보들
+   */
+  const tableContentAutoMessage = useMemo(() => {
+    return {
+      data: tablePropertyAutoMessage,
+      originData: autoMessageData,
+      styles: {
+        rowHeight: 55,
+      },
+      type: 'auto-message',
+    };
+  }, [autoMessageData, tablePropertyAutoMessage]);
 
   /**
    * @description 테이블 내용 정보들
@@ -400,11 +573,16 @@ function SMSView() {
 
   const getTableContent = useCallback(() => {
     if (selectedTabIndex === 0) {
+      return tableContentAutoMessage;
+    } else if (selectedTabIndex === 1) {
       return tableContentMaxCount;
     }
 
-    return tableContentMaxCount;
-  }, [selectedTabIndex, tableContentMaxCount]);
+    return {
+      data: [],
+      type: 'none',
+    };
+  }, [selectedTabIndex, tableContentAutoMessage, tableContentMaxCount]);
 
   useEffect(() => {
     getBranches();
@@ -414,11 +592,29 @@ function SMSView() {
    * @description 발송 수량 설정 화면인 경우 발송 수량 데이터 가져오기
    */
   useEffect(() => {
-    if (selectedTabIndex === 1) {
+    if (selectedTabIndex === 0) {
+      // 자동 문자 화면
+      let branchId = form.branch;
+
+      if (loginInfo.admin_id < USER_TYPE.ADMIN) {
+        // 일반 관리자보다 권한이 낮은 경우 자기 지점만 볼 수 있음
+        branchId = loginInfo.branch_id;
+      }
+
+      getAutoMessage(branchId, page, 15);
+    } else if (selectedTabIndex === 1) {
       // 발송 수량 설정 화면
       getSmsCount();
     }
-  }, [getSmsCount, selectedTabIndex]);
+  }, [
+    form.branch,
+    getAutoMessage,
+    getSmsCount,
+    loginInfo.admin_id,
+    loginInfo.branch_id,
+    page,
+    selectedTabIndex,
+  ]);
 
   return (
     <>
