@@ -36,7 +36,7 @@ const settingAutoMessageTableTitles = [
     paddingLeft: 10,
     textAlign: 'left',
     title: '등록일시 / 번호',
-    width: 15,
+    width: 10,
   },
   {
     fontFamily: 'MalgunGothic',
@@ -45,7 +45,7 @@ const settingAutoMessageTableTitles = [
     letterSpacing: -0.6,
     textAlign: 'left',
     title: '제목',
-    width: 10,
+    width: 15,
   },
   {
     fontFamily: 'MalgunGothic',
@@ -54,7 +54,7 @@ const settingAutoMessageTableTitles = [
     letterSpacing: -0.6,
     textAlign: 'left',
     title: '발송 조건 / 문자 내용',
-    width: 40,
+    width: 45,
   },
   {
     fontFamily: 'MalgunGothic',
@@ -63,16 +63,16 @@ const settingAutoMessageTableTitles = [
     letterSpacing: -0.6,
     textAlign: 'left',
     title: '사용 / 미사용',
-    width: 10,
+    width: 15,
   },
   {
     fontFamily: 'MalgunGothic',
     fontSize: 12,
-    isWidthPercent: true,
+    // isWidthPercent: true,
     letterSpacing: -0.6,
     textAlign: 'left',
     title: '삭제 / 수정',
-    width: 15,
+    width: 70,
   },
 ];
 
