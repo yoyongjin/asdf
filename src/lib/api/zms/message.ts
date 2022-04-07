@@ -106,6 +106,43 @@ class Message {
       throw new Error(error);
     }
   }
+
+  /**
+   * @description 자동문자 사용 유무 설정하기
+   * @param id 자동문자 ID
+   * @param used 사용 유무 (Y/N)
+   * @returns
+   */
+  static async setUsedAutoMessage(id: number, used: string) {
+    const params = {
+      id,
+      use_yn: used,
+    };
+
+    try {
+      const token = Main.getAccessToken();
+
+      const { data } = await APIManager.patch(
+        url.zms.api.path.set_used_auto_message,
+        params,
+        {
+          token,
+        },
+      );
+
+      Logger.log('Set Used Auto Message Data', JSON.stringify(data));
+
+      return data;
+    } catch (error) {
+      if (error.response?.data) {
+        Logger.log(JSON.stringify(error.response.data));
+
+        return error.response.data;
+      }
+
+      throw new Error(error);
+    }
+  }
 }
 
 export default Message;

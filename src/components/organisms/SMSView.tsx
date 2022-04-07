@@ -145,6 +145,7 @@ function SMSView() {
     autoMessageData,
     getAutoMessage,
     getSmsCount,
+    setUsedAutoMessage,
     maxCountData,
     modifySmsCount,
   } = useMessage();
@@ -246,6 +247,7 @@ function SMSView() {
                   value.toUpperCase() === ANSWER_VALUE.YES
                     ? '사용중'
                     : '미사용',
+                onClick: setUsedAutoMessage,
               },
               styles: {
                 ballColor: commonColor,
@@ -309,7 +311,7 @@ function SMSView() {
 
       return autoMessageItems;
     });
-  }, [autoMessageData]);
+  }, [autoMessageData, setUsedAutoMessage]);
 
   /**
    * @description 발송 수량 설정 테이블 상세 내용 정보들

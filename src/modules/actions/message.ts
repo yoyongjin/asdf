@@ -4,7 +4,9 @@ import {
   IMaxMessageItem,
   IRequestGetAutoMessage,
   IRequestModifySmsCount,
+  IRequestSetUsedAutoMessage,
   IResponseGetAutoMessage,
+  IResponseSetUsedAutoMessage,
 } from 'types/message';
 
 // 발송 수량 가져오기
@@ -47,4 +49,20 @@ export const successGetAutoMessage = createAction(
 )<IResponseGetAutoMessage>();
 export const failureGetAutoMessage = createAction(
   FAILURE_GET_AUTO_MESSAGE,
+)<string>();
+
+// 자동 문자 사용 유무 설정하기
+export const REQUEST_SET_USED_AUTO_MESSAGE = 'REQUEST_SET_USED_AUTO_MESSAGE';
+export const SUCCESS_SET_USED_AUTO_MESSAGE = 'SUCCESS_SET_USED_AUTO_MESSAGE';
+export const FAILURE_SET_USED_AUTO_MESSAGE = 'FAILURE_SET_USED_AUTO_MESSAGE';
+
+// 자동 문자 사용 유무 Action
+export const requestSetUsedAutoMessage = createAction(
+  REQUEST_SET_USED_AUTO_MESSAGE,
+)<IRequestSetUsedAutoMessage>();
+export const successSetUsedAutoMessage = createAction(
+  SUCCESS_SET_USED_AUTO_MESSAGE,
+)<IResponseSetUsedAutoMessage>();
+export const failureSetUsedAutoMessage = createAction(
+  FAILURE_SET_USED_AUTO_MESSAGE,
 )<string>();

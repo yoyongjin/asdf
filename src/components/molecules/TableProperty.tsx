@@ -5,11 +5,11 @@ import { Button, Input, Text } from 'components/atoms';
 import { TextSlideToggle } from 'components/molecules';
 import useInputForm, { TonChangeInput } from 'hooks/useInputForm';
 import { Colors } from 'utils/color';
-import { TModifySmsCount } from 'hooks/useMessage';
+import { TModifySmsCount, TSetUsedAutoMessage } from 'hooks/useMessage';
 import { TOnClickToggle } from 'hooks/useToggle';
 import { DynamicJSON } from 'types/common';
-import { IMaxMessageItem } from 'types/message';
-import constants from 'utils/constants';
+import { IAutoMessageItem, IMaxMessageItem } from 'types/message';
+import constants, { ANSWER_VALUE } from 'utils/constants';
 import Utils from 'utils/new_utils';
 
 const StyledWrapper = styled.td<IStyledWrapper>`
@@ -151,7 +151,20 @@ function TableProperty({
       styles?: ITextSlideToggleStyle,
     ) => {
       const name = `${contentType}-slide-toggle-${key}`;
-      const value = form[name] ?? data.isChecked;
+
+      const onClickButton = () => {
+        if (data.onClick) {
+          if (contentType === 'auto-message') {
+            const _originItem = originItem as IAutoMessageItem;
+            const yn =
+              _originItem.use_yn.toLocaleUpperCase() === ANSWER_VALUE.YES
+                ? ANSWER_VALUE.NO
+                : ANSWER_VALUE.YES; // 현재 값의 정반대 값을 넣어줌
+
+            data.onClick(_originItem.id, yn);
+          }
+        }
+      };
 
       return (
         <TextSlideToggle
@@ -159,8 +172,9 @@ function TableProperty({
           slideToggleBallColor={styles?.ballColor}
           slideToggleBorderColor={styles?.borderColor}
           slideToggleId={name}
-          slideToggleIsChecked={Boolean(value)}
+          slideToggleIsChecked={data.isChecked}
           slideToggleOnChange={data.onChange}
+          slideToggleOnClick={onClickButton}
           textFontColor={styles?.fontColor}
           textFontFamily={styles?.fontFamily}
           textFontSize={styles?.fontSize}
@@ -169,7 +183,7 @@ function TableProperty({
         />
       );
     },
-    [contentType, form],
+    [contentType, originItem],
   );
 
   const RenderView = (config: IProperty, tablePropertyKey: number) => {
@@ -281,6 +295,7 @@ interface ISlideToggleItem {
   isChecked: boolean;
   width?: number;
   onChange?: TOnClickToggle;
+  onClick?: TSetUsedAutoMessage;
 }
 
 // text 요소 정보
@@ -311,7 +326,7 @@ export interface IProperty {
 interface ITablePropertyProps {
   contents: Array<IProperty>;
   contentType: string; // 컴포넌트 재사용 시 데이터 구분하기 위해
-  originItem: IMaxMessageItem; // 원본 데이터
+  originItem: IMaxMessageItem | IAutoMessageItem; // 원본 데이터
 }
 
 TableProperty.defaultProps = {};

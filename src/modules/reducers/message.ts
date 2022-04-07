@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import produce from 'immer';
 import { createReducer } from 'typesafe-actions';
 
@@ -38,6 +39,10 @@ const initialState: IMessageState = {
       error: '',
     },
     modifySmsCount: {
+      fetch: false,
+      error: '',
+    },
+    setUsedAutoMessage: {
       fetch: false,
       error: '',
     },
@@ -109,6 +114,40 @@ const userReducer = createReducer<IMessageState, TMessageAction>(initialState, {
       draft.autoMessageAllCount = action.payload.count;
       draft.request.getAutoMessage.fetch = false;
       draft.request.getAutoMessage.error = '';
+    });
+  },
+  [types.FAILURE_SET_USED_AUTO_MESSAGE]: (state, action) => {
+    // 자동 문자 사용 유무 설정하기 실패
+    return produce(state, (draft) => {
+      draft.request.setUsedAutoMessage.fetch = false;
+      draft.request.setUsedAutoMessage.error = action.payload;
+    });
+  },
+  [types.REQUEST_SET_USED_AUTO_MESSAGE]: (state, action) => {
+    // 자동 문자 사용 유무 설정하기 요청
+    return produce(state, (draft) => {
+      draft.request.setUsedAutoMessage.fetch = true;
+    });
+  },
+  [types.SUCCESS_SET_USED_AUTO_MESSAGE]: (state, action) => {
+    // 자동 문자 사용 유무 설정하기 성공
+    return produce(state, (draft) => {
+      draft.request.setUsedAutoMessage.fetch = false;
+      draft.request.setUsedAutoMessage.error = '';
+
+      const autoMessageData = _.cloneDeep(state.autoMessageData);
+
+      const index = autoMessageData.findIndex(
+        (values) => values.id === action.payload.id,
+      );
+
+      if (index < 0) {
+        return;
+      }
+
+      autoMessageData[index].use_yn = action.payload.use_yn;
+
+      draft.autoMessageData = autoMessageData;
     });
   },
 });
