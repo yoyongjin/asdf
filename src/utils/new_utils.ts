@@ -123,12 +123,53 @@ class Utils {
     return fullTime;
   }
 
+  /**
+   * @description 총 날짜 가져오기
+   * @param timestamp 시간
+   * @param delimYMD 년월일 구분자
+   * @param delimHMS 시분초 구분자
+   */
+  static getFullDate(timestamp: number, delimYMD = ':', delimHMS = ':') {
+    const yyyymmdd = Utils.getYYYYMMDD(timestamp, delimYMD);
+    const hhmmss = Utils.getHourMinSecByTimestamp(timestamp, delimHMS);
+
+    return `${yyyymmdd} ${hhmmss}`;
+  }
+
   static pad(data: string, standard = 2) {
     if (data.length < standard) {
       return '0' + data;
     }
 
     return data;
+  }
+
+  /**
+   * @description 숫자로 구성된 요일값을 한글로 변경
+   * @param numberOfDays 숫자로 구성된 요일
+   * @param delim 구분자
+   */
+  static parsingDays(numberOfDays: string, delim = '') {
+    const days = ['일', '월', '화', '수', '목', '금', '토'];
+
+    return numberOfDays.split(delim).map((values) => {
+      return days[Number(values)];
+    });
+  }
+
+  /**
+   * @description 년월일 구분자로 된 문자열을 파싱하기
+   * @param formatDate 년월일 문자열 ex) 20220407
+   * @param delim 구분자
+   */
+  static parsingYYYYMMDD(formatDate: string, delim = '-') {
+    const [year, month, day] = formatDate.split(delim);
+
+    return {
+      year,
+      month,
+      day,
+    };
   }
 }
 
