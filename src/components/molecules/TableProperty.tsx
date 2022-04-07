@@ -2,9 +2,11 @@ import React, { useCallback, useRef } from 'react';
 import styled from 'styled-components';
 
 import { Button, Input, Text } from 'components/atoms';
+import { TextSlideToggle } from 'components/molecules';
 import useInputForm, { TonChangeInput } from 'hooks/useInputForm';
 import { Colors } from 'utils/color';
 import { TModifySmsCount } from 'hooks/useMessage';
+import { TOnClickToggle } from 'hooks/useToggle';
 import { DynamicJSON } from 'types/common';
 import { IMaxMessageItem } from 'types/message';
 import Utils from 'utils/new_utils';
@@ -119,6 +121,34 @@ function TableProperty({
     );
   }, []);
 
+  const TextSlideToggleView = useCallback(
+    (
+      key: number,
+      data: ITextSlideToggleItem,
+      styles?: ITextSlideToggleStyle,
+    ) => {
+      const name = `${contentType}-slide-toggle-${key}`;
+      const value = form[name] ?? data.isChecked;
+
+      return (
+        <TextSlideToggle
+          isReverse={data.isReverse}
+          slideToggleBallColor={styles?.ballColor}
+          slideToggleBorderColor={styles?.borderColor}
+          slideToggleId={name}
+          slideToggleIsChecked={Boolean(value)}
+          slideToggleOnChange={data.onChange}
+          textFontColor={styles?.fontColor}
+          textFontFamily={styles?.fontFamily}
+          textFontSize={styles?.fontSize}
+          textFontWeight={styles?.fontWeight}
+          textTitle={data.text}
+        />
+      );
+    },
+    [contentType, form],
+  );
+
   const RenderView = (config: IProperty, tablePropertyKey: number) => {
     const { data, type, styles } = config;
 
@@ -137,6 +167,15 @@ function TableProperty({
         const inputData = data as IInputItem;
         const inputStyles = styles as IInputItemStyle;
         return InputView(tablePropertyKey, inputData, inputStyles);
+      }
+      case 'text-slide-toggle': {
+        const textSlideToggleData = data as ITextSlideToggleItem;
+        const textSlideToggleStyles = styles as ITextSlideToggleStyle;
+        return TextSlideToggleView(
+          tablePropertyKey,
+          textSlideToggleData,
+          textSlideToggleStyles,
+        );
       }
     }
   };
@@ -188,6 +227,13 @@ interface IInputItemStyle extends ITextItemStyle {
   width: number;
 }
 
+interface ISlideToggleStyle {
+  ballColor?: string;
+  borderColor?: string;
+}
+
+interface ITextSlideToggleStyle extends ISlideToggleStyle, ITextItemStyle {}
+
 // button 요소 정보
 interface IButtonItem {
   image?: string;
@@ -205,9 +251,23 @@ interface IInputItem {
   ref: React.MutableRefObject<HTMLInputElement[]>;
 }
 
+// slice toggle 요소 정보
+interface ISlideToggleItem {
+  height?: number;
+  id?: string;
+  isChecked: boolean;
+  width?: number;
+  onChange?: TOnClickToggle;
+}
+
 // text 요소 정보
 interface ITextItem {
   text: string;
+}
+
+// slide toggle + text 요소 정보
+interface ITextSlideToggleItem extends ISlideToggleItem, ITextItem {
+  isReverse: boolean;
 }
 
 interface ITdStyle {
@@ -218,8 +278,9 @@ interface ITdStyle {
 
 export interface IProperty {
   type: string;
-  data: IButtonItem | IInputItem | ITextItem;
-  styles?: IButtonItemStyle | IInputItemStyle | ITextItemStyle; // 사용하는 컴포넌트의 style
+  data: IButtonItem | IInputItem | ITextItem | ITextSlideToggleItem;
+  styles?: // 사용하는 컴포넌트의 style
+  IButtonItemStyle | IInputItemStyle | ITextItemStyle | ITextSlideToggleStyle;
   propertyStyles?: ITdStyle; // 해당 요소의 style
 }
 
