@@ -635,7 +635,7 @@ function SMSView() {
         <StyledContent>
           <div>
             {selectedTabIndex === 0 ? (
-              // 상담원별 통화 통계
+              // 자동 문자
               <Table
                 borderItem={tableHeadBorderStyle}
                 contents={getTableContent()}
@@ -644,7 +644,7 @@ function SMSView() {
                 titles={settingAutoMessageTableTitles}
               />
             ) : (
-              // 알림 문자 통계
+              // 발송 수량 설정
               <Table
                 borderItem={tableHeadBorderStyle}
                 contents={getTableContent()}
