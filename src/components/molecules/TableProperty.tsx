@@ -86,7 +86,7 @@ function TableProperty({
     data: IInputItem,
     styles?: IInputItemStyle,
   ) => {
-    const name = `${key}`;
+    const name = `${contentType}-input-${key}`;
     const value = form[name] ?? data.value;
 
     return (
