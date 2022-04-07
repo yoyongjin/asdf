@@ -15,6 +15,7 @@ const StyledDatePickerWrapper = styled.div`
  */
 function DateRangePicker({
   datePickerBorderStyle,
+  datePickerDisabled,
   datePickerEndOnChange,
   datePickerEndSelectedDate,
   datePickerFormat,
@@ -35,6 +36,7 @@ function DateRangePicker({
       <StyledDatePickerWrapper>
         <DatePicker
           borderStyle={datePickerBorderStyle}
+          disabled={datePickerDisabled}
           format={datePickerFormat}
           height={datePickerHeight}
           isShowTime={datePickerIsShowTime}
@@ -58,6 +60,7 @@ function DateRangePicker({
       <StyledDatePickerWrapper>
         <DatePicker
           borderStyle={datePickerBorderStyle}
+          disabled={datePickerDisabled}
           format={datePickerFormat}
           height={datePickerHeight}
           isShowTime={datePickerIsShowTime}
@@ -73,6 +76,7 @@ function DateRangePicker({
 
 interface IDateRangePicker {
   datePickerBorderStyle?: string;
+  datePickerDisabled: boolean;
   datePickerEndOnChange: TonChangeDatePicker;
   datePickerEndSelectedDate?: Date;
   datePickerFormat?: string;
@@ -90,6 +94,7 @@ interface IDateRangePicker {
 }
 
 DateRangePicker.defaultProps = {
+  datePickerDisabled: false,
   datePickerIsShowTime: false,
   datePickerIsShowTimeOnly: false,
   textFontColor: Colors.navy2,

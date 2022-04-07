@@ -25,6 +25,7 @@ function DatePicker({
   borderRadius,
   borderStyle,
   borderWidth,
+  disabled,
   fontSize,
   format,
   height,
@@ -60,6 +61,7 @@ function DatePicker({
       showTimeSelectOnly={isShowTimeOnly}
       textAlign={textAlign}
       width={width}
+      disabled={disabled}
     />
   );
 }
@@ -76,6 +78,7 @@ interface IStyledDatePicker {
 }
 
 interface IDatePicker extends IStyledDatePicker {
+  readonly disabled: boolean; // 활성화/비활성화 여부
   readonly format: string; // 포맷
   readonly isShowTime: boolean; // 시간도 선택 하도록 할지에 대한 여부
   readonly isShowTimeOnly: boolean; // 시간만 선택 하도록 할지에 대한 여부
@@ -91,6 +94,7 @@ DatePicker.defaultProps = {
   borderRadius: 8,
   borderStyle: 'none',
   borderWidth: 1,
+  disabled: false,
   fontSize: 12,
   format: 'yyyy-MM-dd',
   isShowTime: false,
