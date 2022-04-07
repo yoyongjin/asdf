@@ -29,6 +29,7 @@ export default {
         get_plan: '/api/phone/plan',
         get_info: '/api/phone/info',
         get_sms_count: '/api/message/sms-count',
+        get_auto_message: '/api/message/auto-message',
       },
     },
   },

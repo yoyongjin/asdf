@@ -1,6 +1,11 @@
 import { createAction } from 'typesafe-actions';
 
-import { IMaxMessageItem, IRequestModifySmsCount } from 'types/message';
+import {
+  IMaxMessageItem,
+  IRequestGetAutoMessage,
+  IRequestModifySmsCount,
+  IResponseGetAutoMessage,
+} from 'types/message';
 
 // 발송 수량 가져오기
 export const REQUEST_GET_SMS_COUNT = 'REQUEST_GET_SMS_COUNT';
@@ -26,4 +31,20 @@ export const requestModifySmsCount = createAction(
 export const successModifySmsCount = createAction(SUCCESS_MODIFY_SMS_COUNT)();
 export const failureModifySmsCount = createAction(
   FAILURE_MODIFY_SMS_COUNT,
+)<string>();
+
+// 자동 문자 데이터 가져오기
+export const REQUEST_GET_AUTO_MESSAGE = 'REQUEST_GET_AUTO_MESSAGE';
+export const SUCCESS_GET_AUTO_MESSAGE = 'SUCCESS_GET_AUTO_MESSAGE';
+export const FAILURE_GET_AUTO_MESSAGE = 'FAILURE_GET_AUTO_MESSAGE';
+
+// 자동 문자 데이터 Action
+export const requestGetAutoMessage = createAction(
+  REQUEST_GET_AUTO_MESSAGE,
+)<IRequestGetAutoMessage>();
+export const successGetAutoMessage = createAction(
+  SUCCESS_GET_AUTO_MESSAGE,
+)<IResponseGetAutoMessage>();
+export const failureGetAutoMessage = createAction(
+  FAILURE_GET_AUTO_MESSAGE,
 )<string>();

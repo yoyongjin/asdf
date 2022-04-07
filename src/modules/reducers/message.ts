@@ -11,8 +11,28 @@ const defaultMaxCountItem = {
   max_count_mouth: 0,
 };
 
+const defaultAutoMessageItem = {
+  id: 0,
+  branch_id: 0,
+  title: '',
+  content: '',
+  start_date: null,
+  end_date: null,
+  start_time: null,
+  end_time: null,
+  days: null,
+  use_yn: '',
+  code: null,
+  priority: null,
+  created_at: '',
+};
+
 const initialState: IMessageState = {
   request: {
+    getAutoMessage: {
+      fetch: false,
+      error: '',
+    },
     getSmsCount: {
       fetch: false,
       error: '',
@@ -23,6 +43,8 @@ const initialState: IMessageState = {
     },
   },
   max_count_data: [defaultMaxCountItem],
+  autoMessageData: [defaultAutoMessageItem],
+  autoMessageAllCount: 0,
 };
 
 const userReducer = createReducer<IMessageState, TMessageAction>(initialState, {
@@ -65,6 +87,28 @@ const userReducer = createReducer<IMessageState, TMessageAction>(initialState, {
     return produce(state, (draft) => {
       draft.request.modifySmsCount.fetch = false;
       draft.request.modifySmsCount.error = '';
+    });
+  },
+  [types.FAILURE_GET_AUTO_MESSAGE]: (state, action) => {
+    // 자동 문자 가져오기 실패
+    return produce(state, (draft) => {
+      draft.request.getAutoMessage.fetch = false;
+      draft.request.getAutoMessage.error = action.payload;
+    });
+  },
+  [types.REQUEST_GET_AUTO_MESSAGE]: (state, action) => {
+    // 자동 문자 가져오기 요청
+    return produce(state, (draft) => {
+      draft.request.getAutoMessage.fetch = true;
+    });
+  },
+  [types.SUCCESS_GET_AUTO_MESSAGE]: (state, action) => {
+    // 자동 문자 가져오기 성공
+    return produce(state, (draft) => {
+      draft.autoMessageData = action.payload.data;
+      draft.autoMessageAllCount = action.payload.count;
+      draft.request.getAutoMessage.fetch = false;
+      draft.request.getAutoMessage.error = '';
     });
   },
 });
