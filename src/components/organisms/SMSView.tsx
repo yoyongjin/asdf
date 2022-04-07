@@ -214,13 +214,29 @@ function SMSView() {
 
       const createdAtfullDate = Utils.getFullDate(
         new Date(created_at).getTime(),
+        false,
         '.',
         '.',
       );
 
       const fullDate = startDate && endDate && `[${startDate} ~ ${endDate}]`;
-      const fullTime =
-        start_time && end_time && `[${start_time} ~ ${end_time}]`;
+
+      let startTime = '';
+      let endTime = '';
+
+      if (start_time) {
+        const { hours, minutes, seconds } = Utils.parsingHHMMSS(start_time);
+
+        startTime = `${hours}:${minutes}`;
+      }
+
+      if (end_time) {
+        const { hours, minutes, seconds } = Utils.parsingHHMMSS(end_time);
+
+        endTime = `${hours}:${minutes}`;
+      }
+
+      const fullTime = `[${startTime} ~ ${endTime}]`;
 
       let fullDays = '';
       if (days) {

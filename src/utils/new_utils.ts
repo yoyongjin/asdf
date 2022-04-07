@@ -135,12 +135,20 @@ class Utils {
   /**
    * @description 총 날짜 가져오기
    * @param timestamp 시간
+   * @param isSec 초 가져올지 여부
    * @param delimYMD 년월일 구분자
    * @param delimHMS 시분초 구분자
    */
-  static getFullDate(timestamp: number, delimYMD = ':', delimHMS = ':') {
+  static getFullDate(
+    timestamp: number,
+    isSec = true,
+    delimYMD = ':',
+    delimHMS = ':',
+  ) {
     const yyyymmdd = Utils.getYYYYMMDD(timestamp, delimYMD);
-    const hhmmss = Utils.getHourMinSecByTimestamp(timestamp, delimHMS);
+    const hhmmss = isSec
+      ? Utils.getHourMinSecByTimestamp(timestamp, delimHMS)
+      : Utils.getHourMinByTimestamp(timestamp, delimHMS);
 
     return `${yyyymmdd} ${hhmmss}`;
   }
@@ -178,6 +186,21 @@ class Utils {
       year,
       month,
       day,
+    };
+  }
+
+  /**
+   * @description 시분초 구분자로 된 문자열을 파싱하기
+   * @param formatDate 시분초 문자열 ex) 18:00:00
+   * @param delim 구분자
+   */
+  static parsingHHMMSS(formatTime: string, delim = ':') {
+    const [hours, minutes, seconds] = formatTime.split(delim);
+
+    return {
+      hours,
+      minutes,
+      seconds,
     };
   }
 }
