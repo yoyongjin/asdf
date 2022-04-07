@@ -143,6 +143,7 @@ function SMSView() {
   });
   const { branches, getBranches } = useOrganization();
   const {
+    addAutoMessage,
     autoMessageData,
     getAutoMessage,
     getSmsCount,
@@ -152,7 +153,7 @@ function SMSView() {
     modifySmsCount,
   } = useMessage();
   const { visible, onClickVisible } = useVisible();
-  const { removeAutoMessageStatus } = useFetch();
+  const { addAutoMessageStatus, removeAutoMessageStatus } = useFetch();
 
   const branchSelectOption = useMemo(() => {
     return branches!.map((values) => {
@@ -607,7 +608,7 @@ function SMSView() {
         branchId = loginInfo.branch_id;
       }
 
-      if (!removeAutoMessageStatus) {
+      if (!removeAutoMessageStatus || !addAutoMessageStatus) {
         getAutoMessage(branchId, page, 15);
       }
     } else if (selectedTabIndex === 1) {
@@ -615,6 +616,7 @@ function SMSView() {
       getSmsCount();
     }
   }, [
+    addAutoMessageStatus,
     form.branch,
     getAutoMessage,
     getSmsCount,
@@ -667,7 +669,12 @@ function SMSView() {
       </StyledWrapper>
       <Modal
         backgroundColor={Colors.white}
-        Component={<AutoMessagePopup onClickVisible={onClickVisible} />}
+        Component={
+          <AutoMessagePopup
+            addAutoMessage={addAutoMessage}
+            onClickVisible={onClickVisible}
+          />
+        }
         height={643}
         isVisible={visible}
         paddingBottom={21}

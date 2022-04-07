@@ -4,6 +4,63 @@ import Main from 'lib/api/zms/main';
 import Logger from 'utils/log';
 
 class Message {
+  /**
+   * @description 자동문자 추가하기
+   * @param id 지점 ID
+   * @param content 내용
+   * @param title 제목
+   * @param startDate 시작 날짜
+   * @param endDate 끝 날짜
+   * @param startTime 시작 시각
+   * @param endTime 끝 시각
+   * @param days 요일
+   */
+  static async addAutoMessage(
+    id: number,
+    content: string,
+    title: string,
+    startDate: string,
+    endDate: string,
+    startTime: string,
+    endTime: string,
+    days: string,
+  ) {
+    const params = {
+      branch_id: id,
+      content,
+      days,
+      end_date: endDate,
+      end_time: endTime + ':00',
+      start_date: startDate,
+      start_time: startTime + ':00',
+      title,
+    };
+
+    try {
+      const token = Main.getAccessToken();
+
+      const { data } = await APIManager.post(
+        url.zms.api.path.add_auto_message,
+        params,
+        {
+          token,
+        },
+      );
+
+      Logger.log('Add Auto Message Data', JSON.stringify(data));
+
+      return data;
+    } catch (error) {
+      if (error.response?.data) {
+        Logger.log(JSON.stringify(error.response.data));
+
+        return error.response.data;
+      }
+
+      throw new Error(error);
+    }
+  }
+
   static async getAutoMessage(id: number, page: number, count: number) {
     const params = {
       branch_id: id,

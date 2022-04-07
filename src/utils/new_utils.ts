@@ -111,6 +111,15 @@ class Utils {
     return fullTime;
   }
 
+  static getHourMinByTimestamp(timestamp: number, delim = ' : ') {
+    const date = new Date(timestamp);
+    const hour = date.getHours() + '';
+    const min = date.getMinutes() + '';
+
+    const fullTime = `${Utils.pad(hour)}${delim}${Utils.pad(min)}`;
+    return fullTime;
+  }
+
   static getHourMinSecBySecond(timestamp: number, delim = ':') {
     const hours = Math.floor(timestamp / 3600);
     const minutes = Math.floor((timestamp - hours * 3600) / 60);

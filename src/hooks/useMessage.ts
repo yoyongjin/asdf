@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { RootState } from 'modules/reducers';
 import {
+  requestAddAutoMessage,
   requestGetAutoMessage,
   requestGetSmsCount,
   requestModifySmsCount,
@@ -19,6 +20,36 @@ function useMessage() {
   );
 
   const dispatch = useDispatch();
+
+  /**
+   * @description 자동 문자 추가하기
+   */
+  const addAutoMessage = useCallback(
+    (
+      id: number,
+      title: string,
+      content: string,
+      startDate: string,
+      endDate: string,
+      startTime: string,
+      endTime: string,
+      days: string,
+    ) => {
+      const payload = {
+        branch_id: id,
+        content,
+        days,
+        end_date: endDate,
+        end_time: endTime,
+        start_date: startDate,
+        start_time: startTime,
+        title,
+      };
+
+      dispatch(requestAddAutoMessage(payload));
+    },
+    [dispatch],
+  );
 
   /**
    * @description 발송 수량 가져오기
@@ -89,6 +120,7 @@ function useMessage() {
   );
 
   return {
+    addAutoMessage,
     autoMessageData,
     getAutoMessage,
     getSmsCount,
@@ -100,6 +132,17 @@ function useMessage() {
 }
 
 export default useMessage;
+
+export type TAddAutoMessage = (
+  id: number,
+  title: string,
+  content: string,
+  startDate: string,
+  endDate: string,
+  startTime: string,
+  endTime: string,
+  days: string,
+) => void;
 
 export type TModifySmsCount = (
   id: number,

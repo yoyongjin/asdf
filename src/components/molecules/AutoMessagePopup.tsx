@@ -13,11 +13,13 @@ import {
 import useAuth from 'hooks/useAuth';
 import useDatePicker from 'hooks/useDatePicker';
 import useInputForm from 'hooks/useInputForm';
+import { TAddAutoMessage } from 'hooks/useMessage';
 import useOrganization from 'hooks/useOrganization';
 import useToggle from 'hooks/useToggle';
 import { TOnClickVisible } from 'hooks/useVisible';
 import { Colors } from 'utils/color';
 import constants, { USER_TYPE } from 'utils/constants';
+import Utils from 'utils/new_utils';
 
 const renderSettingTitleData = [
   { id: 0, name: 'subject', text: '', paddingTop: 14, placeholder: '제목' },
@@ -74,7 +76,10 @@ const StyledTextAreaWrapper = styled.div`
   width: 328px;
 `;
 
-function AutoMessagePopup({ onClickVisible }: IAutoMessagePopup) {
+function AutoMessagePopup({
+  addAutoMessage,
+  onClickVisible,
+}: IAutoMessagePopup) {
   const { loginInfo } = useAuth();
   const {
     datePicker: startDatePicker,
@@ -252,6 +257,107 @@ function AutoMessagePopup({ onClickVisible }: IAutoMessagePopup) {
     }
   }, []);
 
+  const daysToString = useMemo(() => {
+    let days = '';
+    days += isToggleSun ? '0' : '';
+    days += isToggleMon ? '1' : '';
+    days += isToggleTue ? '2' : '';
+    days += isToggleWed ? '3' : '';
+    days += isToggleThu ? '4' : '';
+    days += isToggleFri ? '5' : '';
+    days += isToggleSat ? '6' : '';
+
+    return days;
+  }, [
+    isToggleFri,
+    isToggleMon,
+    isToggleSat,
+    isToggleSun,
+    isToggleThu,
+    isToggleTue,
+    isToggleWed,
+  ]);
+
+  const isValidate = useCallback(
+    (title: string, content: string, days: string, branchId: number) => {
+      if (!title) {
+        alert('제목을 입력해주세요.');
+        return false;
+      }
+
+      if (!content) {
+        alert('문자 내용을 입력해주세요.');
+        return false;
+      }
+
+      if (branchId === constants.DEFAULT_ID) {
+        alert('지점을 선택해주세요.');
+        return false;
+      }
+
+      if (!days) {
+        alert('요일을 선택해주세요.');
+        return false;
+      }
+
+      return true;
+    },
+    [],
+  );
+
+  const onClickEvent = useCallback(() => {
+    const branchId = form.branch; // 선택한 지점
+    const title = form.subject; // 제목
+    const content = form.content; // 내용
+    const days = daysToString;
+    const startTime = Utils.getHourMinByTimestamp(
+      new Date(startTimePicker).getTime(),
+      ':',
+    );
+    const endTime = Utils.getHourMinByTimestamp(
+      new Date(endTimePicker).getTime(),
+      ':',
+    );
+
+    let startDate = '';
+    let endDate = '';
+
+    if (!form.daily) {
+      // 상시 체크를 안한 경우
+      startDate = Utils.getYYYYMMDD(new Date(startDatePicker).getTime(), '-');
+      endDate = Utils.getYYYYMMDD(new Date(endDatePicker).getTime(), '-');
+    }
+
+    const isSuccess = isValidate(title, content, days, branchId);
+
+    if (!isSuccess) {
+      return;
+    }
+
+    addAutoMessage(
+      branchId,
+      title,
+      content,
+      startDate,
+      endDate,
+      startTime,
+      endTime,
+      days,
+    );
+  }, [
+    addAutoMessage,
+    daysToString,
+    endDatePicker,
+    endTimePicker,
+    form.branch,
+    form.content,
+    form.daily,
+    form.subject,
+    isValidate,
+    startDatePicker,
+    startTimePicker,
+  ]);
+
   useEffect(() => {
     getBranches();
   }, [getBranches]);
@@ -320,6 +426,7 @@ function AutoMessagePopup({ onClickVisible }: IAutoMessagePopup) {
           return (
             <DateRangePicker
               datePickerBorderStyle="solid"
+              datePickerDisabled={form.daily}
               datePickerEndOnChange={onChangeEndDatePicker}
               datePickerEndSelectedDate={endDatePicker}
               datePickerFormat="yyyy년 MM월 dd일"
@@ -441,6 +548,7 @@ function AutoMessagePopup({ onClickVisible }: IAutoMessagePopup) {
           borderRadius={8}
           width={32.8}
           height={3.6}
+          onClick={onClickEvent}
         >
           <Text
             fontColor={Colors.white}
@@ -469,6 +577,7 @@ interface IStyledSettingItem {
 }
 
 interface IAutoMessagePopup {
+  addAutoMessage: TAddAutoMessage;
   onClickVisible: TOnClickVisible;
 }
 

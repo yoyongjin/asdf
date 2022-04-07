@@ -1,21 +1,25 @@
 import { all, call, fork, takeLatest, put } from 'redux-saga/effects';
 
 import {
+  failureAddAutoMessage,
   failureGetAutoMessage,
   failureGetSmsCount,
   failureModifySmsCount,
   failureRemoveAutoMessage,
   failureSetUsedAutoMessage,
+  requestAddAutoMessage,
   requestGetAutoMessage,
   requestGetSmsCount,
   requestModifySmsCount,
   requestRemoveAutoMessage,
   requestSetUsedAutoMessage,
+  REQUEST_ADD_AUTO_MESSAGE,
   REQUEST_GET_AUTO_MESSAGE,
   REQUEST_GET_SMS_COUNT,
   REQUEST_MODIFY_SMS_COUNT,
   REQUEST_REMOVE_AUTO_MESSAGE,
   REQUEST_SET_USED_AUTO_MESSAGE,
+  successAddAutoMessage,
   successGetAutoMessage,
   successGetSmsCount,
   successModifySmsCount,
@@ -25,6 +29,48 @@ import {
 import ZMSMessage from 'lib/api/zms/message';
 import { ResponseFailureData, ResponseSuccessData } from 'types/common';
 import { API_FETCH } from 'utils/constants';
+
+function* addAutoMessageProcess(
+  action: ReturnType<typeof requestAddAutoMessage>,
+) {
+  try {
+    const {
+      branch_id,
+      content,
+      days,
+      end_date,
+      end_time,
+      start_date,
+      start_time,
+      title,
+    } = action.payload;
+
+    const response: ResponseSuccessData | ResponseFailureData = yield call(
+      ZMSMessage.addAutoMessage,
+      branch_id,
+      title,
+      content,
+      start_date,
+      end_date,
+      start_time,
+      end_time,
+      days,
+    );
+
+    if (response.status === API_FETCH.SUCCESS) {
+      const { data } = response as ResponseSuccessData;
+
+      yield put(successAddAutoMessage());
+
+      return;
+    }
+
+    const { error_msg } = response as ResponseFailureData;
+    yield put(failureAddAutoMessage(error_msg));
+  } catch (error) {
+    yield put(failureAddAutoMessage(error.message));
+  }
+}
 
 function* getAutoMessageProcess(
   action: ReturnType<typeof requestGetAutoMessage>,
@@ -154,6 +200,10 @@ function* setUsedAutoMessageProcess(
   }
 }
 
+function* watchAddAutoMessage() {
+  yield takeLatest(REQUEST_ADD_AUTO_MESSAGE, addAutoMessageProcess);
+}
+
 function* watchGetAutoMessage() {
   yield takeLatest(REQUEST_GET_AUTO_MESSAGE, getAutoMessageProcess);
 }
@@ -176,6 +226,7 @@ function* watchSetUsedAutoMessage() {
 
 function* messageSaga() {
   yield all([
+    fork(watchAddAutoMessage),
     fork(watchGetAutoMessage),
     fork(watchGetSmsCount),
     fork(watchModifySmsCount),

@@ -2,6 +2,7 @@ import { createAction } from 'typesafe-actions';
 
 import {
   IMaxMessageItem,
+  IRequestAddAutoMessage,
   IRequestGetAutoMessage,
   IRequestModifySmsCount,
   IRequestRemoveAutoMessage,
@@ -82,4 +83,18 @@ export const successRemoveAutoMessage = createAction(
 )();
 export const failureRemoveAutoMessage = createAction(
   FAILURE_REMOVE_AUTO_MESSAGE,
+)<string>();
+
+// 자동 문자 추가하기
+export const REQUEST_ADD_AUTO_MESSAGE = 'REQUEST_ADD_AUTO_MESSAGE';
+export const SUCCESS_ADD_AUTO_MESSAGE = 'SUCCESS_ADD_AUTO_MESSAGE';
+export const FAILURE_ADD_AUTO_MESSAGE = 'FAILURE_ADD_AUTO_MESSAGE';
+
+// 자동 문자 추가 Action
+export const requestAddAutoMessage = createAction(
+  REQUEST_ADD_AUTO_MESSAGE,
+)<IRequestAddAutoMessage>();
+export const successAddAutoMessage = createAction(SUCCESS_ADD_AUTO_MESSAGE)();
+export const failureAddAutoMessage = createAction(
+  FAILURE_ADD_AUTO_MESSAGE,
 )<string>();

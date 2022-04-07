@@ -30,6 +30,10 @@ const defaultAutoMessageItem = {
 
 const initialState: IMessageState = {
   request: {
+    addAutoMessage: {
+      fetch: false,
+      error: '',
+    },
     getAutoMessage: {
       fetch: false,
       error: '',
@@ -172,6 +176,26 @@ const userReducer = createReducer<IMessageState, TMessageAction>(initialState, {
     return produce(state, (draft) => {
       draft.request.removeAutoMessage.fetch = false;
       draft.request.removeAutoMessage.error = '';
+    });
+  },
+  [types.FAILURE_ADD_AUTO_MESSAGE]: (state, action) => {
+    // 자동 문자 추가하기 실패
+    return produce(state, (draft) => {
+      draft.request.addAutoMessage.fetch = false;
+      draft.request.addAutoMessage.error = action.payload;
+    });
+  },
+  [types.REQUEST_ADD_AUTO_MESSAGE]: (state, action) => {
+    // 자동 문자 추가하기 요청
+    return produce(state, (draft) => {
+      draft.request.addAutoMessage.fetch = true;
+    });
+  },
+  [types.SUCCESS_ADD_AUTO_MESSAGE]: (state, action) => {
+    // 자동 문자 추가하기 성공
+    return produce(state, (draft) => {
+      draft.request.addAutoMessage.fetch = false;
+      draft.request.addAutoMessage.error = '';
     });
   },
 });

@@ -13,6 +13,7 @@ export interface IMessageState {
 }
 
 export interface IRequestType {
+  addAutoMessage: common.FetchType;
   getAutoMessage: common.FetchType;
   getSmsCount: common.FetchType;
   modifySmsCount: common.FetchType;
@@ -62,6 +63,17 @@ export interface IRequestSetUsedAutoMessage {
 
 export interface IRequestRemoveAutoMessage {
   id: number; // 자동 문자 ID
+}
+
+export interface IRequestAddAutoMessage {
+  branch_id: number; // 지점 ID
+  title: string; // 제목
+  content: string; // 내용
+  start_date: string; // 시작 날짜 ex) YYYY/MM/DD
+  end_date: string; // 종료 날짜 ex) YYYY/MM/DD
+  start_time: string; // 시작 시간 ex) YY:MM
+  end_time: string; // 종료 시간 ex) YY:MM
+  days: string; // 요일 ex) 0123456
 }
 
 export interface IResponseGetAutoMessage {
