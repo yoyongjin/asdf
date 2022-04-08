@@ -1,6 +1,6 @@
 import { ActionType } from 'typesafe-actions';
 
-import * as actions from 'modules/actions/branch';
+import * as actions from 'modules/actions/organization';
 import * as common from 'types/common';
 
 export type OrganizationAction = ActionType<typeof actions>;

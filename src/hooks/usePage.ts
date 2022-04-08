@@ -6,7 +6,7 @@ import Utils from 'utils/new_utils';
 
 function usePage() {
   const maxBranch = useSelector(
-    (state: RootState) => state.branch.numberOfBranch,
+    (state: RootState) => state.organization.numberOfBranch,
   );
   const maxUser = useSelector((state: RootState) => state.user.numberOfUsers);
   const maxAutoMessage = useSelector(

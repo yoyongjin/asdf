@@ -38,7 +38,7 @@ import {
   failureRemoveBranch,
   failureRemoveTeam,
   failureGetBranch,
-} from 'modules/actions/branch';
+} from 'modules/actions/organization';
 import ZMSOrganization from 'lib/api/zms/organization';
 import { ResponseFailureData, ResponseSuccessData } from 'types/common';
 import { API_FETCH } from 'utils/constants';

@@ -1,7 +1,7 @@
 import produce from 'immer';
 import { createReducer } from 'typesafe-actions';
 
-import * as types from 'modules/actions/branch';
+import * as types from 'modules/actions/organization';
 import { OrganizationAction, OrganizationState } from 'types/organization';
 
 const initialState: OrganizationState<string> = {
@@ -409,16 +409,6 @@ const userReducer = createReducer<
     return produce(state, (draft) => {
       draft.request.removeTeam.fetch = false;
       draft.request.removeTeam.error = action.payload;
-    });
-  },
-  [types.INIT_BRANCH_LIST]: (state, action) => {
-    return produce(state, (draft) => {
-      draft.branch.user = [action.payload];
-    });
-  },
-  [types.INIT_TEAM_LST]: (state, action) => {
-    return produce(state, (draft) => {
-      draft.team.user = [];
     });
   },
 });

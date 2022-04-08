@@ -70,10 +70,6 @@ export const REQUEST_REMOVE_TEAM = 'REQUEST_REMOVE_TEAM';
 export const SUCCESS_REMOVE_TEAM = 'SUCCESS_REMOVE_TEAM';
 export const FAILURE_REMOVE_TEAM = 'FAILURE_REMOVE_TEAM';
 
-// ??
-export const INIT_BRANCH_LIST = 'INIT_BRANCH_LIST';
-export const INIT_TEAM_LST = 'INIT_TEAM_LST';
-
 // 액션함수
 
 // 조직 가져오기
@@ -153,7 +149,3 @@ export const requestRemoveTeam =
 export const successRemoveTeam =
   createAction(SUCCESS_REMOVE_TEAM)<SuccessRemoveTeam>();
 export const failureRemoveTeam = createAction(FAILURE_REMOVE_TEAM)<string>();
-
-// ??
-export const initBranchList = createAction(INIT_BRANCH_LIST)<BranchData>();
-export const initTeamList = createAction(INIT_TEAM_LST)();

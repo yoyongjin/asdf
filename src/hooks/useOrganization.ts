@@ -12,21 +12,23 @@ import {
   requestRemoveTeam,
   requestGetBranch,
   requestGetTeam,
-  initBranchList,
-  initTeamList,
-} from 'modules/actions/branch';
+} from 'modules/actions/organization';
 import { RootState } from 'modules/reducers';
 
 function useOrganization() {
   const organizations = useSelector(
-    (state: RootState) => state.branch.organizations,
+    (state: RootState) => state.organization.organizations,
   ); // 지점 정보
-  const branches = useSelector((state: RootState) => state.branch.branch.all); // 지점명 리스트
-  const teams = useSelector((state: RootState) => state.branch.team.all); // 팀명 리스트
-  const userBranches = useSelector(
-    (state: RootState) => state.branch.branch.user,
+  const branches = useSelector(
+    (state: RootState) => state.organization.branch.all,
   ); // 지점명 리스트
-  const userTeams = useSelector((state: RootState) => state.branch.team.user); // 지점명 리스트
+  const teams = useSelector((state: RootState) => state.organization.team.all); // 팀명 리스트
+  const userBranches = useSelector(
+    (state: RootState) => state.organization.branch.user,
+  ); // 지점명 리스트
+  const userTeams = useSelector(
+    (state: RootState) => state.organization.team.user,
+  ); // 지점명 리스트
 
   const dispatch = useDispatch();
 
@@ -146,22 +148,6 @@ function useOrganization() {
     [dispatch],
   );
 
-  const initUserBranchList = useCallback(
-    (id, name) => {
-      const payload = {
-        id,
-        branch_name: name,
-        created_at: '',
-      };
-      dispatch(initBranchList(payload));
-    },
-    [dispatch],
-  );
-
-  const initUserTeamList = useCallback(() => {
-    dispatch(initTeamList());
-  }, [dispatch]);
-
   const onClickAddTempBranch = useCallback(() => {
     // 지점 추가 시, 리덕스에 임시값을 넣는 로직
     const branchKeys = Object.getOwnPropertyNames(organizations);
@@ -189,8 +175,6 @@ function useOrganization() {
     handleModifyTeam,
     handleRemoveBranch,
     handleRemoveTeam,
-    initUserTeamList,
-    initUserBranchList,
     onClickAddTempBranch,
   };
 }
