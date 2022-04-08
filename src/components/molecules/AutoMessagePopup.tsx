@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { useEffect, useMemo, useCallback } from 'react';
 import styled from 'styled-components';
 
@@ -10,15 +11,15 @@ import {
   TextArea,
   Toggle,
 } from 'components/atoms';
-import useAuth from 'hooks/useAuth';
 import useDatePicker from 'hooks/useDatePicker';
 import useInputForm from 'hooks/useInputForm';
-import { TAddAutoMessage } from 'hooks/useMessage';
+import { TAddAutoMessage, TModifyAutoMessage } from 'hooks/useMessage';
 import useOrganization from 'hooks/useOrganization';
 import useToggle from 'hooks/useToggle';
 import { TOnClickVisible } from 'hooks/useVisible';
+import { IAutoMessageItem } from 'types/message';
 import { Colors } from 'utils/color';
-import constants, { USER_TYPE } from 'utils/constants';
+import constants from 'utils/constants';
 import Utils from 'utils/new_utils';
 
 const renderSettingTitleData = [
@@ -33,7 +34,7 @@ const renderSettingTitleData = [
   },
   { id: 3, name: 'branch', text: '지점' },
   { id: 4, name: 'date', text: '기간 설정' },
-  { id: 5, name: 'daily', text: '', paddingTop: 10 },
+  { id: 5, name: 'daily_date', text: '', paddingTop: 10 },
   { id: 6, name: 'time', text: '시간 설정' },
   { id: 7, name: 'day', text: '요일 지정' },
 ];
@@ -78,9 +79,27 @@ const StyledTextAreaWrapper = styled.div`
 
 function AutoMessagePopup({
   addAutoMessage,
+  isVisible,
+  modifyAutoMessage,
   onClickVisible,
+  selectedAutoMessageData,
 }: IAutoMessagePopup) {
-  const { loginInfo } = useAuth();
+  const initializedData = useMemo(() => {
+    return {
+      branch: selectedAutoMessageData?.branch_id || constants.DEFAULT_ID,
+      content: selectedAutoMessageData?.content || '',
+      daily_date:
+        !_.isEmpty(selectedAutoMessageData) &&
+        !selectedAutoMessageData?.start_date &&
+        !selectedAutoMessageData?.end_date,
+      daily_time:
+        !_.isEmpty(selectedAutoMessageData) &&
+        !selectedAutoMessageData?.start_time &&
+        !selectedAutoMessageData?.end_time,
+      subject: selectedAutoMessageData?.title || '',
+    };
+  }, [selectedAutoMessageData]);
+
   const {
     datePicker: startDatePicker,
     onChangeDatePicker: onChangeStartDatePicker,
@@ -104,15 +123,8 @@ function AutoMessagePopup({
     onChangeSelect,
     onChangeCheckBox,
     onChangeTextArea,
-  } = useInputForm({
-    branch:
-      loginInfo.admin_id < USER_TYPE.ADMIN
-        ? loginInfo.branch_id
-        : constants.DEFAULT_ID, // 지점 관리자부터 하위 관리자들은 자신의 지점만 볼 수 있다.
-    content: '',
-    daily: false,
-    subject: '',
-  });
+    setInitializedForm,
+  } = useInputForm(initializedData);
   const { isToggle: isToggleMon, onClickToggle: onClickToggleMon } =
     useToggle();
   const { isToggle: isToggleTue, onClickToggle: onClickToggleTue } =
@@ -322,19 +334,13 @@ function AutoMessagePopup({
     let startDate = '';
     let endDate = '';
 
-    if (!form.daily) {
+    if (!form.daily_date) {
       // 상시 체크를 안한 경우
       startDate = Utils.getYYYYMMDD(new Date(startDatePicker).getTime(), '-');
       endDate = Utils.getYYYYMMDD(new Date(endDatePicker).getTime(), '-');
     }
 
-    const isSuccess = isValidate(title, content, days, branchId);
-
-    if (!isSuccess) {
-      return;
-    }
-
-    addAutoMessage(
+    console.log(
       branchId,
       title,
       content,
@@ -344,6 +350,37 @@ function AutoMessagePopup({
       endTime,
       days,
     );
+
+    const isSuccess = isValidate(title, content, days, branchId);
+
+    if (!isSuccess) {
+      return;
+    }
+
+    if (selectedAutoMessageData) {
+      modifyAutoMessage(
+        selectedAutoMessageData.id,
+        branchId,
+        title,
+        content,
+        startDate,
+        endDate,
+        startTime,
+        endTime,
+        days,
+      );
+    } else {
+      addAutoMessage(
+        branchId,
+        title,
+        content,
+        startDate,
+        endDate,
+        startTime,
+        endTime,
+        days,
+      );
+    }
   }, [
     addAutoMessage,
     daysToString,
@@ -351,9 +388,11 @@ function AutoMessagePopup({
     endTimePicker,
     form.branch,
     form.content,
-    form.daily,
+    form.daily_date,
     form.subject,
     isValidate,
+    modifyAutoMessage,
+    selectedAutoMessageData,
     startDatePicker,
     startTimePicker,
   ]);
@@ -361,6 +400,109 @@ function AutoMessagePopup({
   useEffect(() => {
     getBranches();
   }, [getBranches]);
+
+  // 초기화
+  useEffect(() => {
+    if (isVisible) {
+      setInitializedForm(initializedData);
+    }
+  }, [initializedData, isVisible, setInitializedForm]);
+
+  // 초기화
+  useEffect(() => {
+    if (!isVisible && !selectedAutoMessageData) {
+      onClickToggleSun(false);
+      onClickToggleMon(false);
+      onClickToggleTue(false);
+      onClickToggleWed(false);
+      onClickToggleThu(false);
+      onClickToggleFri(false);
+      onClickToggleSat(false);
+    }
+  }, [
+    isVisible,
+    onClickToggleFri,
+    onClickToggleMon,
+    onClickToggleSat,
+    onClickToggleSun,
+    onClickToggleThu,
+    onClickToggleTue,
+    onClickToggleWed,
+    selectedAutoMessageData,
+  ]);
+
+  // 요일 설정
+  useEffect(() => {
+    console.log('!@#!@#!@#@!#!@#@!#!@#');
+    const isSun = selectedAutoMessageData?.days?.includes('0');
+    const isMon = selectedAutoMessageData?.days?.includes('1');
+    const isTue = selectedAutoMessageData?.days?.includes('2');
+    const isWed = selectedAutoMessageData?.days?.includes('3');
+    const isThu = selectedAutoMessageData?.days?.includes('4');
+    const isFri = selectedAutoMessageData?.days?.includes('5');
+    const isSat = selectedAutoMessageData?.days?.includes('6');
+
+    if (isSun) {
+      onClickToggleSun();
+    }
+    if (isMon) {
+      onClickToggleMon();
+    }
+    if (isTue) {
+      onClickToggleTue();
+    }
+    if (isWed) {
+      onClickToggleWed();
+    }
+    if (isThu) {
+      onClickToggleThu();
+    }
+    if (isFri) {
+      onClickToggleFri();
+    }
+    if (isSat) {
+      onClickToggleSat();
+    }
+  }, [
+    onClickToggleFri,
+    onClickToggleMon,
+    onClickToggleSat,
+    onClickToggleSun,
+    onClickToggleThu,
+    onClickToggleTue,
+    onClickToggleWed,
+    selectedAutoMessageData,
+  ]);
+
+  // 기간/시간 설정
+  useEffect(() => {
+    const startDate = selectedAutoMessageData?.start_date
+      ? new Date(selectedAutoMessageData?.start_date)
+      : new Date();
+    const endDate = selectedAutoMessageData?.end_date
+      ? new Date(selectedAutoMessageData?.end_date)
+      : new Date();
+
+    const currentYMD = Utils.getYYYYMMDD(new Date().getTime(), '-');
+    const startTime = selectedAutoMessageData?.start_time
+      ? new Date(`${currentYMD} ${selectedAutoMessageData?.start_time}`)
+      : new Date();
+    const endTime = selectedAutoMessageData?.end_time
+      ? new Date(`${currentYMD} ${selectedAutoMessageData?.end_time}`)
+      : new Date();
+
+    onChangeEndDatePicker(endDate);
+    onChangeStartDatePicker(startDate);
+
+    onChangeEndTimePicker(startTime);
+    onChangeStartTimePicker(endTime);
+  }, [
+    onChangeEndDatePicker,
+    onChangeEndTimePicker,
+    onChangeStartDatePicker,
+    onChangeStartTimePicker,
+    selectedAutoMessageData,
+  ]);
 
   const RenderSettingView = useCallback(
     (settingData: IRenderSettingTitleData) => {
@@ -410,6 +552,9 @@ function AutoMessagePopup({
               borderColor={Colors.gray14}
               borderRadius={8}
               defaultValue={form.branch}
+              disabled={
+                selectedAutoMessageData?.branch_id === constants.DEFAULT_ID
+              }
               fontColor={Colors.navy2}
               fontSize={12}
               name={settingData.name}
@@ -426,7 +571,7 @@ function AutoMessagePopup({
           return (
             <DateRangePicker
               datePickerBorderStyle="solid"
-              datePickerDisabled={form.daily}
+              datePickerDisabled={form.daily_date}
               datePickerEndOnChange={onChangeEndDatePicker}
               datePickerEndSelectedDate={endDatePicker}
               datePickerFormat="yyyy년 MM월 dd일"
@@ -441,7 +586,7 @@ function AutoMessagePopup({
           // 기간 상시 체크박스
           return (
             <TextCheckBox
-              checkBoxIsChecked={form.daily}
+              checkBoxIsChecked={form.daily_date}
               checkBoxName={settingData.name}
               checkBoxOnChange={onChangeCheckBox}
               distance={2}
@@ -458,6 +603,7 @@ function AutoMessagePopup({
           return (
             <DateRangePicker
               datePickerBorderStyle="solid"
+              datePickerDisabled={form.daily_time}
               datePickerEndOnChange={onChangeEndTimePicker}
               datePickerEndSelectedDate={endTimePicker}
               datePickerFormat="HH:mm"
@@ -496,7 +642,8 @@ function AutoMessagePopup({
       endTimePicker,
       form.branch,
       form.content,
-      form.daily,
+      form.daily_date,
+      form.daily_time,
       form.subject,
       onChangeCheckBox,
       onChangeEndDatePicker,
@@ -506,6 +653,7 @@ function AutoMessagePopup({
       onChangeStartDatePicker,
       onChangeStartTimePicker,
       onChangeTextArea,
+      selectedAutoMessageData,
       startDatePicker,
       startTimePicker,
     ],
@@ -578,7 +726,10 @@ interface IStyledSettingItem {
 
 interface IAutoMessagePopup {
   addAutoMessage: TAddAutoMessage;
+  isVisible: boolean;
+  modifyAutoMessage: TModifyAutoMessage;
   onClickVisible: TOnClickVisible;
+  selectedAutoMessageData?: IAutoMessageItem | null;
 }
 
 AutoMessagePopup.defaultProps = {};

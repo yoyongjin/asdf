@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import { Modal } from 'components/atoms';
@@ -12,6 +12,7 @@ import useMessage from 'hooks/useMessage';
 import useOrganization from 'hooks/useOrganization';
 import useTab from 'hooks/useTab';
 import useVisible from 'hooks/useVisible';
+import { IAutoMessageItem } from 'types/message';
 import { Colors } from 'utils/color';
 import constants, { ANSWER_VALUE, USER_TYPE } from 'utils/constants';
 import Utils from 'utils/new_utils';
@@ -133,6 +134,8 @@ const StyledContent = styled.div`
 `;
 
 function SMSView() {
+  const [selectedAutoMessage, setSelectedAutoMessage] =
+    useState<IAutoMessageItem | null>(null);
   const { loginInfo } = useAuth();
   const { onChangeSelectedTabIndex, selectedTabIndex } = useTab();
   const { form, onChangeSelect } = useInputForm({
@@ -150,10 +153,15 @@ function SMSView() {
     setUsedAutoMessage,
     removeAutoMessage,
     maxCountData,
+    modifyAutoMessage,
     modifySmsCount,
   } = useMessage();
   const { visible, onClickVisible } = useVisible();
-  const { addAutoMessageStatus, removeAutoMessageStatus } = useFetch();
+  const {
+    addAutoMessageStatus,
+    modifyAutoMessageStatus,
+    removeAutoMessageStatus,
+  } = useFetch();
 
   const branchSelectOption = useMemo(() => {
     return branches!.map((values) => {
@@ -163,6 +171,14 @@ function SMSView() {
       };
     });
   }, [branches]);
+
+  const onClickModifyAutoMessagePopup = useCallback(
+    (item: IAutoMessageItem) => {
+      onClickVisible();
+      setSelectedAutoMessage(item);
+    },
+    [onClickVisible],
+  );
 
   /**
    * @description 자동 메시지 테이블 상세 내용 정보들
@@ -313,6 +329,7 @@ function SMSView() {
       const modifyData = {
         data: {
           text: '수정',
+          onClick: onClickModifyAutoMessagePopup,
         },
         styles: {
           backgroundColor: Colors.white,
@@ -332,7 +349,12 @@ function SMSView() {
 
       return autoMessageItems;
     });
-  }, [autoMessageData, removeAutoMessage, setUsedAutoMessage]);
+  }, [
+    autoMessageData,
+    onClickModifyAutoMessagePopup,
+    removeAutoMessage,
+    setUsedAutoMessage,
+  ]);
 
   /**
    * @description 발송 수량 설정 테이블 상세 내용 정보들
@@ -611,6 +633,12 @@ function SMSView() {
     getBranches();
   }, [getBranches]);
 
+  useEffect(() => {
+    if (!visible) {
+      setSelectedAutoMessage(null);
+    }
+  }, [visible]);
+
   /**
    * @description 발송 수량 설정 화면인 경우 발송 수량 데이터 가져오기
    */
@@ -624,8 +652,12 @@ function SMSView() {
         branchId = loginInfo.branch_id;
       }
 
-      if (!removeAutoMessageStatus || !addAutoMessageStatus) {
-        getAutoMessage(branchId, page, 15);
+      if (
+        !removeAutoMessageStatus ||
+        !addAutoMessageStatus ||
+        !modifyAutoMessageStatus
+      ) {
+        getAutoMessage(branchId, page, defaultPageCount);
       }
     } else if (selectedTabIndex === 1) {
       // 발송 수량 설정 화면
@@ -638,6 +670,7 @@ function SMSView() {
     getSmsCount,
     loginInfo.admin_id,
     loginInfo.branch_id,
+    modifyAutoMessageStatus,
     page,
     removeAutoMessageStatus,
     selectedTabIndex,
@@ -688,7 +721,10 @@ function SMSView() {
         Component={
           <AutoMessagePopup
             addAutoMessage={addAutoMessage}
+            isVisible={visible}
+            modifyAutoMessage={modifyAutoMessage}
             onClickVisible={onClickVisible}
+            selectedAutoMessageData={selectedAutoMessage}
           />
         }
         height={643}
@@ -706,3 +742,5 @@ function SMSView() {
 SMSView.defaultProps = {};
 
 export default SMSView;
+
+export type TOnClickModifyAutoMessagePopup = (item: IAutoMessageItem) => void;
