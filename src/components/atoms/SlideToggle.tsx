@@ -76,6 +76,7 @@ function SlideToggle({
         id={id}
         onChange={onChange}
         type="checkbox"
+        readOnly
       />
       <StyledLabel htmlFor={id} onClick={onClick} {...rest}>
         <StyledBall size={rest.height - 5} ballColor={ballColor}>
