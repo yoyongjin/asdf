@@ -3,9 +3,11 @@ import { useCallback, useState } from 'react';
 function useToggle() {
   const [isToggle, setToggle] = useState<boolean>(false);
 
-  const onClickToggle = useCallback(() => {
-    setToggle(!isToggle);
-  }, [isToggle]);
+  const onClickToggle = useCallback((isChecked?: boolean) => {
+    setToggle((currentToggle) => {
+      return isChecked ?? !currentToggle;
+    });
+  }, []);
 
   return {
     isToggle,

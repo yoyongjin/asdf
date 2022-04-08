@@ -64,7 +64,7 @@ function Toggle({
       borderStyle={borderStyle}
       borderWidth={borderWidth}
       height={height}
-      onClick={onClick}
+      onClick={() => onClick && onClick()}
       width={width}
     >
       <Text
