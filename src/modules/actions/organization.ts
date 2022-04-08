@@ -2,13 +2,13 @@ import { createAction } from 'typesafe-actions';
 
 import {
   OrganizationData,
-  TeamData,
+  TeamItem,
   RequestAddBranch,
   SuccessAddBranch,
   SuccessModifyBranch,
   RequestRemoveBranch,
   SuccessRemoveBranch,
-  BranchData,
+  BranchItem,
   RequestGetBranch,
   RequestGetTeam,
   RequestAddTeam,
@@ -85,17 +85,17 @@ export const failureGetOrganization = createAction(
 export const requestGetBranch =
   createAction(REQUEST_GET_BRANCH)<RequestGetBranch>();
 export const successGetBranch =
-  createAction(SUCCESS_GET_BRANCH)<Array<BranchData>>();
+  createAction(SUCCESS_GET_BRANCH)<Array<BranchItem>>();
 export const successGetUserBranch = createAction(SUCCESS_GET_USER_BRANCH)<
-  Array<BranchData>
+  Array<BranchItem>
 >();
 export const failureGetBranch = createAction(FAILURE_GET_BRANCH)<string>();
 
 // 팀 가져오기
 export const requestGetTeam = createAction(REQUEST_GET_TEAM)<RequestGetTeam>();
-export const successGetTeam = createAction(SUCCESS_GET_TEAM)<Array<TeamData>>();
+export const successGetTeam = createAction(SUCCESS_GET_TEAM)<Array<TeamItem>>();
 export const successGetUserTeam = createAction(SUCCESS_GET_USER_TEAM)<
-  Array<TeamData>
+  Array<TeamItem>
 >();
 export const failureGetTema = createAction(FAILURE_GET_TEAM)<string>();
 

@@ -6,7 +6,7 @@ import useInputForm from 'hooks/useInputForm';
 import { Colors } from 'utils/color';
 
 import constants, { COMPANY_TYPE } from 'utils/constants';
-import { BranchData, TeamData } from 'types/organization';
+import { BranchItem, TeamItem } from 'types/organization';
 import { DynamicJSON } from 'types/common';
 import {
   HandleAddBranch,
@@ -74,7 +74,7 @@ function Organization({
       branchId: number,
       name: string,
       value: string,
-      organizationData: BranchData | TeamData,
+      organizationData: BranchItem | TeamItem,
     ) => {
       switch (e.keyCode) {
         case 9:
@@ -83,7 +83,7 @@ function Organization({
 
           if (name.indexOf('branch') > -1) {
             // 지점 추가/수정/삭제 시
-            const branchData = organizationData as BranchData;
+            const branchData = organizationData as BranchItem;
 
             if (!branchData.branch_name) {
               // 지점 입력이 처음일 때
@@ -96,7 +96,7 @@ function Organization({
             }
           } else if (name.indexOf('team') > -1) {
             // 팀 추가/수정/삭제 시
-            const teamData = organizationData as TeamData;
+            const teamData = organizationData as TeamItem;
 
             if (!teamData.team_name) {
               // 팀 입력이 처음일 때
@@ -112,7 +112,7 @@ function Organization({
         case 8:
           if (!value || value.trim() === '') {
             if (name.indexOf('branch') > -1) {
-              const branchData = organizationData as BranchData;
+              const branchData = organizationData as BranchItem;
 
               if (!branchData.branch_name) {
                 // 서버에 없는 데이터(팀명 입력 부분)
@@ -131,7 +131,7 @@ function Organization({
 
               handleRemoveBranch(branchData.id);
             } else if (name.indexOf('team') > -1) {
-              const teamData = organizationData as TeamData;
+              const teamData = organizationData as TeamItem;
 
               if (!teamData.team_name) {
                 // 서버에 없는 데이터(팀명 입력 부분)
@@ -178,8 +178,8 @@ function Organization({
   return (
     <StyledWrapper>
       {organizationDataList.map((value, i) => {
-        const branchData = value as BranchData;
-        const teamData = value as TeamData;
+        const branchData = value as BranchItem;
+        const teamData = value as TeamItem;
 
         if (branchData.branch_name !== undefined) {
           // 해당 정보가 지점인 경우
@@ -283,7 +283,7 @@ interface OrganizationProps {
   handleRemoveBranch: HandleRemoveBranch;
   handleRemoveTeam: HandleRemoveTeam;
   index: number;
-  organizationDataList: Array<BranchData | TeamData>;
+  organizationDataList: Array<BranchItem | TeamItem>;
 }
 
 Organization.defaultProps = {};

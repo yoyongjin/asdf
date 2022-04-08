@@ -26,28 +26,28 @@ export interface RequestType {
 }
 
 export interface OrganizationData<T> {
-  T: Array<BranchData | TeamData>;
+  T: Array<BranchItem | TeamItem>;
 }
 
-export interface BranchData {
+export interface BranchItem {
   id: number;
   branch_name: string;
 }
 
-export interface TeamData {
+export interface TeamItem {
   id: number;
   team_name: string;
   branch_id: number;
 }
 
 export interface EachBranch {
-  all: Array<BranchData>;
-  user: Array<BranchData>;
+  all: Array<BranchItem>;
+  user: Array<BranchItem>;
 }
 
 export interface EachTeam {
-  all: Array<TeamData>;
-  user: Array<TeamData>;
+  all: Array<TeamItem>;
+  user: Array<TeamItem>;
 }
 
 export interface RequestGetBranch {
