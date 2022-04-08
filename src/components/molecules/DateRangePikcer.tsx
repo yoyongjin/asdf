@@ -98,7 +98,7 @@ DateRangePicker.defaultProps = {
   datePickerIsShowTime: false,
   datePickerIsShowTimeOnly: false,
   textFontColor: Colors.navy2,
-  textFontFamily: 'MalgunGothic',
+  textFontFamily: 'Malgun Gothic',
   textFontSize: 12,
   textFontWeight: 800,
   textValue: '~',

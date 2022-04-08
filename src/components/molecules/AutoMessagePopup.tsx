@@ -185,7 +185,7 @@ function AutoMessagePopup({
       },
       styles: {
         fontColor: Colors.black,
-        fontFamily: 'MalgunGothic',
+        fontFamily: 'Malgun Gothic',
         fontSize: 14,
       },
     };
@@ -196,7 +196,7 @@ function AutoMessagePopup({
         text: '알림문자 등록/수정',
       },
       styles: {
-        fontFamily: 'MalgunGothic',
+        fontFamily: 'Malgun Gothic',
         fontSize: 14,
       },
     };
@@ -587,7 +587,7 @@ function AutoMessagePopup({
               distance={2}
               isReverse
               textFontColor={Colors.navy2}
-              textFontFamily="MalgunGothic"
+              textFontFamily="Malgun Gothic"
               textFontSize={11}
               textTitle="상시 발송(항목 체크시 기간 설정 안함)"
             />
@@ -675,7 +675,7 @@ function AutoMessagePopup({
               <Text
                 fontColor={Colors.navy2}
                 fontSize={values.textSize || 12}
-                fontFamily="MalgunGothic"
+                fontFamily="Malgun Gothic"
                 fontWeight={800}
               >
                 {values.text}
@@ -695,7 +695,7 @@ function AutoMessagePopup({
         >
           <Text
             fontColor={Colors.white}
-            fontFamily="MalgunGothic"
+            fontFamily="Malgun Gothic"
             fontSize={14}
             fontWeight={800}
           >

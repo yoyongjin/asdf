@@ -126,7 +126,7 @@ TextSlideToggle.defaultProps = {
   slideToggleHeight: 20,
   slideToggleWidth: 40,
   textFontColor: Colors.gray13,
-  textFontFamily: 'MalgunGothic',
+  textFontFamily: 'Malgun Gothic',
   textFontSize: 12,
   textFontWeight: 800,
 };

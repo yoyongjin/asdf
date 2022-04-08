@@ -123,7 +123,7 @@ Toggle.defaultProps = {
   notSelectedBorderColor: Colors.white,
   selectedBackgroundColor: Colors.gray13,
   selectedBorderColor: Colors.gray13,
-  textFontFamily: 'MalgunGothic',
+  textFontFamily: 'Malgun Gothic',
   textFontSize: 12,
   textFontWeight: 400,
   textNotSelectedFontColor: Colors.gray13,

@@ -36,7 +36,7 @@ const tabTitle = [
 
 const settingAutoMessageTableTitles = [
   {
-    fontFamily: 'MalgunGothic',
+    fontFamily: 'Malgun Gothic',
     fontSize: 12,
     isWidthPercent: true,
     letterSpacing: -0.6,
@@ -46,7 +46,7 @@ const settingAutoMessageTableTitles = [
     width: 10,
   },
   {
-    fontFamily: 'MalgunGothic',
+    fontFamily: 'Malgun Gothic',
     fontSize: 12,
     isWidthPercent: true,
     letterSpacing: -0.6,
@@ -55,7 +55,7 @@ const settingAutoMessageTableTitles = [
     width: 15,
   },
   {
-    fontFamily: 'MalgunGothic',
+    fontFamily: 'Malgun Gothic',
     fontSize: 12,
     isWidthPercent: true,
     letterSpacing: -0.6,
@@ -64,7 +64,7 @@ const settingAutoMessageTableTitles = [
     width: 45,
   },
   {
-    fontFamily: 'MalgunGothic',
+    fontFamily: 'Malgun Gothic',
     fontSize: 12,
     isWidthPercent: true,
     letterSpacing: -0.6,
@@ -73,7 +73,7 @@ const settingAutoMessageTableTitles = [
     width: 15,
   },
   {
-    fontFamily: 'MalgunGothic',
+    fontFamily: 'Malgun Gothic',
     fontSize: 12,
     // isWidthPercent: true,
     letterSpacing: -0.6,
@@ -85,7 +85,7 @@ const settingAutoMessageTableTitles = [
 
 const settingMessageCountTableTitles = [
   {
-    fontFamily: 'MalgunGothic',
+    fontFamily: 'Malgun Gothic',
     fontSize: 12,
     isWidthPercent: true,
     letterSpacing: -0.6,
@@ -95,7 +95,7 @@ const settingMessageCountTableTitles = [
     width: 20,
   },
   {
-    fontFamily: 'MalgunGothic',
+    fontFamily: 'Malgun Gothic',
     fontSize: 12,
     isWidthPercent: true,
     letterSpacing: -0.6,
@@ -104,7 +104,7 @@ const settingMessageCountTableTitles = [
     width: 15,
   },
   {
-    fontFamily: 'MalgunGothic',
+    fontFamily: 'Malgun Gothic',
     fontSize: 12,
     isWidthPercent: true,
     letterSpacing: -0.6,
@@ -113,7 +113,7 @@ const settingMessageCountTableTitles = [
     width: 15,
   },
   {
-    fontFamily: 'MalgunGothic',
+    fontFamily: 'Malgun Gothic',
     fontSize: 12,
     isWidthPercent: true,
     letterSpacing: -0.6,

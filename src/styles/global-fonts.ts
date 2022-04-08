@@ -5,8 +5,6 @@ import NanumBarunGothicTTF from 'fonts/NanumBarunGothic.ttf';
 import NanumBarunGothicEOT from 'fonts/NanumBarunGothic.eot';
 import NanumGothicTTF from 'fonts/NanumGothic.ttf';
 import NanumGothicEOT from 'fonts/NanumGothic.eot';
-import MalgunGothicTTF from 'fonts/MalgunGothic.ttf';
-import MalgunGothicEOT from 'fonts/MalgunGothic.eot';
 
 export const GlobalFonts = createGlobalStyle`
     @font-face {
@@ -21,9 +19,5 @@ export const GlobalFonts = createGlobalStyle`
     @font-face {
         font-family: 'NanumGothic';
         src: url(${NanumGothicEOT}),url(${NanumGothicTTF})
-    }
-    @font-face {
-        font-family: 'MalgunGothic';
-        src: url(${MalgunGothicEOT}),url(${MalgunGothicTTF})
     }
 `;
