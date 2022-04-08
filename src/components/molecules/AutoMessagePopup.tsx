@@ -381,6 +381,8 @@ function AutoMessagePopup({
         days,
       );
     }
+
+    onClickVisible();
   }, [
     addAutoMessage,
     daysToString,
@@ -392,6 +394,7 @@ function AutoMessagePopup({
     form.subject,
     isValidate,
     modifyAutoMessage,
+    onClickVisible,
     selectedAutoMessageData,
     startDatePicker,
     startTimePicker,
