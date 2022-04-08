@@ -15,6 +15,7 @@ import { DynamicJSON } from 'types/common';
 import { IAutoMessageItem, IMaxMessageItem } from 'types/message';
 import constants, { ANSWER_VALUE } from 'utils/constants';
 import Utils from 'utils/new_utils';
+import { TOnClickModifyAutoMessagePopup } from 'components/organisms/SMSView';
 
 const StyledWrapper = styled.td<IStyledWrapper>`
   text-align: ${(props) => props.textAlign};
@@ -64,6 +65,9 @@ function TableProperty({
             if (key === 4) {
               // 5번째 요소(삭제)
               (data.onClick as TRemoveAutoMessage)(_originItem.id);
+            } else if (key === 5) {
+              // 6번째 요소(수정)
+              (data.onClick as TOnClickModifyAutoMessagePopup)(_originItem);
             }
           }
         }
@@ -289,7 +293,10 @@ interface ITextSlideToggleStyle extends ISlideToggleStyle, ITextItemStyle {}
 // button 요소 정보
 interface IButtonItem {
   image?: string;
-  onClick?: TModifySmsCount | TRemoveAutoMessage;
+  onClick?:
+    | TModifySmsCount
+    | TRemoveAutoMessage
+    | TOnClickModifyAutoMessagePopup;
   text?: string;
 }
 
