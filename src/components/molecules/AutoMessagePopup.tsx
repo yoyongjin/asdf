@@ -28,7 +28,7 @@ const renderSettingTitleData = [
   {
     id: 2,
     name: '',
-    text: '알림 문자 발송 조건',
+    text: '자동 문자 발송 조건',
     textSize: 14,
     paddingTop: 15,
   },
@@ -193,7 +193,7 @@ function AutoMessagePopup({
     const textConfig2 = {
       type: 'text',
       data: {
-        text: '알림문자 등록/수정',
+        text: '자동문자 등록/수정',
       },
       styles: {
         fontFamily: 'Malgun Gothic',
