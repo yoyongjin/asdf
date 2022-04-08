@@ -203,6 +203,14 @@ class Utils {
       seconds,
     };
   }
+
+  static replace(
+    origintText: string,
+    changedWord: string,
+    replaceWord: string,
+  ) {
+    return origintText.replace(changedWord, replaceWord);
+  }
 }
 
 export default Utils;

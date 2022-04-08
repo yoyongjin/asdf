@@ -467,26 +467,30 @@ function AutoMessagePopup({
 
   // 기간/시간 설정
   useEffect(() => {
-    const startDate = selectedAutoMessageData?.start_date
-      ? new Date(selectedAutoMessageData?.start_date)
-      : new Date();
-    const endDate = selectedAutoMessageData?.end_date
-      ? new Date(selectedAutoMessageData?.end_date)
-      : new Date();
+    if (selectedAutoMessageData) {
+      const { start_date, end_date, start_time, end_time } =
+        selectedAutoMessageData;
 
-    const currentYMD = Utils.getYYYYMMDD(new Date().getTime(), '-');
-    const startTime = selectedAutoMessageData?.start_time
-      ? new Date(`${currentYMD} ${selectedAutoMessageData?.start_time}`)
-      : new Date();
-    const endTime = selectedAutoMessageData?.end_time
-      ? new Date(`${currentYMD} ${selectedAutoMessageData?.end_time}`)
-      : new Date();
+      if (start_date && end_date) {
+        const startYMD = Utils.replace(start_date, '-', '/');
+        const endYMD = Utils.replace(end_date, '-', '/');
 
-    onChangeEndDatePicker(endDate);
-    onChangeStartDatePicker(startDate);
+        const startDate = new Date(startYMD);
+        const endDate = new Date(endYMD);
 
-    onChangeEndTimePicker(startTime);
-    onChangeStartTimePicker(endTime);
+        onChangeEndDatePicker(endDate);
+        onChangeStartDatePicker(startDate);
+      }
+
+      if (start_time && end_time) {
+        const currentYMD = Utils.getYYYYMMDD(new Date().getTime(), '/');
+        const startTime = new Date(`${currentYMD} ${start_time}`);
+        const endTime = new Date(`${currentYMD} ${end_time}`);
+
+        onChangeEndTimePicker(startTime);
+        onChangeStartTimePicker(endTime);
+      }
+    }
   }, [
     onChangeEndDatePicker,
     onChangeEndTimePicker,

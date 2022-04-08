@@ -241,8 +241,9 @@ function SMSView() {
         endDate = `${endYear}년 ${endMonth}월 ${endDay}일`;
       }
 
+      const createdAt = Utils.replace(created_at, '-', '/');
       const createdAtfullDate = Utils.getFullDate(
-        new Date(created_at).getTime(),
+        new Date(createdAt).getTime(),
         false,
         '.',
         '.',
