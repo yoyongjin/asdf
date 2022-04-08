@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import styled, { css } from 'styled-components';
 import { Location } from 'history';
 
@@ -8,26 +8,23 @@ import { Colors } from 'utils/color';
 import constants, { AUTO_MESSAGE_VERSION, USER_TYPE } from 'utils/constants';
 
 const StyledWrapper = styled.div`
-  /* Display   */
   height: 100%;
   width: 100%;
 `;
 
-const StyledLink = styled.span<StyledLinkProps>`
-  /* Text */
-  text-align: center;
-
-  /* Display   */
+const StyledLink = styled.span<IStyledLink>`
   display: inline-block;
   height: calc(100% - 6px);
+  text-align: center;
+
   ${(props) => {
     if (props.type === props.visible) {
       return css`
-        width: 90px;
         border-bottom: 6px solid ${Colors.white1};
         transition-duration: 0.5s;
         transition-property: all;
         transition-timing-function: ease-out;
+        width: 90px;
       `;
     }
   }}
@@ -66,7 +63,7 @@ const LINK_DATA = [
   },
 ];
 
-function LinkSelector({ location, permission }: LinkSelectorProps) {
+function LinkSelector({ location, permission }: ILinkSelector) {
   const [visible, setVisible] = useState<number>(0);
 
   useEffect(() => {
@@ -88,43 +85,36 @@ function LinkSelector({ location, permission }: LinkSelectorProps) {
 
   return (
     <StyledWrapper>
-      {LINK_DATA.map((data, i) => {
-        if (!data.isVisible) {
-          // 화면에서 보이지 않도록 하기
-          return null;
-        }
+      {permission !== USER_TYPE.CONSULTANT &&
+        LINK_DATA.map((data, index) => {
+          if (!data.isVisible) {
+            // 화면에서 보이지 않도록 하기
+            return null;
+          }
 
-        return (
-          <>
-            {permission === USER_TYPE.CONSULTANT ? null : (
-              <>
-                <StyledCommonBothWhiteSpace pixel={data.pixel} />
-                <StyledLink visible={visible} type={i}>
-                  <Link path={data.path}>
-                    <Text
-                      fontColor={Colors.white}
-                      fontSize={16}
-                      fontWeight={700}
-                    >
-                      {data.name}
-                    </Text>
-                  </Link>
-                </StyledLink>
-              </>
-            )}
-          </>
-        );
-      })}
+          return (
+            <Fragment key={`LinkSelector-${data.path}`}>
+              <StyledCommonBothWhiteSpace pixel={data.pixel} />
+              <StyledLink type={index} visible={visible}>
+                <Link path={data.path}>
+                  <Text fontColor={Colors.white} fontSize={16} fontWeight={700}>
+                    {data.name}
+                  </Text>
+                </Link>
+              </StyledLink>
+            </Fragment>
+          );
+        })}
     </StyledWrapper>
   );
 }
 
-interface StyledLinkProps {
-  visible: number;
+interface IStyledLink {
   type: number;
+  visible: number;
 }
 
-interface LinkSelectorProps {
+interface ILinkSelector {
   location: Location;
   permission: number;
 }
