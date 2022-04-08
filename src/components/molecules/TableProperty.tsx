@@ -139,7 +139,7 @@ function TableProperty({
         const realTexts = data.text.split(constants.PARSING_KEY);
 
         return (
-          <StyledTextWrapper>
+          <StyledTextWrapper key={`TableProperty-StyledTextWrapper-${index}`}>
             <Text
               fontColor={styles?.fontColor || Colors.gray4}
               fontFamily={styles?.fontFamily || 'NanumGothic'}

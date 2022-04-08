@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import styled from 'styled-components';
 
 import { Text } from 'components/atoms';
@@ -21,21 +21,23 @@ function TabTitle({
 }: ITabTitleProps) {
   return (
     <StyledWrapper>
-      {tabs.map((tab, i) => {
+      {tabs.map((tab, index) => {
         return (
-          <>
+          <Fragment key={`TabTitle-Fragment-${index}`}>
             <Text
               fontColor={
-                i === selectedItem ? selectedFontColor : notSelectedFontColor
+                index === selectedItem
+                  ? selectedFontColor
+                  : notSelectedFontColor
               }
               fontFamily={fontFamily}
               fontSize={fontSize}
               fontWeight={fontWeight}
-              onClick={() => setSelectedItem(i)}
+              onClick={() => setSelectedItem(index)}
             >
               {tab.name}
             </Text>
-            {i + 1 !== tabs.length ? (
+            {index + 1 !== tabs.length ? (
               <>
                 <StyledCommonBothWhiteSpace pixel={15} />
                 <Text
@@ -48,7 +50,7 @@ function TabTitle({
                 <StyledCommonBothWhiteSpace pixel={15} />
               </>
             ) : null}
-          </>
+          </Fragment>
         );
       })}
     </StyledWrapper>

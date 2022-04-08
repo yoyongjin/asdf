@@ -162,17 +162,15 @@ function Title({
               }
 
               return (
-                <>
-                  <StyledButton>
-                    <Button
-                      bgColor={Colors.navy1}
-                      height={2.5}
-                      image={info.image}
-                      width={11.8}
-                      onClick={info.click}
-                    />
-                  </StyledButton>
-                </>
+                <StyledButton key={`Title-StyledButton-${index}`}>
+                  <Button
+                    bgColor={Colors.navy1}
+                    height={2.5}
+                    image={info.image}
+                    width={11.8}
+                    onClick={info.click}
+                  />
+                </StyledButton>
               );
             })}
           </>
@@ -214,23 +212,21 @@ function Title({
               const style = volumeData!.style![index];
 
               return (
-                <>
-                  <StyledVolume>
-                    <TextRange
-                      rangeMax={info.max}
-                      rangeMin={info.min}
-                      rangeName={info.name}
-                      rangeStep={info.step}
-                      rangeValue={String(data)}
-                      textColor={style.textColor!}
-                      textFamily={style.textFamily!}
-                      textSize={style.textSize!}
-                      textWeight={style.textWeight!}
-                      textValue={info.text}
-                      onChangeRange={info.change}
-                    />
-                  </StyledVolume>
-                </>
+                <StyledVolume key={`Title-StyledVolume-${index}`}>
+                  <TextRange
+                    rangeMax={info.max}
+                    rangeMin={info.min}
+                    rangeName={info.name}
+                    rangeStep={info.step}
+                    rangeValue={String(data)}
+                    textColor={style.textColor!}
+                    textFamily={style.textFamily!}
+                    textSize={style.textSize!}
+                    textWeight={style.textWeight!}
+                    textValue={info.text}
+                    onChangeRange={info.change}
+                  />
+                </StyledVolume>
               );
             })}
           </>
@@ -243,7 +239,7 @@ function Title({
               const style = selectData!.style![index];
 
               return (
-                <StyledSelect>
+                <StyledSelect key={`Title-StyledSelect-${index}`}>
                   <Select
                     borderColor={style.borderColor}
                     borderRadius={style.borderRadius}
@@ -274,7 +270,7 @@ function Title({
               const option = searchData!.option;
 
               return (
-                <StyledSearch>
+                <StyledSearch key={`Title-StyledSearch-${index}`}>
                   <SearchBar
                     inputPlaceHolder={option?.placeHolder}
                     search={data}

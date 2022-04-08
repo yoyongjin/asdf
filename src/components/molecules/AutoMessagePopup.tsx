@@ -613,9 +613,10 @@ function AutoMessagePopup({
         }
         case 7: {
           // 요일 지정
-          return daysData.map((values) => {
+          return daysData.map((values, index) => {
             return (
               <Toggle
+                key={`AutoMessagePopup-Toggle-${index}`}
                 isSelected={values.isSelected}
                 onClick={values.onClick}
                 textNotSelectedText={values.text}
@@ -669,9 +670,12 @@ function AutoMessagePopup({
         />
       </StyledTitle>
       <StyledContent>
-        {renderSettingTitleData.map((values) => {
+        {renderSettingTitleData.map((values, index) => {
           return (
-            <StyledSettingItem paddingTop={values.paddingTop || 13}>
+            <StyledSettingItem
+              key={`AutoMessagePopup-StyledSettingItem-${index}`}
+              paddingTop={values.paddingTop || 13}
+            >
               <Text
                 fontColor={Colors.navy2}
                 fontSize={values.textSize || 12}

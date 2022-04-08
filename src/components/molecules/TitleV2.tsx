@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { Fragment, useCallback } from 'react';
 import styled, { css } from 'styled-components';
 
 import {
@@ -46,6 +46,7 @@ function TitleV2({ renderLeft, renderRight, titleStyle }: ITitleProps) {
       if (data.text) {
         return (
           <Button
+            key={`TitleV2-Button-${data.text}`}
             bgColor={styles?.backgroundColor}
             borderColor={styles?.borderColor}
             borderRadius={styles?.borderRadius}
@@ -68,6 +69,7 @@ function TitleV2({ renderLeft, renderRight, titleStyle }: ITitleProps) {
 
       return (
         <Button
+          key={`TitleV2-Button-${data.image}`}
           image={data.image}
           height={styles?.height}
           onClick={data.onClick}
@@ -179,6 +181,7 @@ function TitleV2({ renderLeft, renderRight, titleStyle }: ITitleProps) {
   const TextView = useCallback((data: ITextItem, styles?: ITextItemStyle) => {
     return (
       <Text
+        key={`TitleV2-Text-${data.text}`}
         fontColor={styles?.fontColor || Colors.blue4}
         fontFamily={styles?.fontFamily || 'NanumGothic'}
         fontSize={styles?.fontSize || 18}
@@ -272,14 +275,14 @@ function TitleV2({ renderLeft, renderRight, titleStyle }: ITitleProps) {
               renderLeft.renderStyle[index].paddingRight;
 
             return (
-              <>
+              <Fragment key={`TitleV2-Fragment-left-${index}`}>
                 {RenderView(config)}
                 <StyledCommonBothWhiteSpace
                   left={paddingLeft}
                   right={paddingRight}
                   pixel={paddingLeftRight}
                 />
-              </>
+              </Fragment>
             );
           })}
         </StyledPostion>

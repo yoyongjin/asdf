@@ -139,11 +139,11 @@ function Table({
         height={headHeight}
       >
         <TableTitle titles={titles} />
-        {dependencyTitles
-          ? dependencyTitles.map((titles) => {
-              return <TableTitle titles={titles} />;
-            })
-          : null}
+        {dependencyTitles?.map((titles, index) => {
+          return (
+            <TableTitle key={`Table-TableTitle-${index}`} titles={titles} />
+          );
+        })}
       </StyledHead>
       <StyledBody>
         <TableContent contents={contents} />
