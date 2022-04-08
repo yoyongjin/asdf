@@ -55,11 +55,6 @@ function Select({
           <StyledOption
             key={`option-${i}`}
             value={isUsedId ? option.id : option.data}
-            selected={
-              isUsedId
-                ? option.id === defaultValue
-                : option.data === defaultValue
-            }
             {...rest}
           >
             {option.data}
