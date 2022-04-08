@@ -139,13 +139,13 @@ function AutoMessagePopup({
 
   const daysData = useMemo(() => {
     return [
-      { id: 1, text: '월', onClick: onClickToggleSun, isSelected: isToggleSun },
-      { id: 2, text: '화', onClick: onClickToggleMon, isSelected: isToggleMon },
-      { id: 3, text: '수', onClick: onClickToggleTue, isSelected: isToggleTue },
-      { id: 4, text: '목', onClick: onClickToggleWed, isSelected: isToggleWed },
-      { id: 5, text: '금', onClick: onClickToggleThu, isSelected: isToggleThu },
-      { id: 6, text: '토', onClick: onClickToggleFri, isSelected: isToggleFri },
-      { id: 0, text: '일', onClick: onClickToggleSat, isSelected: isToggleSat },
+      { id: 1, text: '월', onClick: onClickToggleMon, isSelected: isToggleMon },
+      { id: 2, text: '화', onClick: onClickToggleTue, isSelected: isToggleTue },
+      { id: 3, text: '수', onClick: onClickToggleWed, isSelected: isToggleWed },
+      { id: 4, text: '목', onClick: onClickToggleThu, isSelected: isToggleThu },
+      { id: 5, text: '금', onClick: onClickToggleFri, isSelected: isToggleFri },
+      { id: 6, text: '토', onClick: onClickToggleSat, isSelected: isToggleSat },
+      { id: 0, text: '일', onClick: onClickToggleSun, isSelected: isToggleSun },
     ];
   }, [
     isToggleFri,
