@@ -9,12 +9,16 @@ function useFetch() {
   const addAutoMessageStatus = useSelector(
     (state: RootState) => state.message.request.addAutoMessage.fetch,
   ); // 자동 문자 삭제 API 상태
+  const modifyAutoMessageStatus = useSelector(
+    (state: RootState) => state.message.request.modifyAutoMessage.fetch,
+  ); // 자동 문자 수정 API 상태
   const removeAutoMessageStatus = useSelector(
     (state: RootState) => state.message.request.removeAutoMessage.fetch,
   ); // 자동 문자 삭제 API 상태
 
   return {
     addAutoMessageStatus,
+    modifyAutoMessageStatus,
     removeAutoMessageStatus,
   };
 }

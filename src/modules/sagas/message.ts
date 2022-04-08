@@ -10,18 +10,21 @@ import {
   requestAddAutoMessage,
   requestGetAutoMessage,
   requestGetSmsCount,
+  requestModifyAutoMessage,
   requestModifySmsCount,
   requestRemoveAutoMessage,
   requestSetUsedAutoMessage,
   REQUEST_ADD_AUTO_MESSAGE,
   REQUEST_GET_AUTO_MESSAGE,
   REQUEST_GET_SMS_COUNT,
+  REQUEST_MODIFY_AUTO_MESSAGE,
   REQUEST_MODIFY_SMS_COUNT,
   REQUEST_REMOVE_AUTO_MESSAGE,
   REQUEST_SET_USED_AUTO_MESSAGE,
   successAddAutoMessage,
   successGetAutoMessage,
   successGetSmsCount,
+  successModifyAutoMessage,
   successModifySmsCount,
   successRemoveAutoMessage,
   successSetUsedAutoMessage,
@@ -120,6 +123,50 @@ function* getSmsCountProcess(action: ReturnType<typeof requestGetSmsCount>) {
   }
 }
 
+function* modifyAutoMessageProcess(
+  action: ReturnType<typeof requestModifyAutoMessage>,
+) {
+  try {
+    const {
+      id,
+      branch_id,
+      content,
+      days,
+      end_date,
+      end_time,
+      start_date,
+      start_time,
+      title,
+    } = action.payload;
+
+    const response: ResponseSuccessData | ResponseFailureData = yield call(
+      ZMSMessage.modifyAutoMessage,
+      id,
+      branch_id,
+      title,
+      content,
+      start_date,
+      end_date,
+      start_time,
+      end_time,
+      days,
+    );
+
+    if (response.status === API_FETCH.SUCCESS) {
+      const { data } = response as ResponseSuccessData;
+
+      yield put(successModifyAutoMessage());
+
+      return;
+    }
+
+    const { error_msg } = response as ResponseFailureData;
+    yield put(failureAddAutoMessage(error_msg));
+  } catch (error) {
+    yield put(failureAddAutoMessage(error.message));
+  }
+}
+
 function* modifySmsCountProcess(
   action: ReturnType<typeof requestModifySmsCount>,
 ) {
@@ -212,6 +259,10 @@ function* watchGetSmsCount() {
   yield takeLatest(REQUEST_GET_SMS_COUNT, getSmsCountProcess);
 }
 
+function* watchModifyAutoMessage() {
+  yield takeLatest(REQUEST_MODIFY_AUTO_MESSAGE, modifyAutoMessageProcess);
+}
+
 function* watchModifySmsCount() {
   yield takeLatest(REQUEST_MODIFY_SMS_COUNT, modifySmsCountProcess);
 }
@@ -229,6 +280,7 @@ function* messageSaga() {
     fork(watchAddAutoMessage),
     fork(watchGetAutoMessage),
     fork(watchGetSmsCount),
+    fork(watchModifyAutoMessage),
     fork(watchModifySmsCount),
     fork(watchRemoveAutoMessage),
     fork(watchSetUsedAutoMessage),

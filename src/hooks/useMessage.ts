@@ -6,6 +6,7 @@ import {
   requestAddAutoMessage,
   requestGetAutoMessage,
   requestGetSmsCount,
+  requestModifyAutoMessage,
   requestModifySmsCount,
   requestRemoveAutoMessage,
   requestSetUsedAutoMessage,
@@ -75,6 +76,38 @@ function useMessage() {
   );
 
   /**
+   * @description 자동 문자 수정하기
+   */
+  const modifyAutoMessage = useCallback(
+    (
+      id: number,
+      branchId: number,
+      title: string,
+      content: string,
+      startDate: string,
+      endDate: string,
+      startTime: string,
+      endTime: string,
+      days: string,
+    ) => {
+      const payload = {
+        id,
+        branch_id: branchId,
+        content,
+        days,
+        end_date: endDate,
+        end_time: endTime,
+        start_date: startDate,
+        start_time: startTime,
+        title,
+      };
+
+      dispatch(requestModifyAutoMessage(payload));
+    },
+    [dispatch],
+  );
+
+  /**
    * @description 발송 수량 수정하기
    */
   const modifySmsCount = useCallback(
@@ -125,6 +158,7 @@ function useMessage() {
     getAutoMessage,
     getSmsCount,
     maxCountData,
+    modifyAutoMessage,
     modifySmsCount,
     removeAutoMessage,
     setUsedAutoMessage,
@@ -135,6 +169,18 @@ export default useMessage;
 
 export type TAddAutoMessage = (
   id: number,
+  title: string,
+  content: string,
+  startDate: string,
+  endDate: string,
+  startTime: string,
+  endTime: string,
+  days: string,
+) => void;
+
+export type TModifyAutoMessage = (
+  id: number,
+  branchId: number,
   title: string,
   content: string,
   startDate: string,

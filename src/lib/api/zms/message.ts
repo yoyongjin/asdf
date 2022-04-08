@@ -123,6 +123,66 @@ class Message {
   }
 
   /**
+   * @description 자동문자 수정하기
+   * @param id 자동문자 ID
+   * @param branchId 지점 ID
+   * @param content 내용
+   * @param title 제목
+   * @param startDate 시작 날짜
+   * @param endDate 끝 날짜
+   * @param startTime 시작 시각
+   * @param endTime 끝 시각
+   * @param days 요일
+   */
+  static async modifyAutoMessage(
+    id: number,
+    branchId: number,
+    content: string,
+    title: string,
+    startDate: string,
+    endDate: string,
+    startTime: string,
+    endTime: string,
+    days: string,
+  ) {
+    const params = {
+      id,
+      branch_id: branchId,
+      content,
+      days,
+      end_date: endDate,
+      end_time: endTime + ':00',
+      start_date: startDate,
+      start_time: startTime + ':00',
+      title,
+    };
+
+    try {
+      const token = Main.getAccessToken();
+
+      const { data } = await APIManager.patch(
+        url.zms.api.path.add_auto_message,
+        params,
+        {
+          token,
+        },
+      );
+
+      Logger.log('Modify Auto Message Data', JSON.stringify(data));
+
+      return data;
+    } catch (error) {
+      if (error.response?.data) {
+        Logger.log(JSON.stringify(error.response.data));
+
+        return error.response.data;
+      }
+
+      throw new Error(error);
+    }
+  }
+
+  /**
    * @description 발송 수량 수정하기
    * @param {number} id 지점 ID
    * @param {number} maxCountDate 일일 최대 발송 수량

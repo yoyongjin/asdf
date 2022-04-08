@@ -4,6 +4,7 @@ import {
   IMaxMessageItem,
   IRequestAddAutoMessage,
   IRequestGetAutoMessage,
+  IRequestModifyAutoMessage,
   IRequestModifySmsCount,
   IRequestRemoveAutoMessage,
   IRequestSetUsedAutoMessage,
@@ -97,4 +98,20 @@ export const requestAddAutoMessage = createAction(
 export const successAddAutoMessage = createAction(SUCCESS_ADD_AUTO_MESSAGE)();
 export const failureAddAutoMessage = createAction(
   FAILURE_ADD_AUTO_MESSAGE,
+)<string>();
+
+// 자동 문자 수정하기
+export const REQUEST_MODIFY_AUTO_MESSAGE = 'REQUEST_MODIFY_AUTO_MESSAGE';
+export const SUCCESS_MODIFY_AUTO_MESSAGE = 'SUCCESS_MODIFY_AUTO_MESSAGE';
+export const FAILURE_MODIFY_AUTO_MESSAGE = 'FAILURE_MODIFY_AUTO_MESSAGE';
+
+// 자동 문자 추가 Action
+export const requestModifyAutoMessage = createAction(
+  REQUEST_MODIFY_AUTO_MESSAGE,
+)<IRequestModifyAutoMessage>();
+export const successModifyAutoMessage = createAction(
+  SUCCESS_MODIFY_AUTO_MESSAGE,
+)();
+export const failureModifyAutoMessage = createAction(
+  FAILURE_MODIFY_AUTO_MESSAGE,
 )<string>();
