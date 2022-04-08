@@ -340,17 +340,6 @@ function AutoMessagePopup({
       endDate = Utils.getYYYYMMDD(new Date(endDatePicker).getTime(), '-');
     }
 
-    console.log(
-      branchId,
-      title,
-      content,
-      startDate,
-      endDate,
-      startTime,
-      endTime,
-      days,
-    );
-
     const isSuccess = isValidate(title, content, days, branchId);
 
     if (!isSuccess) {
@@ -436,7 +425,6 @@ function AutoMessagePopup({
 
   // 요일 설정
   useEffect(() => {
-    console.log('!@#!@#!@#@!#!@#@!#!@#');
     const isSun = selectedAutoMessageData?.days?.includes('0');
     const isMon = selectedAutoMessageData?.days?.includes('1');
     const isTue = selectedAutoMessageData?.days?.includes('2');
