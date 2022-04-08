@@ -7,8 +7,8 @@ class Message {
   /**
    * @description 자동문자 추가하기
    * @param id 지점 ID
-   * @param content 내용
    * @param title 제목
+   * @param content 내용
    * @param startDate 시작 날짜
    * @param endDate 끝 날짜
    * @param startTime 시작 시각
@@ -17,8 +17,8 @@ class Message {
    */
   static async addAutoMessage(
     id: number,
-    content: string,
     title: string,
+    content: string,
     startDate: string,
     endDate: string,
     startTime: string,
@@ -126,8 +126,8 @@ class Message {
    * @description 자동문자 수정하기
    * @param id 자동문자 ID
    * @param branchId 지점 ID
-   * @param content 내용
    * @param title 제목
+   * @param content 내용
    * @param startDate 시작 날짜
    * @param endDate 끝 날짜
    * @param startTime 시작 시각
@@ -137,8 +137,8 @@ class Message {
   static async modifyAutoMessage(
     id: number,
     branchId: number,
-    content: string,
     title: string,
+    content: string,
     startDate: string,
     endDate: string,
     startTime: string,
