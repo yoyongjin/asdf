@@ -89,15 +89,15 @@ function UserProperty({
           values === 'out_time' ||
           values === 'login_at'
         ) {
-          return '';
+          return null;
         }
 
         if (constants.TRANSPORT === ZIBOX_TRANSPORT.OCX) {
           if (constants.ZIBOX_VERSION === ZIBOX_VERSION.ZIBOX2) {
-            if (values === 'zibox_ip' || values === 'zibox_mac') return '';
+            if (values === 'zibox_ip' || values === 'zibox_mac') return null;
           }
         } else {
-          if (values === 'pc_ip') return '';
+          if (values === 'pc_ip') return null;
         }
 
         return (

@@ -25,7 +25,7 @@ function TableTitle({ titles }: ITableTitleProps) {
     <StyledWrapper>
       {titles.map((titleData, i) => {
         if (titleData.isNotShow) {
-          return '';
+          return null;
         }
 
         return (
