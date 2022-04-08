@@ -3,7 +3,11 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import { Modal } from 'components/atoms';
-import { AutoMessagePopup, TitleV2 } from 'components/molecules';
+import {
+  AutoMessagePopup,
+  TablePagination,
+  TitleV2,
+} from 'components/molecules';
 import { IProperty as ITableProperty } from 'components/molecules/TableProperty';
 import { Table } from 'components/organisms';
 import useAuth from 'hooks/useAuth';
@@ -11,6 +15,7 @@ import useInputForm from 'hooks/useInputForm';
 import useMessage from 'hooks/useMessage';
 import useOrganization from 'hooks/useOrganization';
 import useTab from 'hooks/useTab';
+import usePage from 'hooks/usePage';
 import useVisible from 'hooks/useVisible';
 import { IAutoMessageItem } from 'types/message';
 import { Colors } from 'utils/color';
@@ -118,6 +123,8 @@ const settingMessageCountTableTitles = [
   },
 ];
 
+const defaultPageCount = 15;
+
 const StyledWrapper = styled.div`
   height: 100%;
   width: 100%;
@@ -129,8 +136,13 @@ const StyledTitle = styled.div`
 `;
 
 const StyledContent = styled.div`
-  height: calc(100% - 4.275rem - 100px);
+  height: calc(100% - 9.5rem - 100px);
   overflow-x: auto;
+`;
+
+const StyledFooter = styled.div`
+  padding-top: 50px;
+  height: 50px;
 `;
 
 function SMSView() {
@@ -157,6 +169,7 @@ function SMSView() {
     modifySmsCount,
   } = useMessage();
   const { visible, onClickVisible } = useVisible();
+  const { maxAutoMessage, page, onClickNextPage, onClickPrevPage } = usePage();
   const {
     addAutoMessageStatus,
     modifyAutoMessageStatus,
@@ -715,6 +728,18 @@ function SMSView() {
             )}
           </div>
         </StyledContent>
+        <StyledFooter>
+          {selectedTabIndex === 0 ? (
+            // 자동 문자
+            <TablePagination
+              count={maxAutoMessage}
+              divide={defaultPageCount}
+              curPage={page}
+              onClickNextPage={onClickNextPage}
+              onClickPrevPage={onClickPrevPage}
+            />
+          ) : null}
+        </StyledFooter>
       </StyledWrapper>
       <Modal
         backgroundColor={Colors.white}
