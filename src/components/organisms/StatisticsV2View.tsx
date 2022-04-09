@@ -792,11 +792,11 @@ const selectBoxConditionOption = [
   },
   {
     id: 4,
-    data: '15분',
+    data: '30분',
   },
   {
     id: 5,
-    data: '30분',
+    data: '15분',
   },
   {
     id: 6,
