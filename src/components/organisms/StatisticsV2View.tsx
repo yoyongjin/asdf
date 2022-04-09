@@ -1,11 +1,15 @@
-import React, { useMemo, useCallback } from 'react';
+import _ from 'lodash';
+import React, { useMemo, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { TitleV2 } from 'components/molecules';
 import { Table } from 'components/organisms';
 import useDatePicker from 'hooks/useDatePicker';
 import useInputForm from 'hooks/useInputForm';
+import useMultiSelect from 'hooks/useMultiSelect';
+import useOrganization from 'hooks/useOrganization';
 import useTab from 'hooks/useTab';
+import useUser from 'hooks/useUser';
 import { Colors } from 'utils/color';
 
 const callStatisticsByConsultantTableTitles = [
@@ -838,6 +842,57 @@ function StatisticsV2View() {
     onChangeDatePicker: onChangeEndTimePicker,
   } = useDatePicker();
   const { onChangeSelectedTabIndex, selectedTabIndex } = useTab();
+  const {
+    getPluralBranch,
+    getPluralTeam,
+    pluralBranch,
+    pluralTeam,
+    setInitializePluralTeam,
+  } = useOrganization();
+  const {
+    getPluralConsultant,
+    pluralConsultant,
+    setInitializePluralConsultant,
+  } = useUser();
+  const {
+    handleSelectedOption: handlePluralBranchSelectedOption,
+    selectedOption: pluralBranchSelectedOption,
+  } = useMultiSelect();
+  const {
+    handleSelectedOption: handlePluralTeamSelectedOption,
+    selectedOption: pluralTeamSelectedOption,
+  } = useMultiSelect();
+  const {
+    handleSelectedOption: handlePluralConsultantSelectedOption,
+    selectedOption: pluralConsultantSelectedOption,
+  } = useMultiSelect();
+
+  const pluralBranchOption = useMemo(() => {
+    return pluralBranch.map((values) => {
+      return {
+        value: values.id,
+        label: values.branch_name,
+      };
+    });
+  }, [pluralBranch]);
+
+  const pluralTeamOption = useMemo(() => {
+    return pluralTeam.map((values) => {
+      return {
+        value: values.id,
+        label: values.team_name,
+      };
+    });
+  }, [pluralTeam]);
+
+  const pluralConsultantOption = useMemo(() => {
+    return pluralConsultant.map((values) => {
+      return {
+        value: values.id,
+        label: values.name,
+      };
+    });
+  }, [pluralConsultant]);
 
   const borderItem = useMemo(() => {
     return {
@@ -963,52 +1018,45 @@ function StatisticsV2View() {
     const multiSelectConfig1 = {
       type: 'multi-select',
       data: {
-        labelledBy: 'test1',
-        selectedOptions: [
-          {
-            label: 'test',
-            value: 'test1',
-          },
-        ],
-        options: [],
+        onChange: handlePluralBranchSelectedOption,
+        options: pluralBranchOption,
+        selectedOptions: pluralBranchSelectedOption,
+        textChoice: '개 지점',
       },
     };
 
     const multiSelectConfig2 = {
       type: 'multi-select',
       data: {
-        labelledBy: 'test2',
-        selectedOptions: [
-          {
-            label: 'test',
-            value: 'test1',
-          },
-        ],
-        options: [],
+        onChange: handlePluralTeamSelectedOption,
+        options: pluralTeamOption,
+        selectedOptions: pluralTeamSelectedOption,
+        textChoice: '개 팀',
       },
     };
 
     const multiSelectConfig3 = {
       type: 'multi-select',
       data: {
-        labelledBy: 'test3',
-        selectedOptions: [
-          {
-            label: 'test',
-            value: 'test1',
-          },
-        ],
-        options: [
-          {
-            label: 'test',
-            value: 'test1',
-          },
-        ],
+        onChange: handlePluralConsultantSelectedOption,
+        options: pluralConsultantOption,
+        selectedOptions: pluralConsultantSelectedOption,
+        textChoice: '명',
       },
     };
 
     return [multiSelectConfig1, multiSelectConfig2, multiSelectConfig3];
-  }, []);
+  }, [
+    handlePluralBranchSelectedOption,
+    handlePluralConsultantSelectedOption,
+    handlePluralTeamSelectedOption,
+    pluralBranchOption,
+    pluralBranchSelectedOption,
+    pluralConsultantOption,
+    pluralConsultantSelectedOption,
+    pluralTeamOption,
+    pluralTeamSelectedOption,
+  ]);
 
   /**
    * @description 타이틀에 들어갈 selectbox 정보들
@@ -1180,6 +1228,45 @@ function StatisticsV2View() {
       };
     }
   }, []);
+
+  // pluralBranchSelectedOption 변경되면 하위 데이터 초기화
+  useEffect(() => {
+    handlePluralTeamSelectedOption([]);
+    handlePluralConsultantSelectedOption([]);
+  }, [
+    handlePluralConsultantSelectedOption,
+    handlePluralTeamSelectedOption,
+    pluralBranchSelectedOption,
+    setInitializePluralConsultant,
+    setInitializePluralTeam,
+  ]);
+
+  // pluralTeamSelectedOption이 변경되면 하위 데이터 초기화
+  useEffect(() => {
+    handlePluralConsultantSelectedOption([]);
+  }, [
+    handlePluralConsultantSelectedOption,
+    handlePluralTeamSelectedOption,
+    pluralTeamSelectedOption,
+    setInitializePluralConsultant,
+    setInitializePluralTeam,
+  ]);
+
+  useEffect(() => {
+    getPluralBranch();
+  }, [getPluralBranch]);
+
+  useEffect(() => {
+    if (!_.isEmpty(pluralBranchSelectedOption)) {
+      getPluralTeam(pluralBranchSelectedOption);
+    }
+  }, [getPluralTeam, pluralBranchSelectedOption]);
+
+  useEffect(() => {
+    if (!_.isEmpty(pluralTeamSelectedOption)) {
+      getPluralConsultant(pluralTeamSelectedOption);
+    }
+  }, [getPluralConsultant, pluralTeamSelectedOption]);
 
   return (
     <>

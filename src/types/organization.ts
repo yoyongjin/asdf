@@ -12,11 +12,13 @@ export interface OrganizationState<T> {
   branch: EachBranch;
   team: EachTeam;
   plural_branch: Array<BranchItem>;
+  plural_team: Array<TeamItem>;
 }
 
 export interface RequestType {
   getOrganization: common.FetchType;
   getPluralBranch: common.FetchType;
+  getPluralTeam: common.FetchType;
   getBranch: common.FetchType;
   getTeam: common.FetchType;
   addBranch: common.FetchType;
@@ -114,4 +116,8 @@ export interface SuccessRemoveTeam extends RequestRemoveTeam {}
 
 export interface AddTemporaryTeam {
   branch_id: number;
+}
+
+export interface RequestGetPluralTeam {
+  ids: string;
 }

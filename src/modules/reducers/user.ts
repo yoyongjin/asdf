@@ -10,6 +10,10 @@ import { UserAction, UserState } from 'types/user';
 
 const initialState: UserState = {
   request: {
+    getPluralConsultant: {
+      fetch: false,
+      error: '',
+    },
     getUser: {
       fetch: false,
       error: '',
@@ -40,6 +44,7 @@ const initialState: UserState = {
   numberOfUsers: 0,
   userCount: 0,
   realTimeStatus: {},
+  plural_consultant: [],
 };
 
 const userReducer = createReducer<UserState, UserAction>(initialState, {
@@ -433,6 +438,30 @@ const userReducer = createReducer<UserState, UserAction>(initialState, {
   [types.CHANGE_USERS_COUNT]: (state, action) => {
     return produce(state, (draft) => {
       draft.userCount = action.payload;
+    });
+  },
+  [types.REQUEST_GET_PLURAL_CONSULTANT]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.request.getPluralConsultant.fetch = true;
+      draft.request.getPluralConsultant.error = '';
+    });
+  },
+  [types.SUCCESS_GET_PLURAL_CONSULTANT]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.plural_consultant = action.payload;
+      draft.request.getPluralConsultant.fetch = false;
+      draft.request.getPluralConsultant.error = '';
+    });
+  },
+  [types.FAILURE_GET_PLURAL_CONSULTANT]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.request.getPluralConsultant.fetch = false;
+      draft.request.getPluralConsultant.error = action.payload;
+    });
+  },
+  [types.SET_INIT_PLURAL_CONSULTANT]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.plural_consultant = [];
     });
   },
   /**

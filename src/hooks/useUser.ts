@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { IOption as IMultiSelectOption } from 'components/atoms/MultiSelect';
 import {
   requestGetUsers,
   requestAddUser,
@@ -9,6 +10,8 @@ import {
   requestResetPassword,
   disconnectForce,
   changeUsersCount,
+  requestGetPluralConsultant,
+  setInitPluralConsultant,
 } from 'modules/actions/user';
 import { RootState } from 'modules/reducers';
 import constants from 'utils/constants';
@@ -18,8 +21,28 @@ function useUser() {
   const consultantInfo = useSelector(
     (state: RootState) => state.user.consultant,
   ); // 상담원 정보
+  const pluralConsultant = useSelector(
+    (state: RootState) => state.user.plural_consultant,
+  ); // 상담원 여러명 리스트
 
   const dispatch = useDispatch();
+
+  const getPluralConsultant = useCallback(
+    (selectedData: Array<IMultiSelectOption>) => {
+      const ids = selectedData.map((selected) => selected.value).join(',');
+
+      const payload = {
+        ids,
+      };
+
+      dispatch(requestGetPluralConsultant(payload));
+    },
+    [dispatch],
+  );
+
+  const setInitializePluralConsultant = useCallback(() => {
+    dispatch(setInitPluralConsultant());
+  }, [dispatch]);
 
   const getUsers = useCallback(
     (
@@ -182,6 +205,8 @@ function useUser() {
   return {
     userInfo,
     consultantInfo,
+    getPluralConsultant,
+    pluralConsultant,
     getUsers,
     onClickAddUser,
     onClickModifyUser,
@@ -189,6 +214,7 @@ function useUser() {
     onClickResetPassword,
     onChangeUserCount,
     onClickDisconnect,
+    setInitializePluralConsultant,
   };
 }
 

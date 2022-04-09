@@ -12,9 +12,11 @@ export interface UserState {
   numberOfUsers: number;
   userCount: number;
   realTimeStatus: ConsultantAllStatusByNumberV2;
+  plural_consultant: Array<IConsultantItem>;
 }
 
 export interface RequestType {
+  getPluralConsultant: common.FetchType;
   getUser: common.FetchType;
   addUser: common.FetchType;
   modifyUser: common.FetchType;
@@ -116,6 +118,11 @@ export interface ConsultantInfoType extends UserInfo {
 
 export interface ChangeUser {
   userInfo: UserData;
+}
+
+export interface IConsultantItem {
+  id: number;
+  name: string;
 }
 
 /**
@@ -228,4 +235,8 @@ export interface RequestRemoveUser {
 
 export interface RequestResetPassword {
   id: number;
+}
+
+export interface IRequestGetPluralConsultant {
+  ids: string;
 }

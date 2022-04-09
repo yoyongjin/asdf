@@ -27,6 +27,10 @@ import {
   failureZiboxVolume,
   disconnectForce,
   DISCONNECT_FORCE,
+  requestGetPluralConsultant,
+  successGetPluralConsultant,
+  failureGetPluralConsultant,
+  REQUEST_GET_PLURAL_CONSULTANT,
 } from 'modules/actions/user';
 import ZMSUser from 'lib/api/zms/user';
 import RelayAuth from 'lib/api/relay/auth';
@@ -365,6 +369,39 @@ function* disconnectForceProcess(action: ReturnType<typeof disconnectForce>) {
   // }
 }
 
+function* getPluralConsultantProcess(
+  action: ReturnType<typeof requestGetPluralConsultant>,
+) {
+  const { ids } = action.payload;
+  try {
+    const response: ResponseSuccessData | ResponseFailureData = yield call(
+      ZMSUser.getPluralConsultant,
+      ids,
+    );
+
+    if (response.status === API_FETCH.SUCCESS) {
+      const { data } = response as ResponseSuccessData;
+
+      yield put(successGetPluralConsultant(data));
+
+      return;
+    }
+
+    const { error_msg } = response as ResponseFailureData;
+    yield put(failureGetPluralConsultant(error_msg));
+
+    alert(error_msg);
+  } catch (error) {
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureGetPluralConsultant(message));
+  }
+}
+
 function* watchGetUsers() {
   yield takeLatest(REQUEST_GET_USERS, getUsersProcess);
 }
@@ -393,6 +430,10 @@ function* watchDisconnectForce() {
   yield takeLatest(DISCONNECT_FORCE, disconnectForceProcess);
 }
 
+function* watchGetPluralConsultant() {
+  yield takeLatest(REQUEST_GET_PLURAL_CONSULTANT, getPluralConsultantProcess);
+}
+
 function* userSaga() {
   yield all([
     fork(watchGetUsers),
@@ -402,6 +443,7 @@ function* userSaga() {
     fork(watchResetPassword),
     fork(watchModifyZiboxVolume),
     fork(watchDisconnectForce),
+    fork(watchGetPluralConsultant),
   ]);
 }
 

@@ -42,6 +42,10 @@ import {
   successGetPluralBranch,
   failureGetPluralBranch,
   REQUEST_GET_PLURAL_BRANCH,
+  requestGetPluralTeam,
+  successGetPluralTeam,
+  failureGetPluralTeam,
+  REQUEST_GET_PLURAL_TEAM,
 } from 'modules/actions/organization';
 import ZMSOrganization from 'lib/api/zms/organization';
 import { ResponseFailureData, ResponseSuccessData } from 'types/common';
@@ -144,6 +148,39 @@ function* getPluralBranchProcess(
     }
 
     yield put(failureGetPluralBranch(message));
+  }
+}
+
+function* getPluralTeamProcess(
+  action: ReturnType<typeof requestGetPluralTeam>,
+) {
+  const { ids } = action.payload;
+  try {
+    const response: ResponseSuccessData | ResponseFailureData = yield call(
+      ZMSOrganization.getPluralTeam,
+      ids,
+    );
+
+    if (response.status === API_FETCH.SUCCESS) {
+      const { data } = response as ResponseSuccessData;
+
+      yield put(successGetPluralTeam(data));
+
+      return;
+    }
+
+    const { error_msg } = response as ResponseFailureData;
+    yield put(failureGetPluralTeam(error_msg));
+
+    alert(error_msg);
+  } catch (error) {
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureGetPluralTeam(message));
   }
 }
 
@@ -446,6 +483,10 @@ function* watchGetPluralBranch() {
   yield takeLatest(REQUEST_GET_PLURAL_BRANCH, getPluralBranchProcess);
 }
 
+function* wtachGetPluralTeam() {
+  yield takeLatest(REQUEST_GET_PLURAL_TEAM, getPluralTeamProcess);
+}
+
 function* branchSaga() {
   yield all([
     fork(watchGetOrganization),
@@ -458,6 +499,7 @@ function* branchSaga() {
     fork(watchRemoveBranch),
     fork(watchRemoveTeam),
     fork(watchGetPluralBranch),
+    fork(wtachGetPluralTeam),
   ]);
 }
 

@@ -18,6 +18,10 @@ const initialState: OrganizationState<string> = {
       fetch: false,
       error: '',
     },
+    getPluralTeam: {
+      fetch: false,
+      error: '',
+    },
     getTeam: {
       fetch: false,
       error: '',
@@ -57,6 +61,7 @@ const initialState: OrganizationState<string> = {
     user: [],
   },
   plural_branch: [],
+  plural_team: [],
   numberOfBranch: 0,
 };
 
@@ -433,6 +438,30 @@ const userReducer = createReducer<
     return produce(state, (draft) => {
       draft.request.getPluralBranch.fetch = false;
       draft.request.getPluralBranch.error = action.payload;
+    });
+  },
+  [types.REQUEST_GET_PLURAL_TEAM]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.request.getPluralTeam.fetch = true;
+      draft.request.getPluralTeam.error = '';
+    });
+  },
+  [types.SUCCESS_GET_PLURAL_TEAM]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.plural_team = action.payload;
+      draft.request.getPluralTeam.fetch = false;
+      draft.request.getPluralTeam.error = '';
+    });
+  },
+  [types.FAILURE_GET_PLURAL_TEAM]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.request.getPluralTeam.fetch = false;
+      draft.request.getPluralTeam.error = action.payload;
+    });
+  },
+  [types.SET_INIT_PLURAL_TEAM]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.plural_team = [];
     });
   },
 });

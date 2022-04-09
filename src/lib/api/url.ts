@@ -34,6 +34,8 @@ export default {
         remove_auto_message: '/api/message/auto-message',
         add_auto_message: '/api/message/auto-message',
         get_plural_branch: '/api/statistics_v2/branch',
+        get_plural_user: '/api/statistics_v2/user',
+        get_plural_team: '/api/statistics_v2/team',
       },
     },
   },

@@ -6,6 +6,46 @@ import { USED_PHONE_STATUS } from 'utils/constants';
 import Logger from 'utils/log';
 
 class User {
+  /**
+   * @description 상담원 여러명 가져오기
+   * @params ids id 복수 (구분자 ,) ex) 1,2,3
+   */
+  static async getPluralConsultant(ids: string) {
+    try {
+      const token = Main.getAccessToken();
+
+      const params = {
+        ids,
+      };
+
+      const { data } = await APIManager.get(
+        url.zms.api.path.get_plural_user,
+        params,
+        {
+          token,
+        },
+      );
+      Logger.log('Get Plural User Data', JSON.stringify(data));
+
+      return data;
+    } catch (error) {
+      if (error instanceof Error) {
+        const isSuccess = APIManager.isError(error);
+
+        if (isSuccess) {
+          const info = APIManager.error(error);
+          Logger.log(JSON.stringify(info));
+
+          return info;
+        }
+
+        throw error;
+      }
+
+      return false;
+    }
+  }
+
   static async getUsers(
     branchId: number,
     teamId: number,

@@ -17,6 +17,8 @@ import {
   RequestRemoveUser,
   RequestResetPassword,
   RequestZiBoxVolume,
+  IRequestGetPluralConsultant,
+  IConsultantItem,
 } from 'types/user';
 
 // 유저 정보 가져오기
@@ -190,3 +192,27 @@ export const setMonitStatus = createAction(SET_MONIT_STATUS)<number>();
 export const disconnectForce = createAction(DISCONNECT_FORCE)<{
   number: string;
 }>();
+
+// 상담원 여러명 가져오기
+export const REQUEST_GET_PLURAL_CONSULTANT = 'REQUEST_GET_PLURAL_CONSULTANT';
+export const SUCCESS_GET_PLURAL_CONSULTANT = 'SUCCESS_GET_PLURAL_CONSULTANT';
+export const FAILURE_GET_PLURAL_CONSULTANT = 'FAILURE_GET_PLURAL_CONSULTANT';
+
+// 상담원 여러명 가져오기 Action
+export const requestGetPluralConsultant = createAction(
+  REQUEST_GET_PLURAL_CONSULTANT,
+)<IRequestGetPluralConsultant>();
+export const successGetPluralConsultant = createAction(
+  SUCCESS_GET_PLURAL_CONSULTANT,
+)<Array<IConsultantItem>>();
+export const failureGetPluralConsultant = createAction(
+  FAILURE_GET_PLURAL_CONSULTANT,
+)<string>();
+
+// 상담원 여러명 초기화
+export const SET_INIT_PLURAL_CONSULTANT = 'SET_INIT_PLURAL_CONSULTANT';
+
+// 상담원 여러명 초기화 Action
+export const setInitPluralConsultant = createAction(
+  SET_INIT_PLURAL_CONSULTANT,
+)();

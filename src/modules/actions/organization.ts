@@ -19,6 +19,7 @@ import {
   SuccessRemoveTeam,
   RequestRemoveTeam,
   AddTemporaryTeam,
+  RequestGetPluralTeam,
 } from 'types/organization';
 
 // 조직 가져오기
@@ -163,3 +164,25 @@ export const successGetPluralBranch = createAction(SUCCESS_GET_PLURAL_BRANCH)<
 export const failureGetPluralBranch = createAction(
   FAILURE_GET_PLURAL_BRANCH,
 )<string>();
+
+// 팀 여러개 가져오기
+export const REQUEST_GET_PLURAL_TEAM = 'REQUEST_GET_PLURAL_TEAM';
+export const SUCCESS_GET_PLURAL_TEAM = 'SUCCESS_GET_PLURAL_TEAM';
+export const FAILURE_GET_PLURAL_TEAM = 'FAILURE_GET_PLURAL_TEAM';
+
+// 팀 여러개 가져오기 Action
+export const requestGetPluralTeam = createAction(
+  REQUEST_GET_PLURAL_TEAM,
+)<RequestGetPluralTeam>();
+export const successGetPluralTeam = createAction(SUCCESS_GET_PLURAL_TEAM)<
+  Array<TeamItem>
+>();
+export const failureGetPluralTeam = createAction(
+  FAILURE_GET_PLURAL_TEAM,
+)<string>();
+
+// 팀 여러개 초기화
+export const SET_INIT_PLURAL_TEAM = 'SET_INIT_PLURAL_TEAM';
+
+// 팀 여러개 가져오기 Action
+export const setInitPluralTeam = createAction(SET_INIT_PLURAL_TEAM)();

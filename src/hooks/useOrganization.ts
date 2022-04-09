@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
+import { IOption as IMultiSelectOption } from 'components/atoms/MultiSelect';
 import {
   requestGetOrganization,
   requestAddBranch,
@@ -13,8 +14,11 @@ import {
   requestGetBranch,
   requestGetTeam,
   requestGetPluralBranch,
+  requestGetPluralTeam,
+  setInitPluralTeam,
 } from 'modules/actions/organization';
 import { RootState } from 'modules/reducers';
+import { setInitPluralConsultant } from 'modules/actions/user';
 
 function useOrganization() {
   const organizations = useSelector(
@@ -33,6 +37,9 @@ function useOrganization() {
   const pluralBranch = useSelector(
     (state: RootState) => state.organization.plural_branch,
   ); // 지점명 여러개 리스트
+  const pluralTeam = useSelector(
+    (state: RootState) => state.organization.plural_team,
+  ); // 팀 여러개 리스트
 
   const dispatch = useDispatch();
 
@@ -42,6 +49,26 @@ function useOrganization() {
 
   const getPluralBranch = useCallback(() => {
     dispatch(requestGetPluralBranch());
+    dispatch(setInitPluralTeam());
+    dispatch(setInitPluralConsultant());
+  }, [dispatch]);
+
+  const getPluralTeam = useCallback(
+    (selectedData: Array<IMultiSelectOption>) => {
+      const ids = selectedData.map((selected) => selected.value).join(',');
+
+      const payload = {
+        ids,
+      };
+
+      dispatch(requestGetPluralTeam(payload));
+      dispatch(setInitPluralConsultant());
+    },
+    [dispatch],
+  );
+
+  const setInitializePluralTeam = useCallback(() => {
+    dispatch(setInitPluralTeam());
   }, [dispatch]);
 
   const getBranches = useCallback(() => {
@@ -173,8 +200,10 @@ function useOrganization() {
     userBranches,
     userTeams,
     pluralBranch,
+    pluralTeam,
     getOrganizations,
     getPluralBranch,
+    getPluralTeam,
     getBranches,
     getTeams,
     getUserBranches,
@@ -186,6 +215,7 @@ function useOrganization() {
     handleRemoveBranch,
     handleRemoveTeam,
     onClickAddTempBranch,
+    setInitializePluralTeam,
   };
 }
 
