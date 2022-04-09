@@ -10,7 +10,7 @@ const StyledWrapper = styled.div`
   max-height: 1200rem;
   min-height: 100vh;
   max-width: 200rem;
-  min-width: 115rem;
+  min-width: 145rem;
   width: 100vw;
 `;
 
