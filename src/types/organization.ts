@@ -11,10 +11,12 @@ export interface OrganizationState<T> {
   numberOfBranch: number;
   branch: EachBranch;
   team: EachTeam;
+  plural_branch: Array<BranchItem>;
 }
 
 export interface RequestType {
   getOrganization: common.FetchType;
+  getPluralBranch: common.FetchType;
   getBranch: common.FetchType;
   getTeam: common.FetchType;
   addBranch: common.FetchType;

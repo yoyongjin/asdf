@@ -14,6 +14,10 @@ const initialState: OrganizationState<string> = {
       fetch: false,
       error: '',
     },
+    getPluralBranch: {
+      fetch: false,
+      error: '',
+    },
     getTeam: {
       fetch: false,
       error: '',
@@ -52,6 +56,7 @@ const initialState: OrganizationState<string> = {
     all: [],
     user: [],
   },
+  plural_branch: [],
   numberOfBranch: 0,
 };
 
@@ -409,6 +414,25 @@ const userReducer = createReducer<
     return produce(state, (draft) => {
       draft.request.removeTeam.fetch = false;
       draft.request.removeTeam.error = action.payload;
+    });
+  },
+  [types.REQUEST_GET_PLURAL_BRANCH]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.request.getPluralBranch.fetch = true;
+      draft.request.getPluralBranch.error = '';
+    });
+  },
+  [types.SUCCESS_GET_PLURAL_BRANCH]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.plural_branch = action.payload;
+      draft.request.getPluralBranch.fetch = false;
+      draft.request.getPluralBranch.error = '';
+    });
+  },
+  [types.FAILURE_GET_PLURAL_BRANCH]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.request.getPluralBranch.fetch = false;
+      draft.request.getPluralBranch.error = action.payload;
     });
   },
 });

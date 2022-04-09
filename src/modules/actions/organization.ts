@@ -149,3 +149,17 @@ export const requestRemoveTeam =
 export const successRemoveTeam =
   createAction(SUCCESS_REMOVE_TEAM)<SuccessRemoveTeam>();
 export const failureRemoveTeam = createAction(FAILURE_REMOVE_TEAM)<string>();
+
+// 조직 여러개 가져오기
+export const REQUEST_GET_PLURAL_BRANCH = 'REQUEST_GET_PLURAL_BRANCH';
+export const SUCCESS_GET_PLURAL_BRANCH = 'SUCCESS_GET_PLURAL_BRANCH';
+export const FAILURE_GET_PLURAL_BRANCH = 'FAILURE_GET_PLURAL_BRANCH';
+
+// 조직 여러개 가져오기
+export const requestGetPluralBranch = createAction(REQUEST_GET_PLURAL_BRANCH)();
+export const successGetPluralBranch = createAction(SUCCESS_GET_PLURAL_BRANCH)<
+  Array<BranchItem>
+>();
+export const failureGetPluralBranch = createAction(
+  FAILURE_GET_PLURAL_BRANCH,
+)<string>();

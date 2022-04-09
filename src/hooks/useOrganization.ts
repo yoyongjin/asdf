@@ -12,6 +12,7 @@ import {
   requestRemoveTeam,
   requestGetBranch,
   requestGetTeam,
+  requestGetPluralBranch,
 } from 'modules/actions/organization';
 import { RootState } from 'modules/reducers';
 
@@ -29,11 +30,18 @@ function useOrganization() {
   const userTeams = useSelector(
     (state: RootState) => state.organization.team.user,
   ); // 지점명 리스트
+  const pluralBranch = useSelector(
+    (state: RootState) => state.organization.plural_branch,
+  ); // 지점명 여러개 리스트
 
   const dispatch = useDispatch();
 
   const getOrganizations = useCallback(() => {
     dispatch(requestGetOrganization());
+  }, [dispatch]);
+
+  const getPluralBranch = useCallback(() => {
+    dispatch(requestGetPluralBranch());
   }, [dispatch]);
 
   const getBranches = useCallback(() => {
@@ -164,7 +172,9 @@ function useOrganization() {
     teams,
     userBranches,
     userTeams,
+    pluralBranch,
     getOrganizations,
+    getPluralBranch,
     getBranches,
     getTeams,
     getUserBranches,

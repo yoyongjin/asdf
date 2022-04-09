@@ -33,6 +33,7 @@ export default {
         set_used_auto_message: '/api/message/auto-message-usage',
         remove_auto_message: '/api/message/auto-message',
         add_auto_message: '/api/message/auto-message',
+        get_plural_branch: '/api/statistics_v2/branch',
       },
     },
   },

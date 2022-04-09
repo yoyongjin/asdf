@@ -68,6 +68,41 @@ class Organization {
     }
   }
 
+  /**
+   * @description 조직 여러개 가져오기
+   */
+  static async getPluralBranch() {
+    try {
+      const token = Main.getAccessToken();
+
+      const { data } = await APIManager.get(
+        url.zms.api.path.get_plural_branch,
+        null,
+        {
+          token,
+        },
+      );
+      Logger.log('Get Plural Branches Data', JSON.stringify(data));
+
+      return data;
+    } catch (error) {
+      if (error instanceof Error) {
+        const isSuccess = APIManager.isError(error);
+
+        if (isSuccess) {
+          const info = APIManager.error(error);
+          Logger.log(JSON.stringify(info));
+
+          return info;
+        }
+
+        throw error;
+      }
+
+      return false;
+    }
+  }
+
   static async getTeams(id: number) {
     try {
       const token = Main.getAccessToken();
