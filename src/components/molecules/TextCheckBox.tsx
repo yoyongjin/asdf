@@ -8,6 +8,7 @@ import { StyledCommonBothWhiteSpace } from 'styles/common';
 const StyledWrapper = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
 `;
 
 /**
@@ -84,7 +85,7 @@ function TextCheckBox({
  */
 interface ITextCheckBox {
   checkBoxIsChecked: boolean;
-  checkBoxName: string;
+  checkBoxName?: string;
   checkBoxOnChange: TonChangeCheckBox;
   distance: number; // Text와 CheckBox의 거리
   isReverse: boolean; // 뒤집을지에 대한 여부
