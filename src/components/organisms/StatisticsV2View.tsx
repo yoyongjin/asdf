@@ -1279,6 +1279,8 @@ function StatisticsV2View() {
   useEffect(() => {
     handlePluralTeamSelectedOption([]);
     handlePluralConsultantSelectedOption([]);
+    setInitializePluralConsultant();
+    setInitializePluralTeam();
   }, [
     handlePluralConsultantSelectedOption,
     handlePluralTeamSelectedOption,
@@ -1290,6 +1292,7 @@ function StatisticsV2View() {
   // pluralTeamSelectedOption이 변경되면 하위 데이터 초기화
   useEffect(() => {
     handlePluralConsultantSelectedOption([]);
+    setInitializePluralConsultant();
   }, [
     handlePluralConsultantSelectedOption,
     handlePluralTeamSelectedOption,
