@@ -21,6 +21,7 @@ export enum Colors {
   black1 = '#1f2021',
   red = '#FF0000',
   red1 = '#ffe1e6',
+  red2 = '#ff6347',
   maroon = '#800000',
   yellow = '#FFFF00',
   yellow1 = '#ecf8d0',
