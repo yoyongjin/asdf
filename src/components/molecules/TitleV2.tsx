@@ -14,6 +14,7 @@ import { DateRangePicker, TabTitle, TextCheckBox } from 'components/molecules';
 import { ITabItem } from 'components/molecules/TabTitle';
 import { TonChangeDatePicker } from 'hooks/useDatePicker';
 import { TonChangeCheckBox, TonChangeSelect } from 'hooks/useInputForm';
+import { THandleSelectedOption } from 'hooks/useMultiSelect';
 import { TOnClickVisible } from 'hooks/useVisible';
 import { StyledCommonBothWhiteSpace } from 'styles/common';
 import { Colors } from 'utils/color';
@@ -121,8 +122,9 @@ function TitleV2({ renderLeft, renderRight, titleStyle }: ITitleProps) {
   const MultiSelectView = useCallback((data: IMultiSelectItem) => {
     return (
       <MultiSelect
-        labelledBy={data.labelledBy}
+        onChange={data.onChange}
         options={data.options}
+        textChoice={data.textChoice}
         value={data.selectedOptions}
       />
     );
@@ -367,9 +369,10 @@ interface IButtonItem {
 
 // muli select 요소 정보
 interface IMultiSelectItem {
-  labelledBy: string;
   selectedOptions: Array<IMultiSelectOption>;
+  onChange?: THandleSelectedOption;
   options: Array<IMultiSelectOption>;
+  textChoice?: string;
 }
 
 // select 요소 정보
