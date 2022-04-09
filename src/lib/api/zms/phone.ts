@@ -20,13 +20,20 @@ class Phone {
 
       return data;
     } catch (error) {
-      if (error.response?.data) {
-        Logger.log(JSON.stringify(error.response.data));
+      if (error instanceof Error) {
+        const isSuccess = APIManager.isError(error);
 
-        return error.response.data;
+        if (isSuccess) {
+          const info = APIManager.error(error);
+          Logger.log(JSON.stringify(info));
+
+          return info;
+        }
+
+        throw error;
       }
 
-      throw new Error(error);
+      return false;
     }
   }
 
@@ -49,13 +56,20 @@ class Phone {
 
       return data;
     } catch (error) {
-      if (error.response?.data) {
-        Logger.log(JSON.stringify(error.response.data));
+      if (error instanceof Error) {
+        const isSuccess = APIManager.isError(error);
 
-        return error.response.data;
+        if (isSuccess) {
+          const info = APIManager.error(error);
+          Logger.log(JSON.stringify(info));
+
+          return info;
+        }
+
+        throw error;
       }
 
-      throw new Error(error);
+      return false;
     }
   }
 
@@ -77,13 +91,20 @@ class Phone {
 
       return data;
     } catch (error) {
-      if (error.response?.data) {
-        Logger.log(JSON.stringify(error.response.data));
+      if (error instanceof Error) {
+        const isSuccess = APIManager.isError(error);
 
-        return error.response.data;
+        if (isSuccess) {
+          const info = APIManager.error(error);
+          Logger.log(JSON.stringify(info));
+
+          return info;
+        }
+
+        throw error;
       }
 
-      throw new Error(error);
+      return false;
     }
   }
 }

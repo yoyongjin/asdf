@@ -77,7 +77,13 @@ function* loginProcess(action: ReturnType<typeof requestLogin>) {
 
     alert(error_msg);
   } catch (error) {
-    yield put(failureLogin(error.message));
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureLogin(message));
   }
 }
 
@@ -128,7 +134,13 @@ function* checkLoginProcess(action: ReturnType<typeof requestCheckLogin>) {
 
     history.push(ROUTER_TYPE.LOGIN);
   } catch (error) {
-    yield put(failureCheckLogin(error.message));
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureCheckLogin(message));
     history.push(ROUTER_TYPE.LOGIN);
     ZMSMain.removeAccessToken();
   }
@@ -165,7 +177,13 @@ function* logoutProcess(action: ReturnType<typeof requestLogout>) {
 
     alert(error_msg);
   } catch (error) {
-    yield put(failureLogout(error.message));
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureLogout(message));
   }
 }
 
@@ -201,7 +219,13 @@ function* changePasswordProcess(
 
     alert(error_msg);
   } catch (error) {
-    yield put(failureChangePassword(error.message));
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureChangePassword(message));
   }
 }
 

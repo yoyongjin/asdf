@@ -65,7 +65,13 @@ function* getOrganizationProcess(
 
     alert(error_msg);
   } catch (error) {
-    yield put(failureGetOrganization(error.message));
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureGetOrganization(message));
   }
 }
 
@@ -96,7 +102,13 @@ function* getBranchProcess(action: ReturnType<typeof requestGetBranch>) {
 
     alert(error_msg);
   } catch (error) {
-    yield put(failureGetBranch(error.message));
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureGetBranch(message));
   }
 }
 
@@ -159,7 +171,13 @@ function* addBranchProcess(action: ReturnType<typeof requestAddBranch>) {
 
     alert(error_msg);
   } catch (error) {
-    yield put(failureAddBranch(error.message));
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureAddBranch(message));
   }
 }
 
@@ -193,7 +211,13 @@ function* addTeamProcess(action: ReturnType<typeof requestAddTeam>) {
 
     alert(error_msg);
   } catch (error) {
-    yield put(failureAddTeam(error.message));
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureAddTeam(message));
   }
 }
 
@@ -225,7 +249,13 @@ function* modifyBranchProcess(action: ReturnType<typeof requestModifyBranch>) {
 
     alert(error_msg);
   } catch (error) {
-    yield put(failureModifyBranch(error.message));
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureModifyBranch(message));
   }
 }
 
@@ -258,7 +288,13 @@ function* modifyTeamProcess(action: ReturnType<typeof requestModifyTeam>) {
 
     alert(error_msg);
   } catch (error) {
-    yield put(failureModifyTeam(error.message));
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureModifyTeam(message));
   }
 }
 
@@ -288,7 +324,13 @@ function* removeBranchProcess(action: ReturnType<typeof requestRemoveBranch>) {
 
     alert(error_msg);
   } catch (error) {
-    yield put(failureRemoveBranch(error.message));
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureRemoveBranch(message));
   }
 }
 
@@ -320,7 +362,13 @@ function* removeTeamProcess(action: ReturnType<typeof requestRemoveTeam>) {
 
     alert(error_msg);
   } catch (error) {
-    yield put(failureRemoveTeam(error.message));
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureRemoveTeam(message));
   }
 }
 

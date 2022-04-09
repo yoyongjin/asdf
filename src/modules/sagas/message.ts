@@ -71,7 +71,13 @@ function* addAutoMessageProcess(
     const { error_msg } = response as ResponseFailureData;
     yield put(failureAddAutoMessage(error_msg));
   } catch (error) {
-    yield put(failureAddAutoMessage(error.message));
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureAddAutoMessage(message));
   }
 }
 
@@ -98,7 +104,13 @@ function* getAutoMessageProcess(
     const { error_msg } = response as ResponseFailureData;
     yield put(failureGetAutoMessage(error_msg));
   } catch (error) {
-    yield put(failureGetAutoMessage(error.message));
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureGetAutoMessage(message));
   }
 }
 
@@ -119,7 +131,13 @@ function* getSmsCountProcess(action: ReturnType<typeof requestGetSmsCount>) {
     const { error_msg } = response as ResponseFailureData;
     yield put(failureGetSmsCount(error_msg));
   } catch (error) {
-    yield put(failureGetSmsCount(error.message));
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureGetSmsCount(message));
   }
 }
 
@@ -163,7 +181,13 @@ function* modifyAutoMessageProcess(
     const { error_msg } = response as ResponseFailureData;
     yield put(failureAddAutoMessage(error_msg));
   } catch (error) {
-    yield put(failureAddAutoMessage(error.message));
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureAddAutoMessage(message));
   }
 }
 
@@ -190,7 +214,13 @@ function* modifySmsCountProcess(
     const { error_msg } = response as ResponseFailureData;
     yield put(failureModifySmsCount(error_msg));
   } catch (error) {
-    yield put(failureModifySmsCount(error.message));
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureModifySmsCount(message));
   }
 }
 
@@ -216,7 +246,13 @@ function* removeAutoMessageProcess(
     const { error_msg } = response as ResponseFailureData;
     yield put(failureRemoveAutoMessage(error_msg));
   } catch (error) {
-    yield put(failureRemoveAutoMessage(error.message));
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureRemoveAutoMessage(message));
   }
 }
 
@@ -243,7 +279,13 @@ function* setUsedAutoMessageProcess(
     const { error_msg } = response as ResponseFailureData;
     yield put(failureSetUsedAutoMessage(error_msg));
   } catch (error) {
-    yield put(failureSetUsedAutoMessage(error.message));
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureSetUsedAutoMessage(message));
   }
 }
 

@@ -72,7 +72,13 @@ function* getUsersProcess(action: ReturnType<typeof requestGetUsers>) {
 
     alert(error_msg);
   } catch (error) {
-    yield put(failureGetUsers(error.message));
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureGetUsers(message));
   }
 }
 
@@ -120,7 +126,13 @@ function* addUserProcess(action: ReturnType<typeof requestAddUser>) {
 
     alert(error_msg);
   } catch (error) {
-    yield put(failureAddUser(error.message));
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureAddUser(message));
   }
 }
 
@@ -186,7 +198,13 @@ function* modifyUserProcess(action: ReturnType<typeof requestModifyUser>) {
 
     alert(error_msg);
   } catch (error) {
-    yield put(failureModifyUser(error.message));
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureModifyUser(message));
   }
 }
 
@@ -223,7 +241,13 @@ function* removeUserProcess(action: ReturnType<typeof requestRemoveUser>) {
 
     alert(error_msg);
   } catch (error) {
-    yield put(failureRemoveUser(error));
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureRemoveUser(message));
   }
 }
 
@@ -252,7 +276,13 @@ function* resetPasswordProcess(
 
     alert(error_msg);
   } catch (error) {
-    yield put(failureResetPassword(error));
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureResetPassword(message));
   }
 }
 
@@ -282,7 +312,13 @@ function* modifyZiboxVolumeProcess(
 
     alert(error_msg);
   } catch (error) {
-    yield put(failureZiboxVolume(error.message));
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureZiboxVolume(message));
   }
 }
 
@@ -303,7 +339,13 @@ function* disconnectForceProcess(action: ReturnType<typeof disconnectForce>) {
       // yield call(API.changeStatus, 'reset', number, 'reset_status');
     }
   } catch (error) {
-    yield put(failureZiboxVolume(error.message));
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureZiboxVolume(message));
   }
 
   // try {

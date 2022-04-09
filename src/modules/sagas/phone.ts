@@ -38,7 +38,13 @@ function* getPhoneInfoProcess(action: ReturnType<typeof requestGetPhoneInfo>) {
     const { error_msg } = response as ResponseFailureData;
     yield put(failureGetPhoneInfo(error_msg));
   } catch (error) {
-    yield put(failureGetPhoneInfo(error.message));
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureGetPhoneInfo(message));
   }
 }
 
@@ -64,7 +70,13 @@ function* getPlanByTelecomProcess(
     const { error_msg } = response as ResponseFailureData;
     yield put(failureGetPlanByTelecom(error_msg));
   } catch (error) {
-    yield put(failureGetPlanByTelecom(error.message));
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureGetPlanByTelecom(message));
   }
 }
 
@@ -87,7 +99,13 @@ function* getTelecomProcess(action: ReturnType<typeof requestGetTelecom>) {
 
     alert(error_msg);
   } catch (error) {
-    yield put(failureGetTelecom(error.message));
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureGetTelecom(message));
   }
 }
 

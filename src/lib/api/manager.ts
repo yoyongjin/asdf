@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 import url from 'lib/api/url';
 
@@ -107,6 +107,31 @@ class API {
     return host!.put(endpoint, params, {
       headers,
     });
+  }
+
+  /**
+   * @description Axios 에러인지 타입 체크
+   * @param error 에러
+   */
+  static isError(error: any): error is AxiosError {
+    return error.response !== undefined || error.request !== undefined;
+  }
+
+  /**
+   * @description axios error 처리
+   * @param error axios error
+   */
+  static error(error: AxiosError) {
+    let info = '';
+    if (error.response) {
+      // 요청 실패
+      info = error.response?.data;
+    } else if (error.request) {
+      // 요청에 대한 응답을 받지 못함
+      info = error.request;
+    }
+
+    return info;
   }
 
   /**

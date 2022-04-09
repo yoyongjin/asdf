@@ -38,7 +38,13 @@ function* getStatisticsProcess(
 
     alert(error_msg);
   } catch (error) {
-    yield put(failureGetStatistics(error.message));
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureGetStatistics(message));
   }
 }
 
