@@ -155,7 +155,7 @@ export const REQUEST_GET_PLURAL_BRANCH = 'REQUEST_GET_PLURAL_BRANCH';
 export const SUCCESS_GET_PLURAL_BRANCH = 'SUCCESS_GET_PLURAL_BRANCH';
 export const FAILURE_GET_PLURAL_BRANCH = 'FAILURE_GET_PLURAL_BRANCH';
 
-// 조직 여러개 가져오기
+// 조직 여러개 가져오기 Action
 export const requestGetPluralBranch = createAction(REQUEST_GET_PLURAL_BRANCH)();
 export const successGetPluralBranch = createAction(SUCCESS_GET_PLURAL_BRANCH)<
   Array<BranchItem>
