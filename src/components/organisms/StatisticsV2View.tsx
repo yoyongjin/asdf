@@ -11,6 +11,7 @@ import useOrganization from 'hooks/useOrganization';
 import useTab from 'hooks/useTab';
 import useUser from 'hooks/useUser';
 import { Colors } from 'utils/color';
+import Utils from 'utils/new_utils';
 
 const callStatisticsByConsultantTableTitles = [
   {
@@ -804,6 +805,20 @@ const selectBoxConditionOption = [
   },
 ];
 
+const selectBoxHoursOption = [...new Array(24)].map((values, index) => {
+  return {
+    id: index + 1,
+    data: `${Utils.pad(String(index + 1))}`,
+  };
+});
+
+const selectBoxMinutesOption = [...new Array(4)].map((values, index) => {
+  return {
+    id: index + 1,
+    data: `${15 * (index + 1)}`,
+  };
+});
+
 const StyledWrapper = styled.div`
   height: 100%;
 `;
@@ -832,14 +847,6 @@ function StatisticsV2View() {
   const {
     onChangeDatePicker: onChangeEndDatePicker,
     datePicker: endDatePicker,
-  } = useDatePicker();
-  const {
-    datePicker: startTimePicker,
-    onChangeDatePicker: onChangeStartTimePicker,
-  } = useDatePicker();
-  const {
-    datePicker: endTimePicker,
-    onChangeDatePicker: onChangeEndTimePicker,
   } = useDatePicker();
   const { onChangeSelectedTabIndex, selectedTabIndex } = useTab();
   const {
@@ -981,34 +988,12 @@ function StatisticsV2View() {
       },
     };
 
-    const dateRangePickerConfig2 = {
-      type: 'date-range-picker',
-      data: {
-        endOnChange: onChangeEndTimePicker,
-        endSelectedDate: endTimePicker,
-        format: 'HH:mm',
-        isShowTime: true,
-        isShowTimeOnly: true,
-        startOnChange: onChangeStartTimePicker,
-        startSelectedDate: startTimePicker,
-      },
-      styles: {
-        borderStyle: 'solid',
-        height: 2.8,
-        width: 6.4,
-      },
-    };
-
-    return [dateRangePickerConfig1, dateRangePickerConfig2];
+    return [dateRangePickerConfig1];
   }, [
     endDatePicker,
-    endTimePicker,
     onChangeEndDatePicker,
-    onChangeEndTimePicker,
     onChangeStartDatePicker,
-    onChangeStartTimePicker,
     startDatePicker,
-    startTimePicker,
   ]);
 
   /**
@@ -1062,7 +1047,7 @@ function StatisticsV2View() {
    * @description 타이틀에 들어갈 selectbox 정보들
    */
   const selectData = useMemo(() => {
-    const selectConfig = {
+    const selectConfig1 = {
       type: 'select',
       data: {
         name: 'test111',
@@ -1075,7 +1060,69 @@ function StatisticsV2View() {
       },
     };
 
-    return [selectConfig];
+    const selectConfig2 = {
+      type: 'select',
+      data: {
+        name: 'test222',
+        options: selectBoxHoursOption,
+      },
+      styles: {
+        borderColor: Colors.gray13,
+        borderRadius: 0,
+        fontColor: Colors.navy2,
+        width: 50,
+      },
+    };
+
+    const selectConfig3 = {
+      type: 'select',
+      data: {
+        name: 'test333',
+        options: selectBoxMinutesOption,
+      },
+      styles: {
+        borderColor: Colors.gray13,
+        borderRadius: 0,
+        fontColor: Colors.navy2,
+        width: 50,
+      },
+    };
+
+    const selectConfig4 = {
+      type: 'select',
+      data: {
+        name: 'test444',
+        options: selectBoxHoursOption,
+      },
+      styles: {
+        borderColor: Colors.gray13,
+        borderRadius: 0,
+        fontColor: Colors.navy2,
+        width: 50,
+      },
+    };
+
+    const selectConfig5 = {
+      type: 'select',
+      data: {
+        name: 'test555',
+        options: selectBoxMinutesOption,
+      },
+      styles: {
+        borderColor: Colors.gray13,
+        borderRadius: 0,
+        fontColor: Colors.navy2,
+        width: 50,
+      },
+    };
+
+    return [
+      selectConfig1,
+      selectConfig2,
+      selectConfig3,
+      selectConfig4,
+      selectConfig5,
+    ];
   }, []);
 
   /**
@@ -1135,7 +1182,7 @@ function StatisticsV2View() {
       } else if (type === 2) {
         const renderData = [];
 
-        const [dataPickerConfig1, dataPickerConfig2] = dateRangePickerData;
+        const [dataPickerConfig1] = dateRangePickerData;
 
         const [buttonConfig1, ...buttonConfig] = buttonData;
 
@@ -1143,7 +1190,6 @@ function StatisticsV2View() {
         renderData.push(...textCheckBoxData);
         renderData.push(dataPickerConfig1);
         renderData.push(...selectData);
-        renderData.push(dataPickerConfig2);
         renderData.push(...buttonConfig);
 
         const renderStyle = [];
@@ -1161,11 +1207,11 @@ function StatisticsV2View() {
             defaultRenderStyle.paddingRight = 12;
           }
 
-          if (i === 3 || i === 5 || i === 6) {
+          if (i === 3 || i === 5 || i === 9) {
             defaultRenderStyle.paddingRight = 20;
           }
 
-          if (i === 4) {
+          if (i === 4 || i === 6 || i === 7 || i === 8) {
             defaultRenderStyle.paddingRight = 10;
           }
 
