@@ -5,29 +5,6 @@ import { createReducer } from 'typesafe-actions';
 import * as types from 'modules/actions/message';
 import { TMessageAction, IMessageState } from 'types/message';
 
-const defaultMaxCountItem = {
-  branch_id: 0,
-  branch_name: '',
-  max_count_date: 0,
-  max_count_mouth: 0,
-};
-
-const defaultAutoMessageItem = {
-  id: 0,
-  branch_id: 0,
-  title: '',
-  content: '',
-  start_date: null,
-  end_date: null,
-  start_time: null,
-  end_time: null,
-  days: null,
-  use_yn: '',
-  code: null,
-  priority: null,
-  created_at: '',
-};
-
 const initialState: IMessageState = {
   request: {
     addAutoMessage: {
@@ -59,8 +36,8 @@ const initialState: IMessageState = {
       error: '',
     },
   },
-  max_count_data: [defaultMaxCountItem],
-  autoMessageData: [defaultAutoMessageItem],
+  max_count_data: [],
+  autoMessageData: [],
   autoMessageAllCount: 0,
 };
 
