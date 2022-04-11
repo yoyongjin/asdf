@@ -807,15 +807,15 @@ const selectBoxConditionOption = [
 
 const selectBoxHoursOption = [...new Array(24)].map((values, index) => {
   return {
-    id: index + 1,
-    data: `${Utils.pad(String(index + 1))}`,
+    id: index,
+    data: `${Utils.pad(String(index))}`,
   };
 });
 
 const selectBoxMinutesOption = [...new Array(4)].map((values, index) => {
   return {
-    id: index + 1,
-    data: `${15 * (index + 1)}`,
+    id: 15 * index,
+    data: `${Utils.pad(String(15 * index))}`,
   };
 });
 
