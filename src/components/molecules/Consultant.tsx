@@ -362,6 +362,7 @@ function Consultant({
         );
       }
 
+      // 아래는 폰상태 정상인 경우
       switch (callStatus) {
         case CALL_STATUS_V2.IDLE:
           return (
