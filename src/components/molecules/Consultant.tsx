@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { Button, Image, Text } from 'components/atoms';
 import { changeTappingData, changeTappingStatus } from 'hooks/useMonitoring';
 import { requestTapping, startTapping, stopTapping } from 'hooks/useZibox';
-import Communicator from 'lib/communicator';
 import { LoginData, TappingTarget } from 'types/auth';
 import { UserData } from 'types/user';
 import { Colors } from 'utils/color';
