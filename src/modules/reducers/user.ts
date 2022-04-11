@@ -342,11 +342,13 @@ const userReducer = createReducer<UserState, UserAction>(initialState, {
     const realTimeStatus = _.cloneDeep(state.realTimeStatus);
 
     return produce(state, (draft) => {
-      state.consultant.map((consultant, i) => {
-        if (consultant.call) {
+      draft.consultant = state.consultant.map((consultant, i) => {
+        let tempConsultant = _.cloneDeep(consultant);
+
+        if (tempConsultant.call) {
           // 콜 상태가 현재 존재할 경우
           if (realTimeStatus[consultant.number!].call) {
-            draft.consultant[i].call = realTimeStatus[consultant.number!].call;
+            tempConsultant.call = realTimeStatus[consultant.number!].call;
           }
 
           if (consultant.call?.time) {
@@ -355,7 +357,7 @@ const userReducer = createReducer<UserState, UserAction>(initialState, {
               local_time,
               server_time,
             );
-            draft.consultant[i].calling_time = callingTime;
+            tempConsultant.calling_time = callingTime;
           }
         } else {
           // 콜 상태가 존재하지 않는 경우
@@ -364,8 +366,8 @@ const userReducer = createReducer<UserState, UserAction>(initialState, {
             realTimeStatus[consultant.number!].call
           ) {
             // 실시간 상태 정보가 있을 경우
-            draft.consultant[i] = {
-              ...state.consultant[i],
+            tempConsultant = {
+              ...tempConsultant,
               call: realTimeStatus[consultant.number!].call,
             };
           }
@@ -374,7 +376,7 @@ const userReducer = createReducer<UserState, UserAction>(initialState, {
         if (consultant.consultant) {
           // 상담원 상태가 현재 존재할 경우
           if (realTimeStatus[consultant.number!].consultant) {
-            draft.consultant[i].consultant =
+            tempConsultant.consultant =
               realTimeStatus[consultant.number!].consultant;
           }
         } else {
@@ -384,8 +386,8 @@ const userReducer = createReducer<UserState, UserAction>(initialState, {
             realTimeStatus[consultant.number!].consultant
           ) {
             // 실시간 상태 정보가 있을 경우
-            draft.consultant[i] = {
-              ...state.consultant[i],
+            tempConsultant = {
+              ...tempConsultant,
               consultant: realTimeStatus[consultant.number!].consultant,
             };
           }
@@ -394,8 +396,7 @@ const userReducer = createReducer<UserState, UserAction>(initialState, {
         if (consultant.phone) {
           // 휴대전화 상태가 현재 존재할 경우
           if (realTimeStatus[consultant.number!].phone) {
-            draft.consultant[i].phone =
-              realTimeStatus[consultant.number!].phone;
+            tempConsultant.phone = realTimeStatus[consultant.number!].phone;
           }
         } else {
           // 휴대전화 상태가 존재하지 않는 경우
@@ -404,8 +405,8 @@ const userReducer = createReducer<UserState, UserAction>(initialState, {
             realTimeStatus[consultant.number!].phone
           ) {
             // 실시간 상태 정보가 있을 경우
-            draft.consultant[i] = {
-              ...state.consultant[i],
+            tempConsultant = {
+              ...tempConsultant,
               phone: realTimeStatus[consultant.number!].phone,
             };
           }
@@ -414,8 +415,7 @@ const userReducer = createReducer<UserState, UserAction>(initialState, {
         if (consultant.zibox) {
           // 지박스 상태가 현재 존재할 경우
           if (realTimeStatus[consultant.number!].zibox) {
-            draft.consultant[i].zibox =
-              realTimeStatus[consultant.number!].zibox;
+            tempConsultant.zibox = realTimeStatus[consultant.number!].zibox;
           }
         } else {
           // 지박스 상태가 존재하지 않는 경우
@@ -424,14 +424,14 @@ const userReducer = createReducer<UserState, UserAction>(initialState, {
             realTimeStatus[consultant.number!].zibox
           ) {
             // 실시간 상태 정보가 있을 경우
-            draft.consultant[i] = {
-              ...state.consultant[i],
+            tempConsultant = {
+              ...tempConsultant,
               zibox: realTimeStatus[consultant.number!].zibox,
             };
           }
         }
 
-        return consultant;
+        return tempConsultant;
       });
     });
   },
