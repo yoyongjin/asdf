@@ -3,10 +3,10 @@ import { ActionType } from 'typesafe-actions';
 import * as actions from 'modules/actions/statistics';
 import * as common from 'types/common';
 
-export type StatisticsAction = ActionType<typeof actions>;
+export type TStatisticsAction = ActionType<typeof actions>;
 
-export interface StatisticsState {
-  request: RequestType;
+export interface IStatisticsState {
+  request: IRequestType;
   statistics: Array<StatisticsData>;
   // v2 통계
   callStatisticsByConsultant: Array<ICallStatisticeByConsultantItem>; // 상담원별 통화 통계
@@ -14,7 +14,7 @@ export interface StatisticsState {
   callStatisticsByConsultantTotal: ICallStatisticTotalItem; // 상담원별 통화 통계 총 합
 }
 
-export interface RequestType {
+export interface IRequestType {
   getStatistics: common.FetchType;
   getCallStatisticsByConsultant: common.FetchType;
 }

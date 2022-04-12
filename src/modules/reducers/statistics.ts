@@ -2,7 +2,7 @@ import produce from 'immer';
 import { createReducer } from 'typesafe-actions';
 
 import * as actions from 'modules/actions/statistics';
-import { StatisticsAction, StatisticsState } from 'types/statistics';
+import { IStatisticsState, TStatisticsAction } from 'types/statistics';
 
 const defalutCallStatisticsItem = {
   DATE: '',
@@ -15,7 +15,7 @@ const defalutCallStatisticsItem = {
 };
 
 // 상태
-const initialState: StatisticsState = {
+const initialState: IStatisticsState = {
   request: {
     getStatistics: {
       fetch: false,
@@ -37,7 +37,7 @@ const initialState: StatisticsState = {
 };
 
 // 리듀서
-const authReducer = createReducer<StatisticsState, StatisticsAction>(
+const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
   initialState,
   {
     [actions.REQUEST_GET_STATISTICS]: (state, action) => {
