@@ -36,6 +36,7 @@ export default {
         get_plural_branch: '/api/statistics_v2/branch',
         get_plural_user: '/api/statistics_v2/user',
         get_plural_team: '/api/statistics_v2/team',
+        get_call_statistics_by_consultant: 'api/statistics_v2',
       },
     },
   },

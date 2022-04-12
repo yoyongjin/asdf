@@ -1,6 +1,11 @@
 import { createAction } from 'typesafe-actions';
 
-import { RequestGetStatistics, StatisticsData } from 'types/statistics';
+import {
+  IRequestGetCallStatisticsByConsultant,
+  IResponseGetCallStatisticsByConsultant,
+  RequestGetStatistics,
+  StatisticsData,
+} from 'types/statistics';
 
 // 통계 가져오기
 export const REQUEST_GET_STATISTICS = 'REQUEST_GET_STATISTICS';
@@ -18,4 +23,23 @@ export const successGetStatistics = createAction(SUCCESS_GET_STATISTICS)<
 >();
 export const failureGetStatistics = createAction(
   FAILURE_GET_STATISTICS,
+)<string>();
+
+// v2 상담원별 통화 통계 가져오기
+export const REQUEST_GET_CALL_STATISTICS_BY_CONSULTANT =
+  'REQUEST_GET_CALL_STATISTICS_BY_CONSULTANT';
+export const SUCCESS_GET_CALL_STATISTICS_BY_CONSULTANT =
+  'SUCCESS_GET_CALL_STATISTICS_BY_CONSULTANT';
+export const FAILURE_GET_CALL_STATISTICS_BY_CONSULTANT =
+  'FAILURE_GET_CALL_STATISTICS_BY_CONSULTANT';
+
+// v2 상담원별 통화 통계 가져오기 Action
+export const requestGetCallStatisticsByConsultant = createAction(
+  REQUEST_GET_CALL_STATISTICS_BY_CONSULTANT,
+)<IRequestGetCallStatisticsByConsultant>();
+export const successGetCallStatisticsByConsultant = createAction(
+  SUCCESS_GET_CALL_STATISTICS_BY_CONSULTANT,
+)<IResponseGetCallStatisticsByConsultant>();
+export const failureGetCallStatisticsByConsultant = createAction(
+  FAILURE_GET_CALL_STATISTICS_BY_CONSULTANT,
 )<string>();
