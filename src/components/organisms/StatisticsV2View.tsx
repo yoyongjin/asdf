@@ -8,6 +8,7 @@ import useDatePicker from 'hooks/useDatePicker';
 import useInputForm from 'hooks/useInputForm';
 import useMultiSelect from 'hooks/useMultiSelect';
 import useOrganization from 'hooks/useOrganization';
+import useStatistics from 'hooks/useStatistics';
 import useTab from 'hooks/useTab';
 import useUser from 'hooks/useUser';
 import { Colors } from 'utils/color';
@@ -819,6 +820,9 @@ const selectBoxMinutesOption = [...new Array(4)].map((values, index) => {
   };
 });
 
+const defaultSearchLimit = 50;
+const dayOfWeekTimestamp = 518400000;
+
 const StyledWrapper = styled.div`
   height: 100%;
 `;
@@ -878,6 +882,7 @@ function StatisticsV2View() {
     handleSelectedOption: handlePluralConsultantSelectedOption,
     selectedOption: pluralConsultantSelectedOption,
   } = useMultiSelect();
+  const { handleGetCallStatisticsByConsultant } = useStatistics();
 
   const pluralBranchOption = useMemo(() => {
     return pluralBranch.map((values) => {
@@ -931,6 +936,103 @@ function StatisticsV2View() {
     };
   }, []);
 
+  const isValidStatistics = (
+    ids: string,
+    startDate: string,
+    endDate: string,
+    startTime?: string,
+    endTime?: string,
+  ) => {
+    if (ids.length < 1) {
+      // 선택된 상담원이 없을 경우
+      alert('상담원을 선택해주세요.');
+
+      return false;
+    }
+
+    if (startDate > endDate) {
+      // 시작날짜가 끝날짜보다 큰 경우
+      alert('날짜 조건을 확인해주세요.');
+
+      return false;
+    }
+
+    if (
+      new Date(endDate).getTime() - new Date(startDate).getTime() >
+      dayOfWeekTimestamp
+    ) {
+      // 기간이 7일 이상일 경우
+      alert('날짜는 7일 이상 선택할 수 없습니다.');
+
+      return false;
+    }
+
+    if (startTime && endTime && startTime > endTime) {
+      // 시작시간이 끝시간보다 큰 경우
+      alert('시간 조건을 확인해주세요.');
+
+      return false;
+    }
+
+    return true;
+  };
+
+  const getCallStatisticeByConsultant = useCallback(() => {
+    const ids = pluralConsultantSelectedOption
+      .map((consultant) => consultant.value)
+      .join(','); // 상담원 여러명 선택
+
+    const breakUp = form.break_up ? '1' : '0'; // 1: 해촉 포함 0: 해촉 미포함
+    const startDate = Utils.getYYYYMMDD(startDatePicker.getTime(), '-');
+    const endDate = Utils.getYYYYMMDD(endDatePicker.getTime(), '-');
+    const startTime =
+      Utils.pad(String(form.start_hour)) +
+      ':' +
+      Utils.pad(String(form.start_minute));
+    const endTime =
+      Utils.pad(String(form.end_hour)) +
+      ':' +
+      Utils.pad(String(form.end_minute));
+    const searchType = form.search_type;
+    const page = 1;
+    const limit = defaultSearchLimit;
+
+    const isSuccess = isValidStatistics(
+      ids,
+      startDate,
+      endDate,
+      startTime,
+      endTime,
+    );
+
+    if (!isSuccess) {
+      return;
+    }
+
+    handleGetCallStatisticsByConsultant(
+      ids,
+      breakUp,
+      startDate,
+      endDate,
+      startTime,
+      endTime,
+      searchType,
+      page,
+      limit,
+    );
+  }, [
+    endDatePicker,
+    form.break_up,
+    form.end_hour,
+    form.end_minute,
+    form.search_type,
+    form.start_hour,
+    form.start_minute,
+    handleGetCallStatisticsByConsultant,
+    pluralConsultantSelectedOption,
+    startDatePicker,
+  ]);
+
   /**
    * @description 타이틀에 들어갈 버튼 정보들
    */
@@ -958,6 +1060,7 @@ function StatisticsV2View() {
       type: 'button',
       data: {
         text: '조회',
+        onClick: getCallStatisticeByConsultant,
       },
       styles: {
         backgroundColor: Colors.blue4,
@@ -971,7 +1074,7 @@ function StatisticsV2View() {
     };
 
     return [buttonConfig1, buttonConfig2];
-  }, []);
+  }, [getCallStatisticeByConsultant]);
 
   /**
    * @description 타이틀에 들어갈 date picker 정보들
