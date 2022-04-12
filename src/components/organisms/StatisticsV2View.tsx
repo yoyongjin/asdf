@@ -837,8 +837,13 @@ const StyledStatisticsArea = styled.div`
 const StyledTableContent = styled.div``;
 
 function StatisticsV2View() {
-  const { form, onChangeCheckBox } = useInputForm({
-    break_up: false,
+  const { form, onChangeCheckBox, onChangeSelect } = useInputForm({
+    break_up: false, // 해촉여부
+    search_type: 1, // 조회 조건
+    start_hour: 0, // 시작 시
+    start_minute: 0, // 시작 분
+    end_hour: 0, // 끝 시
+    end_minute: 0, // 끝 분
   });
   const {
     datePicker: startDatePicker,
@@ -1050,21 +1055,25 @@ function StatisticsV2View() {
     const selectConfig1 = {
       type: 'select',
       data: {
-        name: 'test111',
+        name: 'search_type',
+        onChange: onChangeSelect,
         options: selectBoxConditionOption,
+        value: form.search_type,
       },
       styles: {
         borderColor: Colors.gray13,
         borderRadius: 0,
         fontColor: Colors.navy2,
       },
-    };
+    }; // 조회 조건 관련 정보
 
     const selectConfig2 = {
       type: 'select',
       data: {
-        name: 'test222',
+        name: 'start_hour',
+        onChange: onChangeSelect,
         options: selectBoxHoursOption,
+        value: form.start_hour,
       },
       styles: {
         borderColor: Colors.gray13,
@@ -1072,13 +1081,15 @@ function StatisticsV2View() {
         fontColor: Colors.navy2,
         width: 50,
       },
-    };
+    }; // 시작 시 관련 정보
 
     const selectConfig3 = {
       type: 'select',
       data: {
-        name: 'test333',
+        name: 'start_minute',
+        onChange: onChangeSelect,
         options: selectBoxMinutesOption,
+        value: form.start_minute,
       },
       styles: {
         borderColor: Colors.gray13,
@@ -1086,13 +1097,15 @@ function StatisticsV2View() {
         fontColor: Colors.navy2,
         width: 50,
       },
-    };
+    }; // 시작 분 관련 정보
 
     const selectConfig4 = {
       type: 'select',
       data: {
-        name: 'test444',
+        name: 'end_hour',
+        onChange: onChangeSelect,
         options: selectBoxHoursOption,
+        value: form.end_hour,
       },
       styles: {
         borderColor: Colors.gray13,
@@ -1100,13 +1113,15 @@ function StatisticsV2View() {
         fontColor: Colors.navy2,
         width: 50,
       },
-    };
+    }; // 끝 시 관련 정보
 
     const selectConfig5 = {
       type: 'select',
       data: {
-        name: 'test555',
+        name: 'end_minute',
+        onChange: onChangeSelect,
         options: selectBoxMinutesOption,
+        value: form.end_minute,
       },
       styles: {
         borderColor: Colors.gray13,
@@ -1114,7 +1129,7 @@ function StatisticsV2View() {
         fontColor: Colors.navy2,
         width: 50,
       },
-    };
+    }; // 끝 분 관련 정보
 
     return [
       selectConfig1,
@@ -1123,7 +1138,14 @@ function StatisticsV2View() {
       selectConfig4,
       selectConfig5,
     ];
-  }, []);
+  }, [
+    form.end_hour,
+    form.end_minute,
+    form.search_type,
+    form.start_hour,
+    form.start_minute,
+    onChangeSelect,
+  ]);
 
   /**
    * @description 타이틀에 들어갈 tab 정보들
