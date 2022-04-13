@@ -2,12 +2,14 @@ import _ from 'lodash';
 import React, { useMemo, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 
-import { TitleV2 } from 'components/molecules';
+import { TablePagination, TitleV2 } from 'components/molecules';
+import { IProperty as ITableProperty } from 'components/molecules/TableProperty';
 import { Table } from 'components/organisms';
 import useDatePicker from 'hooks/useDatePicker';
 import useInputForm from 'hooks/useInputForm';
 import useMultiSelect from 'hooks/useMultiSelect';
 import useOrganization from 'hooks/useOrganization';
+import usePage from 'hooks/usePage';
 import useStatistics from 'hooks/useStatistics';
 import useTab from 'hooks/useTab';
 import useUser from 'hooks/useUser';
@@ -820,7 +822,13 @@ const selectBoxMinutesOption = [...new Array(4)].map((values, index) => {
   };
 });
 
-const defaultSearchLimit = 50;
+const selectBoxPageLimitOption = [...new Array(3)].map((values, index) => {
+  return {
+    id: 25 * (index + 2),
+    data: `${Utils.pad(String(25 * (index + 2)))}`,
+  };
+});
+
 const dayOfWeekTimestamp = 518400000;
 
 const StyledWrapper = styled.div`
@@ -832,13 +840,19 @@ const StyledTitle = styled.div`
   width: 100%;
 `;
 
-const StyledStatisticsArea = styled.div`
-  height: calc(100% - 8.5rem);
+const StyledContent = styled.div`
+  height: calc(100% - 8.5rem - 100px);
   overflow: auto;
-  width: 100%;
 `;
 
-const StyledTableContent = styled.div``;
+const StyledFooter = styled.div`
+  align-items: center;
+  display: flex;
+  height: 100px;
+  justify-content: center;
+`;
+
+let prevPage = 1;
 
 function StatisticsV2View() {
   const { form, onChangeCheckBox, onChangeSelect } = useInputForm({
@@ -848,6 +862,7 @@ function StatisticsV2View() {
     start_minute: 0, // 시작 분
     end_hour: 0, // 끝 시
     end_minute: 0, // 끝 분
+    limit: 100, // 페이징 개수
   });
   const {
     datePicker: startDatePicker,
@@ -882,7 +897,17 @@ function StatisticsV2View() {
     handleSelectedOption: handlePluralConsultantSelectedOption,
     selectedOption: pluralConsultantSelectedOption,
   } = useMultiSelect();
-  const { handleGetCallStatisticsByConsultant } = useStatistics();
+  const {
+    callStatisticsByConsultantData,
+    handleGetCallStatisticsByConsultant,
+  } = useStatistics();
+  const {
+    maxCallStatisticsByConsultant,
+    page,
+    onChangeCurrentPage,
+    onClickNextPage,
+    onClickPrevPage,
+  } = usePage();
 
   const pluralBranchOption = useMemo(() => {
     return pluralBranch.map((values) => {
@@ -945,16 +970,20 @@ function StatisticsV2View() {
   ) => {
     if (ids.length < 1) {
       // 선택된 상담원이 없을 경우
-      alert('상담원을 선택해주세요.');
 
-      return false;
+      return {
+        status: false,
+        message: '상담원을 선택해주세요.',
+      };
     }
 
     if (startDate > endDate) {
       // 시작날짜가 끝날짜보다 큰 경우
-      alert('날짜 조건을 확인해주세요.');
 
-      return false;
+      return {
+        status: false,
+        message: '날짜 조건을 확인해주세요.',
+      };
     }
 
     if (
@@ -962,22 +991,29 @@ function StatisticsV2View() {
       dayOfWeekTimestamp
     ) {
       // 기간이 7일 이상일 경우
-      alert('날짜는 7일 이상 선택할 수 없습니다.');
 
-      return false;
+      return {
+        status: false,
+        message: '날짜는 7일 이상 선택할 수 없습니다.',
+      };
     }
 
     if (startTime && endTime && startTime > endTime) {
       // 시작시간이 끝시간보다 큰 경우
-      alert('시간 조건을 확인해주세요.');
 
-      return false;
+      return {
+        status: false,
+        message: '시간 조건을 확인해주세요.',
+      };
     }
 
-    return true;
+    return {
+      status: true,
+      message: '',
+    };
   };
 
-  const getCallStatisticeByConsultant = useCallback(() => {
+  const getTitleParams = useMemo(() => {
     const ids = pluralConsultantSelectedOption
       .map((consultant) => consultant.value)
       .join(','); // 상담원 여러명 선택
@@ -994,22 +1030,9 @@ function StatisticsV2View() {
       ':' +
       Utils.pad(String(form.end_minute));
     const searchType = form.search_type;
-    const page = 1;
-    const limit = defaultSearchLimit;
+    const limit = form.limit;
 
-    const isSuccess = isValidStatistics(
-      ids,
-      startDate,
-      endDate,
-      startTime,
-      endTime,
-    );
-
-    if (!isSuccess) {
-      return;
-    }
-
-    handleGetCallStatisticsByConsultant(
+    return {
       ids,
       breakUp,
       startDate,
@@ -1017,21 +1040,63 @@ function StatisticsV2View() {
       startTime,
       endTime,
       searchType,
-      page,
       limit,
-    );
+    };
   }, [
     endDatePicker,
     form.break_up,
     form.end_hour,
     form.end_minute,
+    form.limit,
     form.search_type,
     form.start_hour,
     form.start_minute,
-    handleGetCallStatisticsByConsultant,
     pluralConsultantSelectedOption,
     startDatePicker,
   ]);
+
+  const getCallStatisticeByConsultant = useCallback(
+    (isAlert = true) => {
+      const {
+        ids,
+        breakUp,
+        startDate,
+        endDate,
+        startTime,
+        endTime,
+        searchType,
+        limit,
+      } = getTitleParams;
+
+      const { status, message } = isValidStatistics(
+        ids,
+        startDate,
+        endDate,
+        startTime,
+        endTime,
+      );
+
+      if (!status) {
+        if (isAlert) {
+          alert(message);
+        }
+        return;
+      }
+
+      handleGetCallStatisticsByConsultant(
+        ids,
+        breakUp,
+        startDate,
+        endDate,
+        startTime,
+        endTime,
+        searchType,
+        page,
+        limit,
+      );
+    },
+    [getTitleParams, handleGetCallStatisticsByConsultant, page],
+  );
 
   /**
    * @description 타이틀에 들어갈 버튼 정보들
@@ -1158,21 +1223,6 @@ function StatisticsV2View() {
     const selectConfig1 = {
       type: 'select',
       data: {
-        name: 'search_type',
-        onChange: onChangeSelect,
-        options: selectBoxConditionOption,
-        value: form.search_type,
-      },
-      styles: {
-        borderColor: Colors.gray13,
-        borderRadius: 0,
-        fontColor: Colors.navy2,
-      },
-    }; // 조회 조건 관련 정보
-
-    const selectConfig2 = {
-      type: 'select',
-      data: {
         name: 'start_hour',
         onChange: onChangeSelect,
         options: selectBoxHoursOption,
@@ -1186,7 +1236,7 @@ function StatisticsV2View() {
       },
     }; // 시작 시 관련 정보
 
-    const selectConfig3 = {
+    const selectConfig2 = {
       type: 'select',
       data: {
         name: 'start_minute',
@@ -1202,7 +1252,7 @@ function StatisticsV2View() {
       },
     }; // 시작 분 관련 정보
 
-    const selectConfig4 = {
+    const selectConfig3 = {
       type: 'select',
       data: {
         name: 'end_hour',
@@ -1218,7 +1268,7 @@ function StatisticsV2View() {
       },
     }; // 끝 시 관련 정보
 
-    const selectConfig5 = {
+    const selectConfig4 = {
       type: 'select',
       data: {
         name: 'end_minute',
@@ -1234,16 +1284,48 @@ function StatisticsV2View() {
       },
     }; // 끝 분 관련 정보
 
+    const selectConfig5 = {
+      type: 'select',
+      data: {
+        name: 'search_type',
+        onChange: onChangeSelect,
+        options: selectBoxConditionOption,
+        value: form.search_type,
+      },
+      styles: {
+        borderColor: Colors.gray13,
+        borderRadius: 0,
+        fontColor: Colors.navy2,
+      },
+    }; // 조회 조건 관련 정보
+
+    const selectConfig6 = {
+      type: 'select',
+      data: {
+        name: 'limit',
+        onChange: onChangeSelect,
+        options: selectBoxPageLimitOption,
+        value: form.limit,
+      },
+      styles: {
+        borderColor: Colors.gray13,
+        borderRadius: 0,
+        fontColor: Colors.navy2,
+      },
+    }; // 페이지 개수
+
     return [
       selectConfig1,
       selectConfig2,
       selectConfig3,
       selectConfig4,
       selectConfig5,
+      selectConfig6,
     ];
   }, [
     form.end_hour,
     form.end_minute,
+    form.limit,
     form.search_type,
     form.start_hour,
     form.start_minute,
@@ -1265,6 +1347,26 @@ function StatisticsV2View() {
 
     return [tabConfig];
   }, [onChangeSelectedTabIndex, selectedTabIndex]);
+
+  /**
+   * @description 타이틀에 들어갈 text 정보들
+   */
+  const textData = useMemo(() => {
+    const textConfig = {
+      type: 'text',
+      data: {
+        text: '~',
+      },
+      styles: {
+        fontColor: Colors.navy2,
+        fontFamily: 'Malgun Gothic',
+        fontSize: 12,
+        fontWeight: 800,
+      },
+    };
+
+    return [textConfig];
+  }, []);
 
   /**
    * @description 타이틀에 들어갈 text + checkbox 정보들
@@ -1311,10 +1413,14 @@ function StatisticsV2View() {
 
         const [buttonConfig1, ...buttonConfig] = buttonData;
 
+        const [selectConfig1, selectConfig2, ...selectConfig] = selectData;
+
         renderData.push(...multiSelectData);
         renderData.push(...textCheckBoxData);
         renderData.push(dataPickerConfig1);
-        renderData.push(...selectData);
+        renderData.push(selectConfig1, selectConfig2);
+        renderData.push(...textData);
+        renderData.push(...selectConfig);
         renderData.push(...buttonConfig);
 
         const renderStyle = [];
@@ -1332,11 +1438,11 @@ function StatisticsV2View() {
             defaultRenderStyle.paddingRight = 12;
           }
 
-          if (i === 3 || i === 5 || i === 9) {
+          if (i === 3 || i === 4 || i === 9 || i === 10 || i === 11) {
             defaultRenderStyle.paddingRight = 20;
           }
 
-          if (i === 4 || i === 6 || i === 7 || i === 8) {
+          if (i === 5 || i === 6 || i === 7 || i === 8) {
             defaultRenderStyle.paddingRight = 10;
           }
 
@@ -1356,6 +1462,7 @@ function StatisticsV2View() {
       selectData,
       tabData,
       textCheckBoxData,
+      textData,
     ],
   );
 
@@ -1400,6 +1507,117 @@ function StatisticsV2View() {
     }
   }, []);
 
+  /**
+   * @description 상담원별 통화 통계 테이블 상세 내용 정보들
+   */
+  const tablePropertyCallStatisticsByConsultant = useMemo(() => {
+    return callStatisticsByConsultantData.map((values) => {
+      const row: Array<string> = [];
+
+      // 공통
+      row.push(values.branch_name); // 지점명
+      row.push(values.team_name); // 팀명
+      row.push(values.name); // 이름
+      row.push(values.tmr_cd); // ID
+      row.push(values.date); // 일시
+
+      // 전체
+      row.push(`${values.all_total_call}`); // 전체 시도콜
+      row.push(`${values.all_connect_call}`); // 전체 연결콜
+      row.push(`${values.all_fail_call}`); // 전체 부재콜
+      let allConnectionRate = values.all_connect_call / values.all_total_call;
+      allConnectionRate = allConnectionRate || 0;
+      row.push(`${allConnectionRate}%`); // 전체 연결률
+      row.push(Utils.getHourMinSecBySecond(values.all_total_time)); // 전체 통화 시간
+      row.push(`${values.all_total_time}`); // 전체 통화 시간(초)
+      let allAverageCallTime = values.all_total_time / values.all_total_call;
+      allAverageCallTime = allAverageCallTime || 0;
+      row.push(Utils.getHourMinSecBySecond(allAverageCallTime)); // 전체 평균 통화 시간
+      row.push(Utils.getHourMinSecBySecond(values.all_ring_time)); // 전체 링 시간
+      row.push(`${values.all_ring_time}`); // 전체 링시간(초)
+      row.push(Utils.getHourMinSecBySecond(values.all_talk_time)); // 전체 순수통화시간
+      row.push(`${values.all_talk_time}`); // 전체 순수통화시간(초)
+
+      // 발신
+      row.push(`${values.outcoming_total_call}`); // 발신 시도콜
+      row.push(`${values.outcoming_connect_call}`); // 발신 연결콜
+      row.push(`${values.outcoming_fail_call}`); // 발신 부재콜
+      let outcomingConnectionRate =
+        values.outcoming_connect_call / values.outcoming_total_call;
+      outcomingConnectionRate = outcomingConnectionRate || 0;
+      row.push(`${outcomingConnectionRate}%`); // 발신 연결률
+      row.push(Utils.getHourMinSecBySecond(values.outcoming_total_time)); // 발신 통화 시간
+      row.push(`${values.outcoming_total_time}`); // 발신 통화 시간(초)
+      let outcomingAverageCallTime =
+        values.outcoming_total_time / values.outcoming_total_call;
+      outcomingAverageCallTime = outcomingAverageCallTime || 0;
+      row.push(Utils.getHourMinSecBySecond(outcomingAverageCallTime)); // 발신 평균 통화 시간
+      row.push(Utils.getHourMinSecBySecond(values.outcoming_ring_time)); // 발신 링 시간
+      row.push(`${values.outcoming_ring_time}`); // 발신 링시간(초)
+      row.push(Utils.getHourMinSecBySecond(values.outcoming_talk_time)); // 발신 순수통화시간
+      row.push(`${values.outcoming_talk_time}`); // 발신 순수통화시간(초)
+
+      // 수신
+      row.push(`${values.incoming_total_call}`); // 수신 시도콜
+      row.push(`${values.incoming_connect_call}`); // 수신 연결콜
+      row.push(`${values.incoming_fail_call}`); // 수신 부재콜
+      let incomingConnectionRate =
+        values.incoming_connect_call / values.incoming_total_call;
+      incomingConnectionRate = incomingConnectionRate || 0;
+      row.push(`${incomingConnectionRate}%`); // 수신 연결률
+      row.push(Utils.getHourMinSecBySecond(values.incoming_total_time)); // 수신 통화 시간
+      row.push(`${values.incoming_total_time}`); // 수신 통화 시간(초)
+      let incomingAverageCallTime =
+        values.incoming_total_time / values.incoming_total_call;
+      incomingAverageCallTime = incomingAverageCallTime || 0;
+      row.push(Utils.getHourMinSecBySecond(incomingAverageCallTime)); // 수신 평균 통화 시간
+      row.push(Utils.getHourMinSecBySecond(values.incoming_ring_time)); // 수신 링 시간
+      row.push(`${values.incoming_ring_time}`); // 수신 링시간(초)
+      row.push(Utils.getHourMinSecBySecond(values.incoming_talk_time)); // 수신 순수통화시간
+      row.push(`${values.incoming_talk_time}`); // 수신 순수통화시간(초)
+
+      let backgroundColor = '';
+      if (values.branch_name === '소계') {
+        backgroundColor = Colors.gray15;
+      } else if (values.branch_name === '합계') {
+        backgroundColor = Colors.blue9;
+      }
+      const callStatisticsByConsultantItems: Array<ITableProperty> = row.map(
+        (value, index) => {
+          return {
+            data: {
+              text: value,
+            },
+            styles: {
+              fontSize: 12,
+            },
+            type: 'text',
+            propertyStyles: {
+              backgroundColor,
+              textAlign: 'center',
+            },
+          };
+        },
+      );
+
+      return callStatisticsByConsultantItems;
+    });
+  }, [callStatisticsByConsultantData]);
+
+  /**
+   * @description 상담원별 통화 통계 테이블 내용 정보들
+   */
+  const tableContentCallStatisticsByConsultant = useMemo(() => {
+    return {
+      data: tablePropertyCallStatisticsByConsultant,
+      originData: callStatisticsByConsultantData,
+      styles: {
+        rowHeight: 35,
+      },
+      type: 'call-statistics-by-consultant',
+    };
+  }, [callStatisticsByConsultantData, tablePropertyCallStatisticsByConsultant]);
+
   // pluralBranchSelectedOption 변경되면 하위 데이터 초기화
   useEffect(() => {
     handlePluralTeamSelectedOption([]);
@@ -1442,6 +1660,17 @@ function StatisticsV2View() {
     }
   }, [getPluralConsultant, pluralTeamSelectedOption]);
 
+  /**
+   * @description 페이지가 변경됐을 때 데이터를 가져오기
+   */
+  useEffect(() => {
+    if (prevPage !== page) {
+      getCallStatisticeByConsultant(false);
+    }
+
+    prevPage = page;
+  }, [getCallStatisticeByConsultant, page]);
+
   return (
     <>
       <StyledWrapper>
@@ -1458,13 +1687,13 @@ function StatisticsV2View() {
             titleStyle={getTitleStyle(2)}
           />
         </StyledTitle>
-        <StyledStatisticsArea>
-          <StyledTableContent>
+        <StyledContent>
+          <div>
             {selectedTabIndex === 0 ? (
               // 상담원별 통화 통계
               <Table
                 borderItem={borderItem}
-                contents={tableContents}
+                contents={tableContentCallStatisticsByConsultant}
                 dependencyTitles={dependencyCallStatisticsTitles}
                 headColor={Colors.white}
                 headHeight={52}
@@ -1499,8 +1728,47 @@ function StatisticsV2View() {
                 titles={notificationStatisticsTableTitles}
               />
             )}
-          </StyledTableContent>
-        </StyledStatisticsArea>
+          </div>
+        </StyledContent>
+        <StyledFooter>
+          {selectedTabIndex === 0 ? (
+            // 상담원별 통화 통계
+            <TablePagination
+              count={maxCallStatisticsByConsultant}
+              divide={form.limit}
+              curPage={page}
+              onClickNextPage={onClickNextPage}
+              onClickPrevPage={onClickPrevPage}
+            />
+          ) : selectedTabIndex === 1 ? (
+            // 팀별 통화 통계
+            <TablePagination
+              count={maxCallStatisticsByConsultant}
+              divide={form.limit}
+              curPage={page}
+              onClickNextPage={onClickNextPage}
+              onClickPrevPage={onClickPrevPage}
+            />
+          ) : selectedTabIndex === 2 ? (
+            // 문자 통계
+            <TablePagination
+              count={maxCallStatisticsByConsultant}
+              divide={form.limit}
+              curPage={page}
+              onClickNextPage={onClickNextPage}
+              onClickPrevPage={onClickPrevPage}
+            />
+          ) : (
+            // 알림 문자 통계
+            <TablePagination
+              count={maxCallStatisticsByConsultant}
+              divide={form.limit}
+              curPage={page}
+              onClickNextPage={onClickNextPage}
+              onClickPrevPage={onClickPrevPage}
+            />
+          )}
+        </StyledFooter>
       </StyledWrapper>
     </>
   );
