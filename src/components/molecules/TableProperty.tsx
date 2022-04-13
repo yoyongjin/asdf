@@ -18,6 +18,7 @@ import Utils from 'utils/new_utils';
 import { TOnClickModifyAutoMessagePopup } from 'components/organisms/SMSView';
 
 const StyledWrapper = styled.td<IStyledWrapper>`
+  background-color: ${(props) => props.backgroundColor};
   text-align: ${(props) => props.textAlign};
   padding-left: ${(props) => props.paddingLeft}px;
   padding-right: ${(props) => props.paddingRight}px;
@@ -241,6 +242,7 @@ function TableProperty({
       {contents.map((values, index) => {
         return (
           <StyledWrapper
+            backgroundColor={values.propertyStyles?.backgroundColor}
             key={`styled-table-property-wrapper-${index}`}
             paddingLeft={values.propertyStyles?.paddingLeft || 0}
             paddingRight={values.propertyStyles?.paddingRight || 0}
@@ -332,6 +334,7 @@ interface ITextSlideToggleItem extends ISlideToggleItem, ITextItem {
 }
 
 interface ITdStyle {
+  backgroundColor?: string;
   paddingLeft?: number;
   paddingRight?: number;
   textAlign?: string;

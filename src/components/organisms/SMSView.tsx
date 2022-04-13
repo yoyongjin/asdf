@@ -136,13 +136,15 @@ const StyledTitle = styled.div`
 `;
 
 const StyledContent = styled.div`
-  height: calc(100% - 9.5rem - 100px);
+  height: calc(100% - 8.5rem - 100px);
   overflow-x: auto;
 `;
 
 const StyledFooter = styled.div`
-  padding-top: 50px;
-  height: 50px;
+  align-items: center;
+  display: flex;
+  height: 100px;
+  justify-content: center;
 `;
 
 function SMSView() {

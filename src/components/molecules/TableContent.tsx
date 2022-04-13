@@ -51,7 +51,10 @@ function TableContent({ contents }: ITableContentProps) {
         }
 
         return (
-          <StyledWrapper key={`styled-table-content-${i}`} height={45}>
+          <StyledWrapper
+            key={`styled-table-content-${i}`}
+            height={contents.styles?.rowHeight || 45}
+          >
             <TableProperty
               contents={data}
               contentType={contents.type}
