@@ -12,11 +12,8 @@ function useStatistics() {
   const statistics = useSelector(
     (state: RootState) => state.statistics.statistics,
   );
-  const callStatisticsByConsultant = useSelector(
+  const callStatisticsByConsultantData = useSelector(
     (state: RootState) => state.statistics.callStatisticsByConsultant,
-  );
-  const callStatisticsByConsultantTotal = useSelector(
-    (state: RootState) => state.statistics.callStatisticsByConsultantTotal,
   );
 
   const dispatch = useDispatch();
@@ -76,8 +73,7 @@ function useStatistics() {
     statistics,
     handleGetStatistics,
     handleGetCallStatisticsByConsultant,
-    callStatisticsByConsultant,
-    callStatisticsByConsultantTotal,
+    callStatisticsByConsultantData,
   };
 }
 

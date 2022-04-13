@@ -83,8 +83,9 @@ function* getCallStatisticsByConsultantProcess(
 
     if (response.status === API_FETCH.SUCCESS) {
       const { data } = response as ResponseSuccessData;
-      // const { stat } = data;
-      console.log(data);
+
+      data.page = page;
+      data.limit = page_count;
 
       yield put(successGetCallStatisticsByConsultant(data));
 

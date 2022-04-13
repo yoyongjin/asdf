@@ -12,6 +12,9 @@ function usePage() {
   const maxAutoMessage = useSelector(
     (state: RootState) => state.message.autoMessageAllCount,
   );
+  const maxCallStatisticsByConsultant = useSelector(
+    (state: RootState) => state.statistics.callStatisticsByConsultantAllCount,
+  );
   const [page, setPage] = useState<number>(1);
 
   const onChangeCurrentPage = useCallback(
@@ -57,6 +60,7 @@ function usePage() {
     maxUser,
     maxBranch,
     maxAutoMessage,
+    maxCallStatisticsByConsultant,
     onClickNextPage,
     onClickPrevPage,
     onChangeCurrentPage,

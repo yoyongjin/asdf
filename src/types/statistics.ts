@@ -9,9 +9,8 @@ export interface IStatisticsState {
   request: IRequestType;
   statistics: Array<StatisticsData>;
   // v2 통계
-  callStatisticsByConsultant: Array<ICallStatisticeByConsultantItem>; // 상담원별 통화 통계
+  callStatisticsByConsultant: Array<ICustomCallStatisticeByConsultantItem>; // 상담원별 통화 통계
   callStatisticsByConsultantAllCount: number; // 상담원별 통화 통계 총 수
-  callStatisticsByConsultantTotal: ICallStatisticTotalItem; // 상담원별 통화 통계 총 합
 }
 
 export interface IRequestType {
@@ -30,6 +29,37 @@ export interface StatisticsData {
   success_ratio: number;
   inbound_count: number;
   all_call_time: number;
+}
+
+export interface IPageItem {
+  page: number;
+  limit: number;
+}
+
+export interface ICustomCallStatisticeByConsultantItem {
+  branch_name: string;
+  team_name: string;
+  name: string;
+  tmr_cd: string;
+  date: string;
+  all_total_call: number;
+  all_connect_call: number;
+  all_fail_call: number;
+  all_total_time: number;
+  all_ring_time: number;
+  all_talk_time: number;
+  incoming_total_call: number;
+  incoming_connect_call: number;
+  incoming_fail_call: number;
+  incoming_total_time: number;
+  incoming_ring_time: number;
+  incoming_talk_time: number;
+  outcoming_total_call: number;
+  outcoming_connect_call: number;
+  outcoming_fail_call: number;
+  outcoming_total_time: number;
+  outcoming_ring_time: number;
+  outcoming_talk_time: number;
 }
 
 // 상담원별 통계 item
@@ -84,7 +114,7 @@ export interface IRequestGetCallStatisticsByConsultant {
 }
 
 // 상담원별 통화 통계 응답 파라미터
-export interface IResponseGetCallStatisticsByConsultant {
+export interface IResponseGetCallStatisticsByConsultant extends IPageItem {
   common: IResponseGetCallStatisticsByConsultantCommonItem;
   list: Array<ICallStatisticeByConsultantItem>;
 }
