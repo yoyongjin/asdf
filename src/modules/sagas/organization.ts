@@ -50,6 +50,7 @@ import {
 import ZMSOrganization from 'lib/api/zms/organization';
 import { ResponseFailureData, ResponseSuccessData } from 'types/common';
 import { API_FETCH } from 'utils/constants';
+import Toast from 'utils/toast';
 
 function* getOrganizationProcess(
   action: ReturnType<typeof requestGetOrganization>,
@@ -71,7 +72,7 @@ function* getOrganizationProcess(
     const { error_msg } = response as ResponseFailureData;
     yield put(failureGetOrganization(error_msg));
 
-    alert(error_msg);
+    Toast.error('요청에 실패했어요..😭');
   } catch (error) {
     let message = '';
 
@@ -80,6 +81,8 @@ function* getOrganizationProcess(
     }
 
     yield put(failureGetOrganization(message));
+
+    Toast.error('요청에 실패했어요..😭');
   }
 }
 
@@ -108,7 +111,7 @@ function* getBranchProcess(action: ReturnType<typeof requestGetBranch>) {
     const { error_msg } = response as ResponseFailureData;
     yield put(failureGetBranch(error_msg));
 
-    alert(error_msg);
+    Toast.error('요청에 실패했어요..😭');
   } catch (error) {
     let message = '';
 
@@ -117,6 +120,8 @@ function* getBranchProcess(action: ReturnType<typeof requestGetBranch>) {
     }
 
     yield put(failureGetBranch(message));
+
+    Toast.error('요청에 실패했어요..😭');
   }
 }
 
@@ -139,7 +144,7 @@ function* getPluralBranchProcess(
     const { error_msg } = response as ResponseFailureData;
     yield put(failureGetPluralBranch(error_msg));
 
-    alert(error_msg);
+    Toast.error('요청에 실패했어요..😭');
   } catch (error) {
     let message = '';
 
@@ -148,6 +153,8 @@ function* getPluralBranchProcess(
     }
 
     yield put(failureGetPluralBranch(message));
+
+    Toast.error('요청에 실패했어요..😭');
   }
 }
 
@@ -172,7 +179,7 @@ function* getPluralTeamProcess(
     const { error_msg } = response as ResponseFailureData;
     yield put(failureGetPluralTeam(error_msg));
 
-    alert(error_msg);
+    Toast.error('요청에 실패했어요..😭');
   } catch (error) {
     let message = '';
 
@@ -181,6 +188,8 @@ function* getPluralTeamProcess(
     }
 
     yield put(failureGetPluralTeam(message));
+
+    Toast.error('요청에 실패했어요..😭');
   }
 }
 
@@ -210,9 +219,11 @@ function* getTeamProcess(action: ReturnType<typeof requestGetTeam>) {
     const { error_msg } = response as ResponseFailureData;
     // yield put(failureGetOrganization(error_msg));
 
-    alert(error_msg);
+    Toast.error('요청에 실패했어요..😭');
   } catch (error) {
     // yield put(failureGetOrganization(error.message));
+
+    Toast.error('요청에 실패했어요..😭');
   }
 }
 
@@ -235,13 +246,15 @@ function* addBranchProcess(action: ReturnType<typeof requestAddBranch>) {
 
       yield put(successAddBranch(payload));
 
+      Toast.success('추가 완료😊');
+
       return;
     }
 
     const { error_msg } = response as ResponseFailureData;
     yield put(failureAddBranch(error_msg));
 
-    alert(error_msg);
+    Toast.error('요청에 실패했어요..😭');
   } catch (error) {
     let message = '';
 
@@ -250,6 +263,8 @@ function* addBranchProcess(action: ReturnType<typeof requestAddBranch>) {
     }
 
     yield put(failureAddBranch(message));
+
+    Toast.error('요청에 실패했어요..😭');
   }
 }
 
@@ -275,13 +290,15 @@ function* addTeamProcess(action: ReturnType<typeof requestAddTeam>) {
 
       yield put(successAddTeam(payload));
 
+      Toast.success('추가 완료😊');
+
       return;
     }
 
     const { error_msg } = response as ResponseFailureData;
     yield put(failureAddTeam(error_msg));
 
-    alert(error_msg);
+    Toast.error('요청에 실패했어요..😭');
   } catch (error) {
     let message = '';
 
@@ -290,6 +307,8 @@ function* addTeamProcess(action: ReturnType<typeof requestAddTeam>) {
     }
 
     yield put(failureAddTeam(message));
+
+    Toast.error('요청에 실패했어요..😭');
   }
 }
 
@@ -313,13 +332,15 @@ function* modifyBranchProcess(action: ReturnType<typeof requestModifyBranch>) {
 
       yield put(successModifyBranch(payload));
 
+      Toast.success('수정 완료😊');
+
       return;
     }
 
     const { error_msg } = response as ResponseFailureData;
     yield put(failureModifyBranch(error_msg));
 
-    alert(error_msg);
+    Toast.error('요청에 실패했어요..😭');
   } catch (error) {
     let message = '';
 
@@ -328,6 +349,8 @@ function* modifyBranchProcess(action: ReturnType<typeof requestModifyBranch>) {
     }
 
     yield put(failureModifyBranch(message));
+
+    Toast.error('요청에 실패했어요..😭');
   }
 }
 
@@ -352,13 +375,15 @@ function* modifyTeamProcess(action: ReturnType<typeof requestModifyTeam>) {
 
       yield put(successModifyTeam(payload));
 
+      Toast.success('수정 완료😊');
+
       return;
     }
 
     const { error_msg } = response as ResponseFailureData;
     yield put(failureModifyTeam(error_msg));
 
-    alert(error_msg);
+    Toast.error('요청에 실패했어요..😭');
   } catch (error) {
     let message = '';
 
@@ -367,6 +392,8 @@ function* modifyTeamProcess(action: ReturnType<typeof requestModifyTeam>) {
     }
 
     yield put(failureModifyTeam(message));
+
+    Toast.error('요청에 실패했어요..😭');
   }
 }
 
@@ -388,13 +415,15 @@ function* removeBranchProcess(action: ReturnType<typeof requestRemoveBranch>) {
 
       yield put(successRemoveBranch(payload));
 
+      Toast.success('삭제 완료😊');
+
       return;
     }
 
     const { error_msg } = response as ResponseFailureData;
     yield put(failureRemoveBranch(error_msg));
 
-    alert(error_msg);
+    Toast.error('요청에 실패했어요..😭');
   } catch (error) {
     let message = '';
 
@@ -403,6 +432,8 @@ function* removeBranchProcess(action: ReturnType<typeof requestRemoveBranch>) {
     }
 
     yield put(failureRemoveBranch(message));
+
+    Toast.error('요청에 실패했어요..😭');
   }
 }
 
@@ -426,13 +457,15 @@ function* removeTeamProcess(action: ReturnType<typeof requestRemoveTeam>) {
 
       yield put(successRemoveTeam(payload));
 
+      Toast.success('삭제 완료😊');
+
       return;
     }
 
     const { error_msg } = response as ResponseFailureData;
     yield put(failureRemoveTeam(error_msg));
 
-    alert(error_msg);
+    Toast.error('요청에 실패했어요..😭');
   } catch (error) {
     let message = '';
 
@@ -441,6 +474,8 @@ function* removeTeamProcess(action: ReturnType<typeof requestRemoveTeam>) {
     }
 
     yield put(failureRemoveTeam(message));
+
+    Toast.error('요청에 실패했어요..😭');
   }
 }
 

@@ -31,6 +31,7 @@ import {
 } from 'modules/actions/auth';
 import { ResponseSuccessData, ResponseFailureData } from 'types/common';
 import { API_FETCH, ROUTER_TYPE } from 'utils/constants';
+import Toast from 'utils/toast';
 
 function* loginProcess(action: ReturnType<typeof requestLogin>) {
   const { id, password } = action.payload;
@@ -75,7 +76,7 @@ function* loginProcess(action: ReturnType<typeof requestLogin>) {
     const { error_msg } = response as ResponseFailureData;
     yield put(failureLogin(error_msg));
 
-    alert(error_msg);
+    Toast.error('요청에 실패했어요..😭');
   } catch (error) {
     let message = '';
 
@@ -84,6 +85,8 @@ function* loginProcess(action: ReturnType<typeof requestLogin>) {
     }
 
     yield put(failureLogin(message));
+
+    Toast.error('요청에 실패했어요..😭');
   }
 }
 
@@ -129,7 +132,7 @@ function* checkLoginProcess(action: ReturnType<typeof requestCheckLogin>) {
 
     if (error_msg !== 'No token provided') {
       // 개선 요망
-      alert(error_msg);
+      Toast.error('요청에 실패했어요..😭');
     }
 
     history.push(ROUTER_TYPE.LOGIN);
@@ -143,6 +146,8 @@ function* checkLoginProcess(action: ReturnType<typeof requestCheckLogin>) {
     yield put(failureCheckLogin(message));
     history.push(ROUTER_TYPE.LOGIN);
     ZMSMain.removeAccessToken();
+
+    Toast.error('요청에 실패했어요..😭');
   }
 }
 
@@ -175,7 +180,7 @@ function* logoutProcess(action: ReturnType<typeof requestLogout>) {
     const { error_msg } = response as ResponseFailureData;
     yield put(failureCheckLogin(error_msg));
 
-    alert(error_msg);
+    Toast.error('요청에 실패했어요..😭');
   } catch (error) {
     let message = '';
 
@@ -184,6 +189,8 @@ function* logoutProcess(action: ReturnType<typeof requestLogout>) {
     }
 
     yield put(failureLogout(message));
+
+    Toast.error('요청에 실패했어요..😭');
   }
 }
 
@@ -217,7 +224,7 @@ function* changePasswordProcess(
     const { error_msg } = response as ResponseFailureData;
     yield put(failureChangePassword(error_msg));
 
-    alert(error_msg);
+    Toast.error('요청에 실패했어요..😭');
   } catch (error) {
     let message = '';
 
@@ -226,6 +233,8 @@ function* changePasswordProcess(
     }
 
     yield put(failureChangePassword(message));
+
+    Toast.error('요청에 실패했어요..😭');
   }
 }
 

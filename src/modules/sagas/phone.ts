@@ -17,6 +17,7 @@ import {
 import ZMSPhone from 'lib/api/zms/phone';
 import { ResponseFailureData, ResponseSuccessData } from 'types/common';
 import { API_FETCH } from 'utils/constants';
+import Toast from 'utils/toast';
 
 function* getPhoneInfoProcess(action: ReturnType<typeof requestGetPhoneInfo>) {
   const { number } = action.payload;
@@ -37,6 +38,8 @@ function* getPhoneInfoProcess(action: ReturnType<typeof requestGetPhoneInfo>) {
 
     const { error_msg } = response as ResponseFailureData;
     yield put(failureGetPhoneInfo(error_msg));
+
+    Toast.error('요청에 실패했어요..😭');
   } catch (error) {
     let message = '';
 
@@ -45,6 +48,8 @@ function* getPhoneInfoProcess(action: ReturnType<typeof requestGetPhoneInfo>) {
     }
 
     yield put(failureGetPhoneInfo(message));
+
+    Toast.error('요청에 실패했어요..😭');
   }
 }
 
@@ -69,6 +74,8 @@ function* getPlanByTelecomProcess(
 
     const { error_msg } = response as ResponseFailureData;
     yield put(failureGetPlanByTelecom(error_msg));
+
+    Toast.error('요청에 실패했어요..😭');
   } catch (error) {
     let message = '';
 
@@ -77,6 +84,8 @@ function* getPlanByTelecomProcess(
     }
 
     yield put(failureGetPlanByTelecom(message));
+
+    Toast.error('요청에 실패했어요..😭');
   }
 }
 
@@ -97,7 +106,7 @@ function* getTelecomProcess(action: ReturnType<typeof requestGetTelecom>) {
     const { error_msg } = response as ResponseFailureData;
     yield put(failureGetTelecom(error_msg));
 
-    alert(error_msg);
+    Toast.error('요청에 실패했어요..😭');
   } catch (error) {
     let message = '';
 
@@ -106,6 +115,8 @@ function* getTelecomProcess(action: ReturnType<typeof requestGetTelecom>) {
     }
 
     yield put(failureGetTelecom(message));
+
+    Toast.error('요청에 실패했어요..😭');
   }
 }
 

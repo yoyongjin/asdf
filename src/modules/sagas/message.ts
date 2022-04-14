@@ -31,7 +31,8 @@ import {
 } from 'modules/actions/message';
 import ZMSMessage from 'lib/api/zms/message';
 import { ResponseFailureData, ResponseSuccessData } from 'types/common';
-import { API_FETCH } from 'utils/constants';
+import { ANSWER_VALUE, API_FETCH } from 'utils/constants';
+import Toast from 'utils/toast';
 
 function* addAutoMessageProcess(
   action: ReturnType<typeof requestAddAutoMessage>,
@@ -65,11 +66,15 @@ function* addAutoMessageProcess(
 
       yield put(successAddAutoMessage());
 
+      Toast.success('추가 완료😊');
+
       return;
     }
 
     const { error_msg } = response as ResponseFailureData;
     yield put(failureAddAutoMessage(error_msg));
+
+    Toast.error('요청에 실패했어요..😭');
   } catch (error) {
     let message = '';
 
@@ -78,6 +83,8 @@ function* addAutoMessageProcess(
     }
 
     yield put(failureAddAutoMessage(message));
+
+    Toast.error('요청에 실패했어요..😭');
   }
 }
 
@@ -103,6 +110,8 @@ function* getAutoMessageProcess(
 
     const { error_msg } = response as ResponseFailureData;
     yield put(failureGetAutoMessage(error_msg));
+
+    Toast.error('요청에 실패했어요..😭');
   } catch (error) {
     let message = '';
 
@@ -111,6 +120,8 @@ function* getAutoMessageProcess(
     }
 
     yield put(failureGetAutoMessage(message));
+
+    Toast.error('요청에 실패했어요..😭');
   }
 }
 
@@ -130,6 +141,8 @@ function* getSmsCountProcess(action: ReturnType<typeof requestGetSmsCount>) {
 
     const { error_msg } = response as ResponseFailureData;
     yield put(failureGetSmsCount(error_msg));
+
+    Toast.error('요청에 실패했어요..😭');
   } catch (error) {
     let message = '';
 
@@ -138,6 +151,8 @@ function* getSmsCountProcess(action: ReturnType<typeof requestGetSmsCount>) {
     }
 
     yield put(failureGetSmsCount(message));
+
+    Toast.error('요청에 실패했어요..😭');
   }
 }
 
@@ -175,11 +190,15 @@ function* modifyAutoMessageProcess(
 
       yield put(successModifyAutoMessage());
 
+      Toast.success('수정 완료😊');
+
       return;
     }
 
     const { error_msg } = response as ResponseFailureData;
     yield put(failureAddAutoMessage(error_msg));
+
+    Toast.error('요청에 실패했어요..😭');
   } catch (error) {
     let message = '';
 
@@ -188,6 +207,8 @@ function* modifyAutoMessageProcess(
     }
 
     yield put(failureAddAutoMessage(message));
+
+    Toast.error('요청에 실패했어요..😭');
   }
 }
 
@@ -208,11 +229,15 @@ function* modifySmsCountProcess(
 
       yield put(successModifySmsCount());
 
+      Toast.success('수정 완료😊');
+
       return;
     }
 
     const { error_msg } = response as ResponseFailureData;
     yield put(failureModifySmsCount(error_msg));
+
+    Toast.error('요청에 실패했어요..😭');
   } catch (error) {
     let message = '';
 
@@ -221,6 +246,8 @@ function* modifySmsCountProcess(
     }
 
     yield put(failureModifySmsCount(message));
+
+    Toast.error('요청에 실패했어요..😭');
   }
 }
 
@@ -240,11 +267,15 @@ function* removeAutoMessageProcess(
 
       yield put(successRemoveAutoMessage());
 
+      Toast.success('삭제 완료😊');
+
       return;
     }
 
     const { error_msg } = response as ResponseFailureData;
     yield put(failureRemoveAutoMessage(error_msg));
+
+    Toast.error('요청에 실패했어요..😭');
   } catch (error) {
     let message = '';
 
@@ -253,6 +284,8 @@ function* removeAutoMessageProcess(
     }
 
     yield put(failureRemoveAutoMessage(message));
+
+    Toast.error('요청에 실패했어요..😭');
   }
 }
 
@@ -273,11 +306,19 @@ function* setUsedAutoMessageProcess(
 
       yield put(successSetUsedAutoMessage(action.payload));
 
+      const message =
+        use_yn.toLocaleUpperCase() === ANSWER_VALUE.YES
+          ? '활성화 완료😊'
+          : '비활성화 완료😊';
+      Toast.success(message);
+
       return;
     }
 
     const { error_msg } = response as ResponseFailureData;
     yield put(failureSetUsedAutoMessage(error_msg));
+
+    Toast.error('요청에 실패했어요..😭');
   } catch (error) {
     let message = '';
 
@@ -286,6 +327,8 @@ function* setUsedAutoMessageProcess(
     }
 
     yield put(failureSetUsedAutoMessage(message));
+
+    Toast.error('요청에 실패했어요..😭');
   }
 }
 

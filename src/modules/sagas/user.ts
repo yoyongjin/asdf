@@ -37,6 +37,7 @@ import RelayAuth from 'lib/api/relay/auth';
 import { ResponseFailureData, ResponseSuccessData } from 'types/common';
 import { API_FETCH } from 'utils/constants';
 import Communicator from 'lib/communicator';
+import Toast from 'utils/toast';
 
 function* getUsersProcess(action: ReturnType<typeof requestGetUsers>) {
   const { branch_id, team_id, limit, page, search, url } = action.payload;
@@ -74,7 +75,7 @@ function* getUsersProcess(action: ReturnType<typeof requestGetUsers>) {
     const { error_msg } = response as ResponseFailureData;
     yield put(failureGetUsers(error_msg));
 
-    alert(error_msg);
+    Toast.error('요청에 실패했어요..😭');
   } catch (error) {
     let message = '';
 
@@ -83,6 +84,8 @@ function* getUsersProcess(action: ReturnType<typeof requestGetUsers>) {
     }
 
     yield put(failureGetUsers(message));
+
+    Toast.error('요청에 실패했어요..😭');
   }
 }
 
@@ -122,13 +125,14 @@ function* addUserProcess(action: ReturnType<typeof requestAddUser>) {
 
       yield put(successAddUser());
 
+      Toast.success('추가 완료😊');
       return;
     }
 
     const { error_msg } = response as ResponseFailureData;
     yield put(failureAddUser(error_msg));
 
-    alert(error_msg);
+    Toast.error('요청에 실패했어요..😭');
   } catch (error) {
     let message = '';
 
@@ -137,6 +141,8 @@ function* addUserProcess(action: ReturnType<typeof requestAddUser>) {
     }
 
     yield put(failureAddUser(message));
+
+    Toast.error('요청에 실패했어요..😭');
   }
 }
 
@@ -194,13 +200,15 @@ function* modifyUserProcess(action: ReturnType<typeof requestModifyUser>) {
 
       yield put(successModifyUser());
 
+      Toast.success('수정 완료😊');
+
       return;
     }
 
     const { error_msg } = response as ResponseFailureData;
     yield put(failureModifyUser(error_msg));
 
-    alert(error_msg);
+    Toast.error('요청에 실패했어요..😭');
   } catch (error) {
     let message = '';
 
@@ -209,6 +217,8 @@ function* modifyUserProcess(action: ReturnType<typeof requestModifyUser>) {
     }
 
     yield put(failureModifyUser(message));
+
+    Toast.error('요청에 실패했어요..😭');
   }
 }
 
@@ -237,13 +247,15 @@ function* removeUserProcess(action: ReturnType<typeof requestRemoveUser>) {
 
       yield put(requestGetUsers(payload));
 
+      Toast.success('삭제 완료😊');
+
       return;
     }
 
     const { error_msg } = response as ResponseFailureData;
     yield put(failureRemoveUser(error_msg));
 
-    alert(error_msg);
+    Toast.error('요청에 실패했어요..😭');
   } catch (error) {
     let message = '';
 
@@ -252,6 +264,8 @@ function* removeUserProcess(action: ReturnType<typeof requestRemoveUser>) {
     }
 
     yield put(failureRemoveUser(message));
+
+    Toast.error('요청에 실패했어요..😭');
   }
 }
 
@@ -269,8 +283,9 @@ function* resetPasswordProcess(
     if (response.status === API_FETCH.SUCCESS) {
       const { data } = response as ResponseSuccessData;
 
-      alert('비밀번호가 초기화되었습니다.');
       yield put(successResetPassword());
+
+      Toast.success('초기화 완료😊');
 
       return;
     }
@@ -278,7 +293,7 @@ function* resetPasswordProcess(
     const { error_msg } = response as ResponseFailureData;
     yield put(failureRemoveUser(error_msg));
 
-    alert(error_msg);
+    Toast.error('요청에 실패했어요..😭');
   } catch (error) {
     let message = '';
 
@@ -287,6 +302,8 @@ function* resetPasswordProcess(
     }
 
     yield put(failureResetPassword(message));
+
+    Toast.error('요청에 실패했어요..😭');
   }
 }
 
@@ -308,13 +325,15 @@ function* modifyZiboxVolumeProcess(
 
       yield put(successZiboxVolume());
 
+      Toast.success('수정 완료😊');
+
       return;
     }
 
     const { error_msg } = response as ResponseFailureData;
     yield put(failureZiboxVolume(error_msg));
 
-    alert(error_msg);
+    Toast.error('요청에 실패했어요..😭');
   } catch (error) {
     let message = '';
 
@@ -323,6 +342,8 @@ function* modifyZiboxVolumeProcess(
     }
 
     yield put(failureZiboxVolume(message));
+
+    Toast.error('요청에 실패했어요..😭');
   }
 }
 
@@ -390,7 +411,7 @@ function* getPluralConsultantProcess(
     const { error_msg } = response as ResponseFailureData;
     yield put(failureGetPluralConsultant(error_msg));
 
-    alert(error_msg);
+    Toast.error('요청에 실패했어요..😭');
   } catch (error) {
     let message = '';
 
@@ -399,6 +420,8 @@ function* getPluralConsultantProcess(
     }
 
     yield put(failureGetPluralConsultant(message));
+
+    Toast.error('요청에 실패했어요..😭');
   }
 }
 

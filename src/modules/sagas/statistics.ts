@@ -13,6 +13,7 @@ import {
 } from 'modules/actions/statistics';
 import ZMSStatistics from 'lib/api/zms/statistics';
 import { API_FETCH } from 'utils/constants';
+import Toast from 'utils/toast';
 
 function* getStatisticsProcess(
   action: ReturnType<typeof requestGetStatistics>,
@@ -40,7 +41,7 @@ function* getStatisticsProcess(
     const { error_msg } = response as ResponseFailureData;
     yield put(failureGetStatistics(error_msg));
 
-    alert(error_msg);
+    Toast.error('요청에 실패했어요..😭');
   } catch (error) {
     let message = '';
 
@@ -49,6 +50,8 @@ function* getStatisticsProcess(
     }
 
     yield put(failureGetStatistics(message));
+
+    Toast.error('요청에 실패했어요..😭');
   }
 }
 
@@ -95,7 +98,7 @@ function* getCallStatisticsByConsultantProcess(
     const { error_msg } = response as ResponseFailureData;
     yield put(failureGetCallStatisticsByConsultant(error_msg));
 
-    alert(error_msg);
+    Toast.error('요청에 실패했어요..😭');
   } catch (error) {
     let message = '';
 
@@ -104,6 +107,8 @@ function* getCallStatisticsByConsultantProcess(
     }
 
     yield put(failureGetCallStatisticsByConsultant(message));
+
+    Toast.error('요청에 실패했어요..😭');
   }
 }
 

@@ -4,6 +4,7 @@ import { Router } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 
 import App from 'App';
+import { Toast } from 'components/atoms';
 import { GlobalStyle } from 'styles/global-styles';
 import { GlobalFonts } from 'styles/global-fonts';
 import { dblifeTheme, defaultTheme, linaTheme } from 'styles/theme';
@@ -19,6 +20,7 @@ function Root() {
         <GlobalFonts />
         <Provider store={store!}>
           <App />
+          <Toast />
         </Provider>
       </ThemeProvider>
     </Router>
