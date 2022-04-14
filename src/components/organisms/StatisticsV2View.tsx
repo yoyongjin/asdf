@@ -1525,8 +1525,9 @@ function StatisticsV2View() {
       row.push(`${values.all_total_call}`); // 전체 시도콜
       row.push(`${values.all_connect_call}`); // 전체 연결콜
       row.push(`${values.all_fail_call}`); // 전체 부재콜
-      let allConnectionRate = values.all_connect_call / values.all_total_call;
-      allConnectionRate = allConnectionRate || 0;
+      let allConnectionRate =
+        values.all_connect_call / values.all_total_call || 0;
+      allConnectionRate = Utils.getDecimalNumber(allConnectionRate * 100);
       row.push(`${allConnectionRate}%`); // 전체 연결률
       row.push(Utils.getHourMinSecBySecond(values.all_total_time)); // 전체 통화 시간
       row.push(`${values.all_total_time}`); // 전체 통화 시간(초)
@@ -1543,8 +1544,10 @@ function StatisticsV2View() {
       row.push(`${values.outcoming_connect_call}`); // 발신 연결콜
       row.push(`${values.outcoming_fail_call}`); // 발신 부재콜
       let outcomingConnectionRate =
-        values.outcoming_connect_call / values.outcoming_total_call;
-      outcomingConnectionRate = outcomingConnectionRate || 0;
+        values.outcoming_connect_call / values.outcoming_total_call || 0;
+      outcomingConnectionRate = Utils.getDecimalNumber(
+        outcomingConnectionRate * 100,
+      );
       row.push(`${outcomingConnectionRate}%`); // 발신 연결률
       row.push(Utils.getHourMinSecBySecond(values.outcoming_total_time)); // 발신 통화 시간
       row.push(`${values.outcoming_total_time}`); // 발신 통화 시간(초)
@@ -1562,8 +1565,10 @@ function StatisticsV2View() {
       row.push(`${values.incoming_connect_call}`); // 수신 연결콜
       row.push(`${values.incoming_fail_call}`); // 수신 부재콜
       let incomingConnectionRate =
-        values.incoming_connect_call / values.incoming_total_call;
-      incomingConnectionRate = incomingConnectionRate || 0;
+        values.incoming_connect_call / values.incoming_total_call || 0;
+      incomingConnectionRate = Utils.getDecimalNumber(
+        incomingConnectionRate * 100,
+      );
       row.push(`${incomingConnectionRate}%`); // 수신 연결률
       row.push(Utils.getHourMinSecBySecond(values.incoming_total_time)); // 수신 통화 시간
       row.push(`${values.incoming_total_time}`); // 수신 통화 시간(초)

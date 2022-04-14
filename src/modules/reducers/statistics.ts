@@ -62,7 +62,8 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
         draft.request.getCallStatisticsByConsultant.fetch = false;
         draft.request.getCallStatisticsByConsultant.error = '';
 
-        draft.callStatisticsByConsultantAllCount = action.payload.common.cnt;
+        const allCount = action.payload.common.cnt; // 전체 인원 개수
+        draft.callStatisticsByConsultantAllCount = allCount;
 
         let callStatisticsByConsultant: Array<ICustomCallStatisticeByConsultantItem> =
           [];
@@ -134,7 +135,6 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
           return customCallStatisticsData;
         });
 
-        const allCount = action.payload.common.cnt; // 전체 인원 개수
         const currentPage = action.payload.page; // 현재 페이지
         const limit = action.payload.limit; // 요청 개수
         if (allCount && currentPage * limit >= allCount) {

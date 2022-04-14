@@ -123,13 +123,18 @@ class Utils {
   static getHourMinSecBySecond(timestamp: number, delim = ':') {
     const hours = Math.floor(timestamp / 3600);
     const minutes = Math.floor((timestamp - hours * 3600) / 60);
-    const seconds = timestamp - hours * 3600 - minutes * 60;
+    let seconds = timestamp - hours * 3600 - minutes * 60;
+    seconds = Utils.getDecimalNumber(seconds, 0);
 
     const fullTime = `${Utils.pad(hours.toString())}${delim}${Utils.pad(
       minutes.toString(),
     )}${delim}${Utils.pad(seconds.toString())}`;
 
     return fullTime;
+  }
+
+  static getDecimalNumber(number: number, decimal = 1) {
+    return Number(number.toFixed(decimal));
   }
 
   /**
