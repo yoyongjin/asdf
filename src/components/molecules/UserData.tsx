@@ -92,16 +92,16 @@ const StyledFooter = styled.div`
 `;
 
 const selectData = [
-  { id: 0, name: 'branch', value: '지점명' },
-  { id: 1, name: 'team', value: '팀명' },
-  { id: 2, name: 'admin', value: '권한' },
+  { id: 0, name: 'branch', value: '지점명(*)' },
+  { id: 1, name: 'team', value: '팀명(*)' },
+  { id: 2, name: 'admin', value: '권한(*)' },
   { id: 3, name: 'telecom', value: '통신사' },
   { id: 4, name: 'plan', value: '요금제' },
   { id: 5, name: 'used_phone', value: '사용여부' },
 ];
 
 const inputData = [
-  { id: 0, name: 'name', value: '이름' },
+  { id: 0, name: 'name', value: '이름(*)' },
   { id: 1, name: 'id', value: '아이디' },
   { id: 2, name: 'number', value: '전화번호' },
   { id: 3, name: 'serial_number', value: '일련번호' },
