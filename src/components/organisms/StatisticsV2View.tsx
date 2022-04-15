@@ -1413,45 +1413,113 @@ function StatisticsV2View() {
         };
       } else if (type === 2) {
         const renderData = [];
+        const renderStyle = [];
 
-        const [dataPickerConfig1] = dateRangePickerData;
+        const [multiSelectConfig1, multiSelectConfig2, multiSelectConfig3] =
+          multiSelectData;
 
         const [buttonConfig1, ...buttonConfig] = buttonData;
 
-        const [selectConfig1, selectConfig2, ...selectConfig] = selectData;
+        const [
+          selectConfig1,
+          selectConfig2,
+          selectConfig3,
+          selectConfig4,
+          selectConfig5,
+        ] = selectData;
 
-        renderData.push(...multiSelectData);
-        renderData.push(...textCheckBoxData);
-        renderData.push(dataPickerConfig1);
-        renderData.push(selectConfig1, selectConfig2);
-        renderData.push(...textData);
-        renderData.push(...selectConfig);
-        renderData.push(...buttonConfig);
+        if (selectedTabIndex === 0) {
+          // 상담원별 통화 통계
+          renderData.push(...multiSelectData); // 조직 / 팀 / 상담원 선택
+          renderData.push(...textCheckBoxData); // 해촉 여부
+          renderData.push(...dateRangePickerData); // 날짜 선택
+          renderData.push(selectConfig1, selectConfig2); // 시작 시간 선택
+          renderData.push(...textData); // 물결 텍스트
+          renderData.push(selectConfig3, selectConfig4, selectConfig5); // 끝 시간 선택, 조회 조건 선택
+          renderData.push(...buttonConfig); // 조회 버튼
 
-        const renderStyle = [];
+          for (let i = 0; i < renderData.length; i++) {
+            const defaultRenderStyle = {
+              paddingRight: 0,
+            };
 
-        for (let i = 0; i < renderData.length; i++) {
-          const defaultRenderStyle = {
-            paddingRight: 0,
-          };
+            if (i === 0 || i === 1) {
+              defaultRenderStyle.paddingRight = 4;
+            }
 
-          if (i === 0 || i === 1) {
-            defaultRenderStyle.paddingRight = 4;
+            if (i === 2) {
+              defaultRenderStyle.paddingRight = 12;
+            }
+
+            if (i === 3 || i === 4 || i === 9 || i === 10 || i === 11) {
+              defaultRenderStyle.paddingRight = 20;
+            }
+
+            if (i === 5 || i === 6 || i === 7 || i === 8) {
+              defaultRenderStyle.paddingRight = 10;
+            }
+
+            renderStyle.push(defaultRenderStyle);
           }
+        } else if (selectedTabIndex === 1) {
+          // 팀별 통화 통계
+          renderData.push(multiSelectConfig1, multiSelectConfig2); // 조직 / 팀 / 상담원 선택
+          renderData.push(...textCheckBoxData); // 해촉 여부
+          renderData.push(...dateRangePickerData); // 날짜 선택
+          renderData.push(selectConfig1, selectConfig2); // 시작 시간 선택
+          renderData.push(...textData); // 물결 텍스트
+          renderData.push(selectConfig3, selectConfig4, selectConfig5); // 끝 시간 선택, 조회 조건 선택
+          renderData.push(...buttonConfig); // 조회 버튼
 
-          if (i === 2) {
-            defaultRenderStyle.paddingRight = 12;
+          for (let i = 0; i < renderData.length; i++) {
+            const defaultRenderStyle = {
+              paddingRight: 0,
+            };
+
+            if (i === 0) {
+              defaultRenderStyle.paddingRight = 4;
+            }
+
+            if (i === 1) {
+              defaultRenderStyle.paddingRight = 12;
+            }
+
+            if (i === 2 || i === 3 || i === 8 || i === 9 || i === 10) {
+              defaultRenderStyle.paddingRight = 20;
+            }
+
+            if (i === 4 || i === 5 || i === 6 || i === 7) {
+              defaultRenderStyle.paddingRight = 10;
+            }
+
+            renderStyle.push(defaultRenderStyle);
           }
+        } else {
+          // 문자 통계 / 알림문자 통계
+          renderData.push(...multiSelectData); // 조직 / 팀 / 상담원 선택
+          renderData.push(...textCheckBoxData); // 해촉 여부
+          renderData.push(...dateRangePickerData); // 날짜 선택
+          renderData.push(...buttonConfig); // 조회 버튼
 
-          if (i === 3 || i === 4 || i === 9 || i === 10 || i === 11) {
-            defaultRenderStyle.paddingRight = 20;
+          for (let i = 0; i < renderData.length; i++) {
+            const defaultRenderStyle = {
+              paddingRight: 0,
+            };
+
+            if (i === 0 || i === 1) {
+              defaultRenderStyle.paddingRight = 4;
+            }
+
+            if (i === 2) {
+              defaultRenderStyle.paddingRight = 12;
+            }
+
+            if (i === 3 || i === 4) {
+              defaultRenderStyle.paddingRight = 20;
+            }
+
+            renderStyle.push(defaultRenderStyle);
           }
-
-          if (i === 5 || i === 6 || i === 7 || i === 8) {
-            defaultRenderStyle.paddingRight = 10;
-          }
-
-          renderStyle.push(defaultRenderStyle);
         }
 
         return {
@@ -1465,6 +1533,7 @@ function StatisticsV2View() {
       dateRangePickerData,
       multiSelectData,
       selectData,
+      selectedTabIndex,
       tabData,
       textCheckBoxData,
       textData,
