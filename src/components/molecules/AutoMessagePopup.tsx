@@ -17,9 +17,10 @@ import { TAddAutoMessage, TModifyAutoMessage } from 'hooks/useMessage';
 import useOrganization from 'hooks/useOrganization';
 import useToggle from 'hooks/useToggle';
 import { TOnClickVisible } from 'hooks/useVisible';
+import { LoginData } from 'types/auth';
 import { IAutoMessageItem } from 'types/message';
 import { Colors } from 'utils/color';
-import constants from 'utils/constants';
+import constants, { USER_TYPE } from 'utils/constants';
 import Utils from 'utils/new_utils';
 
 const renderSettingTitleData = [
@@ -80,6 +81,7 @@ const StyledTextAreaWrapper = styled.div`
 function AutoMessagePopup({
   addAutoMessage,
   isVisible,
+  loginInfo,
   modifyAutoMessage,
   onClickVisible,
   selectedAutoMessageData,
@@ -291,7 +293,17 @@ function AutoMessagePopup({
   ]);
 
   const isValidate = useCallback(
-    (title: string, content: string, days: string, branchId: number) => {
+    (
+      title: string,
+      content: string,
+      days: string,
+      branchId: number,
+      startDate: string,
+      endDate: string,
+      startTime: string,
+      endTime: string,
+      adminId: number,
+    ) => {
       if (!title) {
         alert('제목을 입력해주세요.');
         return false;
@@ -302,9 +314,27 @@ function AutoMessagePopup({
         return false;
       }
 
-      if (branchId === constants.DEFAULT_ID) {
-        alert('지점을 선택해주세요.');
-        return false;
+      if (_.isEmpty(selectedAutoMessageData)) {
+        // 등록인 경우
+        if (branchId === constants.DEFAULT_ID) {
+          alert('지점을 선택해주세요.');
+          return false;
+        }
+      } else {
+        // 수정인 경우
+        if (adminId < USER_TYPE.ADMIN && branchId === constants.DEFAULT_ID) {
+          alert('지점을 선택해주세요.');
+          return false;
+        }
+
+        if (
+          selectedAutoMessageData?.branch_id !== constants.DEFAULT_ID &&
+          branchId === constants.DEFAULT_ID
+        ) {
+          // 기존 지점이 정해져있었는데 공통 선택으로 바뀐 경우
+          alert('공통으로 변경할 수 없습니다.');
+          return false;
+        }
       }
 
       if (!days) {
@@ -312,35 +342,59 @@ function AutoMessagePopup({
         return false;
       }
 
+      if (startDate && endDate && startDate > endDate) {
+        // 시작날짜가 끝날짜보다 큰 경우
+        alert('날짜 조건을 확인해주세요.');
+        return false;
+      }
+
+      if (startTime > endTime) {
+        // 시작시간이 끝시간보다 큰 경우
+        alert('시간 조건을 확인해주세요.');
+        return false;
+      }
+
       return true;
     },
-    [],
+    [selectedAutoMessageData],
   );
 
   const onClickEvent = useCallback(() => {
+    const adminId = loginInfo.admin_id;
     const branchId = form.branch; // 선택한 지점
     const title = form.subject; // 제목
     const content = form.content; // 내용
     const days = daysToString;
-    const startTime = Utils.getHourMinByTimestamp(
-      new Date(startTimePicker).getTime(),
-      ':',
-    );
-    const endTime = Utils.getHourMinByTimestamp(
-      new Date(endTimePicker).getTime(),
-      ':',
-    );
 
     let startDate = '';
     let endDate = '';
+    let startTime = '';
+    let endTime = '';
 
     if (!form.daily_date) {
       // 상시 체크를 안한 경우
-      startDate = Utils.getYYYYMMDD(new Date(startDatePicker).getTime(), '-');
-      endDate = Utils.getYYYYMMDD(new Date(endDatePicker).getTime(), '-');
+      if (startDatePicker && endDatePicker) {
+        startDate = Utils.getYYYYMMDD(startDatePicker.getTime(), '-');
+        endDate = Utils.getYYYYMMDD(endDatePicker.getTime(), '-');
+      }
     }
 
-    const isSuccess = isValidate(title, content, days, branchId);
+    if (startTimePicker && endTimePicker) {
+      startTime = Utils.getHourMinByTimestamp(startTimePicker.getTime(), ':');
+      endTime = Utils.getHourMinByTimestamp(endTimePicker.getTime(), ':');
+    }
+
+    const isSuccess = isValidate(
+      title,
+      content,
+      days,
+      branchId,
+      startDate,
+      endDate,
+      startTime,
+      endTime,
+      adminId,
+    );
 
     if (!isSuccess) {
       return;
@@ -382,6 +436,7 @@ function AutoMessagePopup({
     form.daily_date,
     form.subject,
     isValidate,
+    loginInfo.admin_id,
     modifyAutoMessage,
     onClickVisible,
     selectedAutoMessageData,
@@ -480,6 +535,9 @@ function AutoMessagePopup({
 
         onChangeEndDatePicker(endDate);
         onChangeStartDatePicker(startDate);
+      } else {
+        onChangeEndDatePicker();
+        onChangeStartDatePicker();
       }
 
       if (start_time && end_time) {
@@ -487,9 +545,17 @@ function AutoMessagePopup({
         const startTime = new Date(`${currentYMD} ${start_time}`);
         const endTime = new Date(`${currentYMD} ${end_time}`);
 
-        onChangeEndTimePicker(startTime);
-        onChangeStartTimePicker(endTime);
+        onChangeEndTimePicker(endTime);
+        onChangeStartTimePicker(startTime);
+      } else {
+        onChangeEndTimePicker();
+        onChangeStartTimePicker();
       }
+    } else {
+      onChangeEndDatePicker();
+      onChangeStartDatePicker();
+      onChangeEndTimePicker();
+      onChangeStartTimePicker();
     }
   }, [
     onChangeEndDatePicker,
@@ -498,6 +564,16 @@ function AutoMessagePopup({
     onChangeStartTimePicker,
     selectedAutoMessageData,
   ]);
+
+  useEffect(() => {
+    if (!form.daily_date) {
+      onChangeEndDatePicker(new Date());
+      onChangeStartDatePicker(new Date());
+    } else {
+      onChangeEndDatePicker();
+      onChangeStartDatePicker();
+    }
+  }, [form.daily_date, onChangeEndDatePicker, onChangeStartDatePicker]);
 
   const RenderSettingView = useCallback(
     (settingData: IRenderSettingTitleData) => {
@@ -726,6 +802,7 @@ interface IStyledSettingItem {
 interface IAutoMessagePopup {
   addAutoMessage: TAddAutoMessage;
   isVisible: boolean;
+  loginInfo: LoginData;
   modifyAutoMessage: TModifyAutoMessage;
   onClickVisible: TOnClickVisible;
   selectedAutoMessageData?: IAutoMessageItem | null;

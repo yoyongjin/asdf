@@ -867,11 +867,11 @@ function StatisticsV2View() {
   const {
     datePicker: startDatePicker,
     onChangeDatePicker: onChangeStartDatePicker,
-  } = useDatePicker();
+  } = useDatePicker(new Date());
   const {
     onChangeDatePicker: onChangeEndDatePicker,
     datePicker: endDatePicker,
-  } = useDatePicker();
+  } = useDatePicker(new Date());
   const { onChangeSelectedTabIndex, selectedTabIndex } = useTab();
   const {
     getPluralBranch,
@@ -961,7 +961,7 @@ function StatisticsV2View() {
     };
   }, []);
 
-  const isValidStatistics = (
+  const isValidateStatistics = (
     ids: string,
     startDate: string,
     endDate: string,
@@ -1019,8 +1019,8 @@ function StatisticsV2View() {
       .join(','); // 상담원 여러명 선택
 
     const breakUp = form.break_up ? '1' : '0'; // 1: 해촉 포함 0: 해촉 미포함
-    const startDate = Utils.getYYYYMMDD(startDatePicker.getTime(), '-');
-    const endDate = Utils.getYYYYMMDD(endDatePicker.getTime(), '-');
+    let startDate = '';
+    let endDate = '';
     const startTime =
       Utils.pad(String(form.start_hour)) +
       ':' +
@@ -1031,6 +1031,11 @@ function StatisticsV2View() {
       Utils.pad(String(form.end_minute));
     const searchType = form.search_type;
     const limit = form.limit;
+
+    if (startDatePicker && endDatePicker) {
+      startDate = Utils.getYYYYMMDD(startDatePicker.getTime(), '-');
+      endDate = Utils.getYYYYMMDD(endDatePicker.getTime(), '-');
+    }
 
     return {
       ids,
@@ -1068,7 +1073,7 @@ function StatisticsV2View() {
         limit,
       } = getTitleParams;
 
-      const { status, message } = isValidStatistics(
+      const { status, message } = isValidateStatistics(
         ids,
         startDate,
         endDate,

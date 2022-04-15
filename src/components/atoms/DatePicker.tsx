@@ -85,7 +85,7 @@ interface IDatePicker extends IStyledDatePicker {
   readonly maxDate?: Date; // 최대 지정 날짜
   readonly minDate?: Date; // 최소 지정 날짜
   readonly onChange: TonChangeDatePicker;
-  readonly selectedDate: Date; // 선택된 날짜
+  readonly selectedDate?: Date; // 선택된 날짜
   readonly placeholder: string; // 설명
 }
 
@@ -101,7 +101,6 @@ DatePicker.defaultProps = {
   isShowTimeOnly: false,
   height: 3,
   placeholder: '',
-  selectedDate: new Date(),
   textAlign: 'center',
   width: 12,
 };

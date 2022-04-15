@@ -123,7 +123,7 @@ const settingMessageCountTableTitles = [
   },
 ];
 
-const defaultPageCount = 15;
+const defaultPageCount = 10;
 
 const StyledWrapper = styled.div`
   height: 100%;
@@ -268,7 +268,7 @@ function SMSView() {
         endTime = `${hours}:${minutes}`;
       }
 
-      const fullTime = `[${startTime} ~ ${endTime}]`;
+      const fullTime = startTime && endTime && `[${startTime} ~ ${endTime}]`;
 
       let fullDays = '';
       if (days) {
@@ -394,7 +394,7 @@ function SMSView() {
           if (key === 'branch_name') {
             return {
               data: {
-                text: String(maxCountValues[index]),
+                text: String(maxCountValues[index] ?? ''),
               },
               type: 'text',
               propertyStyles: {
@@ -472,15 +472,24 @@ function SMSView() {
    * @description 테이블 내용 정보들
    */
   const tableContentMaxCount = useMemo(() => {
+    let _maxCountData = _.cloneDeep(maxCountData);
+
+    if (form.branch !== constants.DEFAULT_ID) {
+      // 지점이 선택된 경우
+      _maxCountData = maxCountData.filter(
+        (values) => values.branch_id === form.branch,
+      );
+    }
+
     return {
       data: tablePropertyMaxCount,
-      originData: maxCountData,
+      originData: _maxCountData,
       styles: {
         rowHeight: 45,
       },
       type: 'sms-count',
     };
-  }, [maxCountData, tablePropertyMaxCount]);
+  }, [form.branch, maxCountData, tablePropertyMaxCount]);
 
   /**
    * @description 테이블 헤더 border style
@@ -675,15 +684,11 @@ function SMSView() {
       ) {
         getAutoMessage(branchId, page, defaultPageCount);
       }
-    } else if (selectedTabIndex === 1) {
-      // 발송 수량 설정 화면
-      getSmsCount();
     }
   }, [
     addAutoMessageStatus,
     form.branch,
     getAutoMessage,
-    getSmsCount,
     loginInfo.admin_id,
     loginInfo.branch_id,
     modifyAutoMessageStatus,
@@ -691,6 +696,13 @@ function SMSView() {
     removeAutoMessageStatus,
     selectedTabIndex,
   ]);
+
+  useEffect(() => {
+    if (selectedTabIndex === 1) {
+      // 발송 수량 설정 화면
+      getSmsCount();
+    }
+  }, [getSmsCount, selectedTabIndex]);
 
   return (
     <>
@@ -750,6 +762,7 @@ function SMSView() {
           <AutoMessagePopup
             addAutoMessage={addAutoMessage}
             isVisible={visible}
+            loginInfo={loginInfo}
             modifyAutoMessage={modifyAutoMessage}
             onClickVisible={onClickVisible}
             selectedAutoMessageData={selectedAutoMessage}

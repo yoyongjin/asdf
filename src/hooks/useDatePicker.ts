@@ -4,10 +4,10 @@ import { useCallback, useState } from 'react';
  * @description 날짜 / 시간 설정 hook
  * @param date 날짜
  */
-function useDatePicker(date: Date = new Date()) {
+function useDatePicker(date?: Date) {
   const [datePicker, setDatePicker] = useState(date);
 
-  const onChangeDatePicker = useCallback((date: Date) => {
+  const onChangeDatePicker = useCallback((date?: Date) => {
     setDatePicker(date);
   }, []);
 

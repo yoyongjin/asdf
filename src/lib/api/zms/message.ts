@@ -30,9 +30,9 @@ class Message {
       content,
       days,
       end_date: endDate,
-      end_time: endTime + ':00',
+      end_time: endTime ? endTime + ':00' : '',
       start_date: startDate,
-      start_time: startTime + ':00',
+      start_time: startTime ? startTime + ':00' : '',
       title,
     };
 
@@ -172,9 +172,9 @@ class Message {
       content,
       days,
       end_date: endDate,
-      end_time: endTime + ':00',
+      end_time: endTime ? endTime + ':00' : '',
       start_date: startDate,
-      start_time: startTime + ':00',
+      start_time: startTime ? startTime + ':00' : '',
       title,
     };
 
