@@ -9,6 +9,7 @@ import {
   IRequestRemoveAutoMessage,
   IRequestSetUsedAutoMessage,
   IResponseGetAutoMessage,
+  IResponseModifySmsCount,
   IResponseSetUsedAutoMessage,
 } from 'types/message';
 
@@ -33,7 +34,9 @@ export const FAILURE_MODIFY_SMS_COUNT = 'FAILURE_MODIFY_SMS_COUNT';
 export const requestModifySmsCount = createAction(
   REQUEST_MODIFY_SMS_COUNT,
 )<IRequestModifySmsCount>();
-export const successModifySmsCount = createAction(SUCCESS_MODIFY_SMS_COUNT)();
+export const successModifySmsCount = createAction(
+  SUCCESS_MODIFY_SMS_COUNT,
+)<IResponseModifySmsCount>();
 export const failureModifySmsCount = createAction(
   FAILURE_MODIFY_SMS_COUNT,
 )<string>();

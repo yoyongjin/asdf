@@ -51,6 +51,12 @@ export interface IRequestModifySmsCount {
   max_count_mouth: number;
 }
 
+export interface IResponseModifySmsCount {
+  branch_id: number;
+  max_count_date: number;
+  max_count_mouth: number;
+}
+
 export interface IRequestGetAutoMessage {
   id: number; // 지점 ID
   page: number; // 페이지

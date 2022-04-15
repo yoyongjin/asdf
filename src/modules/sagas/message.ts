@@ -227,7 +227,7 @@ function* modifySmsCountProcess(
     if (response.status === API_FETCH.SUCCESS) {
       const { data } = response as ResponseSuccessData;
 
-      yield put(successModifySmsCount());
+      yield put(successModifySmsCount(action.payload));
 
       Toast.success('수정 완료😊');
 

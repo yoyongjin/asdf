@@ -81,6 +81,17 @@ const userReducer = createReducer<IMessageState, TMessageAction>(initialState, {
     return produce(state, (draft) => {
       draft.request.modifySmsCount.fetch = false;
       draft.request.modifySmsCount.error = '';
+
+      const index = state.max_count_data.findIndex(
+        (values) => values.branch_id === action.payload.branch_id,
+      );
+
+      if (index > -1) {
+        const maxCountData = _.cloneDeep(state.max_count_data);
+        maxCountData[index].max_count_date = action.payload.max_count_date;
+        maxCountData[index].max_count_mouth = action.payload.max_count_mouth;
+        draft.max_count_data = maxCountData;
+      }
     });
   },
   [types.FAILURE_GET_AUTO_MESSAGE]: (state, action) => {
