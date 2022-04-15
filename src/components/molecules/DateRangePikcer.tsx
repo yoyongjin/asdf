@@ -7,7 +7,8 @@ import { Colors } from 'utils/color';
 import { TonChangeDatePicker } from 'hooks/useDatePicker';
 
 const StyledWrapper = styled.div`
-  min-width: 300px;
+  align-items: center;
+  display: flex;
 `;
 
 const StyledDatePickerWrapper = styled.div`
