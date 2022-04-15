@@ -10,7 +10,7 @@ export const GlobalFonts = createGlobalStyle`
     @font-face {
         font-family: 'NanumBarunGothic';
         font-display: fallback;
-        src: url(${NanumBarunGothicEOT}),url(${NanumBarunGothicTTF})
+        src: url(${NanumBarunGothicEOT}),url(${NanumBarunGothicTTF}) format(truetype)
     }
     @font-face {
         font-family: 'FranklinGothicCondensed';
@@ -18,6 +18,6 @@ export const GlobalFonts = createGlobalStyle`
     }
     @font-face {
         font-family: 'NanumGothic';
-        src: url(${NanumGothicEOT}),url(${NanumGothicTTF})
+        src: url(${NanumGothicEOT}),url(${NanumGothicTTF}) format(truetype)
     }
 `;
