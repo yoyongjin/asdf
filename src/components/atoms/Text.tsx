@@ -25,6 +25,12 @@ const StyledText = styled.span<TextProps>`
         }
       `;
     }
+
+    if (props.minWidth) {
+      return css<StyledTextProps>`
+        min-width: ${(props) => props.minWidth}px;
+      `;
+    }
   }};
 `;
 
@@ -43,6 +49,7 @@ interface StyledTextProps {
   readonly fontWeight: number | string;
   readonly letterSpacing: number | string;
   readonly lineHeight?: number;
+  readonly minWidth?: number;
 }
 
 interface TextProps extends StyledTextProps {

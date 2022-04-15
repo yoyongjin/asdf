@@ -188,6 +188,7 @@ function TitleV2({ renderLeft, renderRight, titleStyle }: ITitleProps) {
         fontFamily={styles?.fontFamily || 'NanumGothic'}
         fontSize={styles?.fontSize || 18}
         fontWeight={styles?.fontWeight || 800}
+        minWidth={styles?.minWidth}
         onClick={data.onClick}
       >
         {data.text}
@@ -340,6 +341,7 @@ interface ITextItemStyle {
   fontFamily?: string;
   fontSize?: number;
   fontWeight?: number;
+  minWidth?: number;
 }
 
 // button style
