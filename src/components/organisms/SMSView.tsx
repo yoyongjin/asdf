@@ -568,6 +568,23 @@ function SMSView() {
     return [tabConfig1];
   }, [onChangeSelectedTabIndex, selectedTabIndex]);
 
+  const titleTextData = useMemo(() => {
+    const textConfig1 = {
+      type: 'text',
+      data: {
+        text: `발송수량의 값이 0이면, "제한없음"을 뜻함`,
+      },
+      styles: {
+        fontColor: Colors.gray14,
+        fontFamily: 'Malgun Gothic',
+        fontSize: 12,
+        minWidth: 300,
+      },
+    };
+
+    return [textConfig1];
+  }, []);
+
   /**
    * @description 타이틀 왼쪽 요소 가져오기
    * @param {number} type 요소 위치 순서
@@ -587,12 +604,31 @@ function SMSView() {
 
         renderData.push(...titleTabData);
 
+        if (selectedTabIndex === 1) {
+          // 발송 수량 설정 화면에 설명 text 필요
+          renderData.push(...titleTextData);
+        }
+
+        const renderStyle = [];
+
+        for (let i = 0; i < renderData.length; i++) {
+          const defaultRenderStyle = {
+            paddingRight: 50,
+          };
+
+          if (selectedTabIndex === 1) {
+            // 발송 수량 설정 화면에 설명 text로 인한 css
+            renderStyle.push(defaultRenderStyle);
+          }
+        }
+
         return {
           renderConfig: renderData,
+          renderStyle: renderStyle.length < 1 ? undefined : renderStyle,
         };
       }
     },
-    [titleSelectData, titleTabData],
+    [selectedTabIndex, titleSelectData, titleTabData, titleTextData],
   );
 
   /**
