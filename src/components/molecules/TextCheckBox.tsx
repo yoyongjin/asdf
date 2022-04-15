@@ -9,6 +9,7 @@ const StyledWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  min-width: 80px;
 `;
 
 /**

@@ -6,6 +6,10 @@ import { StyledCommonBothWhiteSpace } from 'styles/common';
 import { Colors } from 'utils/color';
 import { TonChangeDatePicker } from 'hooks/useDatePicker';
 
+const StyledWrapper = styled.div`
+  min-width: 300px;
+`;
+
 const StyledDatePickerWrapper = styled.div`
   display: inline-block;
 `;
@@ -32,7 +36,7 @@ function DateRangePicker({
   textValue,
 }: IDateRangePicker) {
   return (
-    <div>
+    <StyledWrapper>
       <StyledDatePickerWrapper>
         <DatePicker
           borderStyle={datePickerBorderStyle}
@@ -70,7 +74,7 @@ function DateRangePicker({
           width={datePickerWidth}
         />
       </StyledDatePickerWrapper>
-    </div>
+    </StyledWrapper>
   );
 }
 
