@@ -56,6 +56,10 @@ function List({
   return (
     <StyledWrapper>
       {menus.map((values) => {
+        if (!values.isVisible) {
+          return null;
+        }
+
         if (!userData.user_name && values.id === 1) {
           // 상담원일 경우 비밀번호 초기화 부분 삭제
           return null;
@@ -112,6 +116,7 @@ interface ListProps {
 export interface MenuData {
   id: number;
   name: string;
+  isVisible: boolean;
 }
 
 List.defaultProps = {};

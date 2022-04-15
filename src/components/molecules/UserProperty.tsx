@@ -43,14 +43,17 @@ const menuList = [
   {
     id: 0,
     name: '정보 수정',
+    isVisible: true,
   },
   {
     id: 1,
     name: '비밀번호 초기화',
+    isVisible: true,
   },
   {
     id: 2,
     name: '삭제',
+    isVisible: !constants.IS_AUTO_USER,
   },
 ];
 
