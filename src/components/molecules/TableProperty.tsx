@@ -114,8 +114,15 @@ function TableProperty({
     data: IInputItem,
     styles?: IInputItemStyle,
   ) => {
-    const name = `${contentType}-input-${key}`;
-    const value = form[name] ?? data.value;
+    let originId = 0;
+
+    if (contentType === 'sms-count') {
+      const _originItem = originItem as IMaxMessageItem;
+
+      originId = _originItem.branch_id;
+    }
+    const name = `${contentType}-input-${key}${originId && `-${originId}`}`;
+    const value = form[name] || form[name] === '' ? form[name] : data.value;
 
     return (
       <Input
