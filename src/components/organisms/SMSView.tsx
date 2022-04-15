@@ -668,21 +668,23 @@ function SMSView() {
    * @description 발송 수량 설정 화면인 경우 발송 수량 데이터 가져오기
    */
   useEffect(() => {
-    if (selectedTabIndex === 0) {
-      // 자동 문자 화면
-      let branchId = form.branch;
+    if (loginInfo.id) {
+      if (selectedTabIndex === 0) {
+        // 자동 문자 화면
+        let branchId = form.branch;
 
-      if (loginInfo.admin_id < USER_TYPE.ADMIN) {
-        // 일반 관리자보다 권한이 낮은 경우 자기 지점만 볼 수 있음
-        branchId = loginInfo.branch_id;
-      }
+        if (loginInfo.admin_id < USER_TYPE.ADMIN) {
+          // 일반 관리자보다 권한이 낮은 경우 자기 지점만 볼 수 있음
+          branchId = loginInfo.branch_id;
+        }
 
-      if (
-        !removeAutoMessageStatus ||
-        !addAutoMessageStatus ||
-        !modifyAutoMessageStatus
-      ) {
-        getAutoMessage(branchId, page, defaultPageCount);
+        if (
+          !removeAutoMessageStatus &&
+          !addAutoMessageStatus &&
+          !modifyAutoMessageStatus
+        ) {
+          getAutoMessage(branchId, page, defaultPageCount);
+        }
       }
     }
   }, [
@@ -691,6 +693,7 @@ function SMSView() {
     getAutoMessage,
     loginInfo.admin_id,
     loginInfo.branch_id,
+    loginInfo.id,
     modifyAutoMessageStatus,
     page,
     removeAutoMessageStatus,
