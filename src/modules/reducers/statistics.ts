@@ -126,7 +126,7 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
               outcoming_ring_time: values.sub_total.outcoming.ring_time,
               outcoming_talk_time: values.sub_total.outcoming.talk_time,
             };
-            customCallStatisticsData.push(subTotalData);
+            // customCallStatisticsData.push(subTotalData);
           }
 
           callStatisticsByConsultant = callStatisticsByConsultant.concat(
