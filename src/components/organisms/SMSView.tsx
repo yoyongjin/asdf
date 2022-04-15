@@ -575,7 +575,7 @@ function SMSView() {
         text: `발송수량의 값이 0이면, "제한없음"을 뜻함`,
       },
       styles: {
-        fontColor: Colors.gray14,
+        fontColor: Colors.gray1,
         fontFamily: 'Malgun Gothic',
         fontSize: 12,
         minWidth: 300,
