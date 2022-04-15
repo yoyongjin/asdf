@@ -348,12 +348,6 @@ function AutoMessagePopup({
         return false;
       }
 
-      if (startTime > endTime) {
-        // 시작시간이 끝시간보다 큰 경우
-        alert('시간 조건을 확인해주세요.');
-        return false;
-      }
-
       return true;
     },
     [selectedAutoMessageData],
