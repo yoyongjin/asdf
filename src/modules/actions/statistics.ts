@@ -3,9 +3,11 @@ import { createAction } from 'typesafe-actions';
 import {
   IRequestGetAutoMessageStatistics,
   IRequestGetCallStatisticsByConsultant,
+  IRequestGetCallStatisticsByTeam,
   IRequestGetMessageStatistics,
   IResponseGetAutoMessageStatistics,
   IResponseGetCallStatisticsByConsultant,
+  IResponseGetCallStatisticsByTeam,
   IResponseGetMessageStatistics,
   RequestGetStatistics,
   StatisticsData,
@@ -46,6 +48,25 @@ export const successGetCallStatisticsByConsultant = createAction(
 )<IResponseGetCallStatisticsByConsultant>();
 export const failureGetCallStatisticsByConsultant = createAction(
   FAILURE_GET_CALL_STATISTICS_BY_CONSULTANT,
+)<string>();
+
+// v2 팀별 통화 통계 가져오기
+export const REQUEST_GET_CALL_STATISTICS_BY_TEAM =
+  'REQUEST_GET_CALL_STATISTICS_BY_TEAM';
+export const SUCCESS_GET_CALL_STATISTICS_BY_TEAM =
+  'SUCCESS_GET_CALL_STATISTICS_BY_TEAM';
+export const FAILURE_GET_CALL_STATISTICS_BY_TEAM =
+  'FAILURE_GET_CALL_STATISTICS_BY_TEAM';
+
+// v2 팀별 통화 통계 가져오기 Action
+export const requestGetCallStatisticsByTeam = createAction(
+  REQUEST_GET_CALL_STATISTICS_BY_TEAM,
+)<IRequestGetCallStatisticsByTeam>();
+export const successGetCallStatisticsByTeam = createAction(
+  SUCCESS_GET_CALL_STATISTICS_BY_TEAM,
+)<IResponseGetCallStatisticsByTeam>();
+export const failureGetCallStatisticsByTeam = createAction(
+  FAILURE_GET_CALL_STATISTICS_BY_TEAM,
 )<string>();
 
 // v2 자동 문자 통계 가져오기

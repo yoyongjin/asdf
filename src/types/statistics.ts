@@ -11,6 +11,8 @@ export interface IStatisticsState {
   // v2 통계
   callStatisticsByConsultant: Array<ICustomCallStatisticeByConsultantItem>; // 상담원별 통화 통계
   callStatisticsByConsultantAllCount: number; // 상담원별 통화 통계 총 수
+  callStatisticsByTeam: Array<ICustomCallStatisticeByTeamItem>; // 팀별 통화 통계
+  callStatisticsByTeamAllCount: number; // 팀별 통화 통계 총 수
   autoMessageStatistics: Array<IAutoMessageStatisticsItem>; // 자동 문자 통계
   autoMessageStatisticsAllCount: number; // 자동 문자 통계
   messageStatistics: Array<IMessageStatisticsItem>; // 문자 통계
@@ -20,6 +22,7 @@ export interface IStatisticsState {
 export interface IRequestType {
   getStatistics: common.FetchType;
   getCallStatisticsByConsultant: common.FetchType;
+  getCallStatisticsByTeam: common.FetchType;
   getAutoMessageStatistics: common.FetchType;
   getMessageStatistics: common.FetchType;
 }
@@ -68,6 +71,30 @@ export interface ICustomCallStatisticeByConsultantItem {
   outcoming_talk_time: number;
 }
 
+export interface ICustomCallStatisticeByTeamItem {
+  branch_name: string;
+  team_name: string;
+  date: string;
+  all_total_call: number;
+  all_connect_call: number;
+  all_fail_call: number;
+  all_total_time: number;
+  all_ring_time: number;
+  all_talk_time: number;
+  incoming_total_call: number;
+  incoming_connect_call: number;
+  incoming_fail_call: number;
+  incoming_total_time: number;
+  incoming_ring_time: number;
+  incoming_talk_time: number;
+  outcoming_total_call: number;
+  outcoming_connect_call: number;
+  outcoming_fail_call: number;
+  outcoming_total_time: number;
+  outcoming_ring_time: number;
+  outcoming_talk_time: number;
+}
+
 // 상담원별 통계 item
 export interface ICallStatisticeByConsultantItem {
   all: Array<ICallStatisticsItem>; // 총 통화 통계
@@ -79,6 +106,17 @@ export interface ICallStatisticeByConsultantItem {
   sub_total: ICallStatisticTotalItem; // 소계
   team_name: string; // 팀명
   tmr_cd: string; // 유저 ID
+}
+
+// 팀별 통계 item
+export interface ICallStatisticeByTeamItem {
+  all: Array<ICallStatisticsItem>; // 총 통화 통계
+  branch_name: string; // 지점명
+  id: number; // key
+  incoming: Array<ICallStatisticsItem>; // 수신 통화 통계
+  outcoming: Array<ICallStatisticsItem>; // 발신 통화 통계
+  sub_total: ICallStatisticTotalItem; // 소계
+  team_name: string; // 팀명
 }
 
 // 통화 통계 합게 item
@@ -159,6 +197,30 @@ export interface IResponseGetCallStatisticsByConsultant extends IPageItem {
 }
 
 interface IResponseGetCallStatisticsByConsultantCommonItem {
+  cnt: number;
+  total: ICallStatisticTotalItem;
+}
+
+// 팀별 통화 통계 요청 파라미터
+export interface IRequestGetCallStatisticsByTeam {
+  end_date: string; // 끝 날짜 ex) 2022-04-11
+  end_time: string; // 끝 시간 ex) 00:00
+  ids: string; // 팀 id 복수개 ex) 1,2,3
+  include_leaver: string; // 해촉 여부 ex) 1
+  start_date: string; // 시작 날짜 ex) 2022-04-11
+  start_time: string; // 시작 시간 ex) 00:00
+  search_type: number; // 검색 조건
+  page: number; // 페이지
+  page_count: number; // 페이지당 노출 개수
+}
+
+// 팀별 통화 통계 응답 파라미터
+export interface IResponseGetCallStatisticsByTeam extends IPageItem {
+  common: IResponseGetCallStatisticsByTeamCommonItem;
+  list: Array<ICallStatisticeByTeamItem>;
+}
+
+interface IResponseGetCallStatisticsByTeamCommonItem {
   cnt: number;
   total: ICallStatisticTotalItem;
 }

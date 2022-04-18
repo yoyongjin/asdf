@@ -4,18 +4,22 @@ import { ResponseSuccessData, ResponseFailureData } from 'types/common';
 import {
   failureGetAutoMessageStatistics,
   failureGetCallStatisticsByConsultant,
+  failureGetCallStatisticsByTeam,
   failureGetMessageStatistics,
   failureGetStatistics,
   requestGetAutoMessageStatistics,
   requestGetCallStatisticsByConsultant,
+  requestGetCallStatisticsByTeam,
   requestGetMessageStatistics,
   requestGetStatistics,
   REQUEST_GET_AUTO_MESSAGE_STATISTICS,
   REQUEST_GET_CALL_STATISTICS_BY_CONSULTANT,
+  REQUEST_GET_CALL_STATISTICS_BY_TEAM,
   REQUEST_GET_MESSAGE_STATISTICS,
   REQUEST_GET_STATISTICS,
   successGetAutoMessageStatistics,
   successGetCallStatisticsByConsultant,
+  successGetCallStatisticsByTeam,
   successGetMessageStatistics,
   successGetStatistics,
 } from 'modules/actions/statistics';
@@ -115,6 +119,63 @@ function* getCallStatisticsByConsultantProcess(
     }
 
     yield put(failureGetCallStatisticsByConsultant(message));
+
+    Toast.error('요청에 실패했어요..😭');
+  }
+}
+
+function* getCallStatisticsByTeamProcess(
+  action: ReturnType<typeof requestGetCallStatisticsByTeam>,
+) {
+  const {
+    end_date,
+    end_time,
+    ids,
+    include_leaver,
+    page,
+    page_count,
+    search_type,
+    start_date,
+    start_time,
+  } = action.payload;
+
+  try {
+    const response: ResponseSuccessData | ResponseFailureData = yield call(
+      ZMSStatistics.getCallStatisticsByTeam,
+      ids,
+      include_leaver,
+      start_date,
+      end_date,
+      start_time,
+      end_time,
+      search_type,
+      page,
+      page_count,
+    );
+
+    if (response.status === API_FETCH.SUCCESS) {
+      const { data } = response as ResponseSuccessData;
+
+      data.page = page;
+      data.limit = page_count;
+
+      yield put(successGetCallStatisticsByTeam(data));
+
+      return;
+    }
+
+    const { error_msg } = response as ResponseFailureData;
+    yield put(failureGetCallStatisticsByTeam(error_msg));
+
+    Toast.error('요청에 실패했어요..😭');
+  } catch (error) {
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureGetCallStatisticsByTeam(message));
 
     Toast.error('요청에 실패했어요..😭');
   }
@@ -221,6 +282,13 @@ function* watchGetCallStatisticsByConsultant() {
   );
 }
 
+function* watchGetCallStatisticsByTeam() {
+  yield takeLatest(
+    REQUEST_GET_CALL_STATISTICS_BY_TEAM,
+    getCallStatisticsByTeamProcess,
+  );
+}
+
 function* watchGetStatistics() {
   yield takeLatest(REQUEST_GET_STATISTICS, getStatisticsProcess);
 }
@@ -233,6 +301,7 @@ function* authSaga() {
   yield all([
     fork(watchGetStatistics),
     fork(watchGetCallStatisticsByConsultant),
+    fork(watchGetCallStatisticsByTeam),
     fork(watchGetAutoMessageStatistics),
     fork(watchGetMessageStatistics),
   ]);

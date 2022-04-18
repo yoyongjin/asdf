@@ -15,6 +15,9 @@ function usePage() {
   const maxCallStatisticsByConsultant = useSelector(
     (state: RootState) => state.statistics.callStatisticsByConsultantAllCount,
   );
+  const maxCallStatisticsByTeam = useSelector(
+    (state: RootState) => state.statistics.callStatisticsByTeamAllCount,
+  );
   const maxAutoMessageStatistics = useSelector(
     (state: RootState) => state.statistics.autoMessageStatisticsAllCount,
   );
@@ -72,6 +75,7 @@ function usePage() {
     onClickPrevPage,
     onChangeCurrentPage,
     maxMessageStatistics,
+    maxCallStatisticsByTeam,
   };
 }
 

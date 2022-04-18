@@ -854,6 +854,7 @@ const StyledFooter = styled.div`
 `;
 
 let prevPage = 1;
+let callByTeamPrevPage = 1;
 let autoMessagePrevPage = 1;
 let meessagePrevPage = 1;
 
@@ -911,6 +912,8 @@ function StatisticsV2View() {
     handleInitializeMessageStatistics,
     handleInitializeAutoMessageStatistics,
     handleGetMessageStatistics,
+    handleGetCallStatisticsByTeam,
+    callStatisticsByTeamData,
   } = useStatistics();
   const {
     maxCallStatisticsByConsultant,
@@ -929,6 +932,12 @@ function StatisticsV2View() {
     page: messageStatisticsPage,
     onClickNextPage: onClickNextPageMessage,
     onClickPrevPage: onClickPrevPageMessage,
+  } = usePage();
+  const {
+    maxCallStatisticsByTeam,
+    page: callStatisticsByTeamPage,
+    onClickNextPage: onClickNextPageCallStatisticsByTeam,
+    onClickPrevPage: onClickPrevPageCallStatisticsByTeam,
   } = usePage();
 
   const pluralBranchOption = useMemo(() => {
@@ -973,72 +982,73 @@ function StatisticsV2View() {
     };
   }, []);
 
-  const tableContents = useMemo(() => {
-    return {
-      data: [],
-      styles: {
-        rowHeight: 30,
-      },
-      type: 'stat',
-    };
-  }, []);
+  const isValidateStatistics = useCallback(
+    (
+      ids: string,
+      startDate: string,
+      endDate: string,
+      startTime?: string,
+      endTime?: string,
+    ) => {
+      if (ids.length < 1) {
+        // 선택된 팀/상담원이 없을 경우
 
-  const isValidateStatistics = (
-    ids: string,
-    startDate: string,
-    endDate: string,
-    startTime?: string,
-    endTime?: string,
-  ) => {
-    if (ids.length < 1) {
-      // 선택된 상담원이 없을 경우
+        return {
+          status: false,
+          message: `${
+            selectedTabIndex === 1 ? '팀' : '상담원'
+          }을 선택해주세요.`,
+        };
+      }
+
+      if (startDate > endDate) {
+        // 시작날짜가 끝날짜보다 큰 경우
+
+        return {
+          status: false,
+          message: '날짜 조건을 확인해주세요.',
+        };
+      }
+
+      if (
+        new Date(endDate).getTime() - new Date(startDate).getTime() >
+        dayOfWeekTimestamp
+      ) {
+        // 기간이 7일 이상일 경우
+
+        return {
+          status: false,
+          message: '날짜는 7일 이상 선택할 수 없습니다.',
+        };
+      }
+
+      if (startTime && endTime && startTime > endTime) {
+        // 시작시간이 끝시간보다 큰 경우
+
+        return {
+          status: false,
+          message: '시간 조건을 확인해주세요.',
+        };
+      }
 
       return {
-        status: false,
-        message: '상담원을 선택해주세요.',
+        status: true,
+        message: '',
       };
-    }
-
-    if (startDate > endDate) {
-      // 시작날짜가 끝날짜보다 큰 경우
-
-      return {
-        status: false,
-        message: '날짜 조건을 확인해주세요.',
-      };
-    }
-
-    if (
-      new Date(endDate).getTime() - new Date(startDate).getTime() >
-      dayOfWeekTimestamp
-    ) {
-      // 기간이 7일 이상일 경우
-
-      return {
-        status: false,
-        message: '날짜는 7일 이상 선택할 수 없습니다.',
-      };
-    }
-
-    if (startTime && endTime && startTime > endTime) {
-      // 시작시간이 끝시간보다 큰 경우
-
-      return {
-        status: false,
-        message: '시간 조건을 확인해주세요.',
-      };
-    }
-
-    return {
-      status: true,
-      message: '',
-    };
-  };
+    },
+    [selectedTabIndex],
+  );
 
   const getTitleParams = useMemo(() => {
-    const ids = pluralConsultantSelectedOption
-      .map((consultant) => consultant.value)
-      .join(','); // 상담원 여러명 선택
+    let ids = '';
+
+    if (selectedTabIndex === 1) {
+      ids = pluralTeamSelectedOption.map((team) => team.value).join(','); // 팀 여러개 선택
+    } else {
+      ids = pluralConsultantSelectedOption
+        .map((consultant) => consultant.value)
+        .join(','); // 상담원 여러명 선택
+    }
 
     const breakUp = form.break_up ? '1' : '0'; // 1: 해촉 포함 0: 해촉 미포함
     let startDate = '';
@@ -1079,6 +1089,8 @@ function StatisticsV2View() {
     form.start_hour,
     form.start_minute,
     pluralConsultantSelectedOption,
+    pluralTeamSelectedOption,
+    selectedTabIndex,
     startDatePicker,
   ]);
 
@@ -1122,7 +1134,55 @@ function StatisticsV2View() {
         limit,
       );
     },
-    [getTitleParams, handleGetCallStatisticsByConsultant, page],
+    [
+      getTitleParams,
+      handleGetCallStatisticsByConsultant,
+      isValidateStatistics,
+      page,
+    ],
+  );
+
+  const getCallStatisticeByTeam = useCallback(
+    (isAlert = true) => {
+      const {
+        ids,
+        breakUp,
+        startDate,
+        endDate,
+        startTime,
+        endTime,
+        searchType,
+        limit,
+      } = getTitleParams;
+
+      const { status, message } = isValidateStatistics(
+        ids,
+        startDate,
+        endDate,
+        startTime,
+        endTime,
+      );
+
+      if (!status) {
+        if (isAlert) {
+          alert(message);
+        }
+        return;
+      }
+
+      handleGetCallStatisticsByTeam(
+        ids,
+        breakUp,
+        startDate,
+        endDate,
+        startTime,
+        endTime,
+        searchType,
+        page,
+        limit,
+      );
+    },
+    [getTitleParams, handleGetCallStatisticsByTeam, isValidateStatistics, page],
   );
 
   const getAutoMessageStatistice = useCallback(
@@ -1194,6 +1254,8 @@ function StatisticsV2View() {
     let onClick: any;
     if (selectedTabIndex === 0) {
       onClick = getCallStatisticeByConsultant;
+    } else if (selectedTabIndex === 1) {
+      onClick = getCallStatisticeByTeam;
     } else if (selectedTabIndex === 2) {
       onClick = getMessageStatistice;
     } else if (selectedTabIndex === 3) {
@@ -1221,6 +1283,7 @@ function StatisticsV2View() {
   }, [
     getAutoMessageStatistice,
     getCallStatisticeByConsultant,
+    getCallStatisticeByTeam,
     getMessageStatistice,
     selectedTabIndex,
   ]);
@@ -1740,7 +1803,7 @@ function StatisticsV2View() {
       styles: {
         rowHeight: 35,
       },
-      type: 'auto-message-statistics',
+      type: 'message-statistics',
     };
   }, [autoMessageStatisticsData, tablePropertyMessageStatistics]);
 
@@ -1980,6 +2043,120 @@ function StatisticsV2View() {
     };
   }, [callStatisticsByConsultantData, tablePropertyCallStatisticsByConsultant]);
 
+  /**
+   * @description 팀별 통화 통계 테이블 상세 내용 정보들
+   */
+  const tablePropertyCallStatisticsByTeam = useMemo(() => {
+    return callStatisticsByTeamData.map((values) => {
+      const row: Array<string> = [];
+
+      // 공통
+      row.push(values.branch_name); // 지점명
+      row.push(values.team_name); // 팀명
+      row.push(values.date); // 일시
+
+      // 전체
+      row.push(`${values.all_total_call}`); // 전체 시도콜
+      row.push(`${values.all_connect_call}`); // 전체 연결콜
+      row.push(`${values.all_fail_call}`); // 전체 부재콜
+      let allConnectionRate =
+        values.all_connect_call / values.all_total_call || 0;
+      allConnectionRate = Utils.getDecimalNumber(allConnectionRate * 100);
+      row.push(`${allConnectionRate}%`); // 전체 연결률
+      row.push(Utils.getHourMinSecBySecond(values.all_total_time)); // 전체 통화 시간
+      row.push(`${values.all_total_time}`); // 전체 통화 시간(초)
+      let allAverageCallTime = values.all_total_time / values.all_total_call;
+      allAverageCallTime = allAverageCallTime || 0;
+      row.push(Utils.getHourMinSecBySecond(allAverageCallTime)); // 전체 평균 통화 시간
+      row.push(Utils.getHourMinSecBySecond(values.all_ring_time)); // 전체 링 시간
+      row.push(`${values.all_ring_time}`); // 전체 링시간(초)
+      row.push(Utils.getHourMinSecBySecond(values.all_talk_time)); // 전체 순수통화시간
+      row.push(`${values.all_talk_time}`); // 전체 순수통화시간(초)
+
+      // 발신
+      row.push(`${values.outcoming_total_call}`); // 발신 시도콜
+      row.push(`${values.outcoming_connect_call}`); // 발신 연결콜
+      row.push(`${values.outcoming_fail_call}`); // 발신 부재콜
+      let outcomingConnectionRate =
+        values.outcoming_connect_call / values.outcoming_total_call || 0;
+      outcomingConnectionRate = Utils.getDecimalNumber(
+        outcomingConnectionRate * 100,
+      );
+      row.push(`${outcomingConnectionRate}%`); // 발신 연결률
+      row.push(Utils.getHourMinSecBySecond(values.outcoming_total_time)); // 발신 통화 시간
+      row.push(`${values.outcoming_total_time}`); // 발신 통화 시간(초)
+      let outcomingAverageCallTime =
+        values.outcoming_total_time / values.outcoming_total_call;
+      outcomingAverageCallTime = outcomingAverageCallTime || 0;
+      row.push(Utils.getHourMinSecBySecond(outcomingAverageCallTime)); // 발신 평균 통화 시간
+      row.push(Utils.getHourMinSecBySecond(values.outcoming_ring_time)); // 발신 링 시간
+      row.push(`${values.outcoming_ring_time}`); // 발신 링시간(초)
+      row.push(Utils.getHourMinSecBySecond(values.outcoming_talk_time)); // 발신 순수통화시간
+      row.push(`${values.outcoming_talk_time}`); // 발신 순수통화시간(초)
+
+      // 수신
+      row.push(`${values.incoming_total_call}`); // 수신 시도콜
+      row.push(`${values.incoming_connect_call}`); // 수신 연결콜
+      row.push(`${values.incoming_fail_call}`); // 수신 부재콜
+      let incomingConnectionRate =
+        values.incoming_connect_call / values.incoming_total_call || 0;
+      incomingConnectionRate = Utils.getDecimalNumber(
+        incomingConnectionRate * 100,
+      );
+      row.push(`${incomingConnectionRate}%`); // 수신 연결률
+      row.push(Utils.getHourMinSecBySecond(values.incoming_total_time)); // 수신 통화 시간
+      row.push(`${values.incoming_total_time}`); // 수신 통화 시간(초)
+      let incomingAverageCallTime =
+        values.incoming_total_time / values.incoming_total_call;
+      incomingAverageCallTime = incomingAverageCallTime || 0;
+      row.push(Utils.getHourMinSecBySecond(incomingAverageCallTime)); // 수신 평균 통화 시간
+      row.push(Utils.getHourMinSecBySecond(values.incoming_ring_time)); // 수신 링 시간
+      row.push(`${values.incoming_ring_time}`); // 수신 링시간(초)
+      row.push(Utils.getHourMinSecBySecond(values.incoming_talk_time)); // 수신 순수통화시간
+      row.push(`${values.incoming_talk_time}`); // 수신 순수통화시간(초)
+
+      let backgroundColor = '';
+      if (values.branch_name === '소계') {
+        backgroundColor = Colors.gray15;
+      } else if (values.branch_name === '합계') {
+        backgroundColor = Colors.blue9;
+      }
+      const callStatisticsByConsultantItems: Array<ITableProperty> = row.map(
+        (value, index) => {
+          return {
+            data: {
+              text: value,
+            },
+            styles: {
+              fontSize: 12,
+            },
+            type: 'text',
+            propertyStyles: {
+              backgroundColor,
+              textAlign: 'center',
+            },
+          };
+        },
+      );
+
+      return callStatisticsByConsultantItems;
+    });
+  }, [callStatisticsByTeamData]);
+
+  /**
+   * @description 팀별 통화 통계 테이블 내용 정보들
+   */
+  const tableContentCallStatisticsByTeam = useMemo(() => {
+    return {
+      data: tablePropertyCallStatisticsByTeam,
+      originData: callStatisticsByTeamData,
+      styles: {
+        rowHeight: 35,
+      },
+      type: 'call-statistics-by-team',
+    };
+  }, [callStatisticsByTeamData, tablePropertyCallStatisticsByTeam]);
+
   // pluralBranchSelectedOption 변경되면 하위 데이터 초기화
   useEffect(() => {
     handlePluralTeamSelectedOption([]);
@@ -2032,6 +2209,17 @@ function StatisticsV2View() {
 
     prevPage = page;
   }, [getCallStatisticeByConsultant, page]);
+
+  /**
+   * @description 페이지가 변경됐을 때 팀별 통화 통계 데이터를 가져오기
+   */
+  useEffect(() => {
+    if (callByTeamPrevPage !== callStatisticsByTeamPage) {
+      getCallStatisticeByTeam(false);
+    }
+
+    callByTeamPrevPage = callStatisticsByTeamPage;
+  }, [callStatisticsByTeamPage, getCallStatisticeByTeam]);
 
   /**
    * @description 페이지가 변경됐을 때 자동 문자 통계 데이터를 가져오기
@@ -2180,7 +2368,7 @@ function StatisticsV2View() {
               // 팀별 통화 통계
               <Table
                 borderItem={borderItem}
-                contents={tableContents}
+                contents={tableContentCallStatisticsByTeam}
                 dependencyTitles={dependencyCallStatisticsTitles}
                 headColor={Colors.white}
                 headHeight={52}
@@ -2220,11 +2408,11 @@ function StatisticsV2View() {
           ) : selectedTabIndex === 1 ? (
             // 팀별 통화 통계
             <TablePagination
-              count={maxCallStatisticsByConsultant}
+              count={maxCallStatisticsByTeam}
               divide={form.limit}
-              curPage={page}
-              onClickNextPage={onClickNextPage}
-              onClickPrevPage={onClickPrevPage}
+              curPage={callStatisticsByTeamPage}
+              onClickNextPage={onClickNextPageCallStatisticsByTeam}
+              onClickPrevPage={onClickPrevPageCallStatisticsByTeam}
             />
           ) : selectedTabIndex === 2 ? (
             // 문자 통계

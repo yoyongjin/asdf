@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
   requestGetAutoMessageStatistics,
   requestGetCallStatisticsByConsultant,
+  requestGetCallStatisticsByTeam,
   requestGetMessageStatistics,
   requestGetStatistics,
   setInitializeAutoMessageStatistics,
@@ -19,6 +20,9 @@ function useStatistics() {
   );
   const callStatisticsByConsultantData = useSelector(
     (state: RootState) => state.statistics.callStatisticsByConsultant,
+  );
+  const callStatisticsByTeamData = useSelector(
+    (state: RootState) => state.statistics.callStatisticsByTeam,
   );
   const autoMessageStatisticsData = useSelector(
     (state: RootState) => state.statistics.autoMessageStatistics,
@@ -75,6 +79,35 @@ function useStatistics() {
       };
 
       dispatch(requestGetCallStatisticsByConsultant(payload));
+    },
+    [dispatch],
+  );
+
+  const handleGetCallStatisticsByTeam = useCallback(
+    (
+      ids: string,
+      breakUp: string,
+      startDate: string,
+      endDate: string,
+      startTime: string,
+      endTime: string,
+      searchType: number,
+      page: number,
+      limit: number,
+    ) => {
+      const payload = {
+        ids,
+        include_leaver: breakUp,
+        start_date: startDate,
+        end_date: endDate,
+        start_time: startTime,
+        end_time: endTime,
+        search_type: searchType,
+        page,
+        page_count: limit,
+      };
+
+      dispatch(requestGetCallStatisticsByTeam(payload));
     },
     [dispatch],
   );
@@ -149,6 +182,8 @@ function useStatistics() {
     handleInitializeAutoMessageStatistics,
     handleGetMessageStatistics,
     handleInitializeMessageStatistics,
+    handleGetCallStatisticsByTeam,
+    callStatisticsByTeamData,
   };
 }
 
