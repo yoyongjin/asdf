@@ -222,7 +222,6 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
     [actions.SUCCESS_GET_MESSAGE_STATISTICS]: (state, action) => {
       // 문자 통계 가져오기 성공
       return produce(state, (draft) => {
-        console.log(action.payload.list);
         draft.messageStatistics = action.payload.list;
         draft.messageStatisticsAllCount = action.payload.cnt;
         draft.request.getMessageStatistics.fetch = false;
