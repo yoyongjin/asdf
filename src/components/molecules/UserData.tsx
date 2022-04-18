@@ -608,6 +608,10 @@ function UserData({
           if (_.isEmpty(userData)) {
             // 유저 정보가 없는 경우(신규 생성 시)
             return true;
+          } else {
+            if (!userData?.number) {
+              return true;
+            }
           }
 
           break;
@@ -781,7 +785,16 @@ function UserData({
     if (isVisible && _.isEmpty(userData)) {
       onEventInitializePhoneInfo();
     }
-  }, [isVisible, onEventInitializePhoneInfo, userData]);
+  }, [isVisible, onEventInitializePhoneInfo, phoneInfo, userData]);
+
+  /**
+   * @description 팝업이 켜졌을 때 phoneInfo의 값이 없으면 초기화
+   */
+  useEffect(() => {
+    if (!isVisible && !_.isEmpty(phoneInfo)) {
+      onEventInitializePhoneInfo();
+    }
+  }, [isVisible, onEventInitializePhoneInfo, phoneInfo, userData]);
 
   return (
     <StyledWrapper>
