@@ -84,8 +84,8 @@ export interface ICallStatisticTotalItem {
 
 // 통화 통계 item
 export interface ICallStatisticsItem {
-  DATE: string; // 통화 날짜
   connect_call: number; // 성공 통화 수
+  date: string; // 통화 날짜
   fail_call: number; // 실패 통화 수
   ring_time: number; // 벨이 울린 시간
   talk_time: number; // 통화가 연결된 후 시간

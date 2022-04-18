@@ -78,7 +78,7 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
               team_name: values.team_name,
               name: values.name,
               tmr_cd: values.tmr_cd,
-              date: values.all[index].DATE,
+              date: values.all[index].date,
               all_total_call: values.all[index].total_call,
               all_connect_call: values.all[index].connect_call,
               all_fail_call: values.all[index].fail_call,
