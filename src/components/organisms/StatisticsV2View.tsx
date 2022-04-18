@@ -1426,6 +1426,7 @@ function StatisticsV2View() {
           selectConfig3,
           selectConfig4,
           selectConfig5,
+          selectConfig6,
         ] = selectData;
 
         if (selectedTabIndex === 0) {
@@ -1435,7 +1436,12 @@ function StatisticsV2View() {
           renderData.push(...dateRangePickerData); // 날짜 선택
           renderData.push(selectConfig1, selectConfig2); // 시작 시간 선택
           renderData.push(...textData); // 물결 텍스트
-          renderData.push(selectConfig3, selectConfig4, selectConfig5); // 끝 시간 선택, 조회 조건 선택
+          renderData.push(
+            selectConfig3,
+            selectConfig4,
+            selectConfig5,
+            selectConfig6,
+          ); // 끝 시간 선택, 조회 조건 선택, 조회 개수
           renderData.push(...buttonConfig); // 조회 버튼
 
           for (let i = 0; i < renderData.length; i++) {
@@ -1468,7 +1474,12 @@ function StatisticsV2View() {
           renderData.push(...dateRangePickerData); // 날짜 선택
           renderData.push(selectConfig1, selectConfig2); // 시작 시간 선택
           renderData.push(...textData); // 물결 텍스트
-          renderData.push(selectConfig3, selectConfig4, selectConfig5); // 끝 시간 선택, 조회 조건 선택
+          renderData.push(
+            selectConfig3,
+            selectConfig4,
+            selectConfig5,
+            selectConfig6,
+          ); // 끝 시간 선택, 조회 조건 선택, 조회 개수
           renderData.push(...buttonConfig); // 조회 버튼
 
           for (let i = 0; i < renderData.length; i++) {
@@ -1499,6 +1510,7 @@ function StatisticsV2View() {
           renderData.push(...multiSelectData); // 조직 / 팀 / 상담원 선택
           renderData.push(...textCheckBoxData); // 해촉 여부
           renderData.push(...dateRangePickerData); // 날짜 선택
+          renderData.push(selectConfig6); // 조회 개수
           renderData.push(...buttonConfig); // 조회 버튼
 
           for (let i = 0; i < renderData.length; i++) {
@@ -1510,11 +1522,11 @@ function StatisticsV2View() {
               defaultRenderStyle.paddingRight = 4;
             }
 
-            if (i === 2) {
+            if (i === 2 || i === 4) {
               defaultRenderStyle.paddingRight = 12;
             }
 
-            if (i === 3 || i === 4) {
+            if (i === 3 || i === 5) {
               defaultRenderStyle.paddingRight = 20;
             }
 
