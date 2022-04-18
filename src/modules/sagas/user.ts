@@ -132,7 +132,7 @@ function* addUserProcess(action: ReturnType<typeof requestAddUser>) {
     const { error_msg } = response as ResponseFailureData;
     yield put(failureAddUser(error_msg));
 
-    Toast.error('요청에 실패했어요..😭');
+    Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
   } catch (error) {
     let message = '';
 
@@ -208,7 +208,7 @@ function* modifyUserProcess(action: ReturnType<typeof requestModifyUser>) {
     const { error_msg } = response as ResponseFailureData;
     yield put(failureModifyUser(error_msg));
 
-    Toast.error('요청에 실패했어요..😭');
+    Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
   } catch (error) {
     let message = '';
 
