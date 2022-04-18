@@ -64,3 +64,21 @@ export const successGetAutoMessageStatistics = createAction(
 export const failureGetAutoMessageStatistics = createAction(
   FAILURE_GET_AUTO_MESSAGE_STATISTICS,
 )<string>();
+
+// v2 상담원별 통화 통계 데이터 초기화하기
+export const SET_INITIALIZE_CALL_STATISTICS_BY_CONSULTANT =
+  'SET_INITIALIZE_CALL_STATISTICS_BY_CONSULTANT';
+
+// v2 상담원별 통계 데이터 초기화하기 Action
+export const setInitializeCallStatisticsByConsultant = createAction(
+  SET_INITIALIZE_CALL_STATISTICS_BY_CONSULTANT,
+)();
+
+// v2 자동 문자 통계 데이터 초기화하기
+export const SET_INITIALIZE_AUTO_MESSAGE_STATISTICS =
+  'SET_INITIALIZE_AUTO_MESSAGE_STATISTICS';
+
+// v2 자동 문자 통계 데이터 초기화하기 Action
+export const setInitializeAutoMessageStatistics = createAction(
+  SET_INITIALIZE_AUTO_MESSAGE_STATISTICS,
+)();

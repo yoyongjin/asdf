@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { TablePagination, TitleV2 } from 'components/molecules';
 import { IProperty as ITableProperty } from 'components/molecules/TableProperty';
 import { Table } from 'components/organisms';
+import useAuth from 'hooks/useAuth';
 import useDatePicker from 'hooks/useDatePicker';
 import useInputForm from 'hooks/useInputForm';
 import useMultiSelect from 'hooks/useMultiSelect';
@@ -856,6 +857,7 @@ let prevPage = 1;
 let autoMessagePrevPage = 1;
 
 function StatisticsV2View() {
+  const { loginInfo } = useAuth();
   const { form, onChangeCheckBox, onChangeSelect } = useInputForm({
     break_up: false, // 해촉여부
     search_type: 1, // 조회 조건
@@ -904,6 +906,7 @@ function StatisticsV2View() {
     autoMessageStatisticsData,
     handleGetAutoMessageStatistics,
     handleInitializeCallStatisticsByConsultant,
+    handleInitializeAutoMessageStatistics,
   } = useStatistics();
   const {
     maxCallStatisticsByConsultant,
@@ -1937,6 +1940,91 @@ function StatisticsV2View() {
 
     autoMessagePrevPage = autoMessageStatisticsPage;
   }, [autoMessageStatisticsPage, getAutoMessageStatistice]);
+
+  const setInitData = useCallback(
+    (type: number) => {
+      switch (type) {
+        case 0: {
+          // 상담원별 통화 통계
+          if (!_.isEmpty(callStatisticsByConsultantData)) {
+            // 비어있지 않으면 초기화 시키기
+            handleInitializeCallStatisticsByConsultant();
+          }
+
+          break;
+        }
+        case 1: {
+          break;
+        }
+        case 2: {
+          break;
+        }
+        case 3: {
+          // 자동 문자 통계
+          if (!_.isEmpty(autoMessageStatisticsData)) {
+            // 비어있지 않으면 초기화 시키기
+            handleInitializeAutoMessageStatistics();
+          }
+
+          break;
+        }
+      }
+    },
+    [
+      autoMessageStatisticsData,
+      callStatisticsByConsultantData,
+      handleInitializeAutoMessageStatistics,
+      handleInitializeCallStatisticsByConsultant,
+    ],
+  );
+
+  /**
+   * @description 기존 데이터 초기화하기
+   */
+  useEffect(() => {
+    if (!loginInfo.id) {
+      return;
+    }
+
+    switch (selectedTabIndex) {
+      case 0: {
+        setInitData(1);
+        setInitData(2);
+        setInitData(3);
+
+        break;
+      }
+      case 1: {
+        setInitData(0);
+        setInitData(2);
+        setInitData(3);
+
+        break;
+      }
+      case 2: {
+        setInitData(0);
+        setInitData(1);
+        setInitData(3);
+
+        break;
+      }
+      case 3: {
+        setInitData(0);
+        setInitData(1);
+        setInitData(2);
+
+        break;
+      }
+    }
+  }, [
+    autoMessageStatisticsData,
+    callStatisticsByConsultantData,
+    handleInitializeAutoMessageStatistics,
+    handleInitializeCallStatisticsByConsultant,
+    loginInfo.id,
+    selectedTabIndex,
+    setInitData,
+  ]);
 
   return (
     <>
