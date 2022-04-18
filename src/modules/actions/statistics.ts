@@ -3,8 +3,10 @@ import { createAction } from 'typesafe-actions';
 import {
   IRequestGetAutoMessageStatistics,
   IRequestGetCallStatisticsByConsultant,
+  IRequestGetMessageStatistics,
   IResponseGetAutoMessageStatistics,
   IResponseGetCallStatisticsByConsultant,
+  IResponseGetMessageStatistics,
   RequestGetStatistics,
   StatisticsData,
 } from 'types/statistics';
@@ -63,6 +65,22 @@ export const successGetAutoMessageStatistics = createAction(
 )<IResponseGetAutoMessageStatistics>();
 export const failureGetAutoMessageStatistics = createAction(
   FAILURE_GET_AUTO_MESSAGE_STATISTICS,
+)<string>();
+
+// v2 문자 통계 가져오기
+export const REQUEST_GET_MESSAGE_STATISTICS = 'REQUEST_GET_MESSAGE_STATISTICS';
+export const SUCCESS_GET_MESSAGE_STATISTICS = 'SUCCESS_GET_MESSAGE_STATISTICS';
+export const FAILURE_GET_MESSAGE_STATISTICS = 'FAILURE_GET_MESSAGE_STATISTICS';
+
+// v2 문자 통계 가져오기 Action
+export const requestGetMessageStatistics = createAction(
+  REQUEST_GET_MESSAGE_STATISTICS,
+)<IRequestGetMessageStatistics>();
+export const successGetMessageStatistics = createAction(
+  SUCCESS_GET_MESSAGE_STATISTICS,
+)<IResponseGetMessageStatistics>();
+export const failureGetMessageStatistics = createAction(
+  FAILURE_GET_MESSAGE_STATISTICS,
 )<string>();
 
 // v2 상담원별 통화 통계 데이터 초기화하기

@@ -18,6 +18,9 @@ function usePage() {
   const maxAutoMessageStatistics = useSelector(
     (state: RootState) => state.statistics.autoMessageStatisticsAllCount,
   );
+  const maxMessageStatistics = useSelector(
+    (state: RootState) => state.statistics.messageStatisticsAllCount,
+  );
   const [page, setPage] = useState<number>(1);
 
   const onChangeCurrentPage = useCallback(
@@ -68,6 +71,7 @@ function usePage() {
     onClickNextPage,
     onClickPrevPage,
     onChangeCurrentPage,
+    maxMessageStatistics,
   };
 }
 

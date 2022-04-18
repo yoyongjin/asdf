@@ -4,15 +4,19 @@ import { ResponseSuccessData, ResponseFailureData } from 'types/common';
 import {
   failureGetAutoMessageStatistics,
   failureGetCallStatisticsByConsultant,
+  failureGetMessageStatistics,
   failureGetStatistics,
   requestGetAutoMessageStatistics,
   requestGetCallStatisticsByConsultant,
+  requestGetMessageStatistics,
   requestGetStatistics,
   REQUEST_GET_AUTO_MESSAGE_STATISTICS,
   REQUEST_GET_CALL_STATISTICS_BY_CONSULTANT,
+  REQUEST_GET_MESSAGE_STATISTICS,
   REQUEST_GET_STATISTICS,
   successGetAutoMessageStatistics,
   successGetCallStatisticsByConsultant,
+  successGetMessageStatistics,
   successGetStatistics,
 } from 'modules/actions/statistics';
 import ZMSStatistics from 'lib/api/zms/statistics';
@@ -161,6 +165,48 @@ function* getAutoMessageStatisticsProcess(
   }
 }
 
+function* getMessageStatisticsProcess(
+  action: ReturnType<typeof requestGetMessageStatistics>,
+) {
+  const { end_date, ids, include_leaver, page, page_count, start_date } =
+    action.payload;
+
+  try {
+    const response: ResponseSuccessData | ResponseFailureData = yield call(
+      ZMSStatistics.getMessageStatistics,
+      ids,
+      include_leaver,
+      start_date,
+      end_date,
+      page,
+      page_count,
+    );
+
+    if (response.status === API_FETCH.SUCCESS) {
+      const { data } = response as ResponseSuccessData;
+
+      yield put(successGetMessageStatistics(data));
+
+      return;
+    }
+
+    const { error_msg } = response as ResponseFailureData;
+    yield put(failureGetMessageStatistics(error_msg));
+
+    Toast.error('요청에 실패했어요..😭');
+  } catch (error) {
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureGetMessageStatistics(message));
+
+    Toast.error('요청에 실패했어요..😭');
+  }
+}
+
 function* watchGetAutoMessageStatistics() {
   yield takeLatest(
     REQUEST_GET_AUTO_MESSAGE_STATISTICS,
@@ -179,11 +225,16 @@ function* watchGetStatistics() {
   yield takeLatest(REQUEST_GET_STATISTICS, getStatisticsProcess);
 }
 
+function* watchGetMessageStatistics() {
+  yield takeLatest(REQUEST_GET_MESSAGE_STATISTICS, getMessageStatisticsProcess);
+}
+
 function* authSaga() {
   yield all([
     fork(watchGetStatistics),
     fork(watchGetCallStatisticsByConsultant),
     fork(watchGetAutoMessageStatistics),
+    fork(watchGetMessageStatistics),
   ]);
 }
 

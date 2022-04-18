@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
   requestGetAutoMessageStatistics,
   requestGetCallStatisticsByConsultant,
+  requestGetMessageStatistics,
   requestGetStatistics,
   setInitializeAutoMessageStatistics,
   setInitializeCallStatisticsByConsultant,
@@ -21,7 +22,9 @@ function useStatistics() {
   const autoMessageStatisticsData = useSelector(
     (state: RootState) => state.statistics.autoMessageStatistics,
   );
-
+  const messageStatisticsData = useSelector(
+    (state: RootState) => state.statistics.messageStatistics,
+  );
   const dispatch = useDispatch();
 
   const handleGetStatistics = useCallback(
@@ -106,15 +109,40 @@ function useStatistics() {
     [dispatch],
   );
 
+  const handleGetMessageStatistics = useCallback(
+    (
+      ids: string,
+      breakUp: string,
+      startDate: string,
+      endDate: string,
+      page: number,
+      limit: number,
+    ) => {
+      const payload = {
+        ids,
+        include_leaver: breakUp,
+        start_date: startDate,
+        end_date: endDate,
+        page,
+        page_count: limit,
+      };
+
+      dispatch(requestGetMessageStatistics(payload));
+    },
+    [dispatch],
+  );
+
   return {
     statistics,
     handleGetStatistics,
     handleGetCallStatisticsByConsultant,
     callStatisticsByConsultantData,
     autoMessageStatisticsData,
+    messageStatisticsData,
     handleGetAutoMessageStatistics,
     handleInitializeCallStatisticsByConsultant,
     handleInitializeAutoMessageStatistics,
+    handleGetMessageStatistics,
   };
 }
 

@@ -13,12 +13,15 @@ export interface IStatisticsState {
   callStatisticsByConsultantAllCount: number; // 상담원별 통화 통계 총 수
   autoMessageStatistics: Array<IAutoMessageStatisticsItem>; // 자동 문자 통계
   autoMessageStatisticsAllCount: number; // 자동 문자 통계
+  messageStatistics: Array<IMessageStatisticsItem>; // 문자 통계
+  messageStatisticsAllCount: number; // 문자 통계 총 수
 }
 
 export interface IRequestType {
   getStatistics: common.FetchType;
   getCallStatisticsByConsultant: common.FetchType;
   getAutoMessageStatistics: common.FetchType;
+  getMessageStatistics: common.FetchType;
 }
 
 export interface StatisticsData {
@@ -112,6 +115,23 @@ export interface IAutoMessageStatisticsItem {
   tmr_name: string; // 상담원명
 }
 
+// 문자 통계 item
+export interface IMessageStatisticsItem {
+  branch_name: string; // 지점명
+  daily_cnt_auto_message: number; // 일 자동문자 발송 수량
+  daily_cnt_message: number; // 일 발송 수량
+  daily_cnt_mms: number; // 일 MMS 발송 수량
+  date: string; // 날짜
+  max_count_date: number; // 일 최대발송 수량
+  max_count_month: number; // 월 최대발송 수량
+  monthly_cnt_auto_message: number; // 월 자동문자 발송 수량
+  monthly_cnt_message: number; // 월 발송 수량
+  monthly_cnt_mms: number; // 월 MMS 발송 수량
+  team_name: string; // 팀명
+  tmr_cd: string | null; // 상담원 ID
+  tmr_name: string; // 상담원명
+}
+
 export interface RequestGetStatistics {
   start_date: string;
   end_date: string;
@@ -156,4 +176,19 @@ export interface IRequestGetAutoMessageStatistics {
 export interface IResponseGetAutoMessageStatistics extends IPageItem {
   cnt: number;
   list: Array<IAutoMessageStatisticsItem>;
+}
+
+// 문자 통계 요청 파라미터
+export interface IRequestGetMessageStatistics {
+  end_date: string; // 끝 날짜 ex) 2022-04-11
+  ids: string; // 상담원 id 복수개 ex) 1,2,3
+  include_leaver: string; // 해촉 여부 ex) 1
+  start_date: string; // 시작 날짜 ex) 2022-04-11
+  page: number; // 페이지
+  page_count: number; // 페이지당 노출 개수
+}
+
+export interface IResponseGetMessageStatistics {
+  cnt: number;
+  list: Array<IMessageStatisticsItem>;
 }
