@@ -32,39 +32,27 @@ function* getStatisticsProcess(
 ) {
   const { start_date, end_date, search_text, search_type } = action.payload;
 
-  try {
-    const response: ResponseSuccessData | ResponseFailureData = yield call(
-      ZMSStatistics.getStatistics,
-      start_date,
-      end_date,
-      search_type,
-      search_text,
-    );
+  const response: ResponseSuccessData | ResponseFailureData = yield call(
+    ZMSStatistics.getStatistics,
+    start_date,
+    end_date,
+    search_type,
+    search_text,
+  );
 
-    if (response.status === API_FETCH.SUCCESS) {
-      const { data } = response as ResponseSuccessData;
-      const { stat } = data;
+  if (response.status === API_FETCH.SUCCESS) {
+    const { data } = response as ResponseSuccessData;
+    const { stat } = data;
 
-      yield put(successGetStatistics(stat));
+    yield put(successGetStatistics(stat));
 
-      return;
-    }
-
-    const { error_msg } = response as ResponseFailureData;
-    yield put(failureGetStatistics(error_msg));
-
-    Toast.error('요청에 실패했어요..😭');
-  } catch (error) {
-    let message = '';
-
-    if (error instanceof Error) {
-      message = error.message;
-    }
-
-    yield put(failureGetStatistics(message));
-
-    Toast.error('요청에 실패했어요..😭');
+    return;
   }
+
+  const { error_msg } = response as ResponseFailureData;
+  yield put(failureGetStatistics(error_msg));
+
+  Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
 function* getCallStatisticsByConsultantProcess(
@@ -82,46 +70,34 @@ function* getCallStatisticsByConsultantProcess(
     start_time,
   } = action.payload;
 
-  try {
-    const response: ResponseSuccessData | ResponseFailureData = yield call(
-      ZMSStatistics.getCallStatisticsByConsultant,
-      ids,
-      include_leaver,
-      start_date,
-      end_date,
-      start_time,
-      end_time,
-      search_type,
-      page,
-      page_count,
-    );
+  const response: ResponseSuccessData | ResponseFailureData = yield call(
+    ZMSStatistics.getCallStatisticsByConsultant,
+    ids,
+    include_leaver,
+    start_date,
+    end_date,
+    start_time,
+    end_time,
+    search_type,
+    page,
+    page_count,
+  );
 
-    if (response.status === API_FETCH.SUCCESS) {
-      const { data } = response as ResponseSuccessData;
+  if (response.status === API_FETCH.SUCCESS) {
+    const { data } = response as ResponseSuccessData;
 
-      data.page = page;
-      data.limit = page_count;
+    data.page = page;
+    data.limit = page_count;
 
-      yield put(successGetCallStatisticsByConsultant(data));
+    yield put(successGetCallStatisticsByConsultant(data));
 
-      return;
-    }
-
-    const { error_msg } = response as ResponseFailureData;
-    yield put(failureGetCallStatisticsByConsultant(error_msg));
-
-    Toast.error('요청에 실패했어요..😭');
-  } catch (error) {
-    let message = '';
-
-    if (error instanceof Error) {
-      message = error.message;
-    }
-
-    yield put(failureGetCallStatisticsByConsultant(message));
-
-    Toast.error('요청에 실패했어요..😭');
+    return;
   }
+
+  const { error_msg } = response as ResponseFailureData;
+  yield put(failureGetCallStatisticsByConsultant(error_msg));
+
+  Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
 function* getCallStatisticsByTeamProcess(
@@ -139,46 +115,34 @@ function* getCallStatisticsByTeamProcess(
     start_time,
   } = action.payload;
 
-  try {
-    const response: ResponseSuccessData | ResponseFailureData = yield call(
-      ZMSStatistics.getCallStatisticsByTeam,
-      ids,
-      include_leaver,
-      start_date,
-      end_date,
-      start_time,
-      end_time,
-      search_type,
-      page,
-      page_count,
-    );
+  const response: ResponseSuccessData | ResponseFailureData = yield call(
+    ZMSStatistics.getCallStatisticsByTeam,
+    ids,
+    include_leaver,
+    start_date,
+    end_date,
+    start_time,
+    end_time,
+    search_type,
+    page,
+    page_count,
+  );
 
-    if (response.status === API_FETCH.SUCCESS) {
-      const { data } = response as ResponseSuccessData;
+  if (response.status === API_FETCH.SUCCESS) {
+    const { data } = response as ResponseSuccessData;
 
-      data.page = page;
-      data.limit = page_count;
+    data.page = page;
+    data.limit = page_count;
 
-      yield put(successGetCallStatisticsByTeam(data));
+    yield put(successGetCallStatisticsByTeam(data));
 
-      return;
-    }
-
-    const { error_msg } = response as ResponseFailureData;
-    yield put(failureGetCallStatisticsByTeam(error_msg));
-
-    Toast.error('요청에 실패했어요..😭');
-  } catch (error) {
-    let message = '';
-
-    if (error instanceof Error) {
-      message = error.message;
-    }
-
-    yield put(failureGetCallStatisticsByTeam(message));
-
-    Toast.error('요청에 실패했어요..😭');
+    return;
   }
+
+  const { error_msg } = response as ResponseFailureData;
+  yield put(failureGetCallStatisticsByTeam(error_msg));
+
+  Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
 function* getAutoMessageStatisticsProcess(
@@ -187,43 +151,31 @@ function* getAutoMessageStatisticsProcess(
   const { end_date, ids, include_leaver, page, page_count, start_date } =
     action.payload;
 
-  try {
-    const response: ResponseSuccessData | ResponseFailureData = yield call(
-      ZMSStatistics.getAutoMessageStatistics,
-      ids,
-      include_leaver,
-      start_date,
-      end_date,
-      page,
-      page_count,
-    );
+  const response: ResponseSuccessData | ResponseFailureData = yield call(
+    ZMSStatistics.getAutoMessageStatistics,
+    ids,
+    include_leaver,
+    start_date,
+    end_date,
+    page,
+    page_count,
+  );
 
-    if (response.status === API_FETCH.SUCCESS) {
-      const { data } = response as ResponseSuccessData;
+  if (response.status === API_FETCH.SUCCESS) {
+    const { data } = response as ResponseSuccessData;
 
-      data.page = page;
-      data.limit = page_count;
+    data.page = page;
+    data.limit = page_count;
 
-      yield put(successGetAutoMessageStatistics(data));
+    yield put(successGetAutoMessageStatistics(data));
 
-      return;
-    }
-
-    const { error_msg } = response as ResponseFailureData;
-    yield put(failureGetAutoMessageStatistics(error_msg));
-
-    Toast.error('요청에 실패했어요..😭');
-  } catch (error) {
-    let message = '';
-
-    if (error instanceof Error) {
-      message = error.message;
-    }
-
-    yield put(failureGetAutoMessageStatistics(message));
-
-    Toast.error('요청에 실패했어요..😭');
+    return;
   }
+
+  const { error_msg } = response as ResponseFailureData;
+  yield put(failureGetAutoMessageStatistics(error_msg));
+
+  Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
 function* getMessageStatisticsProcess(
@@ -232,40 +184,28 @@ function* getMessageStatisticsProcess(
   const { end_date, ids, include_leaver, page, page_count, start_date } =
     action.payload;
 
-  try {
-    const response: ResponseSuccessData | ResponseFailureData = yield call(
-      ZMSStatistics.getMessageStatistics,
-      ids,
-      include_leaver,
-      start_date,
-      end_date,
-      page,
-      page_count,
-    );
+  const response: ResponseSuccessData | ResponseFailureData = yield call(
+    ZMSStatistics.getMessageStatistics,
+    ids,
+    include_leaver,
+    start_date,
+    end_date,
+    page,
+    page_count,
+  );
 
-    if (response.status === API_FETCH.SUCCESS) {
-      const { data } = response as ResponseSuccessData;
+  if (response.status === API_FETCH.SUCCESS) {
+    const { data } = response as ResponseSuccessData;
 
-      yield put(successGetMessageStatistics(data));
+    yield put(successGetMessageStatistics(data));
 
-      return;
-    }
-
-    const { error_msg } = response as ResponseFailureData;
-    yield put(failureGetMessageStatistics(error_msg));
-
-    Toast.error('요청에 실패했어요..😭');
-  } catch (error) {
-    let message = '';
-
-    if (error instanceof Error) {
-      message = error.message;
-    }
-
-    yield put(failureGetMessageStatistics(message));
-
-    Toast.error('요청에 실패했어요..😭');
+    return;
   }
+
+  const { error_msg } = response as ResponseFailureData;
+  yield put(failureGetMessageStatistics(error_msg));
+
+  Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
 function* watchGetAutoMessageStatistics() {

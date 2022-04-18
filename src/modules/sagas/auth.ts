@@ -37,161 +37,123 @@ function* loginProcess(action: ReturnType<typeof requestLogin>) {
   const { id, password } = action.payload;
   const history: History = yield getContext('history');
 
-  try {
-    const response: ResponseSuccessData | ResponseFailureData = yield call(
-      ZMSAuth.login,
-      id,
-      password,
-    );
+  const response: ResponseSuccessData | ResponseFailureData = yield call(
+    ZMSAuth.login,
+    id,
+    password,
+  );
 
-    if (response.status === API_FETCH.SUCCESS) {
-      const { data } = response as ResponseSuccessData;
-      const { user, token } = data;
+  if (response.status === API_FETCH.SUCCESS) {
+    const { data } = response as ResponseSuccessData;
+    const { user, token } = data;
 
-      yield put(successLogin(user));
+    yield put(successLogin(user));
 
-      // 쿠키 설정
-      ZMSMain.setAccessToken(token);
+    // 쿠키 설정
+    ZMSMain.setAccessToken(token);
 
-      if (user.is_init_password) {
-        alert('초기 비밀번호이므로 변경해주시기 바랍니다.');
-        history.push(ROUTER_TYPE.CHANGE_PASSWORD);
+    if (user.is_init_password) {
+      alert('초기 비밀번호이므로 변경해주시기 바랍니다.');
+      history.push(ROUTER_TYPE.CHANGE_PASSWORD);
 
-        return;
-      } else if (user.is_expired_password) {
-        alert('비밀번호가 만료되어 변경해주시기 바랍니다.');
-        history.push(ROUTER_TYPE.CHANGE_PASSWORD);
-
-        return;
-      }
-
-      // 소켓 연결
-      Communicator.getInstance().connectSocket(user.id);
-
-      history.push(ROUTER_TYPE.MONIT);
+      return;
+    } else if (user.is_expired_password) {
+      alert('비밀번호가 만료되어 변경해주시기 바랍니다.');
+      history.push(ROUTER_TYPE.CHANGE_PASSWORD);
 
       return;
     }
 
-    const { error_msg } = response as ResponseFailureData;
-    yield put(failureLogin(error_msg));
+    // 소켓 연결
+    Communicator.getInstance().connectSocket(user.id);
 
-    Toast.error('요청에 실패했어요..😭');
-  } catch (error) {
-    let message = '';
+    history.push(ROUTER_TYPE.MONIT);
 
-    if (error instanceof Error) {
-      message = error.message;
-    }
-
-    yield put(failureLogin(message));
-
-    Toast.error('요청에 실패했어요..😭');
+    return;
   }
+
+  const { error_msg } = response as ResponseFailureData;
+  yield put(failureLogin(error_msg));
+
+  Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
 function* checkLoginProcess(action: ReturnType<typeof requestCheckLogin>) {
   const history: History = yield getContext('history');
 
-  try {
-    const response: ResponseSuccessData | ResponseFailureData = yield call(
-      ZMSAuth.autoLogin,
-    );
+  const response: ResponseSuccessData | ResponseFailureData = yield call(
+    ZMSAuth.autoLogin,
+  );
 
-    if (response.status === API_FETCH.SUCCESS) {
-      const { data } = response as ResponseSuccessData;
-      const { user, token } = data;
+  if (response.status === API_FETCH.SUCCESS) {
+    const { data } = response as ResponseSuccessData;
+    const { user, token } = data;
 
-      yield put(successCheckLogin(user));
+    yield put(successCheckLogin(user));
 
-      // 쿠키 설정
-      ZMSMain.setAccessToken(token);
+    // 쿠키 설정
+    ZMSMain.setAccessToken(token);
 
-      if (user.is_init_password) {
-        alert('초기 비밀번호이므로 변경해주시기 바랍니다.');
-        history.push(ROUTER_TYPE.CHANGE_PASSWORD);
+    if (user.is_init_password) {
+      alert('초기 비밀번호이므로 변경해주시기 바랍니다.');
+      history.push(ROUTER_TYPE.CHANGE_PASSWORD);
 
-        return;
-      } else if (user.is_expired_password) {
-        alert('비밀번호가 만료되어 변경해주시기 바랍니다.');
-        history.push(ROUTER_TYPE.CHANGE_PASSWORD);
-
-        return;
-      }
-
-      // 소켓 연결
-      Communicator.getInstance().connectSocket(user.id);
-
-      history!.push(ROUTER_TYPE.MONIT);
+      return;
+    } else if (user.is_expired_password) {
+      alert('비밀번호가 만료되어 변경해주시기 바랍니다.');
+      history.push(ROUTER_TYPE.CHANGE_PASSWORD);
 
       return;
     }
 
-    const { error_msg } = response as ResponseFailureData;
-    yield put(failureCheckLogin(error_msg));
+    // 소켓 연결
+    Communicator.getInstance().connectSocket(user.id);
 
-    if (error_msg !== 'No token provided') {
-      // 개선 요망
-      Toast.error('요청에 실패했어요..😭');
-    }
+    history!.push(ROUTER_TYPE.MONIT);
 
-    history.push(ROUTER_TYPE.LOGIN);
-  } catch (error) {
-    let message = '';
-
-    if (error instanceof Error) {
-      message = error.message;
-    }
-
-    yield put(failureCheckLogin(message));
-    history.push(ROUTER_TYPE.LOGIN);
-    ZMSMain.removeAccessToken();
-
-    Toast.error('요청에 실패했어요..😭');
+    return;
   }
+
+  const { error_msg } = response as ResponseFailureData;
+  yield put(failureCheckLogin(error_msg));
+
+  if (error_msg !== 'No token provided') {
+    // 개선 요망
+    Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
+  }
+
+  history.push(ROUTER_TYPE.LOGIN);
 }
 
 function* logoutProcess(action: ReturnType<typeof requestLogout>) {
   const history: History = yield getContext('history');
 
-  try {
-    const response: ResponseSuccessData | ResponseFailureData = yield call(
-      ZMSAuth.logout,
-    );
+  const response: ResponseSuccessData | ResponseFailureData = yield call(
+    ZMSAuth.logout,
+  );
 
-    if (response.status === API_FETCH.SUCCESS) {
-      const { data } = response as ResponseSuccessData;
+  if (response.status === API_FETCH.SUCCESS) {
+    const { data } = response as ResponseSuccessData;
 
-      if (data) {
-        yield put(successLogout());
+    if (data) {
+      yield put(successLogout());
 
-        // 쿠키 제거
-        ZMSMain.removeAccessToken();
+      // 쿠키 제거
+      ZMSMain.removeAccessToken();
 
-        history.push(ROUTER_TYPE.LOGIN);
+      history.push(ROUTER_TYPE.LOGIN);
 
-        // 데이터를 비우기 위해 강제 새로고침 (개선 요망)
-        window.location.reload();
-      }
-
-      return;
+      // 데이터를 비우기 위해 강제 새로고침 (개선 요망)
+      window.location.reload();
     }
 
-    const { error_msg } = response as ResponseFailureData;
-    yield put(failureCheckLogin(error_msg));
-
-    Toast.error('요청에 실패했어요..😭');
-  } catch (error) {
-    let message = '';
-
-    if (error instanceof Error) {
-      message = error.message;
-    }
-
-    yield put(failureLogout(message));
-
-    Toast.error('요청에 실패했어요..😭');
+    return;
   }
+
+  const { error_msg } = response as ResponseFailureData;
+  yield put(failureLogout(error_msg));
+
+  Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
 function* changePasswordProcess(
@@ -200,42 +162,30 @@ function* changePasswordProcess(
   const { current_password, new_password, new_confirm_password } =
     action.payload;
 
-  try {
-    const response: ResponseSuccessData | ResponseFailureData = yield call(
-      ZMSAuth.changePassword,
-      current_password,
-      new_password,
-      new_confirm_password,
-    );
+  const response: ResponseSuccessData | ResponseFailureData = yield call(
+    ZMSAuth.changePassword,
+    current_password,
+    new_password,
+    new_confirm_password,
+  );
 
-    if (response.status === API_FETCH.SUCCESS) {
-      const { data } = response as ResponseSuccessData;
+  if (response.status === API_FETCH.SUCCESS) {
+    const { data } = response as ResponseSuccessData;
 
-      if (data) {
-        yield put(successChangePassword());
+    if (data) {
+      yield put(successChangePassword());
 
-        alert('다시 로그인해주세요.');
-        yield put(requestLogout());
-      }
-
-      return;
+      alert('다시 로그인해주세요.');
+      yield put(requestLogout());
     }
 
-    const { error_msg } = response as ResponseFailureData;
-    yield put(failureChangePassword(error_msg));
-
-    Toast.error('요청에 실패했어요..😭');
-  } catch (error) {
-    let message = '';
-
-    if (error instanceof Error) {
-      message = error.message;
-    }
-
-    yield put(failureChangePassword(message));
-
-    Toast.error('요청에 실패했어요..😭');
+    return;
   }
+
+  const { error_msg } = response as ResponseFailureData;
+  yield put(failureChangePassword(error_msg));
+
+  Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
 function* watchLogin() {

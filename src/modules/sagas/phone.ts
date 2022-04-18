@@ -22,35 +22,23 @@ import Toast from 'utils/toast';
 function* getPhoneInfoProcess(action: ReturnType<typeof requestGetPhoneInfo>) {
   const { number } = action.payload;
 
-  try {
-    const response: ResponseSuccessData | ResponseFailureData = yield call(
-      ZMSPhone.getPhoneInfo,
-      number,
-    );
+  const response: ResponseSuccessData | ResponseFailureData = yield call(
+    ZMSPhone.getPhoneInfo,
+    number,
+  );
 
-    if (response.status === API_FETCH.SUCCESS) {
-      const { data } = response as ResponseSuccessData;
+  if (response.status === API_FETCH.SUCCESS) {
+    const { data } = response as ResponseSuccessData;
 
-      yield put(successGetPhoneInfo(data));
+    yield put(successGetPhoneInfo(data));
 
-      return;
-    }
-
-    const { error_msg } = response as ResponseFailureData;
-    yield put(failureGetPhoneInfo(error_msg));
-
-    Toast.error('요청에 실패했어요..😭');
-  } catch (error) {
-    let message = '';
-
-    if (error instanceof Error) {
-      message = error.message;
-    }
-
-    yield put(failureGetPhoneInfo(message));
-
-    Toast.error('요청에 실패했어요..😭');
+    return;
   }
+
+  const { error_msg } = response as ResponseFailureData;
+  yield put(failureGetPhoneInfo(error_msg));
+
+  Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
 function* getPlanByTelecomProcess(
@@ -58,66 +46,42 @@ function* getPlanByTelecomProcess(
 ) {
   const { telecom } = action.payload;
 
-  try {
-    const response: ResponseSuccessData | ResponseFailureData = yield call(
-      ZMSPhone.getPlanByTelcom,
-      telecom,
-    );
+  const response: ResponseSuccessData | ResponseFailureData = yield call(
+    ZMSPhone.getPlanByTelcom,
+    telecom,
+  );
 
-    if (response.status === API_FETCH.SUCCESS) {
-      const { data } = response as ResponseSuccessData;
+  if (response.status === API_FETCH.SUCCESS) {
+    const { data } = response as ResponseSuccessData;
 
-      yield put(successGetPlanByTelecom(data));
+    yield put(successGetPlanByTelecom(data));
 
-      return;
-    }
-
-    const { error_msg } = response as ResponseFailureData;
-    yield put(failureGetPlanByTelecom(error_msg));
-
-    Toast.error('요청에 실패했어요..😭');
-  } catch (error) {
-    let message = '';
-
-    if (error instanceof Error) {
-      message = error.message;
-    }
-
-    yield put(failureGetPlanByTelecom(message));
-
-    Toast.error('요청에 실패했어요..😭');
+    return;
   }
+
+  const { error_msg } = response as ResponseFailureData;
+  yield put(failureGetPlanByTelecom(error_msg));
+
+  Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
 function* getTelecomProcess(action: ReturnType<typeof requestGetTelecom>) {
-  try {
-    const response: ResponseSuccessData | ResponseFailureData = yield call(
-      ZMSPhone.getTelecom,
-    );
+  const response: ResponseSuccessData | ResponseFailureData = yield call(
+    ZMSPhone.getTelecom,
+  );
 
-    if (response.status === API_FETCH.SUCCESS) {
-      const { data } = response as ResponseSuccessData;
+  if (response.status === API_FETCH.SUCCESS) {
+    const { data } = response as ResponseSuccessData;
 
-      yield put(successGetTelecom(data));
+    yield put(successGetTelecom(data));
 
-      return;
-    }
-
-    const { error_msg } = response as ResponseFailureData;
-    yield put(failureGetTelecom(error_msg));
-
-    Toast.error('요청에 실패했어요..😭');
-  } catch (error) {
-    let message = '';
-
-    if (error instanceof Error) {
-      message = error.message;
-    }
-
-    yield put(failureGetTelecom(message));
-
-    Toast.error('요청에 실패했어요..😭');
+    return;
   }
+
+  const { error_msg } = response as ResponseFailureData;
+  yield put(failureGetTelecom(error_msg));
+
+  Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
 function* watchGetPhoneInfo() {

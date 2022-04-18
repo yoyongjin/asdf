@@ -55,428 +55,307 @@ import Toast from 'utils/toast';
 function* getOrganizationProcess(
   action: ReturnType<typeof requestGetOrganization>,
 ) {
-  try {
-    const response: ResponseSuccessData | ResponseFailureData = yield call(
-      ZMSOrganization.getOrganization,
-    );
+  const response: ResponseSuccessData | ResponseFailureData = yield call(
+    ZMSOrganization.getOrganization,
+  );
 
-    if (response.status === API_FETCH.SUCCESS) {
-      const { data } = response as ResponseSuccessData;
-      const { ...rest } = data;
+  if (response.status === API_FETCH.SUCCESS) {
+    const { data } = response as ResponseSuccessData;
+    const { ...rest } = data;
 
-      yield put(successGetOrganization(rest));
+    yield put(successGetOrganization(rest));
 
-      return;
-    }
-
-    const { error_msg } = response as ResponseFailureData;
-    yield put(failureGetOrganization(error_msg));
-
-    Toast.error('요청에 실패했어요..😭');
-  } catch (error) {
-    let message = '';
-
-    if (error instanceof Error) {
-      message = error.message;
-    }
-
-    yield put(failureGetOrganization(message));
-
-    Toast.error('요청에 실패했어요..😭');
+    return;
   }
+
+  const { error_msg } = response as ResponseFailureData;
+  yield put(failureGetOrganization(error_msg));
+
+  Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
 function* getBranchProcess(action: ReturnType<typeof requestGetBranch>) {
   const { isIndividual } = action.payload;
-  try {
-    const response: ResponseSuccessData | ResponseFailureData = yield call(
-      ZMSOrganization.getBranches,
-    );
 
-    if (response.status === API_FETCH.SUCCESS) {
-      const { data } = response as ResponseSuccessData;
+  const response: ResponseSuccessData | ResponseFailureData = yield call(
+    ZMSOrganization.getBranches,
+  );
 
-      if (isIndividual) {
-        // 개인의 지점 가져오기
-        yield put(successGetUserBranch(data.branchs));
+  if (response.status === API_FETCH.SUCCESS) {
+    const { data } = response as ResponseSuccessData;
 
-        return;
-      }
-
-      yield put(successGetBranch(data.branchs));
+    if (isIndividual) {
+      // 개인의 지점 가져오기
+      yield put(successGetUserBranch(data.branchs));
 
       return;
     }
 
-    const { error_msg } = response as ResponseFailureData;
-    yield put(failureGetBranch(error_msg));
+    yield put(successGetBranch(data.branchs));
 
-    Toast.error('요청에 실패했어요..😭');
-  } catch (error) {
-    let message = '';
-
-    if (error instanceof Error) {
-      message = error.message;
-    }
-
-    yield put(failureGetBranch(message));
-
-    Toast.error('요청에 실패했어요..😭');
+    return;
   }
+
+  const { error_msg } = response as ResponseFailureData;
+  yield put(failureGetBranch(error_msg));
+
+  Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
 function* getPluralBranchProcess(
   action: ReturnType<typeof requestGetPluralBranch>,
 ) {
-  try {
-    const response: ResponseSuccessData | ResponseFailureData = yield call(
-      ZMSOrganization.getPluralBranch,
-    );
+  const response: ResponseSuccessData | ResponseFailureData = yield call(
+    ZMSOrganization.getPluralBranch,
+  );
 
-    if (response.status === API_FETCH.SUCCESS) {
-      const { data } = response as ResponseSuccessData;
+  if (response.status === API_FETCH.SUCCESS) {
+    const { data } = response as ResponseSuccessData;
 
-      yield put(successGetPluralBranch(data));
+    yield put(successGetPluralBranch(data));
 
-      return;
-    }
-
-    const { error_msg } = response as ResponseFailureData;
-    yield put(failureGetPluralBranch(error_msg));
-
-    Toast.error('요청에 실패했어요..😭');
-  } catch (error) {
-    let message = '';
-
-    if (error instanceof Error) {
-      message = error.message;
-    }
-
-    yield put(failureGetPluralBranch(message));
-
-    Toast.error('요청에 실패했어요..😭');
+    return;
   }
+
+  const { error_msg } = response as ResponseFailureData;
+  yield put(failureGetPluralBranch(error_msg));
+
+  Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
 function* getPluralTeamProcess(
   action: ReturnType<typeof requestGetPluralTeam>,
 ) {
   const { ids } = action.payload;
-  try {
-    const response: ResponseSuccessData | ResponseFailureData = yield call(
-      ZMSOrganization.getPluralTeam,
-      ids,
-    );
 
-    if (response.status === API_FETCH.SUCCESS) {
-      const { data } = response as ResponseSuccessData;
+  const response: ResponseSuccessData | ResponseFailureData = yield call(
+    ZMSOrganization.getPluralTeam,
+    ids,
+  );
 
-      yield put(successGetPluralTeam(data));
+  if (response.status === API_FETCH.SUCCESS) {
+    const { data } = response as ResponseSuccessData;
 
-      return;
-    }
+    yield put(successGetPluralTeam(data));
 
-    const { error_msg } = response as ResponseFailureData;
-    yield put(failureGetPluralTeam(error_msg));
-
-    Toast.error('요청에 실패했어요..😭');
-  } catch (error) {
-    let message = '';
-
-    if (error instanceof Error) {
-      message = error.message;
-    }
-
-    yield put(failureGetPluralTeam(message));
-
-    Toast.error('요청에 실패했어요..😭');
+    return;
   }
+
+  const { error_msg } = response as ResponseFailureData;
+  yield put(failureGetPluralTeam(error_msg));
+
+  Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
 function* getTeamProcess(action: ReturnType<typeof requestGetTeam>) {
   const { branch_id, isIndividual } = action.payload;
-  try {
-    const response: ResponseSuccessData | ResponseFailureData = yield call(
-      ZMSOrganization.getTeams,
-      branch_id,
-    );
 
-    if (response.status === API_FETCH.SUCCESS) {
-      const { data } = response as ResponseSuccessData;
+  const response: ResponseSuccessData | ResponseFailureData = yield call(
+    ZMSOrganization.getTeams,
+    branch_id,
+  );
 
-      if (isIndividual) {
-        // 개인의 팀 가져오기
-        yield put(successGetUserTeam(data.teams));
+  if (response.status === API_FETCH.SUCCESS) {
+    const { data } = response as ResponseSuccessData;
 
-        return;
-      }
-
-      yield put(successGetTeam(data.teams));
+    if (isIndividual) {
+      // 개인의 팀 가져오기
+      yield put(successGetUserTeam(data.teams));
 
       return;
     }
 
-    const { error_msg } = response as ResponseFailureData;
-    // yield put(failureGetOrganization(error_msg));
+    yield put(successGetTeam(data.teams));
 
-    Toast.error('요청에 실패했어요..😭');
-  } catch (error) {
-    // yield put(failureGetOrganization(error.message));
-
-    Toast.error('요청에 실패했어요..😭');
+    return;
   }
+
+  const { error_msg } = response as ResponseFailureData;
+  // yield put(failureGetOrganization(error_msg));
+
+  Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
 function* addBranchProcess(action: ReturnType<typeof requestAddBranch>) {
   const { name } = action.payload;
 
-  try {
-    const response: ResponseSuccessData | ResponseFailureData = yield call(
-      ZMSOrganization.addBranch,
+  const response: ResponseSuccessData | ResponseFailureData = yield call(
+    ZMSOrganization.addBranch,
+    name,
+  );
+
+  if (response.status === API_FETCH.SUCCESS) {
+    const { data } = response as ResponseSuccessData;
+
+    const payload = {
+      id: data,
       name,
-    );
+    };
 
-    if (response.status === API_FETCH.SUCCESS) {
-      const { data } = response as ResponseSuccessData;
+    yield put(successAddBranch(payload));
 
-      const payload = {
-        id: data,
-        name,
-      };
+    Toast.success('추가 완료😊');
 
-      yield put(successAddBranch(payload));
-
-      Toast.success('추가 완료😊');
-
-      return;
-    }
-
-    const { error_msg } = response as ResponseFailureData;
-    yield put(failureAddBranch(error_msg));
-
-    Toast.error('요청에 실패했어요..😭');
-  } catch (error) {
-    let message = '';
-
-    if (error instanceof Error) {
-      message = error.message;
-    }
-
-    yield put(failureAddBranch(message));
-
-    Toast.error('요청에 실패했어요..😭');
+    return;
   }
+
+  const { error_msg } = response as ResponseFailureData;
+  yield put(failureAddBranch(error_msg));
+
+  Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
 function* addTeamProcess(action: ReturnType<typeof requestAddTeam>) {
   const { name, branch_id, team_id } = action.payload;
 
-  try {
-    const response: ResponseSuccessData | ResponseFailureData = yield call(
-      ZMSOrganization.addTeam,
+  const response: ResponseSuccessData | ResponseFailureData = yield call(
+    ZMSOrganization.addTeam,
+    branch_id,
+    name,
+  );
+
+  if (response.status === API_FETCH.SUCCESS) {
+    const { data } = response as ResponseSuccessData;
+
+    const payload = {
       branch_id,
+      before_id: team_id,
+      next_id: data,
       name,
-    );
+    };
 
-    if (response.status === API_FETCH.SUCCESS) {
-      const { data } = response as ResponseSuccessData;
+    yield put(successAddTeam(payload));
 
-      const payload = {
-        branch_id,
-        before_id: team_id,
-        next_id: data,
-        name,
-      };
+    Toast.success('추가 완료😊');
 
-      yield put(successAddTeam(payload));
-
-      Toast.success('추가 완료😊');
-
-      return;
-    }
-
-    const { error_msg } = response as ResponseFailureData;
-    yield put(failureAddTeam(error_msg));
-
-    Toast.error('요청에 실패했어요..😭');
-  } catch (error) {
-    let message = '';
-
-    if (error instanceof Error) {
-      message = error.message;
-    }
-
-    yield put(failureAddTeam(message));
-
-    Toast.error('요청에 실패했어요..😭');
+    return;
   }
+
+  const { error_msg } = response as ResponseFailureData;
+  yield put(failureAddTeam(error_msg));
+
+  Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
 function* modifyBranchProcess(action: ReturnType<typeof requestModifyBranch>) {
   const { id, name } = action.payload;
 
-  try {
-    const response: ResponseSuccessData | ResponseFailureData = yield call(
-      ZMSOrganization.modifyBranch,
-      id,
+  const response: ResponseSuccessData | ResponseFailureData = yield call(
+    ZMSOrganization.modifyBranch,
+    id,
+    name,
+  );
+
+  if (response.status === API_FETCH.SUCCESS) {
+    const { data } = response as ResponseSuccessData;
+
+    const payload = {
+      id: Number(data.id),
       name,
-    );
+    };
 
-    if (response.status === API_FETCH.SUCCESS) {
-      const { data } = response as ResponseSuccessData;
+    yield put(successModifyBranch(payload));
 
-      const payload = {
-        id: Number(data.id),
-        name,
-      };
+    Toast.success('수정 완료😊');
 
-      yield put(successModifyBranch(payload));
-
-      Toast.success('수정 완료😊');
-
-      return;
-    }
-
-    const { error_msg } = response as ResponseFailureData;
-    yield put(failureModifyBranch(error_msg));
-
-    Toast.error('요청에 실패했어요..😭');
-  } catch (error) {
-    let message = '';
-
-    if (error instanceof Error) {
-      message = error.message;
-    }
-
-    yield put(failureModifyBranch(message));
-
-    Toast.error('요청에 실패했어요..😭');
+    return;
   }
+
+  const { error_msg } = response as ResponseFailureData;
+  yield put(failureModifyBranch(error_msg));
+
+  Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
 function* modifyTeamProcess(action: ReturnType<typeof requestModifyTeam>) {
   const { id: team_id, name, branch_id } = action.payload;
-  try {
-    const response: ResponseSuccessData | ResponseFailureData = yield call(
-      ZMSOrganization.modifyTeam,
-      team_id,
-      branch_id,
+
+  const response: ResponseSuccessData | ResponseFailureData = yield call(
+    ZMSOrganization.modifyTeam,
+    team_id,
+    branch_id,
+    name,
+  );
+
+  if (response.status === API_FETCH.SUCCESS) {
+    const { data } = response as ResponseSuccessData;
+
+    const payload = {
+      id: Number(data.id),
       name,
-    );
+      branch_id,
+    };
 
-    if (response.status === API_FETCH.SUCCESS) {
-      const { data } = response as ResponseSuccessData;
+    yield put(successModifyTeam(payload));
 
-      const payload = {
-        id: Number(data.id),
-        name,
-        branch_id,
-      };
+    Toast.success('수정 완료😊');
 
-      yield put(successModifyTeam(payload));
-
-      Toast.success('수정 완료😊');
-
-      return;
-    }
-
-    const { error_msg } = response as ResponseFailureData;
-    yield put(failureModifyTeam(error_msg));
-
-    Toast.error('요청에 실패했어요..😭');
-  } catch (error) {
-    let message = '';
-
-    if (error instanceof Error) {
-      message = error.message;
-    }
-
-    yield put(failureModifyTeam(message));
-
-    Toast.error('요청에 실패했어요..😭');
+    return;
   }
+
+  const { error_msg } = response as ResponseFailureData;
+  yield put(failureModifyTeam(error_msg));
+
+  Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
 function* removeBranchProcess(action: ReturnType<typeof requestRemoveBranch>) {
   const { id } = action.payload;
 
-  try {
-    const response: ResponseSuccessData | ResponseFailureData = yield call(
-      ZMSOrganization.removeBranch,
-      id,
-    );
+  const response: ResponseSuccessData | ResponseFailureData = yield call(
+    ZMSOrganization.removeBranch,
+    id,
+  );
 
-    if (response.status === API_FETCH.SUCCESS) {
-      const { data } = response as ResponseSuccessData;
+  if (response.status === API_FETCH.SUCCESS) {
+    const { data } = response as ResponseSuccessData;
 
-      const payload = {
-        branch_id: Number(data.id),
-      };
+    const payload = {
+      branch_id: Number(data.id),
+    };
 
-      yield put(successRemoveBranch(payload));
+    yield put(successRemoveBranch(payload));
 
-      Toast.success('삭제 완료😊');
+    Toast.success('삭제 완료😊');
 
-      return;
-    }
-
-    const { error_msg } = response as ResponseFailureData;
-    yield put(failureRemoveBranch(error_msg));
-
-    Toast.error('요청에 실패했어요..😭');
-  } catch (error) {
-    let message = '';
-
-    if (error instanceof Error) {
-      message = error.message;
-    }
-
-    yield put(failureRemoveBranch(message));
-
-    Toast.error('요청에 실패했어요..😭');
+    return;
   }
+
+  const { error_msg } = response as ResponseFailureData;
+  yield put(failureRemoveBranch(error_msg));
+
+  Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
 function* removeTeamProcess(action: ReturnType<typeof requestRemoveTeam>) {
   const { branch_id, team_id } = action.payload;
-  try {
-    const response: ResponseSuccessData | ResponseFailureData = yield call(
-      ZMSOrganization.removeTeam,
+
+  const response: ResponseSuccessData | ResponseFailureData = yield call(
+    ZMSOrganization.removeTeam,
+    branch_id,
+    team_id,
+  );
+
+  if (response.status === API_FETCH.SUCCESS) {
+    const { data } = response as ResponseSuccessData;
+
+    const payload = {
       branch_id,
-      team_id,
-    );
+      team_id: Number(data.id),
+      count: data.count || 0,
+    };
 
-    if (response.status === API_FETCH.SUCCESS) {
-      const { data } = response as ResponseSuccessData;
+    yield put(successRemoveTeam(payload));
 
-      const payload = {
-        branch_id,
-        team_id: Number(data.id),
-        count: data.count || 0,
-      };
+    Toast.success('삭제 완료😊');
 
-      yield put(successRemoveTeam(payload));
-
-      Toast.success('삭제 완료😊');
-
-      return;
-    }
-
-    const { error_msg } = response as ResponseFailureData;
-    yield put(failureRemoveTeam(error_msg));
-
-    Toast.error('요청에 실패했어요..😭');
-  } catch (error) {
-    let message = '';
-
-    if (error instanceof Error) {
-      message = error.message;
-    }
-
-    yield put(failureRemoveTeam(message));
-
-    Toast.error('요청에 실패했어요..😭');
+    return;
   }
+
+  const { error_msg } = response as ResponseFailureData;
+  yield put(failureRemoveTeam(error_msg));
+
+  Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
 function* watchGetOrganization() {

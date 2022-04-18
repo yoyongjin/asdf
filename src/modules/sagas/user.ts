@@ -42,51 +42,39 @@ import Toast from 'utils/toast';
 function* getUsersProcess(action: ReturnType<typeof requestGetUsers>) {
   const { branch_id, team_id, limit, page, search, url } = action.payload;
 
-  try {
-    yield delay(500);
-    const response: ResponseSuccessData | ResponseFailureData = yield call(
-      ZMSUser.getUsers,
-      branch_id,
-      team_id,
-      limit,
-      page,
-      search!,
-    );
+  yield delay(500);
+  const response: ResponseSuccessData | ResponseFailureData = yield call(
+    ZMSUser.getUsers,
+    branch_id,
+    team_id,
+    limit,
+    page,
+    search!,
+  );
 
-    if (response.status === API_FETCH.SUCCESS) {
-      const { data } = response as ResponseSuccessData;
-      const { users, max_count } = data;
+  if (response.status === API_FETCH.SUCCESS) {
+    const { data } = response as ResponseSuccessData;
+    const { users, max_count } = data;
 
-      const payload = {
-        users,
-        count: max_count,
-        url,
-      };
+    const payload = {
+      users,
+      count: max_count,
+      url,
+    };
 
-      yield put(successGetUsers(payload));
+    yield put(successGetUsers(payload));
 
-      if (url === '/main') {
-        Communicator.getInstance().emitMessage('state', '');
-      }
-
-      return;
+    if (url === '/main') {
+      Communicator.getInstance().emitMessage('state', '');
     }
 
-    const { error_msg } = response as ResponseFailureData;
-    yield put(failureGetUsers(error_msg));
-
-    Toast.error('요청에 실패했어요..😭');
-  } catch (error) {
-    let message = '';
-
-    if (error instanceof Error) {
-      message = error.message;
-    }
-
-    yield put(failureGetUsers(message));
-
-    Toast.error('요청에 실패했어요..😭');
+    return;
   }
+
+  const { error_msg } = response as ResponseFailureData;
+  yield put(failureGetUsers(error_msg));
+
+  Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
 function* addUserProcess(action: ReturnType<typeof requestAddUser>) {
@@ -104,46 +92,34 @@ function* addUserProcess(action: ReturnType<typeof requestAddUser>) {
     ziboxspk,
   } = action.payload;
 
-  try {
-    const response: ResponseSuccessData | ResponseFailureData = yield call(
-      ZMSUser.addUser,
-      branch_id,
-      team_id,
-      admin_id,
-      name,
-      user_name,
-      number,
-      pc_ip,
-      ziboxip,
-      ziboxmac,
-      ziboxmic,
-      ziboxspk,
-    );
+  const response: ResponseSuccessData | ResponseFailureData = yield call(
+    ZMSUser.addUser,
+    branch_id,
+    team_id,
+    admin_id,
+    name,
+    user_name,
+    number,
+    pc_ip,
+    ziboxip,
+    ziboxmac,
+    ziboxmic,
+    ziboxspk,
+  );
 
-    if (response.status === API_FETCH.SUCCESS) {
-      const { data } = response as ResponseSuccessData;
+  if (response.status === API_FETCH.SUCCESS) {
+    const { data } = response as ResponseSuccessData;
 
-      yield put(successAddUser());
+    yield put(successAddUser());
 
-      Toast.success('추가 완료😊');
-      return;
-    }
-
-    const { error_msg } = response as ResponseFailureData;
-    yield put(failureAddUser(error_msg));
-
-    Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
-  } catch (error) {
-    let message = '';
-
-    if (error instanceof Error) {
-      message = error.message;
-    }
-
-    yield put(failureAddUser(message));
-
-    Toast.error('요청에 실패했어요..😭');
+    Toast.success('추가 완료😊');
+    return;
   }
+
+  const { error_msg } = response as ResponseFailureData;
+  yield put(failureAddUser(error_msg));
+
+  Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
 function* modifyUserProcess(action: ReturnType<typeof requestModifyUser>) {
@@ -170,103 +146,79 @@ function* modifyUserProcess(action: ReturnType<typeof requestModifyUser>) {
     serial_number,
   } = action.payload;
 
-  try {
-    const response: ResponseSuccessData | ResponseFailureData = yield call(
-      ZMSUser.modifyUser,
-      id,
-      branch_id,
-      team_id,
-      admin_id,
-      name,
-      user_name,
-      number,
-      origin_number,
-      pc_ip,
-      ziboxip,
-      ziboxmac,
-      ziboxmic,
-      ziboxspk,
-      available_time,
-      in_message,
-      out_message,
-      telecom,
-      plan,
-      used,
-      serial_number,
-    );
+  const response: ResponseSuccessData | ResponseFailureData = yield call(
+    ZMSUser.modifyUser,
+    id,
+    branch_id,
+    team_id,
+    admin_id,
+    name,
+    user_name,
+    number,
+    origin_number,
+    pc_ip,
+    ziboxip,
+    ziboxmac,
+    ziboxmic,
+    ziboxspk,
+    available_time,
+    in_message,
+    out_message,
+    telecom,
+    plan,
+    used,
+    serial_number,
+  );
 
-    if (response.status === API_FETCH.SUCCESS) {
-      const { data } = response as ResponseSuccessData;
+  if (response.status === API_FETCH.SUCCESS) {
+    const { data } = response as ResponseSuccessData;
 
-      yield put(successModifyUser());
+    yield put(successModifyUser());
 
-      Toast.success('수정 완료😊');
+    Toast.success('수정 완료😊');
 
-      return;
-    }
-
-    const { error_msg } = response as ResponseFailureData;
-    yield put(failureModifyUser(error_msg));
-
-    Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
-  } catch (error) {
-    let message = '';
-
-    if (error instanceof Error) {
-      message = error.message;
-    }
-
-    yield put(failureModifyUser(message));
-
-    Toast.error('요청에 실패했어요..😭');
+    return;
   }
+
+  const { error_msg } = response as ResponseFailureData;
+  yield put(failureModifyUser(error_msg));
+
+  Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
 function* removeUserProcess(action: ReturnType<typeof requestRemoveUser>) {
   const { id, branch_id, team_id, limit, page, search } = action.payload;
 
-  try {
-    const response: ResponseSuccessData | ResponseFailureData = yield call(
-      ZMSUser.removeUser,
-      id,
-    );
+  const response: ResponseSuccessData | ResponseFailureData = yield call(
+    ZMSUser.removeUser,
+    id,
+  );
 
-    if (response.status === API_FETCH.SUCCESS) {
-      const { data } = response as ResponseSuccessData;
+  if (response.status === API_FETCH.SUCCESS) {
+    const { data } = response as ResponseSuccessData;
 
-      yield put(successRemoveUser());
+    yield put(successRemoveUser());
 
-      const payload = {
-        branch_id,
-        team_id,
-        limit,
-        page,
-        search,
-        url: '/main/manage/user',
-      };
+    const payload = {
+      branch_id,
+      team_id,
+      limit,
+      page,
+      search,
+      url: '/main/manage/user',
+    };
 
-      yield put(requestGetUsers(payload));
+    yield put(requestGetUsers(payload));
 
-      Toast.success('삭제 완료😊');
+    Toast.success('삭제 완료😊');
 
-      return;
-    }
-
-    const { error_msg } = response as ResponseFailureData;
-    yield put(failureRemoveUser(error_msg));
-
-    Toast.error('요청에 실패했어요..😭');
-  } catch (error) {
-    let message = '';
-
-    if (error instanceof Error) {
-      message = error.message;
-    }
-
-    yield put(failureRemoveUser(message));
-
-    Toast.error('요청에 실패했어요..😭');
+    return;
   }
+
+  const { error_msg } = response as ResponseFailureData;
+  yield put(failureRemoveUser(error_msg));
+
+  Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
 function* resetPasswordProcess(
@@ -274,37 +226,25 @@ function* resetPasswordProcess(
 ) {
   const { id } = action.payload;
 
-  try {
-    const response: ResponseSuccessData | ResponseFailureData = yield call(
-      ZMSUser.resetPassword,
-      id,
-    );
+  const response: ResponseSuccessData | ResponseFailureData = yield call(
+    ZMSUser.resetPassword,
+    id,
+  );
 
-    if (response.status === API_FETCH.SUCCESS) {
-      const { data } = response as ResponseSuccessData;
+  if (response.status === API_FETCH.SUCCESS) {
+    const { data } = response as ResponseSuccessData;
 
-      yield put(successResetPassword());
+    yield put(successResetPassword());
 
-      Toast.success('초기화 완료😊');
+    Toast.success('초기화 완료😊');
 
-      return;
-    }
-
-    const { error_msg } = response as ResponseFailureData;
-    yield put(failureRemoveUser(error_msg));
-
-    Toast.error('요청에 실패했어요..😭');
-  } catch (error) {
-    let message = '';
-
-    if (error instanceof Error) {
-      message = error.message;
-    }
-
-    yield put(failureResetPassword(message));
-
-    Toast.error('요청에 실패했어요..😭');
+    return;
   }
+
+  const { error_msg } = response as ResponseFailureData;
+  yield put(failureRemoveUser(error_msg));
+
+  Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
 function* modifyZiboxVolumeProcess(
@@ -312,39 +252,27 @@ function* modifyZiboxVolumeProcess(
 ) {
   const { number, ziboxmic, ziboxspk } = action.payload;
 
-  try {
-    const response: ResponseSuccessData | ResponseFailureData = yield call(
-      ZMSUser.modifyZiBoxVolume,
-      number,
-      ziboxmic,
-      ziboxspk,
-    );
+  const response: ResponseSuccessData | ResponseFailureData = yield call(
+    ZMSUser.modifyZiBoxVolume,
+    number,
+    ziboxmic,
+    ziboxspk,
+  );
 
-    if (response.status === API_FETCH.SUCCESS) {
-      const { data } = response as ResponseSuccessData;
+  if (response.status === API_FETCH.SUCCESS) {
+    const { data } = response as ResponseSuccessData;
 
-      yield put(successZiboxVolume());
+    yield put(successZiboxVolume());
 
-      Toast.success('수정 완료😊');
+    Toast.success('수정 완료😊');
 
-      return;
-    }
-
-    const { error_msg } = response as ResponseFailureData;
-    yield put(failureZiboxVolume(error_msg));
-
-    Toast.error('요청에 실패했어요..😭');
-  } catch (error) {
-    let message = '';
-
-    if (error instanceof Error) {
-      message = error.message;
-    }
-
-    yield put(failureZiboxVolume(message));
-
-    Toast.error('요청에 실패했어요..😭');
+    return;
   }
+
+  const { error_msg } = response as ResponseFailureData;
+  yield put(failureZiboxVolume(error_msg));
+
+  Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
 function* disconnectForceProcess(action: ReturnType<typeof disconnectForce>) {
@@ -394,35 +322,24 @@ function* getPluralConsultantProcess(
   action: ReturnType<typeof requestGetPluralConsultant>,
 ) {
   const { ids } = action.payload;
-  try {
-    const response: ResponseSuccessData | ResponseFailureData = yield call(
-      ZMSUser.getPluralConsultant,
-      ids,
-    );
 
-    if (response.status === API_FETCH.SUCCESS) {
-      const { data } = response as ResponseSuccessData;
+  const response: ResponseSuccessData | ResponseFailureData = yield call(
+    ZMSUser.getPluralConsultant,
+    ids,
+  );
 
-      yield put(successGetPluralConsultant(data));
+  if (response.status === API_FETCH.SUCCESS) {
+    const { data } = response as ResponseSuccessData;
 
-      return;
-    }
+    yield put(successGetPluralConsultant(data));
 
-    const { error_msg } = response as ResponseFailureData;
-    yield put(failureGetPluralConsultant(error_msg));
-
-    Toast.error('요청에 실패했어요..😭');
-  } catch (error) {
-    let message = '';
-
-    if (error instanceof Error) {
-      message = error.message;
-    }
-
-    yield put(failureGetPluralConsultant(message));
-
-    Toast.error('요청에 실패했어요..😭');
+    return;
   }
+
+  const { error_msg } = response as ResponseFailureData;
+  yield put(failureGetPluralConsultant(error_msg));
+
+  Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
 function* watchGetUsers() {
