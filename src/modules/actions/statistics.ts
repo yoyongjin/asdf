@@ -1,7 +1,9 @@
 import { createAction } from 'typesafe-actions';
 
 import {
+  IRequestGetAutoMessageStatistics,
   IRequestGetCallStatisticsByConsultant,
+  IResponseGetAutoMessageStatistics,
   IResponseGetCallStatisticsByConsultant,
   RequestGetStatistics,
   StatisticsData,
@@ -42,4 +44,23 @@ export const successGetCallStatisticsByConsultant = createAction(
 )<IResponseGetCallStatisticsByConsultant>();
 export const failureGetCallStatisticsByConsultant = createAction(
   FAILURE_GET_CALL_STATISTICS_BY_CONSULTANT,
+)<string>();
+
+// v2 자동 문자 통계 가져오기
+export const REQUEST_GET_AUTO_MESSAGE_STATISTICS =
+  'REQUEST_GET_AUTO_MESSAGE_STATISTICS';
+export const SUCCESS_GET_AUTO_MESSAGE_STATISTICS =
+  'SUCCESS_GET_AUTO_MESSAGE_STATISTICS';
+export const FAILURE_GET_AUTO_MESSAGE_STATISTICS =
+  'FAILURE_GET_AUTO_MESSAGE_STATISTICS';
+
+// v2 자동 문자 통계 가져오기 Action
+export const requestGetAutoMessageStatistics = createAction(
+  REQUEST_GET_AUTO_MESSAGE_STATISTICS,
+)<IRequestGetAutoMessageStatistics>();
+export const successGetAutoMessageStatistics = createAction(
+  SUCCESS_GET_AUTO_MESSAGE_STATISTICS,
+)<IResponseGetAutoMessageStatistics>();
+export const failureGetAutoMessageStatistics = createAction(
+  FAILURE_GET_AUTO_MESSAGE_STATISTICS,
 )<string>();

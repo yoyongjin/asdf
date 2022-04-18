@@ -2,12 +2,16 @@ import { all, call, fork, put, takeLatest } from 'redux-saga/effects';
 
 import { ResponseSuccessData, ResponseFailureData } from 'types/common';
 import {
+  failureGetAutoMessageStatistics,
   failureGetCallStatisticsByConsultant,
   failureGetStatistics,
+  requestGetAutoMessageStatistics,
   requestGetCallStatisticsByConsultant,
   requestGetStatistics,
+  REQUEST_GET_AUTO_MESSAGE_STATISTICS,
   REQUEST_GET_CALL_STATISTICS_BY_CONSULTANT,
   REQUEST_GET_STATISTICS,
+  successGetAutoMessageStatistics,
   successGetCallStatisticsByConsultant,
   successGetStatistics,
 } from 'modules/actions/statistics';
@@ -112,6 +116,58 @@ function* getCallStatisticsByConsultantProcess(
   }
 }
 
+function* getAutoMessageStatisticsProcess(
+  action: ReturnType<typeof requestGetAutoMessageStatistics>,
+) {
+  const { end_date, ids, include_leaver, page, page_count, start_date } =
+    action.payload;
+
+  try {
+    const response: ResponseSuccessData | ResponseFailureData = yield call(
+      ZMSStatistics.getAutoMessageStatistics,
+      ids,
+      include_leaver,
+      start_date,
+      end_date,
+      page,
+      page_count,
+    );
+
+    if (response.status === API_FETCH.SUCCESS) {
+      const { data } = response as ResponseSuccessData;
+
+      data.page = page;
+      data.limit = page_count;
+
+      yield put(successGetAutoMessageStatistics(data));
+
+      return;
+    }
+
+    const { error_msg } = response as ResponseFailureData;
+    yield put(failureGetAutoMessageStatistics(error_msg));
+
+    Toast.error('요청에 실패했어요..😭');
+  } catch (error) {
+    let message = '';
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    yield put(failureGetAutoMessageStatistics(message));
+
+    Toast.error('요청에 실패했어요..😭');
+  }
+}
+
+function* watchGetAutoMessageStatistics() {
+  yield takeLatest(
+    REQUEST_GET_AUTO_MESSAGE_STATISTICS,
+    getAutoMessageStatisticsProcess,
+  );
+}
+
 function* watchGetCallStatisticsByConsultant() {
   yield takeLatest(
     REQUEST_GET_CALL_STATISTICS_BY_CONSULTANT,
@@ -127,6 +183,7 @@ function* authSaga() {
   yield all([
     fork(watchGetStatistics),
     fork(watchGetCallStatisticsByConsultant),
+    fork(watchGetAutoMessageStatistics),
   ]);
 }
 

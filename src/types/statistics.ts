@@ -11,11 +11,14 @@ export interface IStatisticsState {
   // v2 통계
   callStatisticsByConsultant: Array<ICustomCallStatisticeByConsultantItem>; // 상담원별 통화 통계
   callStatisticsByConsultantAllCount: number; // 상담원별 통화 통계 총 수
+  autoMessageStatistics: Array<IAutoMessageStatisticsItem>; // 자동 문자 통계
+  autoMessageStatisticsAllCount: number; // 자동 문자 통계
 }
 
 export interface IRequestType {
   getStatistics: common.FetchType;
   getCallStatisticsByConsultant: common.FetchType;
+  getAutoMessageStatistics: common.FetchType;
 }
 
 export interface StatisticsData {
@@ -93,6 +96,22 @@ export interface ICallStatisticsItem {
   total_time: number; // 총 콜 시간
 }
 
+// 자동 문자 통계 item
+export interface IAutoMessageStatisticsItem {
+  branch_name: string; // 지점명
+  cnt: number; // 발송 건수
+  date: string; // 일자
+  days: string; // 자동 문자 발송 요일
+  end_date: string | null; // 자동 문자 종료 날짜
+  end_time: string | null; // 자동 문자 종료 시각
+  start_date: string | null; // 자동 문자 시작 날짜
+  start_time: string | null; // 자동 문자 시작 시간
+  team_name: string; // 팀명
+  title: string; // 자동 문자 제목
+  tmr_cd: string | null; // 상담원 ID
+  tmr_name: string; // 상담원명
+}
+
 export interface RequestGetStatistics {
   start_date: string;
   end_date: string;
@@ -122,4 +141,19 @@ export interface IResponseGetCallStatisticsByConsultant extends IPageItem {
 interface IResponseGetCallStatisticsByConsultantCommonItem {
   cnt: number;
   total: ICallStatisticTotalItem;
+}
+
+// 자동 문자 통계 요청 파라미터
+export interface IRequestGetAutoMessageStatistics {
+  end_date: string; // 끝 날짜 ex) 2022-04-11
+  ids: string; // 상담원 id 복수개 ex) 1,2,3
+  include_leaver: string; // 해촉 여부 ex) 1
+  start_date: string; // 시작 날짜 ex) 2022-04-11
+  page: number; // 페이지
+  page_count: number; // 페이지당 노출 개수
+}
+
+export interface IResponseGetAutoMessageStatistics extends IPageItem {
+  cnt: number;
+  list: Array<IAutoMessageStatisticsItem>;
 }

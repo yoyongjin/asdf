@@ -853,6 +853,7 @@ const StyledFooter = styled.div`
 `;
 
 let prevPage = 1;
+let autoMessagePrevPage = 1;
 
 function StatisticsV2View() {
   const { form, onChangeCheckBox, onChangeSelect } = useInputForm({
@@ -900,13 +901,21 @@ function StatisticsV2View() {
   const {
     callStatisticsByConsultantData,
     handleGetCallStatisticsByConsultant,
+    autoMessageStatisticsData,
+    handleGetAutoMessageStatistics,
+    handleInitializeCallStatisticsByConsultant,
   } = useStatistics();
   const {
     maxCallStatisticsByConsultant,
     page,
-    onChangeCurrentPage,
     onClickNextPage,
     onClickPrevPage,
+  } = usePage();
+  const {
+    maxAutoMessageStatistics,
+    page: autoMessageStatisticsPage,
+    onClickNextPage: onClickNextPageAutoMessage,
+    onClickPrevPage: onClickPrevPageAutoMessage,
   } = usePage();
 
   const pluralBranchOption = useMemo(() => {
@@ -1103,6 +1112,31 @@ function StatisticsV2View() {
     [getTitleParams, handleGetCallStatisticsByConsultant, page],
   );
 
+  const getAutoMessageStatistice = useCallback(
+    (isAlert = true) => {
+      const { ids, breakUp, startDate, endDate, limit } = getTitleParams;
+
+      const { status, message } = isValidateStatistics(ids, startDate, endDate);
+
+      if (!status) {
+        if (isAlert) {
+          alert(message);
+        }
+        return;
+      }
+
+      handleGetAutoMessageStatistics(
+        ids,
+        breakUp,
+        startDate,
+        endDate,
+        page,
+        limit,
+      );
+    },
+    [getTitleParams, handleGetAutoMessageStatistics, page],
+  );
+
   /**
    * @description 타이틀에 들어갈 버튼 정보들
    */
@@ -1126,11 +1160,18 @@ function StatisticsV2View() {
       },
     };
 
+    let onClick: any;
+    if (selectedTabIndex === 0) {
+      onClick = getCallStatisticeByConsultant;
+    } else if (selectedTabIndex === 3) {
+      onClick = getAutoMessageStatistice;
+    }
+
     const buttonConfig2 = {
       type: 'button',
       data: {
         text: '조회',
-        onClick: getCallStatisticeByConsultant,
+        onClick,
       },
       styles: {
         backgroundColor: Colors.blue4,
@@ -1144,7 +1185,11 @@ function StatisticsV2View() {
     };
 
     return [buttonConfig1, buttonConfig2];
-  }, [getCallStatisticeByConsultant]);
+  }, [
+    getAutoMessageStatistice,
+    getCallStatisticeByConsultant,
+    selectedTabIndex,
+  ]);
 
   /**
    * @description 타이틀에 들어갈 date picker 정보들
@@ -1594,6 +1639,126 @@ function StatisticsV2View() {
   }, []);
 
   /**
+   * @description 자동 문자 통계 테이블 상세 내용 정보들
+   */
+  const tablePropertyAutoMessageStatistics = useMemo(() => {
+    return autoMessageStatisticsData.map((values) => {
+      const row: Array<string> = [];
+
+      const {
+        branch_name,
+        cnt,
+        date,
+        days,
+        end_date,
+        end_time,
+        start_date,
+        start_time,
+        team_name,
+        title,
+        tmr_cd,
+        tmr_name,
+      } = values;
+
+      row.push(date.substring(0, 10));
+      row.push(branch_name);
+      row.push(team_name);
+      row.push(tmr_cd ?? '');
+      row.push(tmr_name);
+      row.push(title);
+
+      let startYear = '';
+      let startMonth = '';
+      let startDay = '';
+      let startDate = '';
+      let endYear = '';
+      let endMonth = '';
+      let endDay = '';
+      let endDate = '';
+
+      if (start_date) {
+        const { year, month, day } = Utils.parsingYYYYMMDD(start_date);
+        startYear = year;
+        startMonth = month;
+        startDay = day;
+        startDate = `${startYear}년 ${startMonth}월 ${startDay}일`;
+      }
+
+      if (end_date) {
+        const { year, month, day } = Utils.parsingYYYYMMDD(end_date);
+        endYear = year;
+        endMonth = month;
+        endDay = day;
+        endDate = `${endYear}년 ${endMonth}월 ${endDay}일`;
+      }
+
+      const fullDate = startDate && endDate && `${startDate} ~ ${endDate}`;
+
+      let startTime = '';
+      let endTime = '';
+
+      if (start_time) {
+        const { hours, minutes, seconds } = Utils.parsingHHMMSS(start_time);
+
+        startTime = `${hours}:${minutes}`;
+      }
+
+      if (end_time) {
+        const { hours, minutes, seconds } = Utils.parsingHHMMSS(end_time);
+
+        endTime = `${hours}:${minutes}`;
+      }
+
+      const fullTime = startTime && endTime && `${startTime} ~ ${endTime}`;
+
+      let fullDays = '';
+      if (days) {
+        fullDays = Utils.parsingDays(days).join(', ');
+      }
+
+      const conditionOfSendMessage = `[${fullDate}${
+        fullDate && fullTime ? ' ' : ''
+      }${fullTime}${fullTime && fullDays ? ' ' : ''}${fullDays}]`;
+
+      row.push(conditionOfSendMessage);
+      row.push(`${cnt}`);
+
+      const autoMessageStatisticsItems: Array<ITableProperty> = row.map(
+        (value, index) => {
+          return {
+            data: {
+              text: value,
+            },
+            styles: {
+              fontSize: 12,
+            },
+            type: 'text',
+            propertyStyles: {
+              paddingLeft: 10, // 처음 요소만 padding left 적용
+            },
+          };
+        },
+      );
+
+      return autoMessageStatisticsItems;
+    });
+  }, [autoMessageStatisticsData]);
+
+  /**
+   * @description 상담원별 통화 통계 테이블 내용 정보들
+   */
+  const tableContentAutoMessageStatistics = useMemo(() => {
+    return {
+      data: tablePropertyAutoMessageStatistics,
+      originData: autoMessageStatisticsData,
+      styles: {
+        rowHeight: 35,
+      },
+      type: 'auto-message-statistics',
+    };
+  }, [autoMessageStatisticsData, tablePropertyAutoMessageStatistics]);
+
+  /**
    * @description 상담원별 통화 통계 테이블 상세 내용 정보들
    */
   const tablePropertyCallStatisticsByConsultant = useMemo(() => {
@@ -1762,6 +1927,17 @@ function StatisticsV2View() {
     prevPage = page;
   }, [getCallStatisticeByConsultant, page]);
 
+  /**
+   * @description 페이지가 변경됐을 때 자동 문자 통계 데이터를 가져오기
+   */
+  useEffect(() => {
+    if (autoMessagePrevPage !== autoMessageStatisticsPage) {
+      getAutoMessageStatistice(false);
+    }
+
+    autoMessagePrevPage = autoMessageStatisticsPage;
+  }, [autoMessageStatisticsPage, getAutoMessageStatistice]);
+
   return (
     <>
       <StyledWrapper>
@@ -1813,7 +1989,7 @@ function StatisticsV2View() {
               // 알림 문자 통계
               <Table
                 borderItem={borderItem}
-                contents={tableContents}
+                contents={tableContentAutoMessageStatistics}
                 headColor={Colors.white}
                 headHeight={33}
                 titles={notificationStatisticsTableTitles}
@@ -1852,11 +2028,11 @@ function StatisticsV2View() {
           ) : (
             // 알림 문자 통계
             <TablePagination
-              count={maxCallStatisticsByConsultant}
+              count={maxAutoMessageStatistics}
               divide={form.limit}
-              curPage={page}
-              onClickNextPage={onClickNextPage}
-              onClickPrevPage={onClickPrevPage}
+              curPage={autoMessageStatisticsPage}
+              onClickNextPage={onClickNextPageAutoMessage}
+              onClickPrevPage={onClickPrevPageAutoMessage}
             />
           )}
         </StyledFooter>

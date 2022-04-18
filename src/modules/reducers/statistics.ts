@@ -19,10 +19,16 @@ const initialState: IStatisticsState = {
       fetch: false,
       error: '',
     },
+    getAutoMessageStatistics: {
+      fetch: false,
+      error: '',
+    },
   },
   statistics: [],
   callStatisticsByConsultant: [],
   callStatisticsByConsultantAllCount: 0,
+  autoMessageStatistics: [],
+  autoMessageStatisticsAllCount: 0,
 };
 
 // 리듀서
@@ -177,6 +183,28 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
       return produce(state, (draft) => {
         draft.request.getStatistics.fetch = false;
         draft.request.getStatistics.error = action.payload;
+      });
+    },
+    [actions.REQUEST_GET_AUTO_MESSAGE_STATISTICS]: (state, action) => {
+      // 자동 문자 통계 가져오기
+      return produce(state, (draft) => {
+        draft.request.getAutoMessageStatistics.fetch = true;
+      });
+    },
+    [actions.SUCCESS_GET_AUTO_MESSAGE_STATISTICS]: (state, action) => {
+      // 자동 문자 통계 가져오기 성공
+      return produce(state, (draft) => {
+        draft.autoMessageStatistics = action.payload.list;
+        draft.autoMessageStatisticsAllCount = action.payload.cnt;
+        draft.request.getAutoMessageStatistics.fetch = false;
+        draft.request.getAutoMessageStatistics.error = '';
+      });
+    },
+    [actions.FAILURE_GET_AUTO_MESSAGE_STATISTICS]: (state, action) => {
+      // 자동 문자 통계 가져오기 실패
+      return produce(state, (draft) => {
+        draft.request.getAutoMessageStatistics.fetch = false;
+        draft.request.getAutoMessageStatistics.error = action.payload;
       });
     },
   },

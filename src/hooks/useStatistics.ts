@@ -2,8 +2,10 @@ import { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import {
+  requestGetAutoMessageStatistics,
   requestGetCallStatisticsByConsultant,
   requestGetStatistics,
+  setInitializeCallStatisticsByConsultant,
 } from 'modules/actions/statistics';
 import { RootState } from 'modules/reducers';
 import { RequestGetStatistics } from 'types/statistics';
@@ -14,6 +16,9 @@ function useStatistics() {
   );
   const callStatisticsByConsultantData = useSelector(
     (state: RootState) => state.statistics.callStatisticsByConsultant,
+  );
+  const autoMessageStatisticsData = useSelector(
+    (state: RootState) => state.statistics.autoMessageStatistics,
   );
 
   const dispatch = useDispatch();
@@ -69,11 +74,41 @@ function useStatistics() {
     [dispatch],
   );
 
+  const handleInitializeCallStatisticsByConsultant = useCallback(() => {
+    dispatch(setInitializeCallStatisticsByConsultant());
+  }, [dispatch]);
+
+  const handleGetAutoMessageStatistics = useCallback(
+    (
+      ids: string,
+      breakUp: string,
+      startDate: string,
+      endDate: string,
+      page: number,
+      limit: number,
+    ) => {
+      const payload = {
+        ids,
+        include_leaver: breakUp,
+        start_date: startDate,
+        end_date: endDate,
+        page,
+        page_count: limit,
+      };
+
+      dispatch(requestGetAutoMessageStatistics(payload));
+    },
+    [dispatch],
+  );
+
   return {
     statistics,
     handleGetStatistics,
     handleGetCallStatisticsByConsultant,
     callStatisticsByConsultantData,
+    autoMessageStatisticsData,
+    handleGetAutoMessageStatistics,
+    handleInitializeCallStatisticsByConsultant,
   };
 }
 
