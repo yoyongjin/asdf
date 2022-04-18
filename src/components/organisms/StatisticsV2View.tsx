@@ -908,6 +908,7 @@ function StatisticsV2View() {
     messageStatisticsData,
     handleGetAutoMessageStatistics,
     handleInitializeCallStatisticsByConsultant,
+    handleInitializeMessageStatistics,
     handleInitializeAutoMessageStatistics,
     handleGetMessageStatistics,
   } = useStatistics();
@@ -2070,6 +2071,12 @@ function StatisticsV2View() {
           break;
         }
         case 2: {
+          // 문자 통계
+          if (!_.isEmpty(messageStatisticsData)) {
+            // 비어있지 않으면 초기화 시키기
+            handleInitializeMessageStatistics();
+          }
+
           break;
         }
         case 3: {
@@ -2088,6 +2095,8 @@ function StatisticsV2View() {
       callStatisticsByConsultantData,
       handleInitializeAutoMessageStatistics,
       handleInitializeCallStatisticsByConsultant,
+      handleInitializeMessageStatistics,
+      messageStatisticsData,
     ],
   );
 

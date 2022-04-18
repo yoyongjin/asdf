@@ -250,6 +250,13 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
         draft.autoMessageStatisticsAllCount = 0;
       });
     },
+    [actions.SET_INITIALIZE_MESSAGE_STATISTICS]: (state, action) => {
+      // 문자 통화 통계 초기화하기
+      return produce(state, (draft) => {
+        draft.messageStatistics = [];
+        draft.messageStatisticsAllCount = 0;
+      });
+    },
   },
 );
 
