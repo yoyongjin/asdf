@@ -168,13 +168,13 @@ function* modifyAutoMessageProcess(
 function* modifySmsCountProcess(
   action: ReturnType<typeof requestModifySmsCount>,
 ) {
-  const { branch_id, max_count_date, max_count_mouth } = action.payload;
+  const { branch_id, max_count_date, max_count_month } = action.payload;
 
   const response: ResponseSuccessData | ResponseFailureData = yield call(
     ZMSMessage.modifySmsCount,
     branch_id,
     max_count_date,
-    max_count_mouth,
+    max_count_month,
   );
 
   if (response.status === API_FETCH.SUCCESS) {

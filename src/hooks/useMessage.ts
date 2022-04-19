@@ -115,7 +115,7 @@ function useMessage() {
       const payload = {
         branch_id: id,
         max_count_date: maxCountDate,
-        max_count_mouth: maxCountMonth,
+        max_count_month: maxCountMonth,
       };
 
       dispatch(requestModifySmsCount(payload));

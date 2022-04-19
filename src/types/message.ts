@@ -42,19 +42,19 @@ export interface IMaxMessageItem {
   branch_id: number;
   branch_name: string;
   max_count_date: number;
-  max_count_mouth: number;
+  max_count_month: number;
 }
 
 export interface IRequestModifySmsCount {
   branch_id: number;
   max_count_date: number;
-  max_count_mouth: number;
+  max_count_month: number;
 }
 
 export interface IResponseModifySmsCount {
   branch_id: number;
   max_count_date: number;
-  max_count_mouth: number;
+  max_count_month: number;
 }
 
 export interface IRequestGetAutoMessage {

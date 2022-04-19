@@ -88,9 +88,13 @@ const userReducer = createReducer<IMessageState, TMessageAction>(initialState, {
 
       if (index > -1) {
         const maxCountData = _.cloneDeep(state.max_count_data);
+        console.log(maxCountData[index]);
         maxCountData[index].max_count_date = action.payload.max_count_date;
-        maxCountData[index].max_count_mouth = action.payload.max_count_mouth;
+        maxCountData[index].max_count_month = action.payload.max_count_month;
+
         draft.max_count_data = maxCountData;
+        console.log(state.max_count_data);
+        console.log(maxCountData);
       }
     });
   },

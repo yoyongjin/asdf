@@ -122,7 +122,9 @@ function TableProperty({
       originId = _originItem.branch_id;
     }
     const name = `${contentType}-input-${key}${originId && `-${originId}`}`;
+    console.log(name);
     const value = form[name] || form[name] === '' ? form[name] : data.value;
+    console.log(data.value, value);
 
     return (
       <Input
