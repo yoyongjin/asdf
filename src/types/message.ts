@@ -24,7 +24,7 @@ export interface IRequestType {
 
 export interface IAutoMessageItem {
   id: number;
-  branch_id: number; // 지점 ID
+  branch_id: number; // 센터 ID
   title: string; // 제목
   content: string; // 내용
   start_date: string | null; // 시작 날짜
@@ -58,7 +58,7 @@ export interface IResponseModifySmsCount {
 }
 
 export interface IRequestGetAutoMessage {
-  id: number; // 지점 ID
+  id: number; // 센터 ID
   page: number; // 페이지
   count: number; // 갯수
 }
@@ -73,7 +73,7 @@ export interface IRequestRemoveAutoMessage {
 }
 
 export interface IRequestAddAutoMessage {
-  branch_id: number; // 지점 ID
+  branch_id: number; // 센터 ID
   title: string; // 제목
   content: string; // 내용
   start_date: string; // 시작 날짜 ex) YYYY/MM/DD

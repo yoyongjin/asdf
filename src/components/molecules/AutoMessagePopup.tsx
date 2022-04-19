@@ -33,7 +33,7 @@ const renderSettingTitleData = [
     textSize: 14,
     paddingTop: 15,
   },
-  { id: 3, name: 'branch', text: '지점' },
+  { id: 3, name: 'branch', text: '센터' },
   { id: 4, name: 'date', text: '기간 설정' },
   { id: 5, name: 'daily_date', text: '', paddingTop: 10 },
   { id: 6, name: 'time', text: '시간 설정' },
@@ -317,13 +317,13 @@ function AutoMessagePopup({
       if (_.isEmpty(selectedAutoMessageData)) {
         // 등록인 경우
         if (branchId === constants.DEFAULT_ID) {
-          alert('지점을 선택해주세요.');
+          alert('센터을 선택해주세요.');
           return false;
         }
       } else {
         // 수정인 경우
         if (adminId < USER_TYPE.ADMIN && branchId === constants.DEFAULT_ID) {
-          alert('지점을 선택해주세요.');
+          alert('센터을 선택해주세요.');
           return false;
         }
 
@@ -331,7 +331,7 @@ function AutoMessagePopup({
           selectedAutoMessageData?.branch_id !== constants.DEFAULT_ID &&
           branchId === constants.DEFAULT_ID
         ) {
-          // 기존 지점이 정해져있었는데 공통 선택으로 바뀐 경우
+          // 기존 센터이 정해져있었는데 공통 선택으로 바뀐 경우
           alert('공통으로 변경할 수 없습니다.');
           return false;
         }
@@ -355,7 +355,7 @@ function AutoMessagePopup({
 
   const onClickEvent = useCallback(() => {
     const adminId = loginInfo.admin_id;
-    const branchId = form.branch; // 선택한 지점
+    const branchId = form.branch; // 선택한 센터
     const title = form.subject; // 제목
     const content = form.content; // 내용
     const days = daysToString;
@@ -611,7 +611,7 @@ function AutoMessagePopup({
           );
         }
         case 3: {
-          // 지점명
+          // 센터명
           return (
             <Select
               borderColor={Colors.gray14}

@@ -23,20 +23,20 @@ import { setInitPluralConsultant } from 'modules/actions/user';
 function useOrganization() {
   const organizations = useSelector(
     (state: RootState) => state.organization.organizations,
-  ); // 지점 정보
+  ); // 센터 정보
   const branches = useSelector(
     (state: RootState) => state.organization.branch.all,
-  ); // 지점명 리스트
+  ); // 센터명 리스트
   const teams = useSelector((state: RootState) => state.organization.team.all); // 팀명 리스트
   const userBranches = useSelector(
     (state: RootState) => state.organization.branch.user,
-  ); // 지점명 리스트
+  ); // 센터명 리스트
   const userTeams = useSelector(
     (state: RootState) => state.organization.team.user,
-  ); // 지점명 리스트
+  ); // 센터명 리스트
   const pluralBranch = useSelector(
     (state: RootState) => state.organization.plural_branch,
-  ); // 지점명 여러개 리스트
+  ); // 센터명 여러개 리스트
   const pluralTeam = useSelector(
     (state: RootState) => state.organization.plural_team,
   ); // 팀 여러개 리스트
@@ -113,7 +113,7 @@ function useOrganization() {
 
   const handleAddBranch = useCallback(
     (name: string) => {
-      // 지점 추가
+      // 센터 추가
       const payload = {
         name,
       };
@@ -138,7 +138,7 @@ function useOrganization() {
 
   const handleModifyBranch = useCallback(
     (id: number, name: string) => {
-      // 지점 수정
+      // 센터 수정
       const payload = {
         id,
         name,
@@ -184,7 +184,7 @@ function useOrganization() {
   );
 
   const onClickAddTempBranch = useCallback(() => {
-    // 지점 추가 시, 리덕스에 임시값을 넣는 로직
+    // 센터 추가 시, 리덕스에 임시값을 넣는 로직
     const branchKeys = Object.getOwnPropertyNames(organizations);
     const findKey = branchKeys.find((key) => key === '-1');
     if (findKey) {

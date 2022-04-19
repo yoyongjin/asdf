@@ -82,11 +82,11 @@ function Organization({
           if (!value || value.trim() === '') return;
 
           if (name.indexOf('branch') > -1) {
-            // 지점 추가/수정/삭제 시
+            // 센터 추가/수정/삭제 시
             const branchData = organizationData as BranchItem;
 
             if (!branchData.branch_name) {
-              // 지점 입력이 처음일 때
+              // 센터 입력이 처음일 때
               handleAddBranch(value);
               setSpecificValue(name, '');
 
@@ -182,7 +182,7 @@ function Organization({
         const teamData = value as TeamItem;
 
         if (branchData.branch_name !== undefined) {
-          // 해당 정보가 지점인 경우
+          // 해당 정보가 센터인 경우
           return (
             <StyledBranch key={`styled-branch-${branchData.branch_name}`}>
               <Input
@@ -202,7 +202,7 @@ function Organization({
                 height={4}
                 innerRef={(ref) => (inputRef.current[i] = ref)}
                 name={`branch${branchData.id}`}
-                placeholder="지점명 입력"
+                placeholder="센터명 입력"
                 textAlign={1}
                 type="search"
                 value={

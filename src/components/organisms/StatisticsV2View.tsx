@@ -261,7 +261,7 @@ const smsStatisticsTableTitles = [
     letterSpacing: -0.6,
     paddingLeft: 10,
     textAlign: 'left',
-    title: '일 알림문자',
+    title: '일 자동문자',
     width: 5,
   },
   {
@@ -301,7 +301,7 @@ const smsStatisticsTableTitles = [
     letterSpacing: -0.6,
     paddingLeft: 10,
     textAlign: 'left',
-    title: '당월 알림문자',
+    title: '당월 자동문자',
     width: 5,
   },
   {
@@ -778,7 +778,7 @@ const tabTitle = [
     name: '문자 통계',
   },
   {
-    name: '알림 문자 통계',
+    name: '자동 문자 통계',
   },
 ];
 
@@ -1326,7 +1326,7 @@ function StatisticsV2View() {
         onChange: handlePluralBranchSelectedOption,
         options: pluralBranchOption,
         selectedOptions: pluralBranchSelectedOption,
-        textChoice: '개 지점',
+        textChoice: '개 센터',
       },
     };
 
@@ -1648,7 +1648,7 @@ function StatisticsV2View() {
             renderStyle.push(defaultRenderStyle);
           }
         } else {
-          // 문자 통계 / 알림문자 통계
+          // 문자 통계 / 자동문자 통계
           renderData.push(...multiSelectData); // 조직 / 팀 / 상담원 선택
           renderData.push(...textCheckBoxData); // 해촉 여부
           renderData.push(...dateRangePickerData); // 날짜 선택
@@ -1935,7 +1935,7 @@ function StatisticsV2View() {
       const row: Array<string> = [];
 
       // 공통
-      row.push(values.branch_name); // 지점명
+      row.push(values.branch_name); // 센터명
       row.push(values.team_name); // 팀명
       row.push(values.name); // 이름
       row.push(values.tmr_cd); // ID
@@ -2051,7 +2051,7 @@ function StatisticsV2View() {
       const row: Array<string> = [];
 
       // 공통
-      row.push(values.branch_name); // 지점명
+      row.push(values.branch_name); // 센터명
       row.push(values.team_name); // 팀명
       row.push(values.date); // 일시
 
@@ -2384,7 +2384,7 @@ function StatisticsV2View() {
                 titles={smsStatisticsTableTitles}
               />
             ) : (
-              // 알림 문자 통계
+              // 자동 문자 통계
               <Table
                 borderItem={borderItem}
                 contents={tableContentAutoMessageStatistics}
@@ -2424,7 +2424,7 @@ function StatisticsV2View() {
               onClickPrevPage={onClickPrevPageMessage}
             />
           ) : (
-            // 알림 문자 통계
+            // 자동 문자 통계
             <TablePagination
               count={maxAutoMessageStatistics}
               divide={form.limit}

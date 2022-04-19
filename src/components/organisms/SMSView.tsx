@@ -156,7 +156,7 @@ function SMSView() {
     branch:
       loginInfo.admin_id < USER_TYPE.ADMIN
         ? loginInfo.branch_id
-        : constants.DEFAULT_ID, // 지점 관리자부터 하위 관리자들은 자신의 지점만 볼 수 있다.
+        : constants.DEFAULT_ID, // 센터 관리자부터 하위 관리자들은 자신의 센터만 볼 수 있다.
   });
   const { branches, getBranches } = useOrganization();
   const {
@@ -379,7 +379,7 @@ function SMSView() {
     let _maxCountData = _.cloneDeep(maxCountData);
 
     if (form.branch !== constants.DEFAULT_ID) {
-      // 지점이 선택된 경우
+      // 센터이 선택된 경우
       _maxCountData = maxCountData.filter(
         (values) => values.branch_id === form.branch,
       );
@@ -404,7 +404,7 @@ function SMSView() {
           } else if (key === 'max_count_date' || key === 'max_count_month') {
             return {
               data: {
-                disabled: loginInfo.admin_id < USER_TYPE.BRANCH_ADMIN, // 지점관리자보다 낮을 경우 수정 불가
+                disabled: loginInfo.admin_id < USER_TYPE.BRANCH_ADMIN, // 센터관리자보다 낮을 경우 수정 불가
                 isNumber: true,
                 value: maxCountValues[index],
               },
@@ -475,7 +475,7 @@ function SMSView() {
     let _maxCountData = _.cloneDeep(maxCountData);
 
     if (form.branch !== constants.DEFAULT_ID) {
-      // 지점이 선택된 경우
+      // 센터이 선택된 경우
       _maxCountData = maxCountData.filter(
         (values) => values.branch_id === form.branch,
       );
@@ -710,7 +710,7 @@ function SMSView() {
         let branchId = form.branch;
 
         if (loginInfo.admin_id < USER_TYPE.ADMIN) {
-          // 일반 관리자보다 권한이 낮은 경우 자기 지점만 볼 수 있음
+          // 일반 관리자보다 권한이 낮은 경우 자기 센터만 볼 수 있음
           branchId = loginInfo.branch_id;
         }
 

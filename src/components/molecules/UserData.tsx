@@ -92,7 +92,7 @@ const StyledFooter = styled.div`
 `;
 
 const selectData = [
-  { id: 0, name: 'branch', value: '지점명(*)' },
+  { id: 0, name: 'branch', value: '센터명(*)' },
   { id: 1, name: 'team', value: '팀명(*)' },
   { id: 2, name: 'admin', value: '권한(*)' },
   { id: 3, name: 'telecom', value: '통신사' },
@@ -218,13 +218,13 @@ function UserData({
     ) {
       userPermission.push(
         { id: 1, data: '팀관리자' },
-        { id: 2, data: '지점관리자' },
+        { id: 2, data: '센터관리자' },
         { id: 3, data: '관리자' },
       );
     } else if (loginData.admin_id === USER_TYPE.BRANCH_ADMIN) {
       userPermission.push(
         { id: 1, data: '팀관리자' },
-        { id: 2, data: '지점관리자' },
+        { id: 2, data: '센터관리자' },
       );
     } else if (loginData.admin_id === USER_TYPE.TEAM_ADMIN) {
       userPermission.push({ id: 1, data: '팀관리자' });
@@ -272,7 +272,7 @@ function UserData({
       ziBoxMac: string,
     ) => {
       if (admin < USER_TYPE.ADMIN && branchId === -1) {
-        alert('지점을 선택해주세요.');
+        alert('센터을 선택해주세요.');
 
         return false;
       }
@@ -339,7 +339,7 @@ function UserData({
     const name = form.name; // 이름
     const id = form.id; // 아이디
 
-    let branchId = loginData.branch_id; // 지점
+    let branchId = loginData.branch_id; // 센터
     let teamId = loginData.team_id; // 팀
     let number = ''; // 전화번호
     let originNumber = ''; // 변경 전 전화번호
@@ -377,9 +377,9 @@ function UserData({
     }
 
     if (loginData.admin_id > USER_TYPE.BRANCH_ADMIN) {
-      // 로그인한 유저의 권한이 지점관리자보다 높을 경우
+      // 로그인한 유저의 권한이 센터관리자보다 높을 경우
       if (form.admin > USER_TYPE.BRANCH_ADMIN) {
-        // 선택한 유저의 권한이 지점관리자보다 높을 경우
+        // 선택한 유저의 권한이 센터관리자보다 높을 경우
         branchId = -1;
       } else {
         branchId = form.branch;
@@ -389,7 +389,7 @@ function UserData({
     if (loginData.admin_id > USER_TYPE.TEAM_ADMIN) {
       // 로그인한 유저의 권한이 팀관리자보다 높을 경우
       if (form.admin < USER_TYPE.BRANCH_ADMIN) {
-        // 선택한 유저의 권한이 지점관리자보다 낮은 경우
+        // 선택한 유저의 권한이 센터관리자보다 낮은 경우
         teamId = form.team;
       } else {
         teamId = -1;
@@ -519,7 +519,7 @@ function UserData({
 
       switch (name) {
         case 'branch': {
-          // 지점
+          // 센터
           if (loginData.admin_id < USER_TYPE.ADMIN) {
             // 로그인한 유저의 권한이 일반 관리자 권한보다 낮을 경우
             return true;
@@ -535,7 +535,7 @@ function UserData({
         case 'team': {
           // 팀
           if (loginData.admin_id < USER_TYPE.BRANCH_ADMIN) {
-            // 로그인한 유저의 권한이 지점 관리자 권한보다 낮을 경우
+            // 로그인한 유저의 권한이 센터 관리자 권한보다 낮을 경우
             return true;
           }
 
@@ -806,7 +806,7 @@ function UserData({
           {
             <>
               {selectData.map((data, index) => {
-                // 지점명, 팀명, 권한
+                // 센터명, 팀명, 권한
                 if (data.id > 2) {
                   return null;
                 }

@@ -6,7 +6,7 @@ import Logger from 'utils/log';
 class Message {
   /**
    * @description 자동문자 추가하기
-   * @param id 지점 ID
+   * @param id 센터 ID
    * @param title 제목
    * @param content 내용
    * @param startDate 시작 날짜
@@ -146,7 +146,7 @@ class Message {
   /**
    * @description 자동문자 수정하기
    * @param id 자동문자 ID
-   * @param branchId 지점 ID
+   * @param branchId 센터 ID
    * @param title 제목
    * @param content 내용
    * @param startDate 시작 날짜
@@ -212,7 +212,7 @@ class Message {
 
   /**
    * @description 발송 수량 수정하기
-   * @param {number} id 지점 ID
+   * @param {number} id 센터 ID
    * @param {number} maxCountDate 일일 최대 발송 수량
    * @param {number} maxCountMonth 월 최대 발송 수량
    */

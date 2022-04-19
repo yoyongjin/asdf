@@ -117,7 +117,7 @@ function useCommunicator() {
             adminId === USER_TYPE.BRANCH_ADMIN &&
             branchId !== userInfo.branch_id
           ) {
-            // 같은 지점의 사용자가 아닌 경우
+            // 같은 센터의 사용자가 아닌 경우
             break;
           }
 
@@ -125,7 +125,7 @@ function useCommunicator() {
             adminId === USER_TYPE.TEAM_ADMIN &&
             (branchId !== userInfo.branch_id || teamId !== userInfo.team_id)
           ) {
-            // 같은 지점의 같은 팀의 사용자가 아닌 경우
+            // 같은 센터의 같은 팀의 사용자가 아닌 경우
             break;
           }
 
@@ -141,7 +141,7 @@ function useCommunicator() {
             adminId === USER_TYPE.BRANCH_ADMIN &&
             branchId !== userInfo.branch_id
           ) {
-            // 같은 지점의 사용자가 아닌 경우
+            // 같은 센터의 사용자가 아닌 경우
             break;
           }
 
@@ -149,7 +149,7 @@ function useCommunicator() {
             adminId === USER_TYPE.TEAM_ADMIN &&
             (branchId !== userInfo.branch_id || teamId !== userInfo.team_id)
           ) {
-            // 같은 지점의 같은 팀의 사용자가 아닌 경우
+            // 같은 센터의 같은 팀의 사용자가 아닌 경우
             break;
           }
 

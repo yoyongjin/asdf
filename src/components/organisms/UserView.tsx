@@ -64,7 +64,7 @@ const userInfoTableTitles = [
     fontColor: Colors.white,
     fontSize: 13,
     isWidthPercent: true,
-    title: '지점명',
+    title: '센터명',
     width: 10,
   },
   {
@@ -458,7 +458,7 @@ function UserView({ location }: UserViewProps) {
       loginInfo.admin_id === USER_TYPE.SUPER_ADMIN ||
       loginInfo.admin_id === USER_TYPE.ADMIN
     ) {
-      // 슈퍼관리자일 경우에만 지점명 리스트 가져오기
+      // 슈퍼관리자일 경우에만 센터명 리스트 가져오기
       getBranches();
     }
   }, [loginInfo.admin_id, getBranches]);
@@ -476,7 +476,7 @@ function UserView({ location }: UserViewProps) {
   }, [form.branch, getTeams, loginInfo.admin_id, loginInfo.branch_id]);
 
   useEffect(() => {
-    // 지점명 변경 시 팀 id 초기화
+    // 센터명 변경 시 팀 id 초기화
     setSpecificValue('team', -1);
   }, [form.branch, setSpecificValue]);
 

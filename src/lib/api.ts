@@ -50,7 +50,7 @@ export const instance = axios.create({
 //     user_id: id,
 //   }); // 비밀번호 초기화
 
-// export const getBranchInfo = () => instance.get('/api/branch'); // 지점 + 팀 목록 가져오기
+// export const getBranchInfo = () => instance.get('/api/branch'); // 센터 + 팀 목록 가져오기
 
 // export const insertBranch = (branch_name: string) =>
 //   instance.post('/api/branch', {

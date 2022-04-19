@@ -85,7 +85,7 @@ function* getBranchProcess(action: ReturnType<typeof requestGetBranch>) {
     const { data } = response as ResponseSuccessData;
 
     if (isIndividual) {
-      // 개인의 지점 가져오기
+      // 개인의 센터 가져오기
       yield put(successGetUserBranch(data.branchs));
 
       return;

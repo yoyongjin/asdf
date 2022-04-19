@@ -178,8 +178,8 @@ class Organization {
   }
 
   /**
-   * @description 지점 추가하기
-   * @param name 지점명
+   * @description 센터 추가하기
+   * @param name 센터명
    * @returns
    */
   static async addBranch(name: string) {
@@ -218,7 +218,7 @@ class Organization {
 
   /**
    * @description 팀 추가하기
-   * @param id 지점 ID
+   * @param id 센터 ID
    * @param name 팀명
    * @returns
    */
@@ -258,9 +258,9 @@ class Organization {
   }
 
   /**
-   * @description 지점 수정하기
-   * @param id 지점 ID
-   * @param name 지점명
+   * @description 센터 수정하기
+   * @param id 센터 ID
+   * @param name 센터명
    * @returns
    */
   static async modifyBranch(id: number, name: string) {
@@ -339,8 +339,8 @@ class Organization {
   }
 
   /**
-   * @description 지점 삭제하기
-   * @param id 지점 ID
+   * @description 센터 삭제하기
+   * @param id 센터 ID
    * @returns
    */
   static async removeBranch(id: number) {

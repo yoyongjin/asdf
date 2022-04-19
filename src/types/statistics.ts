@@ -98,7 +98,7 @@ export interface ICustomCallStatisticeByTeamItem {
 // 상담원별 통계 item
 export interface ICallStatisticeByConsultantItem {
   all: Array<ICallStatisticsItem>; // 총 통화 통계
-  branch_name: string; // 지점명
+  branch_name: string; // 센터명
   id: number; // key
   incoming: Array<ICallStatisticsItem>; // 수신 통화 통계
   name: string; // 이름
@@ -111,7 +111,7 @@ export interface ICallStatisticeByConsultantItem {
 // 팀별 통계 item
 export interface ICallStatisticeByTeamItem {
   all: Array<ICallStatisticsItem>; // 총 통화 통계
-  branch_name: string; // 지점명
+  branch_name: string; // 센터명
   id: number; // key
   incoming: Array<ICallStatisticsItem>; // 수신 통화 통계
   outcoming: Array<ICallStatisticsItem>; // 발신 통화 통계
@@ -139,7 +139,7 @@ export interface ICallStatisticsItem {
 
 // 자동 문자 통계 item
 export interface IAutoMessageStatisticsItem {
-  branch_name: string; // 지점명
+  branch_name: string; // 센터명
   cnt: number; // 발송 건수
   date: string; // 일자
   days: string; // 자동 문자 발송 요일
@@ -155,7 +155,7 @@ export interface IAutoMessageStatisticsItem {
 
 // 문자 통계 item
 export interface IMessageStatisticsItem {
-  branch_name: string; // 지점명
+  branch_name: string; // 센터명
   daily_cnt_auto_message: number; // 일 자동문자 발송 수량
   daily_cnt_message: number; // 일 발송 수량
   daily_cnt_mms: number; // 일 MMS 발송 수량

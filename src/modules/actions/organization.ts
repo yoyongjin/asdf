@@ -27,7 +27,7 @@ export const REQUEST_GET_ORGANIZATION = 'REQUEST_GET_ORGANIZATION';
 export const SUCCESS_GET_ORGANIZATION = 'SUCCESS_GET_ORGANIZATION';
 export const FAILURE_GET_ORGANIZATION = 'FAILURE_GET_ORGANIZATION';
 
-// 지점 가져오기
+// 센터 가져오기
 export const REQUEST_GET_BRANCH = 'REQUEST_GET_BRANCH';
 export const SUCCESS_GET_BRANCH = 'SUCCESS_GET_BRANCH';
 export const SUCCESS_GET_USER_BRANCH = 'SUCCESS_GET_USER_BRANCH';
@@ -39,18 +39,18 @@ export const SUCCESS_GET_TEAM = 'SUCCESS_GET_TEAM';
 export const SUCCESS_GET_USER_TEAM = 'SUCCESS_GET_USER_TEAM';
 export const FAILURE_GET_TEAM = 'FAILURE_GET_TEAM';
 
-// 지점 추가
+// 센터 추가
 export const ADD_TEMPERATURE_BRANCH = 'ADD_TEMPERATURE_BRANCH';
 export const REQUEST_ADD_BRANCH = 'REQUEST_ADD_BRANCH';
 export const SUCCESS_ADD_BRANCH = 'SUCCESS_ADD_BRANCH';
 export const FAILURE_ADD_BRANCH = 'FAILURE_ADD_BRANCH';
 
-// 지점 변경
+// 센터 변경
 export const REQUEST_MODIFY_BRANCH = 'REQUEST_MODIFY_BRANCH';
 export const SUCCESS_MODIFY_BRANCH = 'SUCCESS_MODIFY_BRANCH';
 export const FAILURE_MODIFY_BRANCH = 'FAILURE_MODIFY_BRANCH';
 
-// 지점 삭제
+// 센터 삭제
 export const REQUEST_REMOVE_BRANCH = 'REQUEST_REMOVE_BRANCH';
 export const SUCCESS_REMOVE_BRANCH = 'SUCCESS_REMOVE_BRANCH';
 export const FAILURE_REMOVE_BRANCH = 'FAILURE_REMOVE_BRANCH';
@@ -82,7 +82,7 @@ export const failureGetOrganization = createAction(
   FAILURE_GET_ORGANIZATION,
 )<string>();
 
-// 지점 가져오기
+// 센터 가져오기
 export const requestGetBranch =
   createAction(REQUEST_GET_BRANCH)<RequestGetBranch>();
 export const successGetBranch =

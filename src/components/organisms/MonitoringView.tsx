@@ -302,7 +302,7 @@ function Monitoring({ location }: MonitoringProps) {
       // 슈퍼 관리자
       getUsers2(form.branch, form.team, 2000, 1, location.pathname);
     } else if (loginInfo.admin_id === USER_TYPE.BRANCH_ADMIN) {
-      // 지점 관리자
+      // 센터 관리자
       getUsers2(loginInfo.branch_id, form.team, 2000, 1, location.pathname);
     } else if (loginInfo.admin_id === USER_TYPE.TEAM_ADMIN) {
       // 팀 관리자
@@ -340,7 +340,7 @@ function Monitoring({ location }: MonitoringProps) {
       loginInfo.admin_id === USER_TYPE.SUPER_ADMIN ||
       loginInfo.admin_id === USER_TYPE.ADMIN
     ) {
-      // 슈퍼관리자 / 일반 관리자일 경우에만 지점명 가져오기
+      // 슈퍼관리자 / 일반 관리자일 경우에만 센터명 가져오기
       getBranches();
     }
   }, [getBranches, loginInfo.admin_id]);
@@ -353,7 +353,7 @@ function Monitoring({ location }: MonitoringProps) {
       // 슈퍼 관리자 / 일반 관리자
       getTeams(form.branch);
     } else if (loginInfo.admin_id === USER_TYPE.BRANCH_ADMIN) {
-      // 지점 관리자
+      // 센터 관리자
       getTeams(loginInfo.branch_id);
     }
   }, [form.branch, getTeams, loginInfo.admin_id, loginInfo.branch_id]);
@@ -371,7 +371,7 @@ function Monitoring({ location }: MonitoringProps) {
   }, [tappingStatus, form.right, setVolume]);
 
   useEffect(() => {
-    // 지점명 변경 시 팀 id 초기화
+    // 센터명 변경 시 팀 id 초기화
     setSpecificValue('team', -1);
   }, [form.branch, setSpecificValue]);
 

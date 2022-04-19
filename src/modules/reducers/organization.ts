@@ -124,7 +124,7 @@ const userReducer = createReducer<
 
     action.payload.push({
       id: -1,
-      branch_name: '지점명',
+      branch_name: '센터명',
     });
 
     return produce(state, (draft) => {
@@ -144,7 +144,7 @@ const userReducer = createReducer<
 
     action.payload.push({
       id: -1,
-      branch_name: '지점명',
+      branch_name: '센터명',
     });
 
     return produce(state, (draft) => {

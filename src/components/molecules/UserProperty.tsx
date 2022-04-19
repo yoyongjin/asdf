@@ -117,7 +117,7 @@ function UserProperty({
                   : userData[values] === USER_TYPE.TEAM_ADMIN
                   ? '팀관리자'
                   : userData[values] === USER_TYPE.BRANCH_ADMIN
-                  ? '지점관리자'
+                  ? '센터관리자'
                   : userData[values] === USER_TYPE.ADMIN
                   ? '관리자'
                   : userData[values] === USER_TYPE.SUPER_ADMIN

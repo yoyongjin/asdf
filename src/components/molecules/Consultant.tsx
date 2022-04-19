@@ -475,7 +475,7 @@ function Consultant({
         </Text>
         <StyledWhiteSpace pixel={5} />
         <Text fontColor={Colors.gray4} fontSize={12} fontWeight={700}>
-          {`${consultInfo.branch_name}지점 ${consultInfo.team_name}팀`}
+          {`${consultInfo.branch_name}센터 ${consultInfo.team_name}팀`}
         </Text>
       </StyledUserInfo>
       <StyledWhiteSpace pixel={6} />
