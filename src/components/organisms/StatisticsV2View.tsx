@@ -1207,7 +1207,12 @@ function StatisticsV2View() {
         limit,
       );
     },
-    [getTitleParams, handleGetAutoMessageStatistics, page],
+    [
+      getTitleParams,
+      handleGetAutoMessageStatistics,
+      isValidateStatistics,
+      page,
+    ],
   );
 
   const getMessageStatistice = useCallback(
@@ -1225,7 +1230,7 @@ function StatisticsV2View() {
 
       handleGetMessageStatistics(ids, breakUp, startDate, endDate, page, limit);
     },
-    [getTitleParams, handleGetMessageStatistics, page],
+    [getTitleParams, handleGetMessageStatistics, isValidateStatistics, page],
   );
 
   /**
