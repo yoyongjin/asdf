@@ -40,6 +40,10 @@ export interface StatisticsData {
   all_call_time: number;
 }
 
+export interface IExcelItem {
+  isExcel: boolean;
+}
+
 export interface IPageItem {
   page: number;
   limit: number;
@@ -183,6 +187,7 @@ export interface IRequestGetCallStatisticsByConsultant {
   end_time: string; // 끝 시간 ex) 00:00
   ids: string; // 상담원 id 복수개 ex) 1,2,3
   include_leaver: string; // 해촉 여부 ex) 1
+  isExcel: boolean; // 엑셀 여부(전체 데이터)
   start_date: string; // 시작 날짜 ex) 2022-04-11
   start_time: string; // 시작 시간 ex) 00:00
   search_type: number; // 검색 조건
@@ -207,6 +212,7 @@ export interface IRequestGetCallStatisticsByTeam {
   end_time: string; // 끝 시간 ex) 00:00
   ids: string; // 팀 id 복수개 ex) 1,2,3
   include_leaver: string; // 해촉 여부 ex) 1
+  isExcel: boolean; // 엑셀 여부(전체 데이터)
   start_date: string; // 시작 날짜 ex) 2022-04-11
   start_time: string; // 시작 시간 ex) 00:00
   search_type: number; // 검색 조건
@@ -245,6 +251,7 @@ export interface IRequestGetMessageStatistics {
   end_date: string; // 끝 날짜 ex) 2022-04-11
   ids: string; // 상담원 id 복수개 ex) 1,2,3
   include_leaver: string; // 해촉 여부 ex) 1
+  isExcel: boolean; // 엑셀 여부(전체 데이터)
   start_date: string; // 시작 날짜 ex) 2022-04-11
   page: number; // 페이지
   page_count: number; // 페이지당 노출 개수

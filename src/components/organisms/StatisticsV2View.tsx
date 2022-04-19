@@ -1095,7 +1095,7 @@ function StatisticsV2View() {
   ]);
 
   const getCallStatisticeByConsultant = useCallback(
-    (isAlert = true) => {
+    (isAlert = true, isExcel = false) => {
       const {
         ids,
         breakUp,
@@ -1132,6 +1132,7 @@ function StatisticsV2View() {
         searchType,
         page,
         limit,
+        isExcel,
       );
     },
     [
@@ -1143,7 +1144,7 @@ function StatisticsV2View() {
   );
 
   const getCallStatisticeByTeam = useCallback(
-    (isAlert = true) => {
+    (isAlert = true, isExcel = false) => {
       const {
         ids,
         breakUp,
@@ -1180,13 +1181,14 @@ function StatisticsV2View() {
         searchType,
         page,
         limit,
+        isExcel,
       );
     },
     [getTitleParams, handleGetCallStatisticsByTeam, isValidateStatistics, page],
   );
 
   const getAutoMessageStatistice = useCallback(
-    (isAlert = true) => {
+    (isAlert = true, isExcel = false) => {
       const { ids, breakUp, startDate, endDate, limit } = getTitleParams;
 
       const { status, message } = isValidateStatistics(ids, startDate, endDate);
@@ -1205,6 +1207,7 @@ function StatisticsV2View() {
         endDate,
         page,
         limit,
+        isExcel,
       );
     },
     [
@@ -1216,7 +1219,7 @@ function StatisticsV2View() {
   );
 
   const getMessageStatistice = useCallback(
-    (isAlert = true) => {
+    (isAlert = true, isExcel = false) => {
       const { ids, breakUp, startDate, endDate, limit } = getTitleParams;
 
       const { status, message } = isValidateStatistics(ids, startDate, endDate);
@@ -1228,7 +1231,15 @@ function StatisticsV2View() {
         return;
       }
 
-      handleGetMessageStatistics(ids, breakUp, startDate, endDate, page, limit);
+      handleGetMessageStatistics(
+        ids,
+        breakUp,
+        startDate,
+        endDate,
+        page,
+        limit,
+        isExcel,
+      );
     },
     [getTitleParams, handleGetMessageStatistics, isValidateStatistics, page],
   );
@@ -1237,10 +1248,22 @@ function StatisticsV2View() {
    * @description 타이틀에 들어갈 버튼 정보들
    */
   const buttonData = useMemo(() => {
+    let onClickExcel: (() => void) | null = null;
+    if (selectedTabIndex === 0) {
+      onClickExcel = () => getCallStatisticeByConsultant(true, true);
+    } else if (selectedTabIndex === 1) {
+      onClickExcel = () => getCallStatisticeByTeam(true, true);
+    } else if (selectedTabIndex === 2) {
+      onClickExcel = () => getMessageStatistice(true, true);
+    } else if (selectedTabIndex === 3) {
+      onClickExcel = () => getAutoMessageStatistice(true, true);
+    }
+
     const buttonConfig1 = {
       type: 'button',
       data: {
         text: '엑셀파일 다운로드',
+        onClick: onClickExcel,
       },
       styles: {
         backgroundColor: Colors.white,

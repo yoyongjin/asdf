@@ -65,6 +65,7 @@ function useStatistics() {
       searchType: number,
       page: number,
       limit: number,
+      isExcel: boolean,
     ) => {
       const payload = {
         ids,
@@ -76,6 +77,7 @@ function useStatistics() {
         search_type: searchType,
         page,
         page_count: limit,
+        isExcel,
       };
 
       dispatch(requestGetCallStatisticsByConsultant(payload));
@@ -94,6 +96,7 @@ function useStatistics() {
       searchType: number,
       page: number,
       limit: number,
+      isExcel: boolean,
     ) => {
       const payload = {
         ids,
@@ -105,6 +108,7 @@ function useStatistics() {
         search_type: searchType,
         page,
         page_count: limit,
+        isExcel,
       };
 
       dispatch(requestGetCallStatisticsByTeam(payload));
@@ -132,10 +136,12 @@ function useStatistics() {
       endDate: string,
       page: number,
       limit: number,
+      isExcel: boolean,
     ) => {
       const payload = {
         ids,
         include_leaver: breakUp,
+        isExcel,
         start_date: startDate,
         end_date: endDate,
         page,
@@ -155,6 +161,7 @@ function useStatistics() {
       endDate: string,
       page: number,
       limit: number,
+      isExcel: boolean,
     ) => {
       const payload = {
         ids,
@@ -163,6 +170,7 @@ function useStatistics() {
         end_date: endDate,
         page,
         page_count: limit,
+        isExcel,
       };
 
       dispatch(requestGetMessageStatistics(payload));

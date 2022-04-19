@@ -63,6 +63,7 @@ function* getCallStatisticsByConsultantProcess(
     end_time,
     ids,
     include_leaver,
+    isExcel,
     page,
     page_count,
     search_type,
@@ -81,6 +82,7 @@ function* getCallStatisticsByConsultantProcess(
     search_type,
     page,
     page_count,
+    isExcel,
   );
 
   if (response.status === API_FETCH.SUCCESS) {
@@ -108,6 +110,7 @@ function* getCallStatisticsByTeamProcess(
     end_time,
     ids,
     include_leaver,
+    isExcel,
     page,
     page_count,
     search_type,
@@ -126,6 +129,7 @@ function* getCallStatisticsByTeamProcess(
     search_type,
     page,
     page_count,
+    isExcel,
   );
 
   if (response.status === API_FETCH.SUCCESS) {
@@ -148,8 +152,15 @@ function* getCallStatisticsByTeamProcess(
 function* getAutoMessageStatisticsProcess(
   action: ReturnType<typeof requestGetAutoMessageStatistics>,
 ) {
-  const { end_date, ids, include_leaver, page, page_count, start_date } =
-    action.payload;
+  const {
+    end_date,
+    ids,
+    include_leaver,
+    isExcel,
+    page,
+    page_count,
+    start_date,
+  } = action.payload;
 
   const response: ResponseSuccessData | ResponseFailureData = yield call(
     ZMSStatistics.getAutoMessageStatistics,
@@ -159,6 +170,7 @@ function* getAutoMessageStatisticsProcess(
     end_date,
     page,
     page_count,
+    isExcel,
   );
 
   if (response.status === API_FETCH.SUCCESS) {
@@ -181,8 +193,15 @@ function* getAutoMessageStatisticsProcess(
 function* getMessageStatisticsProcess(
   action: ReturnType<typeof requestGetMessageStatistics>,
 ) {
-  const { end_date, ids, include_leaver, page, page_count, start_date } =
-    action.payload;
+  const {
+    end_date,
+    ids,
+    include_leaver,
+    isExcel,
+    page,
+    page_count,
+    start_date,
+  } = action.payload;
 
   const response: ResponseSuccessData | ResponseFailureData = yield call(
     ZMSStatistics.getMessageStatistics,
@@ -192,6 +211,7 @@ function* getMessageStatisticsProcess(
     end_date,
     page,
     page_count,
+    isExcel,
   );
 
   if (response.status === API_FETCH.SUCCESS) {

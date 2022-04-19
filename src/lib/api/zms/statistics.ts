@@ -66,6 +66,7 @@ class Statistics {
    * @param searchType 통게 기준
    * @param page 페이지
    * @param limit 수
+   * @param isExcel 엑셀 여부
    */
   static async getCallStatisticsByConsultant(
     ids: string,
@@ -77,6 +78,7 @@ class Statistics {
     searchType: number,
     page: number,
     limit: number,
+    isExcel: boolean,
   ) {
     const token = Main.getAccessToken();
 
@@ -91,7 +93,7 @@ class Statistics {
         search_type: searchType,
         page,
         page_count: limit,
-        isExcel: false,
+        isExcel,
       };
 
       const { data } = await APIManager.get(
@@ -136,6 +138,7 @@ class Statistics {
    * @param searchType 통게 기준
    * @param page 페이지
    * @param limit 수
+   * @param isExcel 엑셀 여부
    */
   static async getCallStatisticsByTeam(
     ids: string,
@@ -147,6 +150,7 @@ class Statistics {
     searchType: number,
     page: number,
     limit: number,
+    isExcel: boolean,
   ) {
     const token = Main.getAccessToken();
 
@@ -161,7 +165,7 @@ class Statistics {
         search_type: searchType,
         page,
         page_count: limit,
-        isExcel: false,
+        isExcel,
       };
 
       const { data } = await APIManager.get(
@@ -200,6 +204,7 @@ class Statistics {
    * @param endDate 끝 날짜
    * @param page 페이지
    * @param limit 수
+   * @param isExcel 엑셀 여부
    */
   static async getAutoMessageStatistics(
     ids: string,
@@ -208,6 +213,7 @@ class Statistics {
     endDate: string,
     page: number,
     limit: number,
+    isExcel: boolean,
   ) {
     const token = Main.getAccessToken();
 
@@ -219,6 +225,7 @@ class Statistics {
         end_date: endDate,
         page,
         page_count: limit,
+        isExcel,
       };
 
       const { data } = await APIManager.get(
@@ -257,6 +264,7 @@ class Statistics {
    * @param endDate 끝 날짜
    * @param page 페이지
    * @param limit 수
+   * @param isExcel 엑셀 여부
    */
   static async getMessageStatistics(
     ids: string,
@@ -265,6 +273,7 @@ class Statistics {
     endDate: string,
     page: number,
     limit: number,
+    isExcel: boolean,
   ) {
     const token = Main.getAccessToken();
 
@@ -276,6 +285,7 @@ class Statistics {
         end_date: endDate,
         page,
         page_count: limit,
+        isExcel,
       };
 
       const { data } = await APIManager.get(
