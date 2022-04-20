@@ -88,6 +88,7 @@ function* getCallStatisticsByConsultantProcess(
   if (response.status === API_FETCH.SUCCESS) {
     const { data } = response as ResponseSuccessData;
 
+    data.isExcel = isExcel;
     data.page = page;
     data.limit = page_count;
 
@@ -135,6 +136,7 @@ function* getCallStatisticsByTeamProcess(
   if (response.status === API_FETCH.SUCCESS) {
     const { data } = response as ResponseSuccessData;
 
+    data.isExcel = isExcel;
     data.page = page;
     data.limit = page_count;
 

@@ -45,6 +45,8 @@ const initialState: IStatisticsState = {
   messageStatisticsAllCount: 0,
   allAutoMessageStatistics: [],
   allMessageStatistics: [],
+  allCallStatisticsByConsultant: [],
+  allCallStatisticsByTeam: [],
 };
 
 // 리듀서
@@ -84,12 +86,10 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
         draft.request.getCallStatisticsByConsultant.fetch = false;
         draft.request.getCallStatisticsByConsultant.error = '';
 
-        const allCount = action.payload.common.cnt; // 전체 인원 개수
-        draft.callStatisticsByConsultantAllCount = allCount;
-
         let callStatisticsByConsultant: Array<ICustomCallStatisticeByConsultantItem> =
           [];
 
+        // 공통
         action.payload.list.map((values) => {
           const {
             all,
@@ -120,7 +120,7 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
             );
           });
 
-          if (allCount && sub_total) {
+          if (sub_total) {
             const subTotalData =
               StatisticsFormat.getCustomCallStatisticsByConsultantItem(
                 sub_total.all,
@@ -137,22 +137,33 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
           );
         });
 
+        const total = action.payload.common.total;
+        const totalData =
+          StatisticsFormat.getCustomCallStatisticsByConsultantItem(
+            total.all,
+            total.incoming,
+            total.outcoming,
+            '합계',
+          );
+
+        if (action.payload.isExcel) {
+          callStatisticsByConsultant.push(totalData);
+
+          // 받아온 값을 커스텀하여 추가(이차원 배열 => 일차원 배열)
+          draft.allCallStatisticsByConsultant = callStatisticsByConsultant;
+
+          return;
+        }
+
+        const allCount = action.payload.common.cnt; // 전체 인원 개수
         const currentPage = action.payload.page; // 현재 페이지
         const limit = action.payload.limit; // 요청 개수
 
         if (allCount && currentPage * limit >= allCount) {
-          const total = action.payload.common.total;
-          const totalData =
-            StatisticsFormat.getCustomCallStatisticsByConsultantItem(
-              total.all,
-              total.incoming,
-              total.outcoming,
-              '합계',
-            );
-
           callStatisticsByConsultant.push(totalData);
         }
 
+        draft.callStatisticsByConsultantAllCount = allCount;
         // 받아온 값을 커스텀하여 추가(이차원 배열 => 일차원 배열)
         draft.callStatisticsByConsultant = callStatisticsByConsultant;
       });
@@ -176,10 +187,9 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
         draft.request.getCallStatisticsByTeam.fetch = false;
         draft.request.getCallStatisticsByTeam.error = '';
 
-        const allCount = action.payload.common.cnt; // 전체 인원 개수
-        draft.callStatisticsByTeamAllCount = allCount;
-
+        // 공통
         let callStatisticsByTeam: Array<ICustomCallStatisticeByTeamItem> = [];
+
         action.payload.list.map((values) => {
           const {
             branch_name,
@@ -206,7 +216,7 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
             },
           );
 
-          if (allCount && sub_total) {
+          if (sub_total) {
             const subTotalData =
               StatisticsFormat.getCustomCallStatisticsByTeamItem(
                 sub_total.all,
@@ -224,21 +234,32 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
           return customCallStatisticsData;
         });
 
+        const total = action.payload.common.total;
+        const totalData = StatisticsFormat.getCustomCallStatisticsByTeamItem(
+          total.all,
+          total.incoming,
+          total.outcoming,
+          '합계',
+        );
+
+        if (action.payload.isExcel) {
+          callStatisticsByTeam.push(totalData);
+
+          // 받아온 값을 커스텀하여 추가(이차원 배열 => 일차원 배열)
+          draft.allCallStatisticsByTeam = callStatisticsByTeam;
+
+          return;
+        }
+
+        const allCount = action.payload.common.cnt; // 전체 인원 개수
         const currentPage = action.payload.page; // 현재 페이지
         const limit = action.payload.limit; // 요청 개수
 
         if (allCount && currentPage * limit >= allCount) {
-          const total = action.payload.common.total;
-          const totalData = StatisticsFormat.getCustomCallStatisticsByTeamItem(
-            total.all,
-            total.incoming,
-            total.outcoming,
-            '합계',
-          );
-
           callStatisticsByTeam.push(totalData);
         }
 
+        draft.callStatisticsByTeamAllCount = allCount;
         // 받아온 값을 커스텀하여 추가(이차원 배열 => 일차원 배열)
         draft.callStatisticsByTeam = callStatisticsByTeam;
       });

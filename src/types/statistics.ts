@@ -19,6 +19,8 @@ export interface IStatisticsState {
   messageStatisticsAllCount: number; // 문자 통계 총 수
   allAutoMessageStatistics: Array<IAutoMessageStatisticsItem>; // 자동 문자 통계 전체 데이터
   allMessageStatistics: Array<IMessageStatisticsItem>; // 문자 통계 전체 데이터
+  allCallStatisticsByConsultant: Array<ICustomCallStatisticeByConsultantItem>; // 상담원별 통화 통계 전체 데이터
+  allCallStatisticsByTeam: Array<ICustomCallStatisticeByTeamItem>; // 팀별 통화 통계 전체 데이터
 }
 
 export interface IRequestType {
@@ -198,7 +200,9 @@ export interface IRequestGetCallStatisticsByConsultant {
 }
 
 // 상담원별 통화 통계 응답 파라미터
-export interface IResponseGetCallStatisticsByConsultant extends IPageItem {
+export interface IResponseGetCallStatisticsByConsultant
+  extends IPageItem,
+    IExcelItem {
   common: IResponseGetCallStatisticsByConsultantCommonItem;
   list: Array<ICallStatisticeByConsultantItem>;
 }
@@ -223,7 +227,9 @@ export interface IRequestGetCallStatisticsByTeam {
 }
 
 // 팀별 통화 통계 응답 파라미터
-export interface IResponseGetCallStatisticsByTeam extends IPageItem {
+export interface IResponseGetCallStatisticsByTeam
+  extends IPageItem,
+    IExcelItem {
   common: IResponseGetCallStatisticsByTeamCommonItem;
   list: Array<ICallStatisticeByTeamItem>;
 }
