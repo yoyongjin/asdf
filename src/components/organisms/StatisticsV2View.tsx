@@ -799,16 +799,35 @@ function StatisticsV2View() {
         };
       }
 
-      if (
-        new Date(endDate).getTime() - new Date(startDate).getTime() >
-        dayOfWeekTimestamp
-      ) {
-        // 기간이 7일 이상일 경우
+      if (selectedTabIndex < 2) {
+        // 통화 통계인 경우
+        if (form.search_type !== 2) {
+          // 월별 조회 조건이 아닌 경우
+          if (
+            new Date(endDate).getTime() - new Date(startDate).getTime() >
+            dayOfWeekTimestamp
+          ) {
+            // 기간이 7일 이상일 경우
 
-        return {
-          status: false,
-          message: '날짜는 7일 이상 선택할 수 없습니다.',
-        };
+            return {
+              status: false,
+              message: '날짜는 7일 이상 선택할 수 없습니다.',
+            };
+          }
+        }
+      } else {
+        // 그 외 통계인 경우
+        if (
+          new Date(endDate).getTime() - new Date(startDate).getTime() >
+          dayOfWeekTimestamp
+        ) {
+          // 기간이 7일 이상일 경우
+
+          return {
+            status: false,
+            message: '날짜는 7일 이상 선택할 수 없습니다.',
+          };
+        }
       }
 
       if (startTime && endTime && startTime > endTime) {
@@ -825,7 +844,7 @@ function StatisticsV2View() {
         message: '',
       };
     },
-    [selectedTabIndex],
+    [form.search_type, selectedTabIndex],
   );
 
   const getTitleParams = useMemo(() => {
