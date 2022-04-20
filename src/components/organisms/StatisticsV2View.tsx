@@ -16,6 +16,11 @@ import useTab from 'hooks/useTab';
 import useUser from 'hooks/useUser';
 import { Colors } from 'utils/color';
 import Utils from 'utils/new_utils';
+import {
+  tableTitleAutoMessageStatistics,
+  tableTitleMessageStatistics,
+} from 'utils/table/title';
+import TableRow from 'utils/table/row';
 
 const callStatisticsByConsultantTableTitles = [
   {
@@ -180,222 +185,6 @@ const callStatisticsByTeamTableTitles = [
     colSpan: 11,
     title: '수신',
     width: 727,
-  },
-];
-
-const smsStatisticsTableTitles = [
-  {
-    fontFamily: 'Malgun Gothic',
-    fontSize: 12,
-    isWidthPercent: true,
-    letterSpacing: -0.6,
-    paddingLeft: 10,
-    textAlign: 'left',
-    title: '일자',
-    width: 10,
-  },
-  {
-    fontFamily: 'Malgun Gothic',
-    fontSize: 12,
-    isWidthPercent: true,
-    letterSpacing: -0.6,
-    paddingLeft: 10,
-    textAlign: 'left',
-    title: '센터',
-    width: 15,
-  },
-  {
-    fontFamily: 'Malgun Gothic',
-    fontSize: 12,
-    isWidthPercent: true,
-    letterSpacing: -0.6,
-    paddingLeft: 10,
-    textAlign: 'left',
-    title: '팀',
-    width: 15,
-  },
-  {
-    fontFamily: 'Malgun Gothic',
-    fontSize: 12,
-    isWidthPercent: true,
-    letterSpacing: -0.6,
-    paddingLeft: 10,
-    textAlign: 'left',
-    title: 'TMR 코드',
-    width: 15,
-  },
-  {
-    fontFamily: 'Malgun Gothic',
-    fontSize: 12,
-    isWidthPercent: true,
-    letterSpacing: -0.6,
-    paddingLeft: 10,
-    textAlign: 'left',
-    title: 'TMR 명',
-    width: 5,
-  },
-  {
-    fontFamily: 'Malgun Gothic',
-    fontSize: 12,
-    isWidthPercent: true,
-    letterSpacing: -0.6,
-    paddingLeft: 10,
-    textAlign: 'left',
-    title: '일 최대발송수량',
-    width: 5,
-  },
-  {
-    fontFamily: 'Malgun Gothic',
-    fontSize: 12,
-    isWidthPercent: true,
-    letterSpacing: -0.6,
-    paddingLeft: 10,
-    textAlign: 'left',
-    title: '일 총사용량',
-    width: 5,
-  },
-  {
-    fontFamily: 'Malgun Gothic',
-    fontSize: 12,
-    isWidthPercent: true,
-    letterSpacing: -0.6,
-    paddingLeft: 10,
-    textAlign: 'left',
-    title: '일 자동문자',
-    width: 5,
-  },
-  {
-    fontFamily: 'Malgun Gothic',
-    fontSize: 12,
-    isWidthPercent: true,
-    letterSpacing: -0.6,
-    paddingLeft: 10,
-    textAlign: 'left',
-    title: '일 MMS',
-    width: 5,
-  },
-  {
-    fontFamily: 'Malgun Gothic',
-    fontSize: 12,
-    isWidthPercent: true,
-    letterSpacing: -0.6,
-    paddingLeft: 10,
-    textAlign: 'left',
-    title: '당월 최대발송수량',
-    width: 5,
-  },
-  {
-    fontFamily: 'Malgun Gothic',
-    fontSize: 12,
-    isWidthPercent: true,
-    letterSpacing: -0.6,
-    paddingLeft: 10,
-    textAlign: 'left',
-    title: '당월 총사용량',
-    width: 5,
-  },
-  {
-    fontFamily: 'Malgun Gothic',
-    fontSize: 12,
-    isWidthPercent: true,
-    letterSpacing: -0.6,
-    paddingLeft: 10,
-    textAlign: 'left',
-    title: '당월 자동문자',
-    width: 5,
-  },
-  {
-    fontFamily: 'Malgun Gothic',
-    fontSize: 12,
-    isWidthPercent: true,
-    letterSpacing: -0.6,
-    paddingLeft: 10,
-    textAlign: 'left',
-    title: '당월 MMS',
-    width: 5,
-  },
-];
-
-const notificationStatisticsTableTitles = [
-  {
-    fontFamily: 'Malgun Gothic',
-    fontSize: 12,
-    isWidthPercent: true,
-    letterSpacing: -0.6,
-    paddingLeft: 10,
-    textAlign: 'left',
-    title: '일자',
-    width: 5,
-  },
-  {
-    fontFamily: 'Malgun Gothic',
-    fontSize: 12,
-    isWidthPercent: true,
-    letterSpacing: -0.6,
-    paddingLeft: 10,
-    textAlign: 'left',
-    title: '센터',
-    width: 10,
-  },
-  {
-    fontFamily: 'Malgun Gothic',
-    fontSize: 12,
-    isWidthPercent: true,
-    letterSpacing: -0.6,
-    paddingLeft: 10,
-    textAlign: 'left',
-    title: '팀',
-    width: 10,
-  },
-  {
-    fontFamily: 'Malgun Gothic',
-    fontSize: 12,
-    isWidthPercent: true,
-    letterSpacing: -0.6,
-    paddingLeft: 10,
-    textAlign: 'left',
-    title: 'TMR 코드',
-    width: 10,
-  },
-  {
-    fontFamily: 'Malgun Gothic',
-    fontSize: 12,
-    isWidthPercent: true,
-    letterSpacing: -0.6,
-    paddingLeft: 10,
-    textAlign: 'left',
-    title: 'TMR 명',
-    width: 5,
-  },
-  {
-    fontFamily: 'Malgun Gothic',
-    fontSize: 12,
-    isWidthPercent: true,
-    letterSpacing: -0.6,
-    paddingLeft: 10,
-    textAlign: 'left',
-    title: '제목',
-    width: 20,
-  },
-  {
-    fontFamily: 'Malgun Gothic',
-    fontSize: 12,
-    isWidthPercent: true,
-    letterSpacing: -0.6,
-    paddingLeft: 10,
-    textAlign: 'left',
-    title: '발송 조건',
-    width: 25,
-  },
-  {
-    fontFamily: 'Malgun Gothic',
-    fontSize: 12,
-    isWidthPercent: true,
-    letterSpacing: -0.6,
-    paddingLeft: 10,
-    textAlign: 'left',
-    title: '발송 건수',
-    width: 5,
   },
 ];
 
@@ -1768,37 +1557,7 @@ function StatisticsV2View() {
    */
   const tablePropertyMessageStatistics = useMemo(() => {
     return messageStatisticsData.map((values) => {
-      const row: Array<string> = [];
-
-      const {
-        branch_name,
-        daily_cnt_auto_message,
-        daily_cnt_message,
-        daily_cnt_mms,
-        date,
-        max_count_date,
-        max_count_month,
-        monthly_cnt_auto_message,
-        monthly_cnt_message,
-        monthly_cnt_mms,
-        team_name,
-        tmr_cd,
-        tmr_name,
-      } = values;
-
-      row.push(date.substring(0, 10));
-      row.push(branch_name);
-      row.push(team_name);
-      row.push(tmr_cd ?? '');
-      row.push(tmr_name);
-      row.push(`${max_count_date}`);
-      row.push(`${daily_cnt_message}`);
-      row.push(`${daily_cnt_auto_message}`);
-      row.push(`${daily_cnt_mms}`);
-      row.push(`${max_count_month}`);
-      row.push(`${monthly_cnt_message}`);
-      row.push(`${monthly_cnt_auto_message}`);
-      row.push(`${monthly_cnt_mms}`);
+      const row = TableRow.getRowMessageStatistics(values);
 
       const messageStatisticsItems: Array<ITableProperty> = row.map(
         (value, index) => {
@@ -1840,85 +1599,7 @@ function StatisticsV2View() {
    */
   const tablePropertyAutoMessageStatistics = useMemo(() => {
     return autoMessageStatisticsData.map((values) => {
-      const row: Array<string> = [];
-
-      const {
-        branch_name,
-        cnt,
-        date,
-        days,
-        end_date,
-        end_time,
-        start_date,
-        start_time,
-        team_name,
-        title,
-        tmr_cd,
-        tmr_name,
-      } = values;
-
-      row.push(date.substring(0, 10));
-      row.push(branch_name);
-      row.push(team_name);
-      row.push(tmr_cd ?? '');
-      row.push(tmr_name);
-      row.push(title);
-
-      let startYear = '';
-      let startMonth = '';
-      let startDay = '';
-      let startDate = '';
-      let endYear = '';
-      let endMonth = '';
-      let endDay = '';
-      let endDate = '';
-
-      if (start_date) {
-        const { year, month, day } = Utils.parsingYYYYMMDD(start_date);
-        startYear = year;
-        startMonth = month;
-        startDay = day;
-        startDate = `${startYear}년 ${startMonth}월 ${startDay}일`;
-      }
-
-      if (end_date) {
-        const { year, month, day } = Utils.parsingYYYYMMDD(end_date);
-        endYear = year;
-        endMonth = month;
-        endDay = day;
-        endDate = `${endYear}년 ${endMonth}월 ${endDay}일`;
-      }
-
-      const fullDate = startDate && endDate && `${startDate} ~ ${endDate}`;
-
-      let startTime = '';
-      let endTime = '';
-
-      if (start_time) {
-        const { hours, minutes, seconds } = Utils.parsingHHMMSS(start_time);
-
-        startTime = `${hours}:${minutes}`;
-      }
-
-      if (end_time) {
-        const { hours, minutes, seconds } = Utils.parsingHHMMSS(end_time);
-
-        endTime = `${hours}:${minutes}`;
-      }
-
-      const fullTime = startTime && endTime && `${startTime} ~ ${endTime}`;
-
-      let fullDays = '';
-      if (days) {
-        fullDays = Utils.parsingDays(days).join(', ');
-      }
-
-      const conditionOfSendMessage = `[${fullDate}${
-        fullDate && fullTime ? ' ' : ''
-      }${fullTime}${fullTime && fullDays ? ' ' : ''}${fullDays}]`;
-
-      row.push(conditionOfSendMessage);
-      row.push(`${cnt}`);
+      const row = TableRow.getRowAutoMessageStatistics(values);
 
       const autoMessageStatisticsItems: Array<ITableProperty> = row.map(
         (value, index) => {
@@ -2369,6 +2050,7 @@ function StatisticsV2View() {
       <StyledWrapper>
         <StyledTitle>
           <TitleV2
+            isExcel={true}
             renderLeft={getRenderLeft(1)}
             renderRight={getRenderRight(1)}
             titleStyle={getTitleStyle(1)}
@@ -2409,7 +2091,7 @@ function StatisticsV2View() {
                 contents={tableContentMessageStatistics}
                 headColor={Colors.white}
                 headHeight={52}
-                titles={smsStatisticsTableTitles}
+                titles={tableTitleMessageStatistics}
               />
             ) : (
               // 자동 문자 통계
@@ -2418,7 +2100,7 @@ function StatisticsV2View() {
                 contents={tableContentAutoMessageStatistics}
                 headColor={Colors.white}
                 headHeight={33}
-                titles={notificationStatisticsTableTitles}
+                titles={tableTitleAutoMessageStatistics}
               />
             )}
           </div>

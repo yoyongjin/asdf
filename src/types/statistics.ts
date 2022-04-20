@@ -17,6 +17,8 @@ export interface IStatisticsState {
   autoMessageStatisticsAllCount: number; // 자동 문자 통계
   messageStatistics: Array<IMessageStatisticsItem>; // 문자 통계
   messageStatisticsAllCount: number; // 문자 통계 총 수
+  allAutoMessageStatistics: Array<IAutoMessageStatisticsItem>; // 자동 문자 통계 전체 데이터
+  allMessageStatistics: Array<IMessageStatisticsItem>; // 문자 통계 전체 데이터
 }
 
 export interface IRequestType {
@@ -236,12 +238,13 @@ export interface IRequestGetAutoMessageStatistics {
   end_date: string; // 끝 날짜 ex) 2022-04-11
   ids: string; // 상담원 id 복수개 ex) 1,2,3
   include_leaver: string; // 해촉 여부 ex) 1
+  isExcel: boolean; // 엑셀 여부(전체 데이터)
   start_date: string; // 시작 날짜 ex) 2022-04-11
   page: number; // 페이지
   page_count: number; // 페이지당 노출 개수
 }
 
-export interface IResponseGetAutoMessageStatistics extends IPageItem {
+export interface IResponseGetAutoMessageStatistics extends IExcelItem {
   cnt: number;
   list: Array<IAutoMessageStatisticsItem>;
 }
@@ -257,7 +260,7 @@ export interface IRequestGetMessageStatistics {
   page_count: number; // 페이지당 노출 개수
 }
 
-export interface IResponseGetMessageStatistics {
+export interface IResponseGetMessageStatistics extends IExcelItem {
   cnt: number;
   list: Array<IMessageStatisticsItem>;
 }

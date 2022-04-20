@@ -1,11 +1,119 @@
-import { useCallback } from 'react';
+import _ from 'lodash';
+import { useCallback, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import * as XLSX from 'xlsx';
 
 import { ITableTitleData } from 'components/molecules/TableTitle';
+import {
+  setInitializeAllAutoMessageStatistics,
+  setInitializeAllMessageStatistics,
+} from 'modules/actions/statistics';
+import { RootState } from 'modules/reducers';
+import StatisticsFormat from 'utils/format/statistics';
 import Utils from 'utils/new_utils';
-import _ from 'lodash';
+import {
+  tableTitleAutoMessageStatistics,
+  tableTitleMessageStatistics,
+} from 'utils/table/title';
 
 function useExcel() {
+  const allMessageStatisticsData = useSelector(
+    (state: RootState) => state.statistics.allMessageStatistics,
+  );
+  const allAutoMessageStatisticsData = useSelector(
+    (state: RootState) => state.statistics.allAutoMessageStatistics,
+  );
+
+  const dispatch = useDispatch();
+
+  const setInitAllMessageStatistics = useCallback(() => {
+    dispatch(setInitializeAllMessageStatistics());
+  }, [dispatch]);
+
+  const setInitAllAutoMessageStatistics = useCallback(() => {
+    dispatch(setInitializeAllAutoMessageStatistics());
+  }, [dispatch]);
+
+  /**
+   * @description 문자 통계 엑셀
+   */
+  useEffect(() => {
+    if (allMessageStatisticsData.length < 1) {
+      return;
+    }
+
+    const titleName = tableTitleMessageStatistics.map((property) => {
+      return property.title;
+    });
+
+    const titleWidth = tableTitleMessageStatistics.map((property) => {
+      return {
+        width: property.width * 2.5,
+      };
+    });
+
+    const content = allMessageStatisticsData.map((values) => {
+      const item = StatisticsFormat.getExcelMessageStatisticsItem(
+        titleName,
+        values,
+      );
+
+      return item;
+    });
+
+    const ws = XLSX.utils.json_to_sheet(content);
+    ws['!cols'] = titleWidth;
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws);
+
+    const fullData = Utils.getFullDate(new Date().getTime(), true, '', '', '_');
+    const fileName = `${fullData}_문자통계.xlsx`;
+    XLSX.writeFile(wb, fileName);
+
+    setInitAllMessageStatistics();
+  }, [allMessageStatisticsData, setInitAllMessageStatistics]);
+
+  /**
+   * @description 자동 문자 통계 엑셀
+   */
+  useEffect(() => {
+    if (allAutoMessageStatisticsData.length < 1) {
+      return;
+    }
+
+    const titleName = tableTitleAutoMessageStatistics.map((property) => {
+      return property.title;
+    });
+
+    const titleWidth = tableTitleAutoMessageStatistics.map((property) => {
+      return {
+        width: property.width * 2,
+      };
+    });
+
+    const content = allAutoMessageStatisticsData.map((values) => {
+      const item = StatisticsFormat.getExcelAutoMessageStatisticsItem(
+        titleName,
+        values,
+      );
+
+      return item;
+    });
+
+    const ws = XLSX.utils.json_to_sheet(content);
+    ws['!cols'] = titleWidth;
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws);
+
+    const fullData = Utils.getFullDate(new Date().getTime(), true, '', '', '_');
+    const fileName = `${fullData}_자동문자통계.xlsx`;
+    XLSX.writeFile(wb, fileName);
+
+    setInitAllAutoMessageStatistics();
+  }, [allAutoMessageStatisticsData, setInitAllAutoMessageStatistics]);
+
   const handleExcelDownload = useCallback(
     (titles: Array<ITableTitleData>, contents: Array<any>) => {
       const titleName: Array<string> = [];

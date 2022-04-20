@@ -176,8 +176,7 @@ function* getAutoMessageStatisticsProcess(
   if (response.status === API_FETCH.SUCCESS) {
     const { data } = response as ResponseSuccessData;
 
-    data.page = page;
-    data.limit = page_count;
+    data.isExcel = isExcel;
 
     yield put(successGetAutoMessageStatistics(data));
 
@@ -216,6 +215,8 @@ function* getMessageStatisticsProcess(
 
   if (response.status === API_FETCH.SUCCESS) {
     const { data } = response as ResponseSuccessData;
+
+    data.isExcel = isExcel;
 
     yield put(successGetMessageStatistics(data));
 

@@ -13,6 +13,7 @@ import { IOption as IMultiSelectOption } from 'components/atoms/MultiSelect';
 import { DateRangePicker, TabTitle, TextCheckBox } from 'components/molecules';
 import { ITabItem } from 'components/molecules/TabTitle';
 import { TonChangeDatePicker } from 'hooks/useDatePicker';
+import useExcel from 'hooks/useExcel';
 import { TonChangeCheckBox, TonChangeSelect } from 'hooks/useInputForm';
 import { THandleSelectedOption } from 'hooks/useMultiSelect';
 import { TOnClickVisible } from 'hooks/useVisible';
@@ -41,7 +42,17 @@ const StyledPostion = styled.div<IStyledPostion>`
   margin-top: ${(props) => props.marginTop}px;
 `;
 
-function TitleV2({ renderLeft, renderRight, titleStyle }: ITitleProps) {
+function TitleV2({
+  isExcel,
+  renderLeft,
+  renderRight,
+  titleStyle,
+}: ITitleProps) {
+  if (isExcel) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useExcel();
+  }
+
   const ButtonView = useCallback(
     (data: IButtonItem, styles?: IButtonItemStyle) => {
       if (data.text) {
@@ -473,11 +484,14 @@ interface ITitleStyle {
 }
 
 interface ITitleProps {
+  isExcel: boolean; // 엑셀 사용 여부
   renderLeft?: IRenderItem; // 화면 왼쪽에 보여질 컴포넌트의 정보들
   renderRight?: IRenderItem; // 화면 왼쪽에 보여질 컴포넌트의 정보들
   titleStyle?: ITitleStyle; // 전반적인 컴포넌트 style 정보들
 }
 
-TitleV2.defaultProps = {};
+TitleV2.defaultProps = {
+  isExcel: false,
+};
 
 export default React.memo(TitleV2);

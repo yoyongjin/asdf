@@ -122,6 +122,15 @@ export const setInitializeAutoMessageStatistics = createAction(
   SET_INITIALIZE_AUTO_MESSAGE_STATISTICS,
 )();
 
+// v2 전체 자동 문자 통계 데이터 초기화하기
+export const SET_INITIALIZE_ALL_AUTO_MESSAGE_STATISTICS =
+  'SET_INITIALIZE_ALL_AUTO_MESSAGE_STATISTICS';
+
+// v2 전체 자동 문자 통계 데이터 초기화하기 Action
+export const setInitializeAllAutoMessageStatistics = createAction(
+  SET_INITIALIZE_ALL_AUTO_MESSAGE_STATISTICS,
+)();
+
 // v2 문자 통계 데이터 초기화하기
 export const SET_INITIALIZE_MESSAGE_STATISTICS =
   'SET_INITIALIZE_MESSAGE_STATISTICS';
@@ -129,4 +138,13 @@ export const SET_INITIALIZE_MESSAGE_STATISTICS =
 // v2 문자 통계 데이터 초기화하기 Action
 export const setInitializeMessageStatistics = createAction(
   SET_INITIALIZE_MESSAGE_STATISTICS,
+)();
+
+// v2 전체 문자 통계 데이터 초기화하기
+export const SET_INITIALIZE_ALL_MESSAGE_STATISTICS =
+  'SET_INITIALIZE_ALL_MESSAGE_STATISTICS';
+
+// v2 전체 문자 통계 데이터 초기화하기 Action
+export const setInitializeAllMessageStatistics = createAction(
+  SET_INITIALIZE_ALL_MESSAGE_STATISTICS,
 )();

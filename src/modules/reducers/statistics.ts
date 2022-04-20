@@ -8,6 +8,7 @@ import {
   IStatisticsState,
   TStatisticsAction,
 } from 'types/statistics';
+import StatisticsFormat from 'utils/format/statistics';
 
 // 상태
 const initialState: IStatisticsState = {
@@ -42,6 +43,8 @@ const initialState: IStatisticsState = {
   autoMessageStatisticsAllCount: 0,
   messageStatistics: [],
   messageStatisticsAllCount: 0,
+  allAutoMessageStatistics: [],
+  allMessageStatistics: [],
 };
 
 // 리듀서
@@ -329,10 +332,17 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
     [actions.SUCCESS_GET_AUTO_MESSAGE_STATISTICS]: (state, action) => {
       // 자동 문자 통계 가져오기 성공
       return produce(state, (draft) => {
-        draft.autoMessageStatistics = action.payload.list;
-        draft.autoMessageStatisticsAllCount = action.payload.cnt;
         draft.request.getAutoMessageStatistics.fetch = false;
         draft.request.getAutoMessageStatistics.error = '';
+
+        if (action.payload.isExcel) {
+          draft.allAutoMessageStatistics = action.payload.list;
+
+          return;
+        }
+
+        draft.autoMessageStatistics = action.payload.list;
+        draft.autoMessageStatisticsAllCount = action.payload.cnt;
       });
     },
     [actions.FAILURE_GET_AUTO_MESSAGE_STATISTICS]: (state, action) => {
@@ -351,10 +361,17 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
     [actions.SUCCESS_GET_MESSAGE_STATISTICS]: (state, action) => {
       // 문자 통계 가져오기 성공
       return produce(state, (draft) => {
-        draft.messageStatistics = action.payload.list;
-        draft.messageStatisticsAllCount = action.payload.cnt;
         draft.request.getMessageStatistics.fetch = false;
         draft.request.getMessageStatistics.error = '';
+
+        if (action.payload.isExcel) {
+          draft.allMessageStatistics = action.payload.list;
+
+          return;
+        }
+
+        draft.messageStatistics = action.payload.list;
+        draft.messageStatisticsAllCount = action.payload.cnt;
       });
     },
     [actions.FAILURE_GET_MESSAGE_STATISTICS]: (state, action) => {
@@ -383,6 +400,18 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
       return produce(state, (draft) => {
         draft.messageStatistics = [];
         draft.messageStatisticsAllCount = 0;
+      });
+    },
+    [actions.SET_INITIALIZE_ALL_AUTO_MESSAGE_STATISTICS]: (state, action) => {
+      // 전체 자동 문자 통계 초기화하기
+      return produce(state, (draft) => {
+        draft.allAutoMessageStatistics = [];
+      });
+    },
+    [actions.SET_INITIALIZE_ALL_MESSAGE_STATISTICS]: (state, action) => {
+      // 전체 문자 통화 통계 초기화하기
+      return produce(state, (draft) => {
+        draft.allMessageStatistics = [];
       });
     },
   },
