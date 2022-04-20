@@ -1,10 +1,226 @@
 import {
   IAutoMessageStatisticsItem,
+  ICustomCallStatisticeByConsultantItem,
+  ICustomCallStatisticeByTeamItem,
   IMessageStatisticsItem,
 } from 'types/statistics';
 import Utils from 'utils/new_utils';
 
 class TableRow {
+  static getRowCallStatisticsByConsultant(
+    contents: ICustomCallStatisticeByConsultantItem,
+  ) {
+    const row: Array<string> = [];
+
+    const {
+      all_connect_call,
+      all_fail_call,
+      all_ring_time,
+      all_talk_time,
+      all_total_call,
+      all_total_time,
+      branch_name,
+      date,
+      incoming_connect_call,
+      incoming_fail_call,
+      incoming_ring_time,
+      incoming_talk_time,
+      incoming_total_call,
+      incoming_total_time,
+      name,
+      outcoming_connect_call,
+      outcoming_fail_call,
+      outcoming_ring_time,
+      outcoming_talk_time,
+      outcoming_total_call,
+      outcoming_total_time,
+      team_name,
+      tmr_cd,
+    } = contents;
+
+    // 공통
+    row.push(branch_name); // 센터명
+    row.push(team_name); // 팀명
+    row.push(name); // 이름
+    row.push(tmr_cd); // ID
+    row.push(date); // 일시
+
+    // 전체
+    row.push(`${all_total_call}`); // 전체 시도콜
+    row.push(`${all_connect_call}`); // 전체 연결콜
+    row.push(`${all_fail_call}`); // 전체 부재콜
+
+    let allConnectionRate = all_connect_call / all_total_call || 0;
+    allConnectionRate = Utils.getDecimalNumber(allConnectionRate * 100);
+    row.push(`${allConnectionRate}%`); // 전체 연결률
+
+    row.push(Utils.getHourMinSecBySecond(all_total_time)); // 전체 통화 시간
+    row.push(`${all_total_time}`); // 전체 통화 시간(초)
+
+    let allAverageCallTime = all_total_time / all_total_call;
+    allAverageCallTime = allAverageCallTime || 0;
+    row.push(Utils.getHourMinSecBySecond(allAverageCallTime)); // 전체 평균 통화 시간
+
+    row.push(Utils.getHourMinSecBySecond(all_ring_time)); // 전체 링 시간
+    row.push(`${all_ring_time}`); // 전체 링시간(초)
+    row.push(Utils.getHourMinSecBySecond(all_talk_time)); // 전체 순수통화시간
+    row.push(`${all_talk_time}`); // 전체 순수통화시간(초)
+
+    // 발신
+    row.push(`${outcoming_total_call}`); // 발신 시도콜
+    row.push(`${outcoming_connect_call}`); // 발신 연결콜
+    row.push(`${outcoming_fail_call}`); // 발신 부재콜
+
+    let outcomingConnectionRate =
+      outcoming_connect_call / outcoming_total_call || 0;
+    outcomingConnectionRate = Utils.getDecimalNumber(
+      outcomingConnectionRate * 100,
+    );
+    row.push(`${outcomingConnectionRate}%`); // 발신 연결률
+
+    row.push(Utils.getHourMinSecBySecond(outcoming_total_time)); // 발신 통화 시간
+    row.push(`${outcoming_total_time}`); // 발신 통화 시간(초)
+
+    let outcomingAverageCallTime = outcoming_total_time / outcoming_total_call;
+    outcomingAverageCallTime = outcomingAverageCallTime || 0;
+    row.push(Utils.getHourMinSecBySecond(outcomingAverageCallTime)); // 발신 평균 통화 시간
+
+    row.push(Utils.getHourMinSecBySecond(outcoming_ring_time)); // 발신 링 시간
+    row.push(`${outcoming_ring_time}`); // 발신 링시간(초)
+    row.push(Utils.getHourMinSecBySecond(outcoming_talk_time)); // 발신 순수통화시간
+    row.push(`${outcoming_talk_time}`); // 발신 순수통화시간(초)
+
+    // 수신
+    row.push(`${incoming_total_call}`); // 수신 시도콜
+    row.push(`${incoming_connect_call}`); // 수신 연결콜
+    row.push(`${incoming_fail_call}`); // 수신 부재콜
+
+    let incomingConnectionRate =
+      incoming_connect_call / incoming_total_call || 0;
+    incomingConnectionRate = Utils.getDecimalNumber(
+      incomingConnectionRate * 100,
+    );
+    row.push(`${incomingConnectionRate}%`); // 수신 연결률
+
+    row.push(Utils.getHourMinSecBySecond(incoming_total_time)); // 수신 통화 시간
+    row.push(`${incoming_total_time}`); // 수신 통화 시간(초)
+
+    let incomingAverageCallTime = incoming_total_time / incoming_total_call;
+    incomingAverageCallTime = incomingAverageCallTime || 0;
+    row.push(Utils.getHourMinSecBySecond(incomingAverageCallTime)); // 수신 평균 통화 시간
+
+    row.push(Utils.getHourMinSecBySecond(incoming_ring_time)); // 수신 링 시간
+    row.push(`${incoming_ring_time}`); // 수신 링시간(초)
+    row.push(Utils.getHourMinSecBySecond(incoming_talk_time)); // 수신 순수통화시간
+    row.push(`${incoming_talk_time}`); // 수신 순수통화시간(초)
+
+    return row;
+  }
+
+  static getRowCallStatisticsByTeam(contents: ICustomCallStatisticeByTeamItem) {
+    const row: Array<string> = [];
+
+    const {
+      all_connect_call,
+      all_fail_call,
+      all_ring_time,
+      all_talk_time,
+      all_total_call,
+      all_total_time,
+      branch_name,
+      date,
+      incoming_connect_call,
+      incoming_fail_call,
+      incoming_ring_time,
+      incoming_talk_time,
+      incoming_total_call,
+      incoming_total_time,
+      outcoming_connect_call,
+      outcoming_fail_call,
+      outcoming_ring_time,
+      outcoming_talk_time,
+      outcoming_total_call,
+      outcoming_total_time,
+      team_name,
+    } = contents;
+
+    // 공통
+    row.push(branch_name); // 센터명
+    row.push(team_name); // 팀명
+    row.push(date); // 일시
+
+    // 전체
+    row.push(`${all_total_call}`); // 전체 시도콜
+    row.push(`${all_connect_call}`); // 전체 연결콜
+    row.push(`${all_fail_call}`); // 전체 부재콜
+
+    let allConnectionRate = all_connect_call / all_total_call || 0;
+    allConnectionRate = Utils.getDecimalNumber(allConnectionRate * 100);
+    row.push(`${allConnectionRate}%`); // 전체 연결률
+
+    row.push(Utils.getHourMinSecBySecond(all_total_time)); // 전체 통화 시간
+    row.push(`${all_total_time}`); // 전체 통화 시간(초)
+
+    let allAverageCallTime = all_total_time / all_total_call;
+    allAverageCallTime = allAverageCallTime || 0;
+    row.push(Utils.getHourMinSecBySecond(allAverageCallTime)); // 전체 평균 통화 시간
+
+    row.push(Utils.getHourMinSecBySecond(all_ring_time)); // 전체 링 시간
+    row.push(`${all_ring_time}`); // 전체 링시간(초)
+    row.push(Utils.getHourMinSecBySecond(all_talk_time)); // 전체 순수통화시간
+    row.push(`${all_talk_time}`); // 전체 순수통화시간(초)
+
+    // 발신
+    row.push(`${outcoming_total_call}`); // 발신 시도콜
+    row.push(`${outcoming_connect_call}`); // 발신 연결콜
+    row.push(`${outcoming_fail_call}`); // 발신 부재콜
+
+    let outcomingConnectionRate =
+      outcoming_connect_call / outcoming_total_call || 0;
+    outcomingConnectionRate = Utils.getDecimalNumber(
+      outcomingConnectionRate * 100,
+    );
+    row.push(`${outcomingConnectionRate}%`); // 발신 연결률
+
+    row.push(Utils.getHourMinSecBySecond(outcoming_total_time)); // 발신 통화 시간
+    row.push(`${outcoming_total_time}`); // 발신 통화 시간(초)
+
+    let outcomingAverageCallTime = outcoming_total_time / outcoming_total_call;
+    outcomingAverageCallTime = outcomingAverageCallTime || 0;
+    row.push(Utils.getHourMinSecBySecond(outcomingAverageCallTime)); // 발신 평균 통화 시간
+
+    row.push(Utils.getHourMinSecBySecond(outcoming_ring_time)); // 발신 링 시간
+    row.push(`${outcoming_ring_time}`); // 발신 링시간(초)
+    row.push(Utils.getHourMinSecBySecond(outcoming_talk_time)); // 발신 순수통화시간
+    row.push(`${outcoming_talk_time}`); // 발신 순수통화시간(초)
+
+    // 수신
+    row.push(`${incoming_total_call}`); // 수신 시도콜
+    row.push(`${incoming_connect_call}`); // 수신 연결콜
+    row.push(`${incoming_fail_call}`); // 수신 부재콜
+
+    let incomingConnectionRate =
+      incoming_connect_call / incoming_total_call || 0;
+    incomingConnectionRate = Utils.getDecimalNumber(
+      incomingConnectionRate * 100,
+    );
+    row.push(`${incomingConnectionRate}%`); // 수신 연결률
+
+    row.push(Utils.getHourMinSecBySecond(incoming_total_time)); // 수신 통화 시간
+    row.push(`${incoming_total_time}`); // 수신 통화 시간(초)
+
+    let incomingAverageCallTime = incoming_total_time / incoming_total_call;
+    incomingAverageCallTime = incomingAverageCallTime || 0;
+    row.push(Utils.getHourMinSecBySecond(incomingAverageCallTime)); // 수신 평균 통화 시간
+
+    row.push(Utils.getHourMinSecBySecond(incoming_ring_time)); // 수신 링 시간
+    row.push(`${incoming_ring_time}`); // 수신 링시간(초)
+    row.push(Utils.getHourMinSecBySecond(incoming_talk_time)); // 수신 순수통화시간
+    row.push(`${incoming_talk_time}`); // 수신 순수통화시간(초)
+
+    return row;
+  }
+
   static getRowMessageStatistics(contents: IMessageStatisticsItem) {
     const row: Array<string> = [];
 
