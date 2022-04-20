@@ -1,3 +1,407 @@
+import { Colors } from 'utils/color';
+
+export const tableTitleDependencyAllCallStatistics = [...new Array(11)].map(
+  (v, i) => {
+    const property = {
+      backgroundColor: Colors.blue8,
+      borderColor: Colors.gray14,
+      borderStyle: 'solid',
+      borderWidth: 1,
+      fontFamily: 'Malgun Gothic',
+      fontSize: 11,
+      letterSpacing: -0.55,
+      title: '',
+      width: 47,
+    };
+
+    switch (i) {
+      case 0: {
+        property.title = '시도콜';
+
+        break;
+      }
+      case 1: {
+        property.title = '연결콜';
+
+        break;
+      }
+      case 2: {
+        property.title = '부재콜';
+
+        break;
+      }
+      case 3: {
+        property.title = '연결률(%)';
+        property.width = 63;
+
+        break;
+      }
+      case 4: {
+        property.title = '통화시간';
+        property.width = 57;
+
+        break;
+      }
+      case 5: {
+        property.title = '통화시간(초)';
+        property.width = 75;
+
+        break;
+      }
+      case 6: {
+        property.title = '평균통화시간';
+        property.width = 79;
+
+        break;
+      }
+      case 7: {
+        property.title = '링시간';
+        property.width = 57;
+
+        break;
+      }
+      case 8: {
+        property.title = '링시간(초)';
+        property.width = 75;
+
+        break;
+      }
+      case 9: {
+        property.title = '순수 통화시간';
+        property.width = 81;
+
+        break;
+      }
+      case 10: {
+        property.title = '순수 통화시간(초)';
+        property.width = 99;
+
+        break;
+      }
+    }
+
+    return property;
+  },
+);
+
+export const tableTitleDependencyOutcomingCallStatistics = [
+  ...new Array(11),
+].map((v, i) => {
+  const property = {
+    backgroundColor: Colors.yellow1,
+    borderColor: Colors.gray14,
+    borderStyle: 'solid',
+    borderWidth: 1,
+    fontFamily: 'Malgun Gothic',
+    fontSize: 11,
+    letterSpacing: -0.55,
+    title: '',
+    width: 47,
+  };
+
+  switch (i) {
+    case 0: {
+      property.title = '시도콜';
+
+      break;
+    }
+    case 1: {
+      property.title = '연결콜';
+
+      break;
+    }
+    case 2: {
+      property.title = '부재콜';
+
+      break;
+    }
+    case 3: {
+      property.title = '연결률(%)';
+      property.width = 63;
+
+      break;
+    }
+    case 4: {
+      property.title = '통화시간';
+      property.width = 57;
+
+      break;
+    }
+    case 5: {
+      property.title = '통화시간(초)';
+      property.width = 75;
+
+      break;
+    }
+    case 6: {
+      property.title = '평균통화시간';
+      property.width = 79;
+
+      break;
+    }
+    case 7: {
+      property.title = '링시간';
+      property.width = 57;
+
+      break;
+    }
+    case 8: {
+      property.title = '링시간(초)';
+      property.width = 75;
+
+      break;
+    }
+    case 9: {
+      property.title = '순수 통화시간';
+      property.width = 81;
+
+      break;
+    }
+    case 10: {
+      property.title = '순수 통화시간(초)';
+      property.width = 99;
+
+      break;
+    }
+  }
+
+  return property;
+});
+
+export const tableTitleDependencyIncomingCallStatistics = [
+  ...new Array(11),
+].map((v, i) => {
+  const property = {
+    backgroundColor: Colors.red1,
+    borderColor: Colors.gray14,
+    borderStyle: 'solid',
+    borderWidth: 1,
+    fontFamily: 'Malgun Gothic',
+    fontSize: 11,
+    letterSpacing: -0.55,
+    title: '',
+    width: 47,
+  };
+
+  switch (i) {
+    case 0: {
+      property.title = '시도콜';
+
+      break;
+    }
+    case 1: {
+      property.title = '연결콜';
+
+      break;
+    }
+    case 2: {
+      property.title = '부재콜';
+
+      break;
+    }
+    case 3: {
+      property.title = '연결률(%)';
+      property.width = 63;
+
+      break;
+    }
+    case 4: {
+      property.title = '통화시간';
+      property.width = 57;
+
+      break;
+    }
+    case 5: {
+      property.title = '통화시간(초)';
+      property.width = 75;
+
+      break;
+    }
+    case 6: {
+      property.title = '평균통화시간';
+      property.width = 79;
+
+      break;
+    }
+    case 7: {
+      property.title = '링시간';
+      property.width = 57;
+
+      break;
+    }
+    case 8: {
+      property.title = '링시간(초)';
+      property.width = 75;
+
+      break;
+    }
+    case 9: {
+      property.title = '순수 통화시간';
+      property.width = 81;
+
+      break;
+    }
+    case 10: {
+      property.title = '순수 통화시간(초)';
+      property.width = 99;
+
+      break;
+    }
+  }
+
+  return property;
+});
+
+export const tableTitleCallStatisticsByConsultant = [...new Array(8)].map(
+  (v, i) => {
+    const property = {
+      backgroundColor: 'inherit',
+      borderColor: Colors.gray14,
+      borderStyle: 'solid',
+      borderWidth: 1,
+      colSpan: 1,
+      fontFamily: 'Malgun Gothic',
+      fontSize: 12,
+      letterSpacing: -0.6,
+      rowSpan: 1,
+      title: '',
+      width: 727,
+    };
+
+    switch (i) {
+      case 0: {
+        property.rowSpan = 2;
+        property.title = '센터';
+        property.width = 140;
+
+        break;
+      }
+      case 1: {
+        property.rowSpan = 2;
+        property.title = '팀(상담조직)';
+        property.width = 143;
+
+        break;
+      }
+      case 2: {
+        property.rowSpan = 2;
+        property.title = '상담사 명';
+        property.width = 81;
+
+        break;
+      }
+      case 3: {
+        property.rowSpan = 2;
+        property.title = '상담사 ID';
+        property.width = 109;
+
+        break;
+      }
+      case 4: {
+        property.rowSpan = 2;
+        property.title = '일시';
+        property.width = 119;
+
+        break;
+      }
+      case 5: {
+        property.backgroundColor = Colors.blue8;
+        property.colSpan = 11;
+        property.title = '전체';
+
+        break;
+      }
+      case 6: {
+        property.backgroundColor = Colors.yellow1;
+        property.colSpan = 11;
+        property.title = '발신';
+
+        break;
+      }
+      case 7: {
+        property.backgroundColor = Colors.red1;
+        property.colSpan = 11;
+        property.title = '수신';
+
+        break;
+      }
+    }
+
+    return property;
+  },
+);
+
+export const tableTitleDependencyCallStatistics = [
+  [
+    ...tableTitleDependencyAllCallStatistics,
+    ...tableTitleDependencyOutcomingCallStatistics,
+    ...tableTitleDependencyIncomingCallStatistics,
+  ],
+];
+
+export const tableTitleCallStatisticsByTeam = [...new Array(6)].map((v, i) => {
+  const property = {
+    backgroundColor: 'inherit',
+    borderColor: Colors.gray14,
+    borderStyle: 'solid',
+    borderWidth: 1,
+    colSpan: 1,
+    fontFamily: 'Malgun Gothic',
+    fontSize: 12,
+    letterSpacing: -0.6,
+    rowSpan: 1,
+    title: '',
+    width: 727,
+  };
+
+  switch (i) {
+    case 0: {
+      property.rowSpan = 2;
+      property.title = '센터';
+      property.width = 140;
+
+      break;
+    }
+    case 1: {
+      property.rowSpan = 2;
+      property.title = '팀(상담조직)';
+      property.width = 143;
+
+      break;
+    }
+    case 2: {
+      property.rowSpan = 2;
+      property.title = '일시';
+      property.width = 119;
+
+      break;
+    }
+    case 3: {
+      property.backgroundColor = Colors.blue8;
+      property.colSpan = 11;
+      property.title = '전체';
+
+      break;
+    }
+    case 4: {
+      property.backgroundColor = Colors.yellow1;
+      property.colSpan = 11;
+      property.title = '발신';
+
+      break;
+    }
+    case 5: {
+      property.backgroundColor = Colors.red1;
+      property.colSpan = 11;
+      property.title = '수신';
+
+      break;
+    }
+  }
+
+  return property;
+});
+
 export const tableTitleMessageStatistics = [...new Array(13)].map((v, i) => {
   const property = {
     fontFamily: 'Malgun Gothic',
