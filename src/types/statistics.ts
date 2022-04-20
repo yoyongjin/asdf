@@ -109,7 +109,7 @@ export interface ICallStatisticeByConsultantItem {
   incoming: Array<ICallStatisticsItem>; // 수신 통화 통계
   name: string; // 이름
   outcoming: Array<ICallStatisticsItem>; // 발신 통화 통계
-  sub_total: ICallStatisticTotalItem; // 소계
+  sub_total?: ICallStatisticTotalItem; // 소계
   team_name: string; // 팀명
   tmr_cd: string; // 유저 ID
 }
