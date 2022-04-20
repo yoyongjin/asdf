@@ -89,103 +89,66 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
 
         let callStatisticsByConsultant: Array<ICustomCallStatisticeByConsultantItem> =
           [];
+
         action.payload.list.map((values) => {
-          const consultantDataLength = values.all.length;
+          const {
+            all,
+            branch_name,
+            id,
+            incoming,
+            name,
+            outcoming,
+            sub_total,
+            team_name,
+            tmr_cd,
+          } = values;
+
+          const consultantDataLength = all.length;
 
           const customCallStatisticsData = [
             ...new Array(consultantDataLength),
           ].map((key, index) => {
-            return {
-              branch_name: values.branch_name,
-              team_name: values.team_name,
-              name: values.name,
-              tmr_cd: values.tmr_cd,
-              date: values.all[index].date,
-              all_total_call: values.all[index].total_call,
-              all_connect_call: values.all[index].connect_call,
-              all_fail_call: values.all[index].fail_call,
-              all_total_time: values.all[index].total_time,
-              all_ring_time: values.all[index].ring_time,
-              all_talk_time: values.all[index].talk_time,
-              incoming_total_call: values.incoming[index].total_call,
-              incoming_connect_call: values.incoming[index].connect_call,
-              incoming_fail_call: values.incoming[index].fail_call,
-              incoming_total_time: values.incoming[index].total_time,
-              incoming_ring_time: values.incoming[index].ring_time,
-              incoming_talk_time: values.incoming[index].talk_time,
-              outcoming_total_call: values.outcoming[index].total_call,
-              outcoming_connect_call: values.outcoming[index].connect_call,
-              outcoming_fail_call: values.outcoming[index].fail_call,
-              outcoming_total_time: values.outcoming[index].total_time,
-              outcoming_ring_time: values.outcoming[index].ring_time,
-              outcoming_talk_time: values.outcoming[index].talk_time,
-            };
+            return StatisticsFormat.getCustomCallStatisticsByConsultantItem(
+              all[index],
+              incoming[index],
+              outcoming[index],
+              branch_name,
+              team_name,
+              name,
+              tmr_cd,
+              all[index].date,
+            );
           });
 
-          if (allCount && values.sub_total) {
-            const subTotalData = {
-              branch_name: '소계',
-              team_name: '',
-              name: '',
-              tmr_cd: '',
-              date: '',
-              all_total_call: values.sub_total.all.total_call,
-              all_connect_call: values.sub_total.all.connect_call,
-              all_fail_call: values.sub_total.all.fail_call,
-              all_total_time: values.sub_total.all.total_time,
-              all_ring_time: values.sub_total.all.ring_time,
-              all_talk_time: values.sub_total.all.talk_time,
-              incoming_total_call: values.sub_total.incoming.total_call,
-              incoming_connect_call: values.sub_total.incoming.connect_call,
-              incoming_fail_call: values.sub_total.incoming.fail_call,
-              incoming_total_time: values.sub_total.incoming.total_time,
-              incoming_ring_time: values.sub_total.incoming.ring_time,
-              incoming_talk_time: values.sub_total.incoming.talk_time,
-              outcoming_total_call: values.sub_total.outcoming.total_call,
-              outcoming_connect_call: values.sub_total.outcoming.connect_call,
-              outcoming_fail_call: values.sub_total.outcoming.fail_call,
-              outcoming_total_time: values.sub_total.outcoming.total_time,
-              outcoming_ring_time: values.sub_total.outcoming.ring_time,
-              outcoming_talk_time: values.sub_total.outcoming.talk_time,
-            };
-            // customCallStatisticsData.push(subTotalData);
+          if (allCount && sub_total) {
+            const subTotalData =
+              StatisticsFormat.getCustomCallStatisticsByConsultantItem(
+                sub_total.all,
+                sub_total.incoming,
+                sub_total.outcoming,
+                '소계',
+              );
+
+            customCallStatisticsData.push(subTotalData);
           }
 
           callStatisticsByConsultant = callStatisticsByConsultant.concat(
             customCallStatisticsData,
           );
-          return customCallStatisticsData;
         });
 
         const currentPage = action.payload.page; // 현재 페이지
         const limit = action.payload.limit; // 요청 개수
+
         if (allCount && currentPage * limit >= allCount) {
           const total = action.payload.common.total;
-          const totalData = {
-            branch_name: '합계',
-            team_name: '',
-            name: '',
-            tmr_cd: '',
-            date: '',
-            all_total_call: total.all.total_call,
-            all_connect_call: total.all.connect_call,
-            all_fail_call: total.all.fail_call,
-            all_total_time: total.all.total_time,
-            all_ring_time: total.all.ring_time,
-            all_talk_time: total.all.talk_time,
-            incoming_total_call: total.incoming.total_call,
-            incoming_connect_call: total.incoming.connect_call,
-            incoming_fail_call: total.incoming.fail_call,
-            incoming_total_time: total.incoming.total_time,
-            incoming_ring_time: total.incoming.ring_time,
-            incoming_talk_time: total.incoming.talk_time,
-            outcoming_total_call: total.outcoming.total_call,
-            outcoming_connect_call: total.outcoming.connect_call,
-            outcoming_fail_call: total.outcoming.fail_call,
-            outcoming_total_time: total.outcoming.total_time,
-            outcoming_ring_time: total.outcoming.ring_time,
-            outcoming_talk_time: total.outcoming.talk_time,
-          };
+          const totalData =
+            StatisticsFormat.getCustomCallStatisticsByConsultantItem(
+              total.all,
+              total.incoming,
+              total.outcoming,
+              '합계',
+            );
 
           callStatisticsByConsultant.push(totalData);
         }
@@ -218,61 +181,41 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
 
         let callStatisticsByTeam: Array<ICustomCallStatisticeByTeamItem> = [];
         action.payload.list.map((values) => {
-          const teamDataLength = values.all.length;
+          const {
+            branch_name,
+            all,
+            id,
+            incoming,
+            outcoming,
+            sub_total,
+            team_name,
+          } = values;
+
+          const teamDataLength = all.length;
 
           const customCallStatisticsData = [...new Array(teamDataLength)].map(
             (key, index) => {
-              return {
-                branch_name: values.branch_name,
-                team_name: values.team_name,
-                date: values.all[index].date,
-                all_total_call: values.all[index].total_call,
-                all_connect_call: values.all[index].connect_call,
-                all_fail_call: values.all[index].fail_call,
-                all_total_time: values.all[index].total_time,
-                all_ring_time: values.all[index].ring_time,
-                all_talk_time: values.all[index].talk_time,
-                incoming_total_call: values.incoming[index].total_call,
-                incoming_connect_call: values.incoming[index].connect_call,
-                incoming_fail_call: values.incoming[index].fail_call,
-                incoming_total_time: values.incoming[index].total_time,
-                incoming_ring_time: values.incoming[index].ring_time,
-                incoming_talk_time: values.incoming[index].talk_time,
-                outcoming_total_call: values.outcoming[index].total_call,
-                outcoming_connect_call: values.outcoming[index].connect_call,
-                outcoming_fail_call: values.outcoming[index].fail_call,
-                outcoming_total_time: values.outcoming[index].total_time,
-                outcoming_ring_time: values.outcoming[index].ring_time,
-                outcoming_talk_time: values.outcoming[index].talk_time,
-              };
+              return StatisticsFormat.getCustomCallStatisticsByTeamItem(
+                all[index],
+                incoming[index],
+                outcoming[index],
+                branch_name,
+                team_name,
+                all[index].date,
+              );
             },
           );
 
-          if (allCount && values.sub_total) {
-            const subTotalData = {
-              branch_name: '소계',
-              team_name: '',
-              date: '',
-              all_total_call: values.sub_total.all.total_call,
-              all_connect_call: values.sub_total.all.connect_call,
-              all_fail_call: values.sub_total.all.fail_call,
-              all_total_time: values.sub_total.all.total_time,
-              all_ring_time: values.sub_total.all.ring_time,
-              all_talk_time: values.sub_total.all.talk_time,
-              incoming_total_call: values.sub_total.incoming.total_call,
-              incoming_connect_call: values.sub_total.incoming.connect_call,
-              incoming_fail_call: values.sub_total.incoming.fail_call,
-              incoming_total_time: values.sub_total.incoming.total_time,
-              incoming_ring_time: values.sub_total.incoming.ring_time,
-              incoming_talk_time: values.sub_total.incoming.talk_time,
-              outcoming_total_call: values.sub_total.outcoming.total_call,
-              outcoming_connect_call: values.sub_total.outcoming.connect_call,
-              outcoming_fail_call: values.sub_total.outcoming.fail_call,
-              outcoming_total_time: values.sub_total.outcoming.total_time,
-              outcoming_ring_time: values.sub_total.outcoming.ring_time,
-              outcoming_talk_time: values.sub_total.outcoming.talk_time,
-            };
-            // customCallStatisticsData.push(subTotalData);
+          if (allCount && sub_total) {
+            const subTotalData =
+              StatisticsFormat.getCustomCallStatisticsByTeamItem(
+                sub_total.all,
+                sub_total.incoming,
+                sub_total.outcoming,
+                '소계',
+              );
+
+            customCallStatisticsData.push(subTotalData);
           }
 
           callStatisticsByTeam = callStatisticsByTeam.concat(
@@ -283,31 +226,15 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
 
         const currentPage = action.payload.page; // 현재 페이지
         const limit = action.payload.limit; // 요청 개수
+
         if (allCount && currentPage * limit >= allCount) {
           const total = action.payload.common.total;
-          const totalData = {
-            branch_name: '합계',
-            team_name: '',
-            date: '',
-            all_total_call: total.all.total_call,
-            all_connect_call: total.all.connect_call,
-            all_fail_call: total.all.fail_call,
-            all_total_time: total.all.total_time,
-            all_ring_time: total.all.ring_time,
-            all_talk_time: total.all.talk_time,
-            incoming_total_call: total.incoming.total_call,
-            incoming_connect_call: total.incoming.connect_call,
-            incoming_fail_call: total.incoming.fail_call,
-            incoming_total_time: total.incoming.total_time,
-            incoming_ring_time: total.incoming.ring_time,
-            incoming_talk_time: total.incoming.talk_time,
-            outcoming_total_call: total.outcoming.total_call,
-            outcoming_connect_call: total.outcoming.connect_call,
-            outcoming_fail_call: total.outcoming.fail_call,
-            outcoming_total_time: total.outcoming.total_time,
-            outcoming_ring_time: total.outcoming.ring_time,
-            outcoming_talk_time: total.outcoming.talk_time,
-          };
+          const totalData = StatisticsFormat.getCustomCallStatisticsByTeamItem(
+            total.all,
+            total.incoming,
+            total.outcoming,
+            '합계',
+          );
 
           callStatisticsByTeam.push(totalData);
         }
