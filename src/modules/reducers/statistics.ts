@@ -202,13 +202,13 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
       });
     },
     [actions.REQUEST_GET_CALL_STATISTICS_BY_TEAM]: (state, action) => {
-      // 상담원별 통화 통계 가져오기
+      // 팀별 통화 통계 가져오기
       return produce(state, (draft) => {
         draft.request.getCallStatisticsByTeam.fetch = true;
       });
     },
     [actions.SUCCESS_GET_CALL_STATISTICS_BY_TEAM]: (state, action) => {
-      // 상담원별 통화 통계 가져오기 성공
+      // 팀별 통화 통계 가져오기 성공
       return produce(state, (draft) => {
         draft.request.getCallStatisticsByTeam.fetch = false;
         draft.request.getCallStatisticsByTeam.error = '';
@@ -317,7 +317,7 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
       });
     },
     [actions.FAILURE_GET_CALL_STATISTICS_BY_TEAM]: (state, action) => {
-      // 상담원별 통화 통계 가져오기 실패
+      // 팀별 통화 통계 가져오기 실패
       return produce(state, (draft) => {
         draft.request.getCallStatisticsByTeam.fetch = false;
         draft.request.getCallStatisticsByTeam.error = action.payload;
