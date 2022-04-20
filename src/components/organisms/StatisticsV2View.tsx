@@ -121,9 +121,9 @@ function StatisticsV2View() {
   const { form, onChangeCheckBox, onChangeSelect } = useInputForm({
     break_up: false, // 해촉여부
     search_type: 1, // 조회 조건
-    start_hour: 0, // 시작 시
+    start_hour: 8, // 시작 시
     start_minute: 0, // 시작 분
-    end_hour: 0, // 끝 시
+    end_hour: 21, // 끝 시
     end_minute: 0, // 끝 분
     limit: 100, // 페이징 개수
   });
