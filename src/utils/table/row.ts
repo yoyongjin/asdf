@@ -24,7 +24,7 @@ class TableRow {
       tmr_name,
     } = contents;
 
-    row.push(date.substring(0, 10));
+    row.push(date);
     row.push(branch_name);
     row.push(team_name);
 
@@ -61,7 +61,7 @@ class TableRow {
       tmr_name,
     } = contents;
 
-    row.push(date.substring(0, 10));
+    row.push(date);
     row.push(branch_name);
     row.push(team_name);
 

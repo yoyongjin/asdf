@@ -28,7 +28,7 @@ class Statistics {
 
     const items: DynamicJSON = {};
 
-    items[titles[0]] = date.substring(0, 10);
+    items[titles[0]] = date;
     items[titles[1]] = branch_name;
     items[titles[2]] = team_name;
     items[titles[3]] = tmr_name;
@@ -66,7 +66,7 @@ class Statistics {
 
     const items: DynamicJSON = {};
 
-    items[titles[0]] = date.substring(0, 10);
+    items[titles[0]] = date;
     items[titles[1]] = branch_name;
     items[titles[2]] = team_name;
 
