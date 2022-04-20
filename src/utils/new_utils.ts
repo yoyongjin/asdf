@@ -143,19 +143,21 @@ class Utils {
    * @param isSec 초 가져올지 여부
    * @param delimYMD 년월일 구분자
    * @param delimHMS 시분초 구분자
+   * @param space 년원일시분초 구분자
    */
   static getFullDate(
     timestamp: number,
     isSec = true,
     delimYMD = ':',
     delimHMS = ':',
+    space = ' ',
   ) {
     const yyyymmdd = Utils.getYYYYMMDD(timestamp, delimYMD);
     const hhmmss = isSec
       ? Utils.getHourMinSecByTimestamp(timestamp, delimHMS)
       : Utils.getHourMinByTimestamp(timestamp, delimHMS);
 
-    return `${yyyymmdd} ${hhmmss}`;
+    return `${yyyymmdd}${space}${hhmmss}`;
   }
 
   static pad(data: string, standard = 2) {
