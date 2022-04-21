@@ -508,6 +508,8 @@ function UserView({ location }: UserViewProps) {
             isButton
             isSearch
             isSelect
+            isExplanRight
+            explanData={{ title: '조회 개수 : ' }}
             buttonData={buttonData}
             searchData={searchData}
             selectData={selectData}

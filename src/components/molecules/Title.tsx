@@ -115,6 +115,7 @@ function Title({
   isCalendar,
   isExcel,
   isExplan,
+  isExplanRight,
   isPage,
   isSelect,
   isSearch,
@@ -184,6 +185,13 @@ function Title({
         ) : null}
       </StyledBorderPostion>
       <StyledBorderPostion pixel={rightBottomPixel} float="right">
+        {isExplanRight ? (
+          <StyledExplanation>
+            <Text fontColor={Colors.gray6} fontFamily="NanumBarunGothic">
+              {explanData!.title}
+            </Text>
+          </StyledExplanation>
+        ) : null}
         {isCalendar ? (
           <>
             <TextCalendar
@@ -475,6 +483,7 @@ interface TitleProps {
   isCalendar: boolean;
   isExcel: boolean;
   isExplan: boolean;
+  isExplanRight: boolean;
   isPage: boolean;
   isSearch: boolean;
   isSelect: boolean;
@@ -500,6 +509,7 @@ Title.defaultProps = {
   isCalendar: false,
   isExcel: false,
   isExplan: false,
+  isExplanRight: false,
   isPage: false,
   isSearch: false,
   isSelect: false,
