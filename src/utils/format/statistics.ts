@@ -2,6 +2,7 @@ import { DynamicJSON } from 'types/common';
 import {
   IAutoMessageStatisticsItem,
   ICallStatisticsItem,
+  ICustomCallStatisticeByConsultantItem,
   IMessageStatisticsItem,
 } from 'types/statistics';
 import Utils from 'utils/new_utils';
@@ -75,6 +76,165 @@ class Statistics {
       outcoming_ring_time: outcoming.total_call,
       outcoming_talk_time: outcoming.total_call,
     };
+  }
+
+  static getExcelAllCallStatisticsByConsultantItem(
+    titles: Array<string>,
+    contents: ICustomCallStatisticeByConsultantItem,
+  ) {
+    const {
+      all_connect_call,
+      all_fail_call,
+      all_ring_time,
+      all_talk_time,
+      all_total_call,
+      all_total_time,
+      branch_name,
+      date,
+      name,
+      team_name,
+      tmr_cd,
+    } = contents;
+
+    const items: DynamicJSON = {};
+
+    // 공통
+    items[titles[0]] = branch_name;
+    items[titles[1]] = team_name;
+    items[titles[2]] = name;
+    items[titles[3]] = tmr_cd;
+    items[titles[4]] = date;
+
+    // 전체
+    items[titles[5]] = `${all_total_call}`; // 전체 시도콜
+    items[titles[6]] = `${all_connect_call}`; // 전체 연결콜
+    items[titles[7]] = `${all_fail_call}`; // 전체 부재콜
+
+    let allConnectionRate = all_connect_call / all_total_call || 0;
+    allConnectionRate = Utils.getDecimalNumber(allConnectionRate * 100);
+    items[titles[8]] = `${allConnectionRate}%`; // 전체 연결률
+
+    items[titles[9]] = Utils.getHourMinSecBySecond(all_total_time); // 전체 통화 시간
+    items[titles[10]] = `${all_total_time}`; // 전체 통화 시간(초)
+
+    let allAverageCallTime = all_total_time / all_total_call;
+    allAverageCallTime = allAverageCallTime || 0;
+    items[titles[11]] = Utils.getHourMinSecBySecond(allAverageCallTime); // 전체 평균 통화 시간
+
+    items[titles[12]] = Utils.getHourMinSecBySecond(all_ring_time); // 전체 링 시간
+    items[titles[13]] = `${all_ring_time}`; // 전체 링시간(초)
+    items[titles[14]] = Utils.getHourMinSecBySecond(all_talk_time); // 전체 순수통화시간
+    items[titles[15]] = `${all_talk_time}`; // 전체 순수통화시간(초)
+
+    return items;
+  }
+
+  static getExcelIncomingCallStatisticsByConsultantItem(
+    titles: Array<string>,
+    contents: ICustomCallStatisticeByConsultantItem,
+  ) {
+    const {
+      branch_name,
+      date,
+      incoming_connect_call,
+      incoming_fail_call,
+      incoming_ring_time,
+      incoming_talk_time,
+      incoming_total_call,
+      incoming_total_time,
+      name,
+      team_name,
+      tmr_cd,
+    } = contents;
+
+    const items: DynamicJSON = {};
+
+    // 공통
+    items[titles[0]] = branch_name;
+    items[titles[1]] = team_name;
+    items[titles[2]] = name;
+    items[titles[3]] = tmr_cd;
+    items[titles[4]] = date;
+
+    // 수신
+    items[titles[5]] = `${incoming_total_call}`; // 수신 시도콜
+    items[titles[6]] = `${incoming_connect_call}`; // 수신 연결콜
+    items[titles[7]] = `${incoming_fail_call}`; // 수신 부재콜
+
+    let incomingConnectionRate =
+      incoming_connect_call / incoming_total_call || 0;
+    incomingConnectionRate = Utils.getDecimalNumber(
+      incomingConnectionRate * 100,
+    );
+    items[titles[8]] = `${incomingConnectionRate}%`; // 수신 연결률
+
+    items[titles[9]] = Utils.getHourMinSecBySecond(incoming_total_time); // 수신 통화 시간
+    items[titles[10]] = `${incoming_total_time}`; // 수신 통화 시간(초)
+
+    let incomingAverageCallTime = incoming_total_time / incoming_total_call;
+    incomingAverageCallTime = incomingAverageCallTime || 0;
+    items[titles[11]] = Utils.getHourMinSecBySecond(incomingAverageCallTime); // 수신 평균 통화 시간
+
+    items[titles[12]] = Utils.getHourMinSecBySecond(incoming_ring_time); // 수신 링 시간
+    items[titles[13]] = `${incoming_ring_time}`; // 수신 링시간(초)
+    items[titles[14]] = Utils.getHourMinSecBySecond(incoming_talk_time); // 수신 순수통화시간
+    items[titles[15]] = `${incoming_talk_time}`; // 수신 순수통화시간(초)
+
+    return items;
+  }
+
+  static getExcelOutcomingCallStatisticsByConsultantItem(
+    titles: Array<string>,
+    contents: ICustomCallStatisticeByConsultantItem,
+  ) {
+    const {
+      branch_name,
+      date,
+      name,
+      outcoming_connect_call,
+      outcoming_fail_call,
+      outcoming_ring_time,
+      outcoming_talk_time,
+      outcoming_total_call,
+      outcoming_total_time,
+      team_name,
+      tmr_cd,
+    } = contents;
+
+    const items: DynamicJSON = {};
+
+    // 공통
+    items[titles[0]] = branch_name;
+    items[titles[1]] = team_name;
+    items[titles[2]] = name;
+    items[titles[3]] = tmr_cd;
+    items[titles[4]] = date;
+
+    // 발신
+    items[titles[5]] = `${outcoming_total_call}`; // 발신 시도콜
+    items[titles[6]] = `${outcoming_connect_call}`; // 발신 연결콜
+    items[titles[7]] = `${outcoming_fail_call}`; // 발신 부재콜
+
+    let outcomingConnectionRate =
+      outcoming_connect_call / outcoming_total_call || 0;
+    outcomingConnectionRate = Utils.getDecimalNumber(
+      outcomingConnectionRate * 100,
+    );
+    items[titles[8]] = `${outcomingConnectionRate}%`; // 발신 연결률
+
+    items[titles[9]] = Utils.getHourMinSecBySecond(outcoming_total_time); // 발신 통화 시간
+    items[titles[10]] = `${outcoming_total_time}`; // 발신 통화 시간(초)
+
+    let outcomingAverageCallTime = outcoming_total_time / outcoming_total_call;
+    outcomingAverageCallTime = outcomingAverageCallTime || 0;
+    items[titles[11]] = Utils.getHourMinSecBySecond(outcomingAverageCallTime); // 발신 평균 통화 시간
+
+    items[titles[12]] = Utils.getHourMinSecBySecond(outcoming_ring_time); // 발신 링 시간
+    items[titles[13]] = `${outcoming_ring_time}`; // 발신 링시간(초)
+    items[titles[14]] = Utils.getHourMinSecBySecond(outcoming_talk_time); // 발신 순수통화시간
+    items[titles[15]] = `${outcoming_talk_time}`; // 발신 순수통화시간(초)
+
+    return items;
   }
 
   static getExcelMessageStatisticsItem(

@@ -350,6 +350,15 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
         draft.messageStatisticsAllCount = 0;
       });
     },
+    [actions.SET_INITIALIZE_ALL_CALL_STATISTICS_BY_CONSULTANT]: (
+      state,
+      action,
+    ) => {
+      // 전체 상담원별 통화 통계 초기화하기
+      return produce(state, (draft) => {
+        draft.allCallStatisticsByConsultant = [];
+      });
+    },
     [actions.SET_INITIALIZE_ALL_AUTO_MESSAGE_STATISTICS]: (state, action) => {
       // 전체 자동 문자 통계 초기화하기
       return produce(state, (draft) => {

@@ -131,6 +131,15 @@ export const setInitializeAllAutoMessageStatistics = createAction(
   SET_INITIALIZE_ALL_AUTO_MESSAGE_STATISTICS,
 )();
 
+// v2 전체 상담원별 통화 통계 데이터 초기화하기
+export const SET_INITIALIZE_ALL_CALL_STATISTICS_BY_CONSULTANT =
+  'SET_INITIALIZE_ALL_CALL_STATISTICS_BY_CONSULTANT';
+
+// v2 전체 상담원별 통화 통계 데이터 초기화하기 Action
+export const setInitializeAllCallStatisticsByConsultant = createAction(
+  SET_INITIALIZE_ALL_CALL_STATISTICS_BY_CONSULTANT,
+)();
+
 // v2 문자 통계 데이터 초기화하기
 export const SET_INITIALIZE_MESSAGE_STATISTICS =
   'SET_INITIALIZE_MESSAGE_STATISTICS';

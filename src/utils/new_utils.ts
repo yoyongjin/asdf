@@ -213,7 +213,7 @@ class Utils {
 
   static replace(
     origintText: string,
-    changedWord: string,
+    changedWord: string | RegExp,
     replaceWord: string,
   ) {
     return origintText.replace(changedWord, replaceWord);
