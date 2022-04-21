@@ -389,11 +389,27 @@ function useExcel() {
     const ws = XLSX.utils.json_to_sheet(content);
     ws['!cols'] = titleWidth;
 
+    Object.keys(ws).forEach((key) => {
+      // 스타일 적용을 위한 반복문
+      const rowNumber = Number(Utils.replace(key, /[^0-9]/gi, ''));
+
+      if (rowNumber === 1) {
+        // 헤더일 경우 스타일 적용
+        const headerStyle = {
+          font: {
+            bold: true,
+          },
+        };
+        ws[key].s = headerStyle;
+
+        return;
+      }
+    });
+
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws);
 
-    const fullData = Utils.getFullDate(new Date().getTime(), true, '', '', '_');
-    const fileName = `${fullData}_문자통계.xlsx`;
+    const fileName = `message_statistics.xlsx`;
     XLSX.writeFile(wb, fileName);
 
     setInitAllMessageStatistics();
@@ -429,11 +445,27 @@ function useExcel() {
     const ws = XLSX.utils.json_to_sheet(content);
     ws['!cols'] = titleWidth;
 
+    Object.keys(ws).forEach((key) => {
+      // 스타일 적용을 위한 반복문
+      const rowNumber = Number(Utils.replace(key, /[^0-9]/gi, ''));
+
+      if (rowNumber === 1) {
+        // 헤더일 경우 스타일 적용
+        const headerStyle = {
+          font: {
+            bold: true,
+          },
+        };
+        ws[key].s = headerStyle;
+
+        return;
+      }
+    });
+
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws);
 
-    const fullData = Utils.getFullDate(new Date().getTime(), true, '', '', '_');
-    const fileName = `${fullData}_자동문자통계.xlsx`;
+    const fileName = `auto_message_statistics.xlsx`;
     XLSX.writeFile(wb, fileName);
 
     setInitAllAutoMessageStatistics();
