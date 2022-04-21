@@ -71,6 +71,8 @@ function* getCallStatisticsByConsultantProcess(
     start_time,
   } = action.payload;
 
+  Toast.notification('잠시만 기다려주세요..🙄');
+
   const response: ResponseSuccessData | ResponseFailureData = yield call(
     ZMSStatistics.getCallStatisticsByConsultant,
     ids,
@@ -93,6 +95,8 @@ function* getCallStatisticsByConsultantProcess(
     data.limit = page_count;
 
     yield put(successGetCallStatisticsByConsultant(data));
+
+    Toast.success('가져오기 완료😊');
 
     return;
   }
@@ -118,6 +122,8 @@ function* getCallStatisticsByTeamProcess(
     start_date,
     start_time,
   } = action.payload;
+
+  Toast.notification('잠시만 기다려주세요..🙄');
 
   const response: ResponseSuccessData | ResponseFailureData = yield call(
     ZMSStatistics.getCallStatisticsByTeam,
@@ -164,6 +170,8 @@ function* getAutoMessageStatisticsProcess(
     start_date,
   } = action.payload;
 
+  Toast.notification('잠시만 기다려주세요.🙄');
+
   const response: ResponseSuccessData | ResponseFailureData = yield call(
     ZMSStatistics.getAutoMessageStatistics,
     ids,
@@ -178,9 +186,17 @@ function* getAutoMessageStatisticsProcess(
   if (response.status === API_FETCH.SUCCESS) {
     const { data } = response as ResponseSuccessData;
 
+    if (data.cnt < 1) {
+      Toast.warning('데이터가 없습니다🙄');
+
+      return;
+    }
+
     data.isExcel = isExcel;
 
     yield put(successGetAutoMessageStatistics(data));
+
+    Toast.success('가져오기 완료😊');
 
     return;
   }
@@ -204,6 +220,8 @@ function* getMessageStatisticsProcess(
     start_date,
   } = action.payload;
 
+  Toast.notification('잠시만 기다려주세요..🙄');
+
   const response: ResponseSuccessData | ResponseFailureData = yield call(
     ZMSStatistics.getMessageStatistics,
     ids,
@@ -218,9 +236,17 @@ function* getMessageStatisticsProcess(
   if (response.status === API_FETCH.SUCCESS) {
     const { data } = response as ResponseSuccessData;
 
+    if (data.cnt < 1) {
+      Toast.warning('데이터가 없습니다🙄');
+
+      return;
+    }
+
     data.isExcel = isExcel;
 
     yield put(successGetMessageStatistics(data));
+
+    Toast.success('가져오기 완료😊');
 
     return;
   }
