@@ -7,7 +7,17 @@ class Toast {
       icon,
       style: {
         backgroundColor: Colors.red3,
-        color: '#fff',
+        color: Colors.white,
+      },
+    });
+  }
+
+  static notification(message: string, icon = '❕') {
+    toast(message, {
+      icon,
+      style: {
+        backgroundColor: Colors.blue10,
+        color: Colors.white,
       },
     });
   }
@@ -17,7 +27,17 @@ class Toast {
       icon,
       style: {
         backgroundColor: Colors.green4,
-        color: '#fff',
+        color: Colors.white,
+      },
+    });
+  }
+
+  static warning(message: string, icon = '❕') {
+    toast(message, {
+      icon,
+      style: {
+        backgroundColor: Colors.yellow2,
+        color: Colors.black,
       },
     });
   }
