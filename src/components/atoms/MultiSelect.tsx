@@ -4,6 +4,7 @@ import Select, {
   SelectProps,
   SelectState,
 } from 'react-dropdown-select';
+import { FixedSizeList } from 'react-window';
 import styled from 'styled-components';
 
 import { Button, Text } from 'components/atoms';
@@ -23,10 +24,10 @@ const StyledMultiSelect = styled(Select)<IStyledMultiSelect>`
 const StyledOptionWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 `;
 
 const StyledItems = styled.div`
-  overflow: auto;
   min-height: 10px;
   max-height: 200px;
 `;
@@ -113,28 +114,37 @@ function MultiSelect({
           )}
         </StyledOptionWrapper>
         <StyledItems>
-          {props.options.map((option: any) => {
-            return (
-              <StyledItem
-                key={option[props.valueField ?? 0]}
-                onClick={() => {
-                  methods.addItem(option);
-                }}
-              >
-                <TextCheckBox
-                  checkBoxIsChecked={
-                    state.values.indexOf(option) !== constants.DEFAULT_ID
-                  }
-                  checkBoxOnChange={() => methods.addItem(option)}
-                  isReverse
-                  textFontColor={Colors.navy2}
-                  textFontFamily="Malgun Gothic"
-                  textFontSize={12}
-                  textTitle={option[props.labelField ?? 0]}
-                />
-              </StyledItem>
-            );
-          })}
+          <FixedSizeList
+            height={200}
+            itemCount={props.options.length}
+            itemSize={height * 10}
+            width="100%"
+            itemData={props.options}
+          >
+            {({ index, style, data }: any) => {
+              return (
+                <StyledItem
+                  style={style}
+                  key={data[index].value}
+                  onClick={() => {
+                    methods.addItem(data[index]);
+                  }}
+                >
+                  <TextCheckBox
+                    checkBoxIsChecked={
+                      state.values.indexOf(data[index]) !== constants.DEFAULT_ID
+                    }
+                    checkBoxOnChange={() => methods.addItem(data[index])}
+                    isReverse
+                    textFontColor={Colors.navy2}
+                    textFontFamily="Malgun Gothic"
+                    textFontSize={12}
+                    textTitle={data[index].label}
+                  />
+                </StyledItem>
+              );
+            }}
+          </FixedSizeList>
         </StyledItems>
       </>
     );
