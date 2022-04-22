@@ -337,7 +337,7 @@ function UserView({ location }: UserViewProps) {
         },
       ],
       option: {
-        placeHolder: '이름, 전화번호, 계정',
+        placeHolder: '이름, 전화번호, 계정, pc_ip',
       },
     };
   }, [form.search, onChangeInput, onClickSearch]);

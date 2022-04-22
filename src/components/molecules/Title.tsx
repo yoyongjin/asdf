@@ -284,6 +284,7 @@ function Title({
                     search={data}
                     onChange={info.change}
                     onClickSearch={info.click}
+                    inputWidth={22}
                   />
                 </StyledSearch>
               );
