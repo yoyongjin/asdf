@@ -104,7 +104,7 @@ const inputData = [
   { id: 0, name: 'name', value: '이름(*)' },
   { id: 1, name: 'id', value: '아이디' },
   { id: 2, name: 'number', value: '전화번호' },
-  { id: 3, name: 'serial_number', value: '일련번호' },
+  // { id: 3, name: 'serial_number', value: '일련번호' },
   { id: 4, name: 'zibox_ip', value: 'ZiBox IP' },
   { id: 5, name: 'zibox_mac', value: 'ZiBox MAC' },
   { id: 6, name: 'pc_ip', value: 'PC IP' },
