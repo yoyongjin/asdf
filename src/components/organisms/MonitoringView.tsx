@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
-import styled from 'styled-components';
 import { RouteComponentProps } from 'react-router-dom';
+import AutoSizer from 'react-virtualized-auto-sizer';
+import { FixedSizeGrid } from 'react-window';
+import styled from 'styled-components';
 
 import { Modal } from 'components/atoms';
 import { Consultant, Title, UserData } from 'components/molecules';
@@ -12,7 +14,6 @@ import useInputForm from 'hooks/useInputForm';
 import useAuth from 'hooks/useAuth';
 import useVisible from 'hooks/useVisible';
 import useZibox from 'hooks/useZibox';
-
 import constants, {
   SOCKET_CONNECTION,
   USER_TYPE,
@@ -23,36 +24,27 @@ const AREA_MAGIN = 27; //상담사 박스 영역 마진
 const BOX_MAGIN = 5; //상담사 박스 마진
 
 const StyledWrapper = styled.div`
-  /* Display */
   height: 100%;
   width: 100%;
 `;
 
 const StyledTitle = styled.div`
-  /* Display */
   height: 6rem;
 `;
 
 const StyledConsultantAreaWrap = styled.div`
-  /* Display */
-  height: calc(100% - 6rem - 30px);
   display: flex;
+  height: calc(100% - 6rem - 30px);
   justify-content: center;
   margin-top: 5px;
-
-  /* Other */
-  overflow: auto;
 `;
 
 const StyledConsultantArea = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  flex-direction: row;
+  flex: 1 1 auto;
+  width: 100%;
 `;
 
 const StyledConsultant = styled.span`
-  /* Display */
   margin: 7px ${BOX_MAGIN}px 8px;
 `;
 
@@ -242,10 +234,11 @@ function Monitoring({ location }: MonitoringProps) {
   );
 
   const consultantView = useCallback(
-    (consultant: UserDataV2) => {
+    (consultant: UserDataV2, style: React.CSSProperties) => {
       return (
         <StyledConsultant
           key={`${loginInfo.admin_id}-${form.branch}-${form.team}-styled-consultant-${consultant.id}`}
+          style={style}
         >
           <Consultant
             key={`${loginInfo.admin_id}-${form.branch}-${form.team}-consultant-${consultant.id}`}
@@ -399,17 +392,49 @@ function Monitoring({ location }: MonitoringProps) {
           <StyledConsultantArea
             style={{ maxWidth: calculateMaxWidth() + 'px' }}
           >
-            {consultantInfo.map((consultant, i) => {
-              if (loginInfo.admin_id === USER_TYPE.CONSULTANT) {
-                if (consultant.id === loginInfo.id) {
-                  return consultantView(consultant);
-                }
+            <AutoSizer defaultWidth={1920} defaultHeight={1080}>
+              {({ width, height }) => {
+                const cardWidth = 210;
+                const cardHeight = 250;
+                const columnCount = Math.floor(width / cardWidth);
+                const rowCount = Math.ceil(consultantInfo.length / columnCount);
 
-                return null;
-              }
+                return (
+                  <FixedSizeGrid
+                    width={width}
+                    height={height}
+                    columnCount={columnCount}
+                    columnWidth={cardWidth}
+                    rowCount={rowCount}
+                    rowHeight={cardHeight}
+                    itemData={{
+                      consultantInfo,
+                      columnCount,
+                    }}
+                  >
+                    {({ columnIndex, rowIndex, style, data }) => {
+                      const { consultantInfo, columnCount } = data;
+                      const singleColumnIndex =
+                        columnIndex + rowIndex * columnCount;
+                      const card = consultantInfo[singleColumnIndex];
 
-              return consultantView(consultant);
-            })}
+                      if (!card) {
+                        return null;
+                      }
+
+                      if (loginInfo.admin_id === USER_TYPE.CONSULTANT) {
+                        if (card.id === loginInfo.id) {
+                          return consultantView(card, style);
+                        }
+                        return null;
+                      }
+
+                      return consultantView(card, style);
+                    }}
+                  </FixedSizeGrid>
+                );
+              }}
+            </AutoSizer>
           </StyledConsultantArea>
         </StyledConsultantAreaWrap>
       </StyledWrapper>
