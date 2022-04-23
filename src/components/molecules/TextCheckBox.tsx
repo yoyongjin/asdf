@@ -16,6 +16,7 @@ const StyledWrapper = styled.div`
  * @description text + checkbox 컴포넌트
  */
 function TextCheckBox({
+  checkBoxDisabled,
   checkBoxIsChecked,
   checkBoxName,
   checkBoxOnChange,
@@ -33,12 +34,13 @@ function TextCheckBox({
   const CheckBoxView = useCallback(() => {
     return (
       <CheckBox
+        disabled={checkBoxDisabled}
         isChecked={checkBoxIsChecked}
         name={checkBoxName}
         onChange={checkBoxOnChange}
       />
     );
-  }, [checkBoxIsChecked, checkBoxName, checkBoxOnChange]);
+  }, [checkBoxDisabled, checkBoxIsChecked, checkBoxName, checkBoxOnChange]);
 
   /**
    * @description 텍스트 view
@@ -85,6 +87,7 @@ function TextCheckBox({
  * prefix text : text 관련 props
  */
 interface ITextCheckBox {
+  checkBoxDisabled: boolean;
   checkBoxIsChecked: boolean;
   checkBoxName?: string;
   checkBoxOnChange: TonChangeCheckBox;
@@ -98,6 +101,7 @@ interface ITextCheckBox {
 }
 
 TextCheckBox.defaultProps = {
+  checkBoxDisabled: false,
   distance: 6,
   isReverse: false,
 };

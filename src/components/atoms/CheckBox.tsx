@@ -5,10 +5,11 @@ import { TonChangeCheckBox } from 'hooks/useInputForm';
 
 const StyledCheckBox = styled.input``;
 
-function CheckBox({ isChecked, name, onChange }: ICheckBox) {
+function CheckBox({ disabled, isChecked, name, onChange }: ICheckBox) {
   return (
     <StyledCheckBox
       checked={isChecked}
+      disabled={disabled}
       name={name}
       onChange={onChange}
       type="checkbox"
@@ -17,12 +18,14 @@ function CheckBox({ isChecked, name, onChange }: ICheckBox) {
 }
 
 interface ICheckBox {
+  disabled: boolean;
   isChecked: boolean; // 체크 여부
   name?: string; // 이름
   onChange?: TonChangeCheckBox;
 }
 
 CheckBox.defaultProps = {
+  disabled: false,
   isChecked: true,
 };
 
