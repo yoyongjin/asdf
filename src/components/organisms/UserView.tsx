@@ -291,9 +291,21 @@ function UserView({ location }: UserViewProps) {
     const renderStyle = [];
 
     const [titleTextConfig1, titleTextConfig2] = titleTextData;
+    const [selectConfig1, selectConfig2, selectConfig3] = titleSelectData;
 
     renderData.push(titleTextConfig2);
-    renderData.push(...titleSelectData);
+
+    if (loginInfo.admin_id > USER_TYPE.BRANCH_ADMIN) {
+      // 슈퍼관리자, 일반관리자인 경우
+      renderData.push(...titleSelectData);
+    } else if (loginInfo.admin_id === USER_TYPE.BRANCH_ADMIN) {
+      // 지점관리자인 경우
+      renderData.push(selectConfig1, selectConfig3);
+    } else {
+      // 팀관리자인 경우
+      renderData.push(selectConfig1);
+    }
+
     renderData.push(...titleSearchBarData);
 
     for (let i = 0; i < renderData.length; i++) {
@@ -316,7 +328,7 @@ function UserView({ location }: UserViewProps) {
       renderConfig: renderData,
       renderStyle,
     };
-  }, [titleSearchBarData, titleSelectData, titleTextData]);
+  }, [loginInfo.admin_id, titleSearchBarData, titleSelectData, titleTextData]);
 
   /**
    * @description 타이틀 style 가져오기
