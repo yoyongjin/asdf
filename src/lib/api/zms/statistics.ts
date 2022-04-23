@@ -70,7 +70,7 @@ class Statistics {
    */
   static async getCallStatisticsByConsultant(
     ids: string,
-    breakUp: string,
+    breakUp: boolean,
     startDate: string,
     endDate: string,
     startTime: string,
@@ -142,7 +142,7 @@ class Statistics {
    */
   static async getCallStatisticsByTeam(
     ids: string,
-    breakUp: string,
+    breakUp: boolean,
     startDate: string,
     endDate: string,
     startTime: string,
@@ -166,6 +166,7 @@ class Statistics {
         page,
         page_count: limit,
         isExcel,
+        isTeam: true,
       };
 
       const { data } = await APIManager.get(
@@ -208,7 +209,7 @@ class Statistics {
    */
   static async getAutoMessageStatistics(
     ids: string,
-    breakUp: string,
+    breakUp: boolean,
     startDate: string,
     endDate: string,
     page: number,
@@ -268,7 +269,7 @@ class Statistics {
    */
   static async getMessageStatistics(
     ids: string,
-    breakUp: string,
+    breakUp: boolean,
     startDate: string,
     endDate: string,
     page: number,

@@ -57,7 +57,7 @@ function useStatistics() {
   const handleGetCallStatisticsByConsultant = useCallback(
     (
       ids: string,
-      breakUp: string,
+      breakUp: boolean,
       startDate: string,
       endDate: string,
       startTime: string,
@@ -88,7 +88,7 @@ function useStatistics() {
   const handleGetCallStatisticsByTeam = useCallback(
     (
       ids: string,
-      breakUp: string,
+      breakUp: boolean,
       startDate: string,
       endDate: string,
       startTime: string,
@@ -131,7 +131,7 @@ function useStatistics() {
   const handleGetAutoMessageStatistics = useCallback(
     (
       ids: string,
-      breakUp: string,
+      breakUp: boolean,
       startDate: string,
       endDate: string,
       page: number,
@@ -156,7 +156,7 @@ function useStatistics() {
   const handleGetMessageStatistics = useCallback(
     (
       ids: string,
-      breakUp: string,
+      breakUp: boolean,
       startDate: string,
       endDate: string,
       page: number,
@@ -204,7 +204,7 @@ export type HandleGetStatistics = (
 
 export type THandleGetCallStatisticsByConsultant = (
   ids: string,
-  breakUp: string,
+  breakUp: boolean,
   startDate: string,
   endDate: string,
   startTime: string,

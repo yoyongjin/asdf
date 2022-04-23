@@ -328,7 +328,7 @@ function StatisticsV2View() {
         .join(','); // 상담원 여러명 선택
     }
 
-    const breakUp = form.break_up ? '1' : '0'; // 1: 해촉 포함 0: 해촉 미포함
+    const breakUp = form.break_up;
     let startDate = '';
     let endDate = '';
     const startTime =
@@ -918,7 +918,6 @@ function StatisticsV2View() {
         } else if (selectedTabIndex === 1) {
           // 팀별 통화 통계
           renderData.push(multiSelectConfig1, multiSelectConfig2); // 조직 / 팀 / 상담원 선택
-          renderData.push(...textCheckBoxData); // 해촉 여부
           renderData.push(...dateRangePickerData); // 날짜 선택
           renderData.push(selectConfig1, selectConfig2); // 시작 시간 선택
           renderData.push(...textData); // 물결 텍스트
@@ -939,15 +938,11 @@ function StatisticsV2View() {
               defaultRenderStyle.paddingRight = 4;
             }
 
-            if (i === 1) {
-              defaultRenderStyle.paddingRight = 12;
-            }
-
-            if (i === 2 || i === 3 || i === 8 || i === 9 || i === 10) {
+            if (i === 1 || i === 2 || i === 7 || i === 8 || i === 9) {
               defaultRenderStyle.paddingRight = 20;
             }
 
-            if (i === 4 || i === 5 || i === 6 || i === 7) {
+            if (i === 3 || i === 4 || i === 5 || i === 6) {
               defaultRenderStyle.paddingRight = 10;
             }
 
