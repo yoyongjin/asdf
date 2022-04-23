@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { IOption as IMultiSelectOption } from 'components/atoms/MultiSelect';
@@ -42,6 +42,24 @@ function useOrganization() {
   ); // 팀 여러개 리스트
 
   const dispatch = useDispatch();
+
+  const selectBoxBranchOption = useMemo(() => {
+    return branches.map((values) => {
+      return {
+        id: values.id,
+        data: values.branch_name,
+      };
+    });
+  }, [branches]);
+
+  const selectBoxTeamOption = useMemo(() => {
+    return teams.map((values) => {
+      return {
+        id: values.id,
+        data: values.team_name,
+      };
+    });
+  }, [teams]);
 
   const getOrganizations = useCallback(() => {
     dispatch(requestGetOrganization());
@@ -194,6 +212,8 @@ function useOrganization() {
   }, [dispatch, organizations]);
 
   return {
+    selectBoxBranchOption,
+    selectBoxTeamOption,
     organizations,
     branches,
     teams,
