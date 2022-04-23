@@ -84,8 +84,10 @@ function UserView({ location }: UserViewProps) {
     let teamID = form.team;
 
     if (loginInfo.admin_id === USER_TYPE.BRANCH_ADMIN) {
+      // 지점관리자의 경우 지점이 정해져있음
       branchID = loginInfo.branch_id;
     } else if (loginInfo.admin_id === USER_TYPE.TEAM_ADMIN) {
+      // 팀관리자의 경우 지점과 팀이 정해져있음
       branchID = loginInfo.branch_id;
       teamID = loginInfo.team_id;
     }
@@ -104,10 +106,16 @@ function UserView({ location }: UserViewProps) {
     searchText,
   ]);
 
-  const onClickSearch = useCallback((text: string) => {
+  /**
+   * @description 검색어 반영하기
+   */
+  const applySearchText = useCallback((text: string) => {
     setSearchText(text);
   }, []);
 
+  /**
+   * @description 팝업 클릭 시 선택된 유저의 정보 설정
+   */
   const setSeletedConsultantData = useCallback(
     (userInfo: UserDataV2) => {
       setSelectedConsultant(userInfo);
@@ -117,13 +125,35 @@ function UserView({ location }: UserViewProps) {
   );
 
   /**
+   * @description 타이틀에 들어갈 버튼 정보들
+   */
+  const titleButtonData = useMemo(() => {
+    const buttonConfig1 = {
+      type: 'button',
+      data: {
+        image:
+          constants.COMPANY === COMPANY_TYPE.DBLIFE
+            ? DB_ADD_USER_BUTTON_IMAGE
+            : ADD_USER_BUTTON_IMAGE,
+        onClick: onClickVisible,
+      },
+      styles: {
+        height: 2.5,
+        width: 11.8,
+      },
+    };
+
+    return [buttonConfig1];
+  }, [onClickVisible]);
+
+  /**
    * @description 타이틀에 들어갈 search bar 정보들
    */
   const titleSearchBarData = useMemo(() => {
     const searchBarConfig1 = {
       type: 'search-bar',
       data: {
-        buttonOnClick: onClickSearch,
+        buttonOnClick: applySearchText,
         name: 'search',
         placeholder: '이름, 계정, 전화번호, IP',
       },
@@ -133,7 +163,7 @@ function UserView({ location }: UserViewProps) {
     };
 
     return [searchBarConfig1];
-  }, [onClickSearch]);
+  }, [applySearchText]);
 
   /**
    * @description 타이틀에 들어갈 selectbox 정보들
@@ -198,27 +228,8 @@ function UserView({ location }: UserViewProps) {
   ]);
 
   /**
-   * @description 타이틀에 들어갈 버튼 정보들
+   * @description 타이틀에 들어갈 text 정보들
    */
-  const titleButtonData = useMemo(() => {
-    const buttonConfig1 = {
-      type: 'button',
-      data: {
-        image:
-          constants.COMPANY === COMPANY_TYPE.DBLIFE
-            ? DB_ADD_USER_BUTTON_IMAGE
-            : ADD_USER_BUTTON_IMAGE,
-        onClick: onClickVisible,
-      },
-      styles: {
-        height: 2.5,
-        width: 11.8,
-      },
-    };
-
-    return [buttonConfig1];
-  }, [onClickVisible]);
-
   const titleTextData = useMemo(() => {
     const textConfig1 = {
       type: 'text',
@@ -365,9 +376,12 @@ function UserView({ location }: UserViewProps) {
    * @description 유저 정보 가져오기
    */
   useEffect(() => {
-    if (loginInfo.id) {
-      getUsersData();
+    if (!loginInfo.id) {
+      // 비로그인인 경우
+      return;
     }
+
+    getUsersData();
   }, [getUsersData, loginInfo.id]);
 
   /**
@@ -415,24 +429,55 @@ function UserView({ location }: UserViewProps) {
     loginInfo.id,
   ]);
 
+  /**
+   * @description 센터 변경 시 팀 초기화
+   */
   useEffect(() => {
-    // 센터명 변경 시 팀 id 초기화
+    if (!loginInfo.id) {
+      // 비로그인인 경우
+      return;
+    }
+
     setSpecificValue('team', -1);
-  }, [form.branch, setSpecificValue]);
+  }, [form.branch, loginInfo.id, setSpecificValue]);
 
+  /**
+   * @description 조회 개수 저장 (사용자 추가 시 사용)
+   */
   useEffect(() => {
+    if (!loginInfo.id) {
+      // 비로그인인 경우
+      return;
+    }
+
     onChangeUserCount(form.limit);
-  }, [form.limit, onChangeUserCount]);
+  }, [form.limit, loginInfo.id, onChangeUserCount]);
 
+  /**
+   * @description 현재 페이지가 최대 페이지보다 큰 경우 현재 페이지를 최대 페이지로 변경
+   */
   useEffect(() => {
+    if (!loginInfo.id) {
+      // 비로그인인 경우
+      return;
+    }
+
     onChangeCurrentPage(page, maxUser, form.limit);
-  }, [maxUser, form.limit, onChangeCurrentPage, page]);
+  }, [maxUser, form.limit, onChangeCurrentPage, page, loginInfo.id]);
 
+  /**
+   * @description 팝업을 닫을 경우 기존 선택된 유저의 정보 초기화
+   */
   useEffect(() => {
+    if (!loginInfo.id) {
+      // 비로그인인 경우
+      return;
+    }
+
     if (!visible) {
       setSelectedConsultant(undefined);
     }
-  }, [visible]);
+  }, [loginInfo.id, visible]);
 
   return (
     <>
