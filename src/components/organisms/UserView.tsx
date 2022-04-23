@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { RouteComponentProps } from 'react-router-dom';
 
 import { Modal } from 'components/atoms';
-import { Title, TablePagination, UserData } from 'components/molecules';
+import { TablePagination, UserData, TitleV2 } from 'components/molecules';
 import { Table } from 'components/organisms';
 import useUser from 'hooks/useUser';
 import usePage from 'hooks/usePage';
@@ -13,150 +13,52 @@ import useInputForm from 'hooks/useInputForm';
 import useAuth from 'hooks/useAuth';
 import { UserData as UserDataV2 } from 'types/user';
 import { Colors } from 'utils/color';
-import constants, {
-  COMPANY_TYPE,
-  USER_TYPE,
-  ZIBOX_TRANSPORT,
-  ZIBOX_VERSION,
-} from 'utils/constants';
+import constants, { COMPANY_TYPE, USER_TYPE } from 'utils/constants';
+import { tableTitleUserInfo } from 'utils/table/title';
 
-import DB_addUserImage from 'images/bt-add-u-1-nor.png';
-import addUserImage from 'images/zms/bt-add-u-1-nor.png';
+import DB_ADD_USER_BUTTON_IMAGE from 'images/bt-add-u-1-nor.png';
+import ADD_USER_BUTTON_IMAGE from 'images/zms/bt-add-u-1-nor.png';
 
 const StyledWrapper = styled.div`
-  /* Display */
   height: 100%;
   width: 100%;
 `;
 
 const StyledTitle = styled.div`
-  /* Display */
   height: 6rem;
   width: 100%;
 `;
 
-const StyledUserListArea = styled.div`
-  /* Display */
-  height: calc(100% - 6rem - 66px);
+const StyledContent = styled.div`
+  height: calc(100% - 6rem - 120px);
   overflow-x: auto;
-`;
-
-const StyledUserList = styled.div`
-  /* Position */
   padding-top: 20px;
 `;
 
-const StyledUserPage = styled.div`
-  /* Position */
-  padding-top: 46px;
+const StyledFooter = styled.div`
+  align-items: center;
+  display: flex;
+  height: 100px;
+  justify-content: center;
 `;
 
-const userInfoTableTitles = [
-  {
-    fontColor: Colors.white,
-    fontSize: 13,
-    isNotShow: true,
-    isWidthPercent: true,
-    title: 'No.',
-    width: 7,
-  },
-  {
-    fontColor: Colors.white,
-    fontSize: 13,
-    isWidthPercent: true,
-    title: '센터명',
-    width: 10,
-  },
-  {
-    fontColor: Colors.white,
-    fontSize: 13,
-    isWidthPercent: true,
-    title: '팀명',
-    width: 10,
-  },
-  {
-    fontColor: Colors.white,
-    fontSize: 13,
-    isWidthPercent: true,
-    title: '권한',
-    width: 5,
-  },
-  {
-    fontColor: Colors.white,
-    fontSize: 13,
-    isWidthPercent: true,
-    title: '이름',
-    width: 5,
-  },
-  {
-    fontColor: Colors.white,
-    fontSize: 13,
-    isWidthPercent: true,
-    title: '아이디.',
-    width: 15,
-  },
-  {
-    fontColor: Colors.white,
-    fontSize: 13,
-    isWidthPercent: true,
-    title: '전화번호.',
-    width: 15,
-  },
-  {
-    fontColor: Colors.white,
-    fontSize: 13,
-    isWidthPercent: true,
-    isNotShow: constants.TRANSPORT !== ZIBOX_TRANSPORT.OCX, // ocx인 경우만 보여야 함
-    title: 'PC IP.',
-    width: 15,
-  },
-  {
-    fontColor: Colors.white,
-    fontSize: 13,
-    isWidthPercent: true,
-    isNotShow:
-      constants.TRANSPORT === ZIBOX_TRANSPORT.OCX &&
-      constants.ZIBOX_VERSION === ZIBOX_VERSION.ZIBOX2, // zibox2 ocx 버전인 경우 안 보여야함
-    title: 'ZiBox IP',
-    width: 15,
-  },
-  {
-    fontColor: Colors.white,
-    fontSize: 13,
-    isWidthPercent: true,
-    isNotShow:
-      constants.TRANSPORT === ZIBOX_TRANSPORT.OCX &&
-      constants.ZIBOX_VERSION === ZIBOX_VERSION.ZIBOX2, // zibox2 ocx 버전인 경우 안 보여야함
-    title: 'ZiBox Mac.',
-    width: 15,
-  },
-  {
-    fontColor: Colors.white,
-    fontSize: 13,
-    isWidthPercent: true,
-    title: '',
-    width: 10,
-  },
-];
-
-const userCountData = [
-  { id: 5, data: 5 },
-  { id: 10, data: 10 },
-  { id: 15, data: 15 },
-];
+const selectBoxPageLimitOption = [...new Array(3)].map((values, index) => {
+  return {
+    id: 5 * (index + 1),
+    data: `${5 * (index + 1)}`,
+  };
+});
 
 function UserView({ location }: UserViewProps) {
   const [selectedConsultant, setSelectedConsultant] = useState<UserDataV2>();
-  const [search, setSearch] = useState<string>('');
+  const [searchText, setSearchText] = useState<string>('');
   const { loginInfo } = useAuth();
   const { branches, teams, getBranches, getTeams } = useOrganization();
-  const { form, onChangeSelect, onChangeInput, setSpecificValue } =
-    useInputForm({
-      userCount: 15,
-      branch: -1,
-      team: -1,
-      search: '',
-    });
+  const { form, onChangeSelect, setSpecificValue } = useInputForm({
+    limit: 15,
+    branch: -1,
+    team: -1,
+  });
   const {
     userInfo,
     getUsers,
@@ -176,186 +78,52 @@ function UserView({ location }: UserViewProps) {
   } = usePage();
   const { visible, onClickVisible } = useVisible();
 
-  const selectData = useMemo(() => {
-    const _branches = branches!.map((values) => {
+  const selectBoxBranchOption = useMemo(() => {
+    return branches.map((values) => {
       return {
         id: values.id,
         data: values.branch_name,
       };
     });
+  }, [branches]);
 
-    const _teams = teams!.map((values) => {
+  const selectBoxTeamOption = useMemo(() => {
+    return teams.map((values) => {
       return {
         id: values.id,
         data: values.team_name,
       };
     });
+  }, [teams]);
 
-    if (loginInfo.admin_id === USER_TYPE.TEAM_ADMIN) {
-      return {
-        count: 1,
-        data: [userCountData],
-        style: [
-          {
-            width: 50,
-            height: 25,
-            borderRadius: 12.5,
-            borderColor: Colors.gray7,
-            fontColor: Colors.gray4,
-          },
-        ],
-        info: [
-          {
-            id: form.userCount,
-            name: 'userCount',
-            click: onChangeSelect,
-          },
-        ],
-      };
-    }
+  const getUsersData = useCallback(() => {
+    let branchID = form.branch;
+    let teamID = form.team;
 
     if (loginInfo.admin_id === USER_TYPE.BRANCH_ADMIN) {
-      return {
-        count: 2,
-        data: [userCountData, _teams],
-        style: [
-          {
-            width: 50,
-            height: 25,
-            borderRadius: 12.5,
-            borderColor: Colors.gray7,
-            fontColor: Colors.gray4,
-          },
-          {
-            width: 150,
-            height: 25,
-            borderRadius: 12.5,
-            borderColor: Colors.gray7,
-            fontColor: Colors.gray4,
-            paddingLeft: 16,
-          },
-        ],
-        info: [
-          {
-            id: form.userCount,
-            name: 'userCount',
-            click: onChangeSelect,
-          },
-          {
-            id: form.team,
-            name: 'team',
-            click: onChangeSelect,
-          },
-        ],
-      };
+      branchID = loginInfo.branch_id;
+    } else if (loginInfo.admin_id === USER_TYPE.TEAM_ADMIN) {
+      branchID = loginInfo.branch_id;
+      teamID = loginInfo.team_id;
     }
 
-    return {
-      count: 3,
-      data: [userCountData, _branches, _teams],
-      style: [
-        {
-          width: 50,
-          height: 25,
-          borderRadius: 12.5,
-          borderColor: Colors.gray7,
-          fontColor: Colors.gray4,
-        },
-        {
-          width: 150,
-          height: 25,
-          borderRadius: 12.5,
-          borderColor: Colors.gray7,
-          fontColor: Colors.gray4,
-          paddingLeft: 16,
-        },
-        {
-          width: 150,
-          height: 25,
-          borderRadius: 12.5,
-          borderColor: Colors.gray7,
-          fontColor: Colors.gray4,
-          paddingLeft: 16,
-        },
-      ],
-      info: [
-        {
-          id: form.userCount,
-          name: 'userCount',
-          click: onChangeSelect,
-        },
-        {
-          id: form.branch,
-          name: 'branch',
-          click: onChangeSelect,
-        },
-        {
-          id: form.team,
-          name: 'team',
-          click: onChangeSelect,
-        },
-      ],
-    };
+    getUsers(branchID, teamID, form.limit, page, searchText, location.pathname);
   }, [
-    branches,
     form.branch,
+    form.limit,
     form.team,
-    form.userCount,
+    getUsers,
+    location.pathname,
     loginInfo.admin_id,
-    onChangeSelect,
-    teams,
+    loginInfo.branch_id,
+    loginInfo.team_id,
+    page,
+    searchText,
   ]);
 
-  const buttonData = useMemo(() => {
-    return {
-      count: 1,
-      info: [
-        {
-          image:
-            constants.COMPANY === COMPANY_TYPE.DBLIFE
-              ? DB_addUserImage
-              : addUserImage,
-          click: onClickVisible,
-        },
-      ],
-      hidden: false,
-    };
-  }, [onClickVisible]);
-
-  const onClickSearch = useCallback(() => {
-    setSearch(form.search);
-  }, [form.search]);
-
-  const searchData = useMemo(() => {
-    return {
-      count: 1,
-      data: [form.search],
-      info: [
-        {
-          change: onChangeInput,
-          click: onClickSearch,
-        },
-      ],
-      option: {
-        placeHolder: '이름, 전화번호, 계정, pc_ip',
-      },
-    };
-  }, [form.search, onChangeInput, onClickSearch]);
-
-  const getUsers2 = useCallback(
-    (
-      branchId: number,
-      teamId: number,
-      count: number,
-      page: number,
-      path: string,
-      search = '',
-    ) => {
-      // 서버로부터 데이터 요청
-      getUsers(branchId, teamId, count, page, search, path);
-    },
-    [getUsers],
-  );
+  const onClickSearch = useCallback((text: string) => {
+    setSearchText(text);
+  }, []);
 
   const setSeletedConsultantData = useCallback(
     (userInfo: UserDataV2) => {
@@ -364,6 +132,211 @@ function UserView({ location }: UserViewProps) {
     },
     [onClickVisible],
   );
+
+  /**
+   * @description 타이틀에 들어갈 search bar 정보들
+   */
+  const titleSearchBarData = useMemo(() => {
+    const searchBarConfig1 = {
+      type: 'search-bar',
+      data: {
+        buttonOnClick: onClickSearch,
+        name: 'search',
+        placeholder: '이름, 계정, 전화번호, IP',
+      },
+      styles: {
+        width: 22,
+      },
+    };
+
+    return [searchBarConfig1];
+  }, [onClickSearch]);
+
+  /**
+   * @description 타이틀에 들어갈 selectbox 정보들
+   */
+  const titleSelectData = useMemo(() => {
+    const selectConfig1 = {
+      type: 'select',
+      data: {
+        name: 'limit',
+        onChange: onChangeSelect,
+        options: selectBoxPageLimitOption,
+        value: form.limit,
+      },
+      styles: {
+        borderColor: Colors.gray7,
+        borderRadius: 12.5,
+        fontColor: Colors.gray4,
+        width: 50,
+      },
+    }; // 페이지 개수
+
+    const selectConfig2 = {
+      type: 'select',
+      data: {
+        name: 'branch',
+        onChange: onChangeSelect,
+        options: selectBoxBranchOption,
+        value: form.branch,
+      },
+      styles: {
+        borderColor: Colors.gray7,
+        borderRadius: 12.5,
+        fontColor: Colors.gray4,
+        width: 150,
+      },
+    }; // 센터 관련 정보
+
+    const selectConfig3 = {
+      type: 'select',
+      data: {
+        name: 'team',
+        onChange: onChangeSelect,
+        options: selectBoxTeamOption,
+        value: form.team,
+      },
+      styles: {
+        borderColor: Colors.gray7,
+        borderRadius: 12.5,
+        fontColor: Colors.gray4,
+        width: 150,
+      },
+    }; // 팀 관련 정보
+
+    return [selectConfig1, selectConfig2, selectConfig3];
+  }, [
+    form.branch,
+    form.limit,
+    form.team,
+    onChangeSelect,
+    selectBoxBranchOption,
+    selectBoxTeamOption,
+  ]);
+
+  /**
+   * @description 타이틀에 들어갈 버튼 정보들
+   */
+  const titleButtonData = useMemo(() => {
+    const buttonConfig1 = {
+      type: 'button',
+      data: {
+        image:
+          constants.COMPANY === COMPANY_TYPE.DBLIFE
+            ? DB_ADD_USER_BUTTON_IMAGE
+            : ADD_USER_BUTTON_IMAGE,
+        onClick: onClickVisible,
+      },
+      styles: {
+        height: 2.5,
+        width: 11.8,
+      },
+    };
+
+    return [buttonConfig1];
+  }, [onClickVisible]);
+
+  const titleTextData = useMemo(() => {
+    const textConfig1 = {
+      type: 'text',
+      data: {
+        text: '사용자 관리',
+      },
+    };
+
+    const textConfig2 = {
+      type: 'text',
+      data: {
+        text: '조회 개수 : ',
+      },
+      styles: {
+        fontColor: Colors.gray1,
+        fontFamily: 'Malgun Gothic',
+        fontSize: 12,
+        minWidth: 30,
+      },
+    };
+
+    return [textConfig1, textConfig2];
+  }, []);
+
+  /**
+   * @description 타이틀 왼쪽 요소 가져오기
+   */
+  const getTitleRenderLeft = useMemo(() => {
+    const renderData = [];
+    const renderStyle = [];
+
+    const [titleTextConfig1] = titleTextData;
+
+    renderData.push(titleTextConfig1);
+    renderData.push(...titleButtonData);
+
+    for (let i = 0; i < renderData.length; i++) {
+      const defaultRenderStyle = {
+        paddingRight: 0,
+      };
+
+      if (i === 0) {
+        defaultRenderStyle.paddingRight = 19;
+      }
+
+      renderStyle.push(defaultRenderStyle);
+    }
+
+    return {
+      renderConfig: renderData,
+      renderStyle,
+    };
+  }, [titleButtonData, titleTextData]);
+
+  /**
+   * @description 타이틀 오른쪽 요소 가져오기
+   */
+  const getTitleRenderRight = useMemo(() => {
+    const renderData = [];
+    const renderStyle = [];
+
+    const [titleTextConfig1, titleTextConfig2] = titleTextData;
+
+    renderData.push(titleTextConfig2);
+    renderData.push(...titleSelectData);
+    renderData.push(...titleSearchBarData);
+
+    for (let i = 0; i < renderData.length; i++) {
+      const defaultRenderStyle = {
+        paddingRight: 0,
+      };
+
+      if (i === 0 || i === 2) {
+        defaultRenderStyle.paddingRight = 10;
+      }
+
+      if (i === 1 || i === 3) {
+        defaultRenderStyle.paddingRight = 18;
+      }
+
+      renderStyle.push(defaultRenderStyle);
+    }
+
+    return {
+      renderConfig: renderData,
+      renderStyle,
+    };
+  }, [titleSearchBarData, titleSelectData, titleTextData]);
+
+  /**
+   * @description 타이틀 style 가져오기
+   */
+  const getTitleStyle = useMemo(() => {
+    return {
+      borderBottomColor: Colors.blue3,
+      borderBottomStyle: 'solid',
+      borderBottomWidth: 1,
+      leftMarginTop: 25,
+      rightMarginTop: 20,
+    };
+  }, []);
 
   const tableContents = useMemo(() => {
     return {
@@ -380,12 +353,12 @@ function UserView({ location }: UserViewProps) {
             ? form.branch
             : loginInfo.admin_id,
         currentPage: page,
-        currentSearchText: form.search,
+        currentSearchText: searchText,
         currentTeamId:
           loginInfo.admin_id === USER_TYPE.TEAM_ADMIN
             ? loginInfo.admin_id
             : form.team,
-        currentLimit: form.userCount,
+        currentLimit: form.limit,
       },
       styles: {
         rowHeight: 50,
@@ -394,86 +367,70 @@ function UserView({ location }: UserViewProps) {
     };
   }, [
     form.branch,
-    form.search,
+    form.limit,
     form.team,
-    form.userCount,
     loginInfo.admin_id,
     onClickRemoveUser,
     onClickResetPassword,
     page,
+    searchText,
     setSeletedConsultantData,
     userInfo,
   ]);
 
+  /**
+   * @description 유저 정보 가져오기
+   */
   useEffect(() => {
-    if (
-      loginInfo.admin_id === USER_TYPE.SUPER_ADMIN ||
-      loginInfo.admin_id === USER_TYPE.ADMIN
-    ) {
-      // 슈퍼 관리자 / 일반 관리자
-      getUsers2(
-        form.branch,
-        form.team,
-        form.userCount,
-        page,
-        location.pathname,
-        search,
-      );
-    } else if (loginInfo.admin_id === USER_TYPE.BRANCH_ADMIN) {
-      // 일반 관리자
-      getUsers2(
-        loginInfo.branch_id,
-        form.team,
-        form.userCount,
-        page,
-        location.pathname,
-        search,
-      );
-    } else if (loginInfo.admin_id === USER_TYPE.TEAM_ADMIN) {
-      // 일반 관리자
-      getUsers2(
-        loginInfo.branch_id,
-        loginInfo.team_id,
-        form.userCount,
-        page,
-        location.pathname,
-        search,
-      );
+    if (loginInfo.id) {
+      getUsersData();
     }
-  }, [
-    form.branch,
-    form.team,
-    form.userCount,
-    getUsers2,
-    location.pathname,
-    loginInfo.admin_id,
-    loginInfo.branch_id,
-    loginInfo.team_id,
-    page,
-    search,
-  ]);
+  }, [getUsersData, loginInfo.id]);
 
+  /**
+   * @description 센터 리스트 가져오기
+   */
   useEffect(() => {
-    if (
-      loginInfo.admin_id === USER_TYPE.SUPER_ADMIN ||
-      loginInfo.admin_id === USER_TYPE.ADMIN
-    ) {
-      // 슈퍼관리자일 경우에만 센터명 리스트 가져오기
+    if (!loginInfo.id) {
+      // 비로그인인 경우
+      return;
+    }
+
+    if (loginInfo.admin_id > USER_TYPE.BRANCH_ADMIN) {
+      // 센터관리자 상위 권한일 경우에만 호출
       getBranches();
     }
-  }, [loginInfo.admin_id, getBranches]);
+  }, [loginInfo.admin_id, getBranches, loginInfo.id]);
 
+  /**
+   * @description 팀 리스트 가져오기
+   */
   useEffect(() => {
-    // 관리자의 권한에 따라 팀명 리스트 다르게 가져오기
-    if (
-      loginInfo.admin_id === USER_TYPE.SUPER_ADMIN ||
-      loginInfo.admin_id === USER_TYPE.ADMIN
-    ) {
-      getTeams(form.branch);
-    } else if (loginInfo.admin_id === USER_TYPE.BRANCH_ADMIN) {
-      getTeams(loginInfo.branch_id);
+    if (!loginInfo.id) {
+      // 비로그인인 경우
+      return;
     }
-  }, [form.branch, getTeams, loginInfo.admin_id, loginInfo.branch_id]);
+
+    if (loginInfo.admin_id < USER_TYPE.BRANCH_ADMIN) {
+      // 지점관리자 하위 권한은 요청할 필요 없음
+      return;
+    }
+
+    let branchID = form.branch;
+
+    if (loginInfo.admin_id === USER_TYPE.BRANCH_ADMIN) {
+      // 지점관리자의 경우 지점이 정해져있기 때문에 고정값임
+      branchID = loginInfo.branch_id;
+    }
+
+    getTeams(branchID);
+  }, [
+    form.branch,
+    getTeams,
+    loginInfo.admin_id,
+    loginInfo.branch_id,
+    loginInfo.id,
+  ]);
 
   useEffect(() => {
     // 센터명 변경 시 팀 id 초기화
@@ -481,18 +438,12 @@ function UserView({ location }: UserViewProps) {
   }, [form.branch, setSpecificValue]);
 
   useEffect(() => {
-    if (form.search === '') {
-      setSearch(form.search);
-    }
-  }, [form.search]);
+    onChangeUserCount(form.limit);
+  }, [form.limit, onChangeUserCount]);
 
   useEffect(() => {
-    onChangeUserCount(form.userCount);
-  }, [form.userCount, onChangeUserCount]);
-
-  useEffect(() => {
-    onChangeCurrentPage(page, maxUser, form.userCount);
-  }, [maxUser, form.userCount, onChangeCurrentPage, page]);
+    onChangeCurrentPage(page, maxUser, form.limit);
+  }, [maxUser, form.limit, onChangeCurrentPage, page]);
 
   useEffect(() => {
     if (!visible) {
@@ -504,34 +455,26 @@ function UserView({ location }: UserViewProps) {
     <>
       <StyledWrapper>
         <StyledTitle>
-          <Title
-            isButton
-            isSearch
-            isSelect
-            isExplanRight
-            explanData={{ title: '조회 개수 : ' }}
-            buttonData={buttonData}
-            searchData={searchData}
-            selectData={selectData}
-            rightBottomPixel={9}
-          >
-            사용자 관리
-          </Title>
+          <TitleV2
+            renderLeft={getTitleRenderLeft}
+            renderRight={getTitleRenderRight}
+            titleStyle={getTitleStyle}
+          />
         </StyledTitle>
-        <StyledUserListArea>
-          <StyledUserList>
-            <Table contents={tableContents} titles={userInfoTableTitles} />
-          </StyledUserList>
-          <StyledUserPage>
-            <TablePagination
-              count={maxUser}
-              divide={form.userCount}
-              curPage={page}
-              onClickNextPage={onClickNextPage}
-              onClickPrevPage={onClickPrevPage}
-            ></TablePagination>
-          </StyledUserPage>
-        </StyledUserListArea>
+        <StyledContent>
+          <div>
+            <Table contents={tableContents} titles={tableTitleUserInfo} />
+          </div>
+        </StyledContent>
+        <StyledFooter>
+          <TablePagination
+            count={maxUser}
+            divide={form.limit}
+            curPage={page}
+            onClickNextPage={onClickNextPage}
+            onClickPrevPage={onClickPrevPage}
+          />
+        </StyledFooter>
       </StyledWrapper>
       <Modal
         isVisible={visible}

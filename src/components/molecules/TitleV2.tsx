@@ -14,11 +14,16 @@ import { DateRangePicker, TabTitle, TextCheckBox } from 'components/molecules';
 import { ITabItem } from 'components/molecules/TabTitle';
 import { TonChangeDatePicker } from 'hooks/useDatePicker';
 import useExcel from 'hooks/useExcel';
-import { TonChangeCheckBox, TonChangeSelect } from 'hooks/useInputForm';
+import useInputForm, {
+  TonChangeCheckBox,
+  TonChangeInput,
+  TonChangeSelect,
+} from 'hooks/useInputForm';
 import { THandleSelectedOption } from 'hooks/useMultiSelect';
 import { TOnClickVisible } from 'hooks/useVisible';
 import { StyledCommonBothWhiteSpace } from 'styles/common';
 import { Colors } from 'utils/color';
+import SearchBar from './SearchBar';
 
 const StyledWrapper = styled.div<IStyleWrapper>`
   height: 100%;
@@ -48,6 +53,10 @@ function TitleV2({
   renderRight,
   titleStyle,
 }: ITitleProps) {
+  const { form, onChangeInput } = useInputForm({
+    search: '',
+  });
+
   if (isExcel) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useExcel();
@@ -141,6 +150,32 @@ function TitleV2({
     );
   }, []);
 
+  const SearchBarView = useCallback(
+    (key: number, data: ISearchBarItem, style: ISearchBarItemStyle) => {
+      if (!form.search) {
+        if (data.buttonOnClick) {
+          data.buttonOnClick(form.search);
+        }
+      }
+
+      return (
+        <SearchBar
+          key={`TitleV2-SearchBar-${key}`}
+          inputPlaceHolder={data.placeholder}
+          inputWidth={style.width}
+          onChange={onChangeInput}
+          onClickSearch={() => {
+            if (data.buttonOnClick) {
+              data.buttonOnClick(form.search);
+            }
+          }}
+          search={form.search}
+        />
+      );
+    },
+    [form.search, onChangeInput],
+  );
+
   const SelectView = useCallback(
     (data: ISelectItem, styles?: ISelectItemStyle) => {
       return (
@@ -208,7 +243,7 @@ function TitleV2({
   }, []);
 
   const RenderView = useCallback(
-    (config: IRenderConfig) => {
+    (config: IRenderConfig, propertyKey: number) => {
       const { data, type, styles } = config;
 
       switch (type) {
@@ -233,6 +268,11 @@ function TitleV2({
         case 'multi-select': {
           const multiSelectData = data as IMultiSelectItem;
           return MultiSelectView(multiSelectData);
+        }
+        case 'search-bar': {
+          const searchBarData = data as ISearchBarItem;
+          const searchBarStyle = styles as ISearchBarItemStyle;
+          return SearchBarView(propertyKey, searchBarData, searchBarStyle);
         }
         case 'select': {
           const selectData = data as ISelectItem;
@@ -260,6 +300,7 @@ function TitleV2({
       DatePickerView,
       DateRangePickerView,
       MultiSelectView,
+      SearchBarView,
       SelectView,
       TabView,
       TextCheckBoxView,
@@ -290,7 +331,7 @@ function TitleV2({
 
             return (
               <Fragment key={`TitleV2-Fragment-left-${index}`}>
-                {RenderView(config)}
+                {RenderView(config, index)}
                 <StyledCommonBothWhiteSpace
                   left={paddingLeft}
                   right={paddingRight}
@@ -306,8 +347,8 @@ function TitleV2({
           float="right"
           marginTop={titleStyle?.rightMarginTop ?? 15}
         >
-          {renderRight.renderConfig.map((config) => {
-            return RenderView(config);
+          {renderRight.renderConfig.map((config, index) => {
+            return RenderView(config, index);
           })}
         </StyledPostion>
       )}
@@ -369,6 +410,14 @@ interface IButtonItemStyle extends ITextItemStyle {
 // text checkbox style
 interface ITextCheckBoxStyle extends ITextItemStyle {}
 
+// input style
+interface IInputItemStyle extends ITextItemStyle {
+  width?: number;
+}
+
+// search bar style
+interface ISearchBarItemStyle extends IInputItemStyle {}
+
 /**
  * @description 요소별 정보
  */
@@ -386,6 +435,19 @@ interface IMultiSelectItem {
   onChange?: THandleSelectedOption;
   options: Array<IMultiSelectOption>;
   textChoice?: string;
+}
+
+// input 요소 정보
+interface IInputItem {
+  placeholder?: string;
+  name?: string;
+  onChange?: TonChangeInput;
+  value: string;
+}
+
+// search bar 요소 정보
+interface ISearchBarItem extends IInputItem, IButtonItem {
+  buttonOnClick?: (text: string) => void;
 }
 
 // select 요소 정보
@@ -451,6 +513,7 @@ interface IRenderConfig {
     | IDatePickerItem
     | IDateRangePickerItem
     | IMultiSelectItem
+    | ISearchBarItem
     | ISelectItem
     | ITabsItem
     | ITextItem;
@@ -458,6 +521,7 @@ interface IRenderConfig {
   | IButtonItemStyle
     | IDatePickerItemStyle
     | IDateRangePickerItemStyle
+    | ISearchBarItemStyle
     | ISelectItemStyle
     | ITextCheckBoxStyle
     | ITextItemStyle;
