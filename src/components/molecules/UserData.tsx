@@ -15,11 +15,7 @@ import {
 import useInputForm from 'hooks/useInputForm';
 import useOrganization from 'hooks/useOrganization';
 import usePhone from 'hooks/usePhone';
-import {
-  OnClickDisconnect,
-  TOnClickAddUser,
-  TOnClickModifyUser,
-} from 'hooks/useUser';
+import { TOnClickAddUser, TOnClickModifyUser } from 'hooks/useUser';
 import { TOnClickVisible } from 'hooks/useVisible';
 import { LoginData } from 'types/auth';
 import { UserData as UserDataV2 } from 'types/user';
