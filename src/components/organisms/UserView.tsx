@@ -65,7 +65,6 @@ function UserView({ location }: UserViewProps) {
     getUsers,
     onChangeUserCount,
     onClickAddUser,
-    onClickDisconnect,
     onClickModifyUser,
     onClickRemoveUser,
     onClickResetPassword,
@@ -511,7 +510,6 @@ function UserView({ location }: UserViewProps) {
             loginData={loginInfo}
             isVisible={visible}
             onClickAddUser={onClickAddUser}
-            onClickDisconnect={onClickDisconnect}
             onClickModifyUser={onClickModifyUser}
             onClickVisible={onClickVisible}
             userData={selectedConsultant}

@@ -25,15 +25,12 @@ import {
   requestZiboxVolume,
   successZiboxVolume,
   failureZiboxVolume,
-  disconnectForce,
-  DISCONNECT_FORCE,
   requestGetPluralConsultant,
   successGetPluralConsultant,
   failureGetPluralConsultant,
   REQUEST_GET_PLURAL_CONSULTANT,
 } from 'modules/actions/user';
 import ZMSUser from 'lib/api/zms/user';
-import RelayAuth from 'lib/api/relay/auth';
 import { ResponseFailureData, ResponseSuccessData } from 'types/common';
 import { API_FETCH } from 'utils/constants';
 import Communicator from 'lib/communicator';
@@ -275,49 +272,6 @@ function* modifyZiboxVolumeProcess(
   Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
-function* disconnectForceProcess(action: ReturnType<typeof disconnectForce>) {
-  const { number } = action.payload;
-
-  try {
-    const response: ResponseSuccessData | ResponseFailureData = yield call(
-      RelayAuth.disconnect,
-      number,
-    );
-
-    const { data } = response as ResponseSuccessData;
-
-    console.log(data);
-
-    if (data.success) {
-      // yield call(API.changeStatus, 'reset', number, 'reset_status');
-    }
-  } catch (error) {
-    let message = '';
-
-    if (error instanceof Error) {
-      message = error.message;
-    }
-
-    yield put(failureZiboxVolume(message));
-  }
-
-  // try {
-  //   const { number } = action.payload;
-  //   console.log(number);
-
-  //   const response = yield call(API.disconnectForce, number);
-  //   const { data } = response;
-
-  //   if (data.success) {
-  //     // yield call(API.changeStatus, 'reset', number, 'reset_status');
-  //   } else {
-  //     alert('연결 끊기 실패');
-  //   }
-  // } catch (error) {
-  //   console.log(error);
-  // }
-}
-
 function* getPluralConsultantProcess(
   action: ReturnType<typeof requestGetPluralConsultant>,
 ) {
@@ -366,10 +320,6 @@ function* watchModifyZiboxVolume() {
   yield takeLatest(REQUEST_ZIBOX_VOLUME, modifyZiboxVolumeProcess);
 }
 
-function* watchDisconnectForce() {
-  yield takeLatest(DISCONNECT_FORCE, disconnectForceProcess);
-}
-
 function* watchGetPluralConsultant() {
   yield takeLatest(REQUEST_GET_PLURAL_CONSULTANT, getPluralConsultantProcess);
 }
@@ -382,7 +332,6 @@ function* userSaga() {
     fork(watchRemoveUser),
     fork(watchResetPassword),
     fork(watchModifyZiboxVolume),
-    fork(watchDisconnectForce),
     fork(watchGetPluralConsultant),
   ]);
 }

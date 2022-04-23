@@ -156,7 +156,6 @@ export default {
   NODE_ENV: process.env.NODE_ENV,
   API_SERVER: process.env.REACT_APP_API_SERVER,
   SOCKET_SERVER: process.env.REACT_APP_SOCKET_SERVER,
-  RELAY_SERVER: process.env.REACT_APP_RELAY_SERVER,
   COMPANY: process.env.REACT_APP_COMPANY,
   TRANSPORT: process.env.REACT_APP_MODE,
   ZIBOX_SERVER: process.env.REACT_APP_ZIBOX_SERVER,

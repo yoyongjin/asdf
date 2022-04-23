@@ -78,7 +78,6 @@ export const SAVE_STATUS = 'SAVE_STATUS';
 export const RESET_STATUS = 'RESET_STATUS';
 export const CHANGE_MONIT_STATUS = 'CHANGE_MONIT_STATUS';
 export const SET_MONIT_STATUS = 'SET_MONIT_STATUS';
-export const DISCONNECT_FORCE = 'DISCONNECT_FORCE';
 
 // action
 // 유저 정보 가져오기
@@ -189,9 +188,6 @@ export const changeMonitStatus = createAction(CHANGE_MONIT_STATUS)<{
   user_id: number;
 }>();
 export const setMonitStatus = createAction(SET_MONIT_STATUS)<number>();
-export const disconnectForce = createAction(DISCONNECT_FORCE)<{
-  number: string;
-}>();
 
 // 상담원 여러명 가져오기
 export const REQUEST_GET_PLURAL_CONSULTANT = 'REQUEST_GET_PLURAL_CONSULTANT';

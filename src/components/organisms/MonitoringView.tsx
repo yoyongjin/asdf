@@ -66,8 +66,7 @@ function Monitoring({ location }: MonitoringProps) {
     changeTappingStatus,
     tappingTarget,
   } = useMonitoring();
-  const { consultantInfo, getUsers, onClickDisconnect, onClickModifyUser } =
-    useUser();
+  const { consultantInfo, getUsers, onClickModifyUser } = useUser();
   const { visible, onClickVisible } = useVisible();
   const { requestTapping, startTapping, stopTapping, setVolume } = useZibox();
 
@@ -444,7 +443,6 @@ function Monitoring({ location }: MonitoringProps) {
           <UserData
             loginData={loginInfo}
             isVisible={visible}
-            onClickDisconnect={onClickDisconnect}
             onClickModifyUser={onClickModifyUser}
             onClickVisible={onClickVisible}
             userData={selectedConsultant}

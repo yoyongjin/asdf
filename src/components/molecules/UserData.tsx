@@ -134,7 +134,6 @@ function UserData({
   loginData,
   isVisible,
   onClickAddUser,
-  onClickDisconnect,
   onClickModifyUser,
   onClickVisible,
   userData,
@@ -1034,26 +1033,6 @@ function UserData({
         ) : null}
       </StyledContent>
       <StyledFooter>
-        {/* {userData && userData.admin_id === USER_TYPE.CONSULTANT ? (
-          <Button
-            width={10}
-            height={2.6}
-            bgColor={Colors.red}
-            onClick={() => {
-              onClickDisconnect(userData?.number!);
-            }}
-            customStyle="float:left;"
-          >
-            <Text
-              fontColor={Colors.white}
-              fontFamily="NanumBarunGothic"
-              fontSize={14}
-              fontWeight={700}
-            >
-              연결 끊기
-            </Text>
-          </Button>
-        ) : null} */}
         {loginData.admin_id === USER_TYPE.CONSULTANT ? null : (
           <Button
             bgColor={
@@ -1107,7 +1086,6 @@ interface UserDataProps {
   loginData: LoginData;
   isVisible?: boolean;
   userData?: UserDataV2;
-  onClickDisconnect: OnClickDisconnect;
   onClickVisible: TOnClickVisible;
   onClickAddUser?: TOnClickAddUser;
   onClickModifyUser?: TOnClickModifyUser;

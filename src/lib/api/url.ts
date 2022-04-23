@@ -43,12 +43,4 @@ export default {
       },
     },
   },
-  relay: {
-    api: {
-      host: `${constants.RELAY_SERVER}`,
-      path: {
-        disconnect: '/v1/auth/logout',
-      },
-    },
-  },
 };

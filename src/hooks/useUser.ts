@@ -8,7 +8,6 @@ import {
   requestModifyUser,
   requestRemoveUser,
   requestResetPassword,
-  disconnectForce,
   changeUsersCount,
   requestGetPluralConsultant,
   setInitPluralConsultant,
@@ -192,16 +191,6 @@ function useUser() {
     [dispatch],
   );
 
-  const onClickDisconnect = useCallback(
-    (number: string) => {
-      const payload = {
-        number,
-      };
-      dispatch(disconnectForce(payload));
-    },
-    [dispatch],
-  );
-
   return {
     userInfo,
     consultantInfo,
@@ -213,7 +202,6 @@ function useUser() {
     onClickRemoveUser,
     onClickResetPassword,
     onChangeUserCount,
-    onClickDisconnect,
     setInitializePluralConsultant,
   };
 }
