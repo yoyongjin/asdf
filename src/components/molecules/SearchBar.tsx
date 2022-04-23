@@ -6,7 +6,10 @@ import { Colors } from 'utils/color';
 
 import searchIcon from 'images/icon-search.png';
 
-const StyledWrapper = styled.div``;
+const StyledWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
 
 const StyledInput = styled.span`
   padding-right: 5px;
