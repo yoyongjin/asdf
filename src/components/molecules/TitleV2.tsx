@@ -348,7 +348,28 @@ function TitleV2({
           marginTop={titleStyle?.rightMarginTop ?? 15}
         >
           {renderRight.renderConfig.map((config, index) => {
-            return RenderView(config, index);
+            const paddingLeft =
+              renderRight.renderStyle &&
+              renderRight.renderStyle[index].paddingLeft;
+
+            const paddingLeftRight =
+              renderRight.renderStyle &&
+              renderRight.renderStyle[index].paddingLeftRight;
+
+            const paddingRight =
+              renderRight.renderStyle &&
+              renderRight.renderStyle[index].paddingRight;
+
+            return (
+              <Fragment key={`TitleV2-Fragment-right-${index}`}>
+                {RenderView(config, index)}
+                <StyledCommonBothWhiteSpace
+                  left={paddingLeft}
+                  right={paddingRight}
+                  pixel={paddingLeftRight}
+                />
+              </Fragment>
+            );
           })}
         </StyledPostion>
       )}
