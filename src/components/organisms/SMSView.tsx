@@ -195,6 +195,45 @@ function SMSView() {
     [onClickVisible],
   );
 
+  const handleRemoveAutoMessage = useCallback(
+    (id: number) => {
+      if (loginInfo.admin_id < constants.ADMIN.REMOVE_AUTO_MESSAGE) {
+        alert('삭제 권한이 없습니다.');
+
+        return;
+      }
+
+      removeAutoMessage(id);
+    },
+    [loginInfo.admin_id, removeAutoMessage],
+  );
+
+  const handleUsedAutoMessage = useCallback(
+    (id: number, used: string) => {
+      if (loginInfo.admin_id < constants.ADMIN.MODIFY_AUTO_MESSAGE) {
+        alert('수정 권한이 없습니다.');
+
+        return;
+      }
+
+      setUsedAutoMessage(id, used);
+    },
+    [loginInfo.admin_id, setUsedAutoMessage],
+  );
+
+  const handleModifyMessageCount = useCallback(
+    (id: number, maxCountDate: number, maxCountMonth: number) => {
+      if (loginInfo.admin_id < constants.ADMIN.MODIFY_MESSAGE_COUNT_ADMIN) {
+        alert('수정 권한이 없습니다.');
+
+        return;
+      }
+
+      modifySmsCount(id, maxCountDate, maxCountMonth);
+    },
+    [loginInfo.admin_id, modifySmsCount],
+  );
+
   /**
    * @description 자동 메시지 테이블 상세 내용 정보들
    */
@@ -299,7 +338,7 @@ function SMSView() {
                   value.toUpperCase() === ANSWER_VALUE.YES
                     ? '사용중'
                     : '미사용',
-                onClick: setUsedAutoMessage,
+                onClick: handleUsedAutoMessage,
               },
               styles: {
                 ballColor: commonColor,
@@ -326,7 +365,7 @@ function SMSView() {
       const removeData = {
         data: {
           text: '삭제',
-          onClick: removeAutoMessage,
+          onClick: handleRemoveAutoMessage,
         },
         styles: {
           backgroundColor: Colors.white,
@@ -367,9 +406,9 @@ function SMSView() {
     });
   }, [
     autoMessageData,
+    handleRemoveAutoMessage,
+    handleUsedAutoMessage,
     onClickModifyAutoMessagePopup,
-    removeAutoMessage,
-    setUsedAutoMessage,
   ]);
 
   /**
@@ -428,7 +467,7 @@ function SMSView() {
       const addData = {
         data: {
           text: '저장',
-          onClick: modifySmsCount,
+          onClick: handleModifyMessageCount,
         },
         styles: {
           backgroundColor: Colors.white,
@@ -452,7 +491,7 @@ function SMSView() {
 
       return maxCountItems;
     });
-  }, [form.branch, loginInfo.admin_id, maxCountData, modifySmsCount]);
+  }, [form.branch, handleModifyMessageCount, loginInfo.admin_id, maxCountData]);
 
   /**
    * @description 자동 메시지 테이블 내용 정보들
@@ -641,7 +680,10 @@ function SMSView() {
       } else if (type === 2) {
         const renderData = [];
 
-        renderData.push(...titleButtonData);
+        if (loginInfo.admin_id >= constants.ADMIN.ADD_AUTO_MESSAGE) {
+          // 로그인 유저의 권한이 정의된 자동 문자 추가 권한보다 클 경우
+          renderData.push(...titleButtonData);
+        }
 
         if (selectedTabIndex === 1) {
           // 발송 수량은 버튼이 필요 없음
@@ -653,7 +695,7 @@ function SMSView() {
         };
       }
     },
-    [titleButtonData, selectedTabIndex],
+    [loginInfo.admin_id, selectedTabIndex, titleButtonData],
   );
 
   /**

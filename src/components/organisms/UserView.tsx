@@ -263,7 +263,11 @@ function UserView({ location }: UserViewProps) {
     const [titleTextConfig1] = titleTextData;
 
     renderData.push(titleTextConfig1);
-    renderData.push(...titleButtonData);
+
+    if (loginInfo.admin_id >= constants.ADMIN.ADD_USER) {
+      // 로그인 유저의 권한이 정의된 사용자 추가 권한보다 클 경우
+      renderData.push(...titleButtonData);
+    }
 
     for (let i = 0; i < renderData.length; i++) {
       const defaultRenderStyle = {
@@ -281,7 +285,7 @@ function UserView({ location }: UserViewProps) {
       renderConfig: renderData,
       renderStyle,
     };
-  }, [titleButtonData, titleTextData]);
+  }, [loginInfo.admin_id, titleButtonData, titleTextData]);
 
   /**
    * @description 타이틀 오른쪽 요소 가져오기

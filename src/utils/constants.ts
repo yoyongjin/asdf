@@ -169,4 +169,49 @@ export default {
   IS_AUTO_USER: process.env.REACT_APP_IS_AUTO_USER === 'true',
   DEFAULT_ID: -1,
   PARSING_KEY: 'YxAdwk22Fx',
+  ADMIN: {
+    ADD_USER:
+      Number(process.env.REACT_APP_ADD_USER_ADMIN) >= USER_TYPE.CONSULTANT &&
+      Number(process.env.REACT_APP_ADD_USER_ADMIN) <= USER_TYPE.SUPER_ADMIN
+        ? Number(process.env.REACT_APP_ADD_USER_ADMIN)
+        : USER_TYPE.SUPER_ADMIN, // 사용자 추가 권한
+    MODIFY_USER:
+      Number(process.env.REACT_APP_MODIFY_USER_ADMIN) >= USER_TYPE.CONSULTANT &&
+      Number(process.env.REACT_APP_MODIFY_USER_ADMIN) <= USER_TYPE.SUPER_ADMIN
+        ? Number(process.env.REACT_APP_MODIFY_USER_ADMIN)
+        : USER_TYPE.SUPER_ADMIN, // 사용자 수정 권한
+    REMOVE_USER:
+      Number(process.env.REACT_APP_REMOVE_USER_ADMIN) >= USER_TYPE.CONSULTANT &&
+      Number(process.env.REACT_APP_REMOVE_USER_ADMIN) <= USER_TYPE.SUPER_ADMIN
+        ? Number(process.env.REACT_APP_REMOVE_USER_ADMIN)
+        : USER_TYPE.SUPER_ADMIN, // 사용자 삭제 권한
+    ADD_AUTO_MESSAGE:
+      Number(process.env.REACT_APP_ADD_AUTO_MESSAGE_ADMIN) >=
+        USER_TYPE.CONSULTANT &&
+      Number(process.env.REACT_APP_ADD_AUTO_MESSAGE_ADMIN) <=
+        USER_TYPE.SUPER_ADMIN
+        ? Number(process.env.REACT_APP_ADD_AUTO_MESSAGE_ADMIN)
+        : USER_TYPE.SUPER_ADMIN, // 자동 문자 추가 권한
+    MODIFY_AUTO_MESSAGE:
+      Number(process.env.REACT_APP_MODIFY_AUTO_MESSAGE_ADMIN) >=
+        USER_TYPE.CONSULTANT &&
+      Number(process.env.REACT_APP_MODIFY_AUTO_MESSAGE_ADMIN) <=
+        USER_TYPE.SUPER_ADMIN
+        ? Number(process.env.REACT_APP_MODIFY_AUTO_MESSAGE_ADMIN)
+        : USER_TYPE.SUPER_ADMIN, // 자동 문자 수정 권한
+    REMOVE_AUTO_MESSAGE:
+      Number(process.env.REACT_APP_REMOVE_AUTO_MESSAGE_ADMIN) >=
+        USER_TYPE.CONSULTANT &&
+      Number(process.env.REACT_APP_REMOVE_AUTO_MESSAGE_ADMIN) <=
+        USER_TYPE.SUPER_ADMIN
+        ? Number(process.env.REACT_APP_REMOVE_AUTO_MESSAGE_ADMIN)
+        : USER_TYPE.SUPER_ADMIN, // 자동 문자 삭제 권한
+    MODIFY_MESSAGE_COUNT_ADMIN:
+      Number(process.env.REACT_APP_MODIFY_MESSAGE_COUNT_ADMIN) >=
+        USER_TYPE.CONSULTANT &&
+      Number(process.env.REACT_APP_MODIFY_MESSAGE_COUNT_ADMIN) <=
+        USER_TYPE.SUPER_ADMIN
+        ? Number(process.env.REACT_APP_MODIFY_MESSAGE_COUNT_ADMIN)
+        : USER_TYPE.SUPER_ADMIN, // 발송 문자 수량 수정 권한
+  },
 };

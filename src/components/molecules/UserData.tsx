@@ -409,6 +409,12 @@ function UserData({
 
     if (userData && userData!.id) {
       // 사용자 정보가 있을 경우 업데이트
+      if (loginData.admin_id < constants.ADMIN.MODIFY_USER) {
+        // 로그인 유저의 권한이 정의된 사용자 수정 권한보다 작을 경우
+        alert('수정할 수 없는 권한입니다.');
+        return false;
+      }
+
       onClickModifyUser!(
         userData.id,
         branchId,
@@ -488,6 +494,11 @@ function UserData({
     (name: string) => {
       if (loginData.admin_id === USER_TYPE.CONSULTANT) {
         // 로그인한 유저의 권한이 상담원일 경우
+        return true;
+      }
+
+      if (loginData.admin_id < constants.ADMIN.MODIFY_USER) {
+        // 로그인 유저의 권한이 정의된 사용자 수정 권한보다 클 경우
         return true;
       }
 
@@ -587,15 +598,17 @@ function UserData({
         case 'telecom':
         case 'plan':
         case 'used_phone':
-        case 'serial_number':
-        case 'zibox_spk':
-        case 'in_message':
-        case 'out_message':
-        case 'available_time': {
+        case 'serial_number': {
           // 통신사
           // 요금제
           // 휴대폰 사용 여부
           // 일련번호
+          return true;
+        }
+        case 'zibox_spk':
+        case 'in_message':
+        case 'out_message':
+        case 'available_time': {
           // 지박스 스피커 볼륨
           // 이용 가능시간 설정
           // 업무시간 내 메시지
@@ -603,10 +616,6 @@ function UserData({
           if (_.isEmpty(userData)) {
             // 유저 정보가 없는 경우(신규 생성 시)
             return true;
-          } else {
-            if (!userData?.number) {
-              return true;
-            }
           }
 
           break;

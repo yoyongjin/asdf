@@ -1,5 +1,4 @@
-import _ from 'lodash';
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 
 import { Image, Text } from 'components/atoms';
@@ -18,6 +17,7 @@ import optionHoverIcon from 'images/bt-user-modi-over.png';
 import { OnClickRemoveUser, OnClickResetPassword } from 'hooks/useUser';
 import { SetSeletedConsultantData } from 'components/organisms/UserView';
 import { ITableContentOption } from 'components/molecules/TableContent';
+import useAuth from 'hooks/useAuth';
 
 const StyledWrapper = styled.td``;
 
@@ -53,7 +53,7 @@ const menuList = [
   {
     id: 2,
     name: '삭제',
-    isVisible: !constants.IS_AUTO_USER,
+    isVisible: true,
   },
 ];
 
@@ -65,6 +65,7 @@ function UserProperty({
   userData,
 }: TableContentProps) {
   const [isHover, setIsHover] = useState<boolean>(false);
+  const { loginInfo } = useAuth();
 
   const onMouseIn = useCallback(() => {
     setIsHover(true);
@@ -73,6 +74,19 @@ function UserProperty({
   const onMouseOut = useCallback(() => {
     setIsHover(false);
   }, []);
+
+  const menus = useMemo(() => {
+    return menuList.map((value) => {
+      if (value.id === 1) {
+        value.isVisible = loginInfo.admin_id >= constants.ADMIN.MODIFY_USER;
+      }
+
+      if (value.id === 2) {
+        value.isVisible = loginInfo.admin_id >= constants.ADMIN.REMOVE_USER;
+      }
+      return value;
+    });
+  }, [loginInfo.admin_id]);
 
   return (
     <>
@@ -139,7 +153,7 @@ function UserProperty({
               currentSearchText={options.currentSearchText!}
               currentTeamId={options.currentTeamId!}
               currentLimit={options.currentLimit!}
-              menus={menuList}
+              menus={menus}
               onClickUserDataPopup={onClickUserDataPopup}
               onClickRemoveUser={onClickRemoveUser}
               onClickResetPassword={onClickResetPassword}

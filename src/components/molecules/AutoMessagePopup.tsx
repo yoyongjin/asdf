@@ -271,6 +271,63 @@ function AutoMessagePopup({
     }
   }, []);
 
+  /**
+   * @description 활성화/비활성화
+   * @param {string} name
+   */
+  const isDisabledBox = useCallback(
+    (name: string) => {
+      if (loginInfo.admin_id < constants.ADMIN.MODIFY_AUTO_MESSAGE) {
+        // 로그인 유저의 권한이 정의된 자동 문자 수정 권한보다 작을 경우
+        return true;
+      }
+
+      switch (name) {
+        case 'subject':
+        case 'content':
+        case 'daily_date': {
+          // 제목
+          // 내용
+          // 기간 상시 체크
+
+          break;
+        }
+        case 'branch': {
+          // 센터
+          if (selectedAutoMessageData?.branch_id === constants.DEFAULT_ID) {
+            return true;
+          }
+
+          break;
+        }
+        case 'date': {
+          // 기간
+          if (form.daily_date) {
+            return true;
+          }
+
+          break;
+        }
+        case 'time': {
+          // 시간
+          if (form.daily_time) {
+            return true;
+          }
+
+          break;
+        }
+      }
+
+      return false;
+    },
+    [
+      form.daily_date,
+      form.daily_time,
+      loginInfo.admin_id,
+      selectedAutoMessageData,
+    ],
+  );
+
   const daysToString = useMemo(() => {
     let days = '';
     days += isToggleSun ? '0' : '';
@@ -395,6 +452,12 @@ function AutoMessagePopup({
     }
 
     if (selectedAutoMessageData) {
+      if (loginInfo.admin_id < constants.ADMIN.MODIFY_AUTO_MESSAGE) {
+        // 로그인 유저의 권한이 정의된 자동 문자 추가 권한보다 작은 경우
+        alert('수정 권한이 없습니다.');
+        return null;
+      }
+
       modifyAutoMessage(
         selectedAutoMessageData.id,
         branchId,
@@ -577,6 +640,7 @@ function AutoMessagePopup({
           return (
             <Input
               borderRadius={8}
+              disabled={isDisabledBox(settingData.name)}
               fontSize={12}
               height={3}
               name={settingData.name}
@@ -596,6 +660,7 @@ function AutoMessagePopup({
               <TextArea
                 borderRadius={0}
                 borderStyle="none"
+                disabled={isDisabledBox(settingData.name)}
                 fontColor={Colors.navy2}
                 fontSize={12}
                 height={132}
@@ -617,9 +682,7 @@ function AutoMessagePopup({
               borderColor={Colors.gray14}
               borderRadius={8}
               defaultValue={form.branch}
-              disabled={
-                selectedAutoMessageData?.branch_id === constants.DEFAULT_ID
-              }
+              disabled={isDisabledBox(settingData.name)}
               fontColor={Colors.navy2}
               fontSize={12}
               name={settingData.name}
@@ -636,7 +699,7 @@ function AutoMessagePopup({
           return (
             <DateRangePicker
               datePickerBorderStyle="solid"
-              datePickerDisabled={form.daily_date}
+              datePickerDisabled={isDisabledBox(settingData.name)}
               datePickerEndOnChange={onChangeEndDatePicker}
               datePickerEndSelectedDate={endDatePicker}
               datePickerFormat="yyyy년 MM월 dd일"
@@ -651,6 +714,7 @@ function AutoMessagePopup({
           // 기간 상시 체크박스
           return (
             <TextCheckBox
+              checkBoxDisabled={isDisabledBox(settingData.name)}
               checkBoxIsChecked={form.daily_date}
               checkBoxName={settingData.name}
               checkBoxOnChange={onChangeCheckBox}
@@ -668,7 +732,7 @@ function AutoMessagePopup({
           return (
             <DateRangePicker
               datePickerBorderStyle="solid"
-              datePickerDisabled={form.daily_time}
+              datePickerDisabled={isDisabledBox(settingData.name)}
               datePickerEndOnChange={onChangeEndTimePicker}
               datePickerEndSelectedDate={endTimePicker}
               datePickerFormat="HH:mm"
@@ -709,8 +773,8 @@ function AutoMessagePopup({
       form.branch,
       form.content,
       form.daily_date,
-      form.daily_time,
       form.subject,
+      isDisabledBox,
       onChangeCheckBox,
       onChangeEndDatePicker,
       onChangeEndTimePicker,
@@ -719,7 +783,6 @@ function AutoMessagePopup({
       onChangeStartDatePicker,
       onChangeStartTimePicker,
       onChangeTextArea,
-      selectedAutoMessageData,
       startDatePicker,
       startTimePicker,
     ],
