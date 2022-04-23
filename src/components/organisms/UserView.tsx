@@ -53,11 +53,12 @@ function UserView({ location }: UserViewProps) {
   const [selectedConsultant, setSelectedConsultant] = useState<UserDataV2>();
   const [searchText, setSearchText] = useState<string>('');
   const { loginInfo } = useAuth();
-  const { branches, teams, getBranches, getTeams } = useOrganization();
+  const { getBranches, getTeams, selectBoxBranchOption, selectBoxTeamOption } =
+    useOrganization();
   const { form, onChangeSelect, setSpecificValue } = useInputForm({
     limit: 15,
-    branch: -1,
-    team: -1,
+    branch: constants.DEFAULT_ID,
+    team: constants.DEFAULT_ID,
   });
   const {
     userInfo,
@@ -77,24 +78,6 @@ function UserView({ location }: UserViewProps) {
     onClickPrevPage,
   } = usePage();
   const { visible, onClickVisible } = useVisible();
-
-  const selectBoxBranchOption = useMemo(() => {
-    return branches.map((values) => {
-      return {
-        id: values.id,
-        data: values.branch_name,
-      };
-    });
-  }, [branches]);
-
-  const selectBoxTeamOption = useMemo(() => {
-    return teams.map((values) => {
-      return {
-        id: values.id,
-        data: values.team_name,
-      };
-    });
-  }, [teams]);
 
   const getUsersData = useCallback(() => {
     let branchID = form.branch;
