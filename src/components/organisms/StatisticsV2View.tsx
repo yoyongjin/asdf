@@ -178,6 +178,7 @@ function StatisticsV2View() {
     page,
     onClickNextPage,
     onClickPrevPage,
+    onChangeCurrentPage,
   } = usePage();
   const {
     maxAutoMessageStatistics,
@@ -1399,6 +1400,48 @@ function StatisticsV2View() {
     loginInfo.id,
     selectedTabIndex,
     setInitData,
+  ]);
+
+  useEffect(() => {
+    if (!loginInfo.id) {
+      // 비로그인인 경우
+      return;
+    }
+
+    if (selectedTabIndex === 0) {
+      onChangeCurrentPage(page, maxCallStatisticsByConsultant, form.limit);
+    } else if (selectedTabIndex === 1) {
+      onChangeCurrentPage(
+        callStatisticsByTeamPage,
+        maxCallStatisticsByTeam,
+        form.limit,
+      );
+    } else if (selectedTabIndex === 2) {
+      onChangeCurrentPage(
+        messageStatisticsPage,
+        maxMessageStatistics,
+        form.limit,
+      );
+    } else if (selectedTabIndex === 3) {
+      onChangeCurrentPage(
+        autoMessageStatisticsPage,
+        maxAutoMessageStatistics,
+        form.limit,
+      );
+    }
+  }, [
+    autoMessageStatisticsPage,
+    callStatisticsByTeamPage,
+    form.limit,
+    loginInfo.id,
+    maxAutoMessageStatistics,
+    maxCallStatisticsByConsultant,
+    maxCallStatisticsByTeam,
+    maxMessageStatistics,
+    messageStatisticsPage,
+    onChangeCurrentPage,
+    page,
+    selectedTabIndex,
   ]);
 
   return (
