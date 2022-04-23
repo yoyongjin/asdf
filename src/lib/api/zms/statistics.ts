@@ -94,6 +94,7 @@ class Statistics {
         page,
         page_count: limit,
         isExcel,
+        isTeam: false,
       };
 
       const { data } = await APIManager.get(
