@@ -121,6 +121,22 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
           });
 
           if (sub_total) {
+            if (
+              callStatisticsByConsultant.length > 0 &&
+              callStatisticsByConsultant[callStatisticsByConsultant.length - 1]
+                .branch_name === '소계'
+            ) {
+              // 일+시간 조회 조건일 경우 발생하는 문제
+              // 데이터 중 바로 위 데이터가 소계인 경우 쌓지 않도록 처리
+              return null;
+            }
+
+            if (customCallStatisticsData.length < 1) {
+              // 일+시간 조회 조건일 경우 발생하는 문제
+              // 데이터는 없는데 소계 데이터는 있을 경우 쌓지 않도록 처리
+              return null;
+            }
+
             const subTotalData =
               StatisticsFormat.getCustomCallStatisticsByConsultantItem(
                 sub_total.all,
