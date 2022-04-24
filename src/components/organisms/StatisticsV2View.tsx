@@ -24,6 +24,7 @@ import {
   tableTitleMessageStatistics,
 } from 'utils/table/title';
 import TableRow from 'utils/table/row';
+import { USER_TYPE } from 'utils/constants';
 
 const tabTitle = [
   {
@@ -1437,6 +1438,49 @@ function StatisticsV2View() {
     onChangeCurrentPage,
     page,
     selectedTabIndex,
+  ]);
+
+  useEffect(() => {
+    if (loginInfo.admin_id < USER_TYPE.ADMIN) {
+      // 일반 관리자 하위 권한일 경우
+      const selectedBranchs = pluralBranchOption.filter((item) => {
+        return item.value === loginInfo.branch_id;
+      });
+
+      handlePluralBranchSelectedOption(selectedBranchs);
+    }
+  }, [
+    handlePluralBranchSelectedOption,
+    loginInfo.admin_id,
+    loginInfo.branch_id,
+    pluralBranchOption,
+  ]);
+
+  useEffect(() => {
+    if (_.isEmpty(pluralBranchSelectedOption)) {
+      // 비어있으면 할 필요 없음
+      return;
+    }
+
+    if (_.isEmpty(pluralTeamOption)) {
+      // 팀이 비어있으면 할 필요 없음
+      return;
+    }
+
+    if (loginInfo.admin_id === USER_TYPE.TEAM_ADMIN) {
+      // 팀 관리자일 경우
+      const selectedteams = pluralTeamOption.filter((item) => {
+        return item.value === loginInfo.team_id;
+      });
+
+      handlePluralTeamSelectedOption(selectedteams);
+    }
+  }, [
+    handlePluralTeamSelectedOption,
+    loginInfo.admin_id,
+    loginInfo.team_id,
+    pluralBranchSelectedOption,
+    pluralTeamOption,
   ]);
 
   return (
