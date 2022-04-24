@@ -630,6 +630,7 @@ function StatisticsV2View() {
     const multiSelectConfig1 = {
       type: 'multi-select',
       data: {
+        disabled: loginInfo.admin_id < USER_TYPE.ADMIN,
         onChange: handlePluralBranchSelectedOption,
         options: pluralBranchOption,
         selectedOptions: pluralBranchSelectedOption,
@@ -640,6 +641,7 @@ function StatisticsV2View() {
     const multiSelectConfig2 = {
       type: 'multi-select',
       data: {
+        disabled: loginInfo.admin_id < USER_TYPE.BRANCH_ADMIN,
         onChange: handlePluralTeamSelectedOption,
         options: pluralTeamOption,
         selectedOptions: pluralTeamSelectedOption,
@@ -662,6 +664,7 @@ function StatisticsV2View() {
     handlePluralBranchSelectedOption,
     handlePluralConsultantSelectedOption,
     handlePluralTeamSelectedOption,
+    loginInfo.admin_id,
     pluralBranchOption,
     pluralBranchSelectedOption,
     pluralConsultantOption,

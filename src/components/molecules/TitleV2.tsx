@@ -142,6 +142,7 @@ function TitleV2({
   const MultiSelectView = useCallback((data: IMultiSelectItem) => {
     return (
       <MultiSelect
+        isDisabled={data.disabled}
         onChange={data.onChange}
         options={data.options}
         textChoice={data.textChoice}
@@ -452,6 +453,7 @@ interface IButtonItem {
 
 // muli select 요소 정보
 interface IMultiSelectItem {
+  disabled?: boolean;
   selectedOptions: Array<IMultiSelectOption>;
   onChange?: THandleSelectedOption;
   options: Array<IMultiSelectOption>;
