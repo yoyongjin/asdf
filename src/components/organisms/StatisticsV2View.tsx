@@ -458,12 +458,17 @@ function StatisticsV2View() {
         startTime,
         endTime,
         searchType,
-        page,
+        callStatisticsByTeamPage,
         limit,
         isExcel,
       );
     },
-    [getTitleParams, handleGetCallStatisticsByTeam, isValidateStatistics, page],
+    [
+      callStatisticsByTeamPage,
+      getTitleParams,
+      handleGetCallStatisticsByTeam,
+      isValidateStatistics,
+    ],
   );
 
   const getAutoMessageStatistice = useCallback(
@@ -484,16 +489,16 @@ function StatisticsV2View() {
         breakUp,
         startDate,
         endDate,
-        page,
+        autoMessageStatisticsPage,
         limit,
         isExcel,
       );
     },
     [
+      autoMessageStatisticsPage,
       getTitleParams,
       handleGetAutoMessageStatistics,
       isValidateStatistics,
-      page,
     ],
   );
 
@@ -515,12 +520,17 @@ function StatisticsV2View() {
         breakUp,
         startDate,
         endDate,
-        page,
+        messageStatisticsPage,
         limit,
         isExcel,
       );
     },
-    [getTitleParams, handleGetMessageStatistics, isValidateStatistics, page],
+    [
+      getTitleParams,
+      handleGetMessageStatistics,
+      isValidateStatistics,
+      messageStatisticsPage,
+    ],
   );
 
   /**
