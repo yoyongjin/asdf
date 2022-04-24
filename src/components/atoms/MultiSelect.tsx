@@ -122,6 +122,16 @@ function MultiSelect({
             itemData={props.options}
           >
             {({ index, style, data }: any) => {
+              const _index = state.values.findIndex((itmes: any) => {
+                return itmes.value === data[index].value;
+              });
+
+              let isChecked = true;
+
+              if (_index === constants.DEFAULT_ID) {
+                isChecked = false;
+              }
+
               return (
                 <StyledItem
                   style={style}
@@ -131,9 +141,7 @@ function MultiSelect({
                   }}
                 >
                   <TextCheckBox
-                    checkBoxIsChecked={
-                      state.values.indexOf(data[index]) !== constants.DEFAULT_ID
-                    }
+                    checkBoxIsChecked={isChecked}
                     checkBoxOnChange={() => methods.addItem(data[index])}
                     isReverse
                     textFontColor={Colors.navy2}
