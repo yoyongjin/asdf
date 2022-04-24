@@ -5,7 +5,7 @@ import url from 'lib/api/url';
 class API {
   private static zmsApi = axios.create({
     baseURL: url.zms.api.host,
-    timeout: 10000,
+    timeout: 30000,
     withCredentials: true,
   });
 
