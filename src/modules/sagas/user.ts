@@ -37,7 +37,8 @@ import Communicator from 'lib/communicator';
 import Toast from 'utils/toast';
 
 function* getUsersProcess(action: ReturnType<typeof requestGetUsers>) {
-  const { branch_id, team_id, limit, page, search, url } = action.payload;
+  const { branch_id, team_id, limit, page, search, url, include_leaver } =
+    action.payload;
 
   yield delay(500);
   const response: ResponseSuccessData | ResponseFailureData = yield call(
@@ -46,6 +47,7 @@ function* getUsersProcess(action: ReturnType<typeof requestGetUsers>) {
     team_id,
     limit,
     page,
+    include_leaver,
     search!,
   );
 
@@ -195,17 +197,6 @@ function* removeUserProcess(action: ReturnType<typeof requestRemoveUser>) {
     const { data } = response as ResponseSuccessData;
 
     yield put(successRemoveUser());
-
-    const payload = {
-      branch_id,
-      team_id,
-      limit,
-      page,
-      search,
-      url: '/main/manage/user',
-    };
-
-    yield put(requestGetUsers(payload));
 
     Toast.success('삭제 완료😊');
 

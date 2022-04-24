@@ -51,6 +51,7 @@ class User {
     teamId: number,
     limit: number,
     page: number,
+    breakUp: boolean,
     searchName: string,
   ) {
     try {
@@ -62,6 +63,7 @@ class User {
         limit,
         page,
         search_name: searchName,
+        include_leaver: breakUp,
       };
 
       const { data } = await APIManager.get(

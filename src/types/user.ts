@@ -196,6 +196,7 @@ export interface RequestGetUsers {
   page: number;
   search?: string;
   url: string;
+  include_leaver: boolean; // 해촉 여부
 }
 
 export interface RequestAddUser {

@@ -18,6 +18,7 @@ import { tableTitleUserInfo } from 'utils/table/title';
 
 import DB_ADD_USER_BUTTON_IMAGE from 'images/bt-add-u-1-nor.png';
 import ADD_USER_BUTTON_IMAGE from 'images/zms/bt-add-u-1-nor.png';
+import useFetch from 'hooks/useFetch';
 
 const StyledWrapper = styled.div`
   height: 100%;
@@ -55,11 +56,13 @@ function UserView({ location }: UserViewProps) {
   const { loginInfo } = useAuth();
   const { getBranches, getTeams, selectBoxBranchOption, selectBoxTeamOption } =
     useOrganization();
-  const { form, onChangeSelect, setSpecificValue } = useInputForm({
-    limit: 15,
-    branch: constants.DEFAULT_ID,
-    team: constants.DEFAULT_ID,
-  });
+  const { form, onChangeCheckBox, onChangeSelect, setSpecificValue } =
+    useInputForm({
+      limit: 15,
+      branch: constants.DEFAULT_ID,
+      team: constants.DEFAULT_ID,
+      break_up: false,
+    });
   const {
     userInfo,
     getUsers,
@@ -77,6 +80,7 @@ function UserView({ location }: UserViewProps) {
     onClickPrevPage,
   } = usePage();
   const { visible, onClickVisible } = useVisible();
+  const { removeUserStatus } = useFetch();
 
   const getUsersData = useCallback(() => {
     let branchID = form.branch;
@@ -91,9 +95,20 @@ function UserView({ location }: UserViewProps) {
       teamID = loginInfo.team_id;
     }
 
-    getUsers(branchID, teamID, form.limit, page, searchText, location.pathname);
+    if (!removeUserStatus) {
+      getUsers(
+        branchID,
+        teamID,
+        form.limit,
+        page,
+        searchText,
+        form.break_up,
+        location.pathname,
+      );
+    }
   }, [
     form.branch,
+    form.break_up,
     form.limit,
     form.team,
     getUsers,
@@ -102,6 +117,7 @@ function UserView({ location }: UserViewProps) {
     loginInfo.branch_id,
     loginInfo.team_id,
     page,
+    removeUserStatus,
     searchText,
   ]);
 
@@ -227,6 +243,30 @@ function UserView({ location }: UserViewProps) {
   ]);
 
   /**
+   * @description 타이틀에 들어갈 text + checkbox 정보들
+   */
+  const titleTextCheckBoxData = useMemo(() => {
+    const textCheckBoxConfig = {
+      type: 'text-checkbox',
+      data: {
+        isChecked: form.break_up,
+        isReverse: true,
+        name: 'break_up',
+        onChange: onChangeCheckBox,
+        text: '해촉 포함',
+      },
+      styles: {
+        fontColor: Colors.navy2,
+        fontFamily: 'Malgun Gothic',
+        fontSize: 12,
+        fontWeight: 800,
+      },
+    };
+
+    return [textCheckBoxConfig];
+  }, [form.break_up, onChangeCheckBox]);
+
+  /**
    * @description 타이틀에 들어갈 text 정보들
    */
   const titleTextData = useMemo(() => {
@@ -301,13 +341,18 @@ function UserView({ location }: UserViewProps) {
 
     if (loginInfo.admin_id > USER_TYPE.BRANCH_ADMIN) {
       // 슈퍼관리자, 일반관리자인 경우
-      renderData.push(...titleSelectData);
+      renderData.push(
+        selectConfig1,
+        ...titleTextCheckBoxData,
+        selectConfig2,
+        selectConfig3,
+      );
     } else if (loginInfo.admin_id === USER_TYPE.BRANCH_ADMIN) {
       // 지점관리자인 경우
-      renderData.push(selectConfig1, selectConfig3);
+      renderData.push(selectConfig1, ...titleTextCheckBoxData, selectConfig3);
     } else {
       // 팀관리자인 경우
-      renderData.push(selectConfig1);
+      renderData.push(selectConfig1, ...titleTextCheckBoxData);
     }
 
     renderData.push(...titleSearchBarData);
@@ -317,11 +362,11 @@ function UserView({ location }: UserViewProps) {
         paddingRight: 0,
       };
 
-      if (i === 0 || i === 2) {
+      if (i === 0 || i === 3 || i === 4) {
         defaultRenderStyle.paddingRight = 10;
       }
 
-      if (i === 1 || i === 3) {
+      if (i === 1 || i === 2) {
         defaultRenderStyle.paddingRight = 18;
       }
 
@@ -332,7 +377,13 @@ function UserView({ location }: UserViewProps) {
       renderConfig: renderData,
       renderStyle,
     };
-  }, [loginInfo.admin_id, titleSearchBarData, titleSelectData, titleTextData]);
+  }, [
+    loginInfo.admin_id,
+    titleSearchBarData,
+    titleSelectData,
+    titleTextCheckBoxData,
+    titleTextData,
+  ]);
 
   /**
    * @description 타이틀 style 가져오기

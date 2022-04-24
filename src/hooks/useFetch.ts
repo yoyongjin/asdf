@@ -15,11 +15,15 @@ function useFetch() {
   const removeAutoMessageStatus = useSelector(
     (state: RootState) => state.message.request.removeAutoMessage.fetch,
   ); // 자동 문자 삭제 API 상태
+  const removeUserStatus = useSelector(
+    (state: RootState) => state.user.request.removeUser.fetch,
+  );
 
   return {
     addAutoMessageStatus,
     modifyAutoMessageStatus,
     removeAutoMessageStatus,
+    removeUserStatus,
   };
 }
 

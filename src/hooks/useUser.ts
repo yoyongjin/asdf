@@ -50,6 +50,7 @@ function useUser() {
       limit = 0,
       page = 0,
       search = '',
+      breakUp = false,
       url?: string,
     ) => {
       const payload = {
@@ -59,6 +60,7 @@ function useUser() {
         page: page || constants.PAGE,
         search,
         url: url!,
+        include_leaver: breakUp,
       };
 
       dispatch(requestGetUsers(payload));
