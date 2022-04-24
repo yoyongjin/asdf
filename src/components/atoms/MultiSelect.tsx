@@ -192,10 +192,9 @@ export interface IOption {
 
 interface IMultiSelect extends IStyledMultiSelect {
   clearButton: boolean;
-  disabled?: boolean; // 아예 선택 못하게 막기
   height: number;
   width: number;
-  isDisabled: boolean;
+  isDisabled?: boolean;
   isKeepItem: boolean; // 선택된 item 유지 여부
   onChange?: THandleSelectedOption;
   options: Array<IOption>; // 데이터
