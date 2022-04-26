@@ -74,7 +74,10 @@ function* getCallStatisticsByConsultantProcess(
   } = action.payload;
 
   Toast.notification('잠시만 기다려주세요..🙄');
-  yield put(setExcelDownloadStatus(true));
+
+  if (isExcel) {
+    yield put(setExcelDownloadStatus(true));
+  }
 
   const response: ResponseSuccessData | ResponseFailureData = yield call(
     ZMSStatistics.getCallStatisticsByConsultant,
@@ -92,8 +95,6 @@ function* getCallStatisticsByConsultantProcess(
 
   if (response.status === API_FETCH.SUCCESS) {
     const { data } = response as ResponseSuccessData;
-
-    console.log(data);
 
     if (isExcel) {
       yield put(successGetAllCallStatisticsByConsultant());
@@ -141,6 +142,10 @@ function* getCallStatisticsByTeamProcess(
 
   Toast.notification('잠시만 기다려주세요..🙄');
 
+  if (isExcel) {
+    yield put(setExcelDownloadStatus(true));
+  }
+
   const response: ResponseSuccessData | ResponseFailureData = yield call(
     ZMSStatistics.getCallStatisticsByTeam,
     ids,
@@ -157,8 +162,6 @@ function* getCallStatisticsByTeamProcess(
 
   if (response.status === API_FETCH.SUCCESS) {
     const { data } = response as ResponseSuccessData;
-
-    console.log(data);
 
     if (isExcel) {
       yield put(successGetAllCallStatisticsByConsultant());
@@ -203,6 +206,10 @@ function* getAutoMessageStatisticsProcess(
 
   Toast.notification('잠시만 기다려주세요.🙄');
 
+  if (isExcel) {
+    yield put(setExcelDownloadStatus(true));
+  }
+
   const response: ResponseSuccessData | ResponseFailureData = yield call(
     ZMSStatistics.getAutoMessageStatistics,
     ids,
@@ -216,8 +223,6 @@ function* getAutoMessageStatisticsProcess(
 
   if (response.status === API_FETCH.SUCCESS) {
     const { data } = response as ResponseSuccessData;
-
-    console.log(data);
 
     if (isExcel) {
       if (!data) {
@@ -271,6 +276,10 @@ function* getMessageStatisticsProcess(
 
   Toast.notification('잠시만 기다려주세요..🙄');
 
+  if (isExcel) {
+    yield put(setExcelDownloadStatus(true));
+  }
+
   const response: ResponseSuccessData | ResponseFailureData = yield call(
     ZMSStatistics.getMessageStatistics,
     ids,
@@ -284,8 +293,6 @@ function* getMessageStatisticsProcess(
 
   if (response.status === API_FETCH.SUCCESS) {
     const { data } = response as ResponseSuccessData;
-
-    console.log(data);
 
     if (isExcel) {
       if (!data) {
