@@ -221,9 +221,14 @@ function StatisticsV2View() {
 
   const pluralConsultantOption = useMemo(() => {
     return pluralConsultant.map((values) => {
+      let label = `${values.name}`;
+      if (values.user_name) {
+        label += `(${values.user_name})`;
+      }
+
       return {
         value: values.id,
-        label: values.name,
+        label,
       };
     });
   }, [pluralConsultant]);
