@@ -167,7 +167,7 @@ function useCommunicator() {
             const url = constants.API_SERVER + '/' + fileName;
 
             const windowPopup = window.open(url); // 팝업 허용 해줘야 함
-            windowPopup?.close();
+            // windowPopup?.close(); // 사설 인증서라서 잠시 제거
 
             dispatch(setExcelDownloadStatus(false));
             // 아래는 beforeunload 이벤트 호출 시 소켓이 끊어짐 (아래 beforeunload 이벤트 호출됨)
