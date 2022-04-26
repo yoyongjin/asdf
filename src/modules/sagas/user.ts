@@ -40,6 +40,7 @@ function* getUsersProcess(action: ReturnType<typeof requestGetUsers>) {
   const { branch_id, team_id, limit, page, search, url, include_leaver } =
     action.payload;
 
+  Toast.notification('잠시만 기다려주세요..🙄');
   yield delay(500);
   const response: ResponseSuccessData | ResponseFailureData = yield call(
     ZMSUser.getUsers,
@@ -62,6 +63,12 @@ function* getUsersProcess(action: ReturnType<typeof requestGetUsers>) {
     };
 
     yield put(successGetUsers(payload));
+
+    if (max_count < 1) {
+      Toast.warning('데이터가 없습니다🙄');
+    } else {
+      Toast.success('가져오기 완료😊');
+    }
 
     if (url === '/main') {
       Communicator.getInstance().emitMessage('state', '');
