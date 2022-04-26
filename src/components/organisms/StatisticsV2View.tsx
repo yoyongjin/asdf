@@ -188,18 +188,21 @@ function StatisticsV2View() {
     page: autoMessageStatisticsPage,
     onClickNextPage: onClickNextPageAutoMessage,
     onClickPrevPage: onClickPrevPageAutoMessage,
+    onChangeCurrentPage: onChangeCurrentPageAutoMessage,
   } = usePage();
   const {
     maxMessageStatistics,
     page: messageStatisticsPage,
     onClickNextPage: onClickNextPageMessage,
     onClickPrevPage: onClickPrevPageMessage,
+    onChangeCurrentPage: onChangeCurrentPageMessage,
   } = usePage();
   const {
     maxCallStatisticsByTeam,
     page: callStatisticsByTeamPage,
     onClickNextPage: onClickNextPageCallStatisticsByTeam,
     onClickPrevPage: onClickPrevPageCallStatisticsByTeam,
+    onChangeCurrentPage: onChangeCurrentPageCallStatisticsByTeam,
   } = usePage();
 
   const pluralBranchOption = useMemo(() => {
@@ -1298,45 +1301,62 @@ function StatisticsV2View() {
    * @description 페이지가 변경됐을 때 데이터를 가져오기
    */
   useEffect(() => {
-    if (prevPage !== page) {
+    if (!_.isEmpty(callStatisticsByConsultantData) && page !== prevPage) {
       getCallStatisticeByConsultant(false);
     }
 
     prevPage = page;
-  }, [getCallStatisticeByConsultant, page]);
+  }, [callStatisticsByConsultantData, getCallStatisticeByConsultant, page]);
 
   /**
    * @description 페이지가 변경됐을 때 팀별 통화 통계 데이터를 가져오기
    */
   useEffect(() => {
-    if (callByTeamPrevPage !== callStatisticsByTeamPage) {
+    if (
+      !_.isEmpty(callStatisticsByTeamData) &&
+      callByTeamPrevPage !== callStatisticsByTeamPage
+    ) {
       getCallStatisticeByTeam(false);
     }
 
     callByTeamPrevPage = callStatisticsByTeamPage;
-  }, [callStatisticsByTeamPage, getCallStatisticeByTeam]);
+  }, [
+    callStatisticsByTeamData,
+    callStatisticsByTeamPage,
+    getCallStatisticeByTeam,
+  ]);
 
   /**
    * @description 페이지가 변경됐을 때 자동 문자 통계 데이터를 가져오기
    */
   useEffect(() => {
-    if (autoMessagePrevPage !== autoMessageStatisticsPage) {
+    if (
+      !_.isEmpty(autoMessageStatisticsData) &&
+      autoMessagePrevPage !== autoMessageStatisticsPage
+    ) {
       getAutoMessageStatistice(false);
     }
 
     autoMessagePrevPage = autoMessageStatisticsPage;
-  }, [autoMessageStatisticsPage, getAutoMessageStatistice]);
+  }, [
+    autoMessageStatisticsData,
+    autoMessageStatisticsPage,
+    getAutoMessageStatistice,
+  ]);
 
   /**
    * @description 페이지가 변경됐을 때 문자 통계 데이터를 가져오기
    */
   useEffect(() => {
-    if (meessagePrevPage !== messageStatisticsPage) {
+    if (
+      !_.isEmpty(messageStatisticsData) &&
+      meessagePrevPage !== messageStatisticsPage
+    ) {
       getMessageStatistice(false);
     }
 
     meessagePrevPage = messageStatisticsPage;
-  }, [getMessageStatistice, messageStatisticsPage]);
+  }, [getMessageStatistice, messageStatisticsData, messageStatisticsPage]);
 
   const setInitData = useCallback(
     (type: number) => {
@@ -1401,21 +1421,37 @@ function StatisticsV2View() {
     }
 
     if (selectedTabIndex === 0) {
+      if (maxCallStatisticsByConsultant < 1) {
+        prevPage = 1;
+      }
+
       onChangeCurrentPage(page, maxCallStatisticsByConsultant, form.limit);
     } else if (selectedTabIndex === 1) {
-      onChangeCurrentPage(
+      if (maxCallStatisticsByTeam < 1) {
+        callByTeamPrevPage = 1;
+      }
+
+      onChangeCurrentPageCallStatisticsByTeam(
         callStatisticsByTeamPage,
         maxCallStatisticsByTeam,
         form.limit,
       );
     } else if (selectedTabIndex === 2) {
-      onChangeCurrentPage(
+      if (maxMessageStatistics < 1) {
+        meessagePrevPage = 1;
+      }
+
+      onChangeCurrentPageMessage(
         messageStatisticsPage,
         maxMessageStatistics,
         form.limit,
       );
     } else if (selectedTabIndex === 3) {
-      onChangeCurrentPage(
+      if (maxAutoMessageStatistics < 1) {
+        autoMessagePrevPage = 1;
+      }
+
+      onChangeCurrentPageAutoMessage(
         autoMessageStatisticsPage,
         maxAutoMessageStatistics,
         form.limit,
@@ -1432,6 +1468,9 @@ function StatisticsV2View() {
     maxMessageStatistics,
     messageStatisticsPage,
     onChangeCurrentPage,
+    onChangeCurrentPageAutoMessage,
+    onChangeCurrentPageCallStatisticsByTeam,
+    onChangeCurrentPageMessage,
     page,
     selectedTabIndex,
   ]);
