@@ -316,6 +316,13 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
         draft.callStatisticsByConsultantAllCount = 0;
       });
     },
+    [actions.SET_INITIALIZE_CALL_STATISTICS_BY_TEAM]: (state, action) => {
+      // 팀별 통화 통계 초기화하기
+      return produce(state, (draft) => {
+        draft.callStatisticsByTeam = [];
+        draft.callStatisticsByTeamAllCount = 0;
+      });
+    },
     [actions.SET_INITIALIZE_AUTO_MESSAGE_STATISTICS]: (state, action) => {
       // 상담원별 통화 통계 초기화하기
       return produce(state, (draft) => {

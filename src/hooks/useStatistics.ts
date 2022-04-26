@@ -9,6 +9,7 @@ import {
   requestGetStatistics,
   setInitializeAutoMessageStatistics,
   setInitializeCallStatisticsByConsultant,
+  setInitializeCallStatisticsByTeam,
   setInitializeMessageStatistics,
 } from 'modules/actions/statistics';
 import { RootState } from 'modules/reducers';
@@ -120,6 +121,10 @@ function useStatistics() {
     dispatch(setInitializeCallStatisticsByConsultant());
   }, [dispatch]);
 
+  const handleInitializeCallStatisticsByTeam = useCallback(() => {
+    dispatch(setInitializeCallStatisticsByTeam());
+  }, [dispatch]);
+
   const handleInitializeAutoMessageStatistics = useCallback(() => {
     dispatch(setInitializeAutoMessageStatistics());
   }, [dispatch]);
@@ -190,6 +195,7 @@ function useStatistics() {
     handleInitializeAutoMessageStatistics,
     handleGetMessageStatistics,
     handleInitializeMessageStatistics,
+    handleInitializeCallStatisticsByTeam,
     handleGetCallStatisticsByTeam,
     callStatisticsByTeamData,
   };

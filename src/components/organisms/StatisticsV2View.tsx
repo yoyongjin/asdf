@@ -170,6 +170,7 @@ function StatisticsV2View() {
     handleInitializeCallStatisticsByConsultant,
     handleInitializeMessageStatistics,
     handleInitializeAutoMessageStatistics,
+    handleInitializeCallStatisticsByTeam,
     handleGetMessageStatistics,
     handleGetCallStatisticsByTeam,
     callStatisticsByTeamData,
@@ -1331,6 +1332,12 @@ function StatisticsV2View() {
           break;
         }
         case 1: {
+          // 팀별 통화 통계
+          if (!_.isEmpty(callStatisticsByTeamData)) {
+            // 비어있지 않으면 초기화 시키기
+            handleInitializeCallStatisticsByTeam();
+          }
+
           break;
         }
         case 2: {
@@ -1356,8 +1363,10 @@ function StatisticsV2View() {
     [
       autoMessageStatisticsData,
       callStatisticsByConsultantData,
+      callStatisticsByTeamData,
       handleInitializeAutoMessageStatistics,
       handleInitializeCallStatisticsByConsultant,
+      handleInitializeCallStatisticsByTeam,
       handleInitializeMessageStatistics,
       messageStatisticsData,
     ],

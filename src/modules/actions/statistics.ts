@@ -113,6 +113,15 @@ export const setInitializeCallStatisticsByConsultant = createAction(
   SET_INITIALIZE_CALL_STATISTICS_BY_CONSULTANT,
 )();
 
+// v2 팀별 통화 통계 데이터 초기화하기
+export const SET_INITIALIZE_CALL_STATISTICS_BY_TEAM =
+  'SET_INITIALIZE_CALL_STATISTICS_BY_TEAM';
+
+// v2 팀별 통계 데이터 초기화하기 Action
+export const setInitializeCallStatisticsByTeam = createAction(
+  SET_INITIALIZE_CALL_STATISTICS_BY_TEAM,
+)();
+
 // v2 자동 문자 통계 데이터 초기화하기
 export const SET_INITIALIZE_AUTO_MESSAGE_STATISTICS =
   'SET_INITIALIZE_AUTO_MESSAGE_STATISTICS';
