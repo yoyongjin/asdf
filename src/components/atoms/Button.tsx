@@ -79,6 +79,7 @@ interface StyledButtonProps {
 
 interface ButtonProps extends StyledButtonProps {
   readonly children?: React.ReactChild;
+  readonly disabled: boolean;
   readonly onClick?: (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => void;
@@ -87,6 +88,7 @@ interface ButtonProps extends StyledButtonProps {
 Button.defaultProps = {
   borderRadius: 16,
   borderStyle: 'none',
+  disabled: false,
   fontColor: Colors.white,
   fontSize: 1,
   height: 2.3,

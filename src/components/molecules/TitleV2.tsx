@@ -73,6 +73,7 @@ function TitleV2({
             borderRadius={styles?.borderRadius}
             borderStyle={styles?.borderStyle}
             borderWidth={styles?.borderWidth}
+            disabled={data.disabled}
             height={styles?.height}
             onClick={data.onClick}
             width={styles?.width}
@@ -91,6 +92,7 @@ function TitleV2({
       return (
         <Button
           key={`TitleV2-Button-${data.image}`}
+          disabled={data.disabled}
           image={data.image}
           height={styles?.height}
           onClick={data.onClick}
@@ -446,6 +448,7 @@ interface ISearchBarItemStyle extends IInputItemStyle {}
 
 // button 요소 정보
 interface IButtonItem {
+  disabled?: boolean;
   text?: string;
   image?: string;
   onClick?: TOnClickVisible;
