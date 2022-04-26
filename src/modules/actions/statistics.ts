@@ -159,3 +159,9 @@ export const SET_INITIALIZE_MESSAGE_STATISTICS =
 export const setInitializeMessageStatistics = createAction(
   SET_INITIALIZE_MESSAGE_STATISTICS,
 )();
+
+// 엑셀 다운로드 여부
+export const SET_EXCEL_DOWNLOAD_STATUS = 'SET_EXCEL_DOWNLOAD_STATUS';
+export const setExcelDownloadStatus = createAction(
+  SET_EXCEL_DOWNLOAD_STATUS,
+)<boolean>();

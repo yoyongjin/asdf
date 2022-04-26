@@ -17,6 +17,7 @@ import {
   REQUEST_GET_CALL_STATISTICS_BY_TEAM,
   REQUEST_GET_MESSAGE_STATISTICS,
   REQUEST_GET_STATISTICS,
+  setExcelDownloadStatus,
   successGetAllCallStatisticsByConsultant,
   successGetAutoMessageStatistics,
   successGetCallStatisticsByConsultant,
@@ -73,6 +74,7 @@ function* getCallStatisticsByConsultantProcess(
   } = action.payload;
 
   Toast.notification('잠시만 기다려주세요..🙄');
+  yield put(setExcelDownloadStatus(true));
 
   const response: ResponseSuccessData | ResponseFailureData = yield call(
     ZMSStatistics.getCallStatisticsByConsultant,

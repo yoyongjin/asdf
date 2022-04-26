@@ -31,6 +31,9 @@ function useStatistics() {
   const messageStatisticsData = useSelector(
     (state: RootState) => state.statistics.messageStatistics,
   );
+  const excelDownloadStatus = useSelector(
+    (state: RootState) => state.statistics.excelDownloadStatus,
+  );
   const dispatch = useDispatch();
 
   const handleGetStatistics = useCallback(
@@ -184,6 +187,7 @@ function useStatistics() {
   );
 
   return {
+    excelDownloadStatus,
     statistics,
     handleGetStatistics,
     handleGetCallStatisticsByConsultant,

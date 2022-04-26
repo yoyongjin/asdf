@@ -17,6 +17,7 @@ export interface IStatisticsState {
   autoMessageStatisticsAllCount: number; // 자동 문자 통계
   messageStatistics: Array<IMessageStatisticsItem>; // 문자 통계
   messageStatisticsAllCount: number; // 문자 통계 총 수
+  excelDownloadStatus: boolean; // 다운로드 여부
 }
 
 export interface IRequestType {

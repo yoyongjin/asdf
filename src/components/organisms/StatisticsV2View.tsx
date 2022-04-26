@@ -163,6 +163,7 @@ function StatisticsV2View() {
     selectedOption: pluralConsultantSelectedOption,
   } = useMultiSelect();
   const {
+    excelDownloadStatus,
     callStatisticsByConsultantData,
     handleGetCallStatisticsByConsultant,
     autoMessageStatisticsData,
@@ -570,7 +571,8 @@ function StatisticsV2View() {
     const buttonConfig1 = {
       type: 'button',
       data: {
-        text: '엑셀파일 다운로드',
+        disabled: excelDownloadStatus,
+        text: excelDownloadStatus ? '처리 중..' : '엑셀파일 다운로드',
         onClick: onClickExcel,
       },
       styles: {
@@ -617,6 +619,7 @@ function StatisticsV2View() {
 
     return [buttonConfig1, buttonConfig2];
   }, [
+    excelDownloadStatus,
     getAutoMessageStatistice,
     getCallStatisticeByConsultant,
     getCallStatisticeByTeam,

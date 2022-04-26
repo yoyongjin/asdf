@@ -43,6 +43,7 @@ import Logger from 'utils/log';
 import SocketOCX from 'lib/socketOCX';
 import MonitorOcx from 'lib/monitorOCX';
 import _ from 'lodash';
+import { setExcelDownloadStatus } from 'modules/actions/statistics';
 
 function useCommunicator() {
   const dispatch = useDispatch();
@@ -168,6 +169,7 @@ function useCommunicator() {
             const windowPopup = window.open(url); // 팝업 허용 해줘야 함
             windowPopup?.close();
 
+            dispatch(setExcelDownloadStatus(false));
             // 아래는 beforeunload 이벤트 호출 시 소켓이 끊어짐 (아래 beforeunload 이벤트 호출됨)
             // window.location.replace(url);
             // window.location.href = url;

@@ -43,6 +43,7 @@ const initialState: IStatisticsState = {
   autoMessageStatisticsAllCount: 0,
   messageStatistics: [],
   messageStatisticsAllCount: 0,
+  excelDownloadStatus: false,
 };
 
 // 리듀서
@@ -350,6 +351,12 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
       return produce(state, (draft) => {
         draft.messageStatistics = [];
         draft.messageStatisticsAllCount = 0;
+      });
+    },
+    [actions.SET_EXCEL_DOWNLOAD_STATUS]: (state, action) => {
+      // 엑셀 다운로드 상태
+      return produce(state, (draft) => {
+        draft.excelDownloadStatus = action.payload;
       });
     },
   },
