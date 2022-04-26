@@ -227,7 +227,7 @@ function Monitoring({ location }: MonitoringProps) {
       page: number,
       path: string,
     ) => {
-      getUsers(branchId, teamId, count, page, '', path);
+      getUsers(branchId, teamId, count, page, '', false, path);
     },
     [getUsers],
   );
