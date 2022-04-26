@@ -1321,54 +1321,46 @@ function StatisticsV2View() {
 
   const setInitData = useCallback(
     (type: number) => {
-      switch (type) {
-        case 0: {
-          // 상담원별 통화 통계
-          if (!_.isEmpty(callStatisticsByConsultantData)) {
-            // 비어있지 않으면 초기화 시키기
+      const tabIndexs = [0, 1, 2, 3];
+
+      tabIndexs.forEach((selected) => {
+        if (selected === type) {
+          return;
+        }
+
+        switch (type) {
+          case 0: {
+            // 상담원별 통화 통계
             handleInitializeCallStatisticsByConsultant();
-          }
 
-          break;
-        }
-        case 1: {
-          // 팀별 통화 통계
-          if (!_.isEmpty(callStatisticsByTeamData)) {
-            // 비어있지 않으면 초기화 시키기
+            break;
+          }
+          case 1: {
+            // 팀별 통화 통계
             handleInitializeCallStatisticsByTeam();
-          }
 
-          break;
-        }
-        case 2: {
-          // 문자 통계
-          if (!_.isEmpty(messageStatisticsData)) {
-            // 비어있지 않으면 초기화 시키기
+            break;
+          }
+          case 2: {
+            // 문자 통계
             handleInitializeMessageStatistics();
-          }
 
-          break;
-        }
-        case 3: {
-          // 자동 문자 통계
-          if (!_.isEmpty(autoMessageStatisticsData)) {
-            // 비어있지 않으면 초기화 시키기
+            break;
+          }
+          case 3: {
+            // 자동 문자 통계
             handleInitializeAutoMessageStatistics();
-          }
 
-          break;
+            break;
+          }
         }
-      }
+      });
     },
     [
-      autoMessageStatisticsData,
-      callStatisticsByConsultantData,
-      callStatisticsByTeamData,
       handleInitializeAutoMessageStatistics,
       handleInitializeCallStatisticsByConsultant,
       handleInitializeCallStatisticsByTeam,
       handleInitializeMessageStatistics,
-      messageStatisticsData,
     ],
   );
 
@@ -1380,45 +1372,8 @@ function StatisticsV2View() {
       return;
     }
 
-    switch (selectedTabIndex) {
-      case 0: {
-        setInitData(1);
-        setInitData(2);
-        setInitData(3);
-
-        break;
-      }
-      case 1: {
-        setInitData(0);
-        setInitData(2);
-        setInitData(3);
-
-        break;
-      }
-      case 2: {
-        setInitData(0);
-        setInitData(1);
-        setInitData(3);
-
-        break;
-      }
-      case 3: {
-        setInitData(0);
-        setInitData(1);
-        setInitData(2);
-
-        break;
-      }
-    }
-  }, [
-    autoMessageStatisticsData,
-    callStatisticsByConsultantData,
-    handleInitializeAutoMessageStatistics,
-    handleInitializeCallStatisticsByConsultant,
-    loginInfo.id,
-    selectedTabIndex,
-    setInitData,
-  ]);
+    setInitData(selectedTabIndex);
+  }, [loginInfo.id, selectedTabIndex, setInitData]);
 
   useEffect(() => {
     if (!loginInfo.id) {
