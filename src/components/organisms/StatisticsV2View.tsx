@@ -71,14 +71,14 @@ const selectBoxConditionOption = [
 const selectBoxHoursOption = [...new Array(24)].map((values, index) => {
   return {
     id: index,
-    data: `${Utils.pad(String(index))}`,
+    data: `${Utils.pad(String(index))}시`,
   };
 });
 
 const selectBoxMinutesOption = [...new Array(4)].map((values, index) => {
   return {
     id: 15 * index,
-    data: `${Utils.pad(String(15 * index))}`,
+    data: `${Utils.pad(String(15 * index))}분`,
   };
 });
 
@@ -705,7 +705,7 @@ function StatisticsV2View() {
         borderColor: Colors.gray13,
         borderRadius: 0,
         fontColor: Colors.navy2,
-        width: 50,
+        width: 60,
       },
     }; // 시작 시 관련 정보
 
@@ -721,7 +721,7 @@ function StatisticsV2View() {
         borderColor: Colors.gray13,
         borderRadius: 0,
         fontColor: Colors.navy2,
-        width: 50,
+        width: 60,
       },
     }; // 시작 분 관련 정보
 
@@ -737,7 +737,7 @@ function StatisticsV2View() {
         borderColor: Colors.gray13,
         borderRadius: 0,
         fontColor: Colors.navy2,
-        width: 50,
+        width: 60,
       },
     }; // 끝 시 관련 정보
 
@@ -753,7 +753,7 @@ function StatisticsV2View() {
         borderColor: Colors.gray13,
         borderRadius: 0,
         fontColor: Colors.navy2,
-        width: 50,
+        width: 60,
       },
     }; // 끝 분 관련 정보
 
