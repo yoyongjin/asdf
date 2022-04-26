@@ -91,6 +91,8 @@ function* getCallStatisticsByConsultantProcess(
   if (response.status === API_FETCH.SUCCESS) {
     const { data } = response as ResponseSuccessData;
 
+    console.log(data);
+
     if (isExcel) {
       yield put(successGetAllCallStatisticsByConsultant());
 
@@ -154,6 +156,8 @@ function* getCallStatisticsByTeamProcess(
   if (response.status === API_FETCH.SUCCESS) {
     const { data } = response as ResponseSuccessData;
 
+    console.log(data);
+
     if (isExcel) {
       yield put(successGetAllCallStatisticsByConsultant());
 
@@ -210,6 +214,8 @@ function* getAutoMessageStatisticsProcess(
 
   if (response.status === API_FETCH.SUCCESS) {
     const { data } = response as ResponseSuccessData;
+
+    console.log(data);
 
     if (isExcel) {
       if (!data) {
@@ -276,6 +282,8 @@ function* getMessageStatisticsProcess(
 
   if (response.status === API_FETCH.SUCCESS) {
     const { data } = response as ResponseSuccessData;
+
+    console.log(data);
 
     if (isExcel) {
       if (!data) {
