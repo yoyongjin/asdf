@@ -119,15 +119,16 @@ let meessagePrevPage = 1;
 
 function StatisticsV2View() {
   const { loginInfo } = useAuth();
-  const { form, onChangeCheckBox, onChangeSelect } = useInputForm({
-    break_up: false, // 해촉여부
-    search_type: 1, // 조회 조건
-    start_hour: 8, // 시작 시
-    start_minute: 0, // 시작 분
-    end_hour: 21, // 끝 시
-    end_minute: 0, // 끝 분
-    limit: 100, // 페이징 개수
-  });
+  const { form, onChangeCheckBox, onChangeSelect, setSpecificValue } =
+    useInputForm({
+      break_up: false, // 해촉여부
+      search_type: 1, // 조회 조건
+      start_hour: 8, // 시작 시
+      start_minute: 0, // 시작 분
+      end_hour: 21, // 끝 시
+      end_minute: 0, // 끝 분
+      limit: 100, // 페이징 개수
+    });
   const {
     datePicker: startDatePicker,
     onChangeDatePicker: onChangeStartDatePicker,
@@ -693,6 +694,17 @@ function StatisticsV2View() {
    * @description 타이틀에 들어갈 selectbox 정보들
    */
   const selectData = useMemo(() => {
+    const disabledMinutesSearchType = [1, 2, 3, 6]; // 분 select box가 비활성화 되어야하는 조건
+
+    let selectBoxMinutesCustomOption = _.cloneDeep(selectBoxMinutesOption);
+
+    if (form.search_type === 4) {
+      // 조회 조건이 30분 인 경우 분의 값은 0분/30분 만 남겨둠
+      selectBoxMinutesCustomOption = selectBoxMinutesOption.filter(
+        (values) => values.id % 2 === 0,
+      );
+    }
+
     const selectConfig1 = {
       type: 'select',
       data: {
@@ -712,9 +724,10 @@ function StatisticsV2View() {
     const selectConfig2 = {
       type: 'select',
       data: {
+        disabled: disabledMinutesSearchType.includes(form.search_type),
         name: 'start_minute',
         onChange: onChangeSelect,
-        options: selectBoxMinutesOption,
+        options: selectBoxMinutesCustomOption,
         value: form.start_minute,
       },
       styles: {
@@ -744,9 +757,10 @@ function StatisticsV2View() {
     const selectConfig4 = {
       type: 'select',
       data: {
+        disabled: disabledMinutesSearchType.includes(form.search_type),
         name: 'end_minute',
         onChange: onChangeSelect,
-        options: selectBoxMinutesOption,
+        options: selectBoxMinutesCustomOption,
         value: form.end_minute,
       },
       styles: {
@@ -1464,6 +1478,20 @@ function StatisticsV2View() {
     pluralBranchSelectedOption,
     pluralTeamOption,
   ]);
+
+  useEffect(() => {
+    if (form.search_type === 4 || form.search_type === 5) {
+      return;
+    }
+
+    if (form.start_minute !== 0) {
+      setSpecificValue('start_minute', 0);
+    }
+
+    if (form.end_minute !== 0) {
+      setSpecificValue('end_minute', 0);
+    }
+  }, [form.end_minute, form.search_type, form.start_minute, setSpecificValue]);
 
   return (
     <>
