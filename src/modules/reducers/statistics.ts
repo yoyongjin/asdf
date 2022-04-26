@@ -43,10 +43,6 @@ const initialState: IStatisticsState = {
   autoMessageStatisticsAllCount: 0,
   messageStatistics: [],
   messageStatisticsAllCount: 0,
-  allAutoMessageStatistics: [],
-  allMessageStatistics: [],
-  allCallStatisticsByConsultant: [],
-  allCallStatisticsByTeam: [],
 };
 
 // 리듀서
@@ -89,7 +85,6 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
         let callStatisticsByConsultant: Array<ICustomCallStatisticeByConsultantItem> =
           [];
 
-        // 공통
         action.payload.list.map((values) => {
           const {
             all,
@@ -162,15 +157,6 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
             '합계',
           );
 
-        if (action.payload.isExcel) {
-          callStatisticsByConsultant.push(totalData);
-
-          // 받아온 값을 커스텀하여 추가(이차원 배열 => 일차원 배열)
-          draft.allCallStatisticsByConsultant = callStatisticsByConsultant;
-
-          return;
-        }
-
         const allCount = action.payload.common.cnt; // 전체 인원 개수
         const currentPage = action.payload.page; // 현재 페이지
         const limit = action.payload.limit; // 요청 개수
@@ -203,7 +189,6 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
         draft.request.getCallStatisticsByTeam.fetch = false;
         draft.request.getCallStatisticsByTeam.error = '';
 
-        // 공통
         let callStatisticsByTeam: Array<ICustomCallStatisticeByTeamItem> = [];
 
         action.payload.list.map((values) => {
@@ -258,15 +243,6 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
           '합계',
         );
 
-        if (action.payload.isExcel) {
-          callStatisticsByTeam.push(totalData);
-
-          // 받아온 값을 커스텀하여 추가(이차원 배열 => 일차원 배열)
-          draft.allCallStatisticsByTeam = callStatisticsByTeam;
-
-          return;
-        }
-
         const allCount = action.payload.common.cnt; // 전체 인원 개수
         const currentPage = action.payload.page; // 현재 페이지
         const limit = action.payload.limit; // 요청 개수
@@ -299,12 +275,6 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
         draft.request.getAutoMessageStatistics.fetch = false;
         draft.request.getAutoMessageStatistics.error = '';
 
-        if (action.payload.isExcel) {
-          draft.allAutoMessageStatistics = action.payload.list;
-
-          return;
-        }
-
         draft.autoMessageStatistics = action.payload.list;
         draft.autoMessageStatisticsAllCount = action.payload.cnt;
       });
@@ -327,12 +297,6 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
       return produce(state, (draft) => {
         draft.request.getMessageStatistics.fetch = false;
         draft.request.getMessageStatistics.error = '';
-
-        if (action.payload.isExcel) {
-          draft.allMessageStatistics = action.payload.list;
-
-          return;
-        }
 
         draft.messageStatistics = action.payload.list;
         draft.messageStatisticsAllCount = action.payload.cnt;
@@ -364,33 +328,6 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
       return produce(state, (draft) => {
         draft.messageStatistics = [];
         draft.messageStatisticsAllCount = 0;
-      });
-    },
-    [actions.SET_INITIALIZE_ALL_CALL_STATISTICS_BY_CONSULTANT]: (
-      state,
-      action,
-    ) => {
-      // 전체 상담원별 통화 통계 초기화하기
-      return produce(state, (draft) => {
-        draft.allCallStatisticsByConsultant = [];
-      });
-    },
-    [actions.SET_INITIALIZE_ALL_CALL_STATISTICS_BY_TEAM]: (state, action) => {
-      // 전체 팀별 통화 통계 초기화하기
-      return produce(state, (draft) => {
-        draft.allCallStatisticsByTeam = [];
-      });
-    },
-    [actions.SET_INITIALIZE_ALL_AUTO_MESSAGE_STATISTICS]: (state, action) => {
-      // 전체 자동 문자 통계 초기화하기
-      return produce(state, (draft) => {
-        draft.allAutoMessageStatistics = [];
-      });
-    },
-    [actions.SET_INITIALIZE_ALL_MESSAGE_STATISTICS]: (state, action) => {
-      // 전체 문자 통화 통계 초기화하기
-      return produce(state, (draft) => {
-        draft.allMessageStatistics = [];
       });
     },
   },

@@ -122,33 +122,6 @@ export const setInitializeAutoMessageStatistics = createAction(
   SET_INITIALIZE_AUTO_MESSAGE_STATISTICS,
 )();
 
-// v2 전체 자동 문자 통계 데이터 초기화하기
-export const SET_INITIALIZE_ALL_AUTO_MESSAGE_STATISTICS =
-  'SET_INITIALIZE_ALL_AUTO_MESSAGE_STATISTICS';
-
-// v2 전체 자동 문자 통계 데이터 초기화하기 Action
-export const setInitializeAllAutoMessageStatistics = createAction(
-  SET_INITIALIZE_ALL_AUTO_MESSAGE_STATISTICS,
-)();
-
-// v2 전체 상담원별 통화 통계 데이터 초기화하기
-export const SET_INITIALIZE_ALL_CALL_STATISTICS_BY_CONSULTANT =
-  'SET_INITIALIZE_ALL_CALL_STATISTICS_BY_CONSULTANT';
-
-// v2 전체 상담원별 통화 통계 데이터 초기화하기 Action
-export const setInitializeAllCallStatisticsByConsultant = createAction(
-  SET_INITIALIZE_ALL_CALL_STATISTICS_BY_CONSULTANT,
-)();
-
-// v2 전체 팀별 통화 통계 데이터 초기화하기
-export const SET_INITIALIZE_ALL_CALL_STATISTICS_BY_TEAM =
-  'SET_INITIALIZE_ALL_CALL_STATISTICS_BY_TEAM';
-
-// v2 전체 팀별 통화 통계 데이터 초기화하기 Action
-export const setInitializeAllCallStatisticsByTeam = createAction(
-  SET_INITIALIZE_ALL_CALL_STATISTICS_BY_TEAM,
-)();
-
 // v2 문자 통계 데이터 초기화하기
 export const SET_INITIALIZE_MESSAGE_STATISTICS =
   'SET_INITIALIZE_MESSAGE_STATISTICS';
@@ -156,13 +129,4 @@ export const SET_INITIALIZE_MESSAGE_STATISTICS =
 // v2 문자 통계 데이터 초기화하기 Action
 export const setInitializeMessageStatistics = createAction(
   SET_INITIALIZE_MESSAGE_STATISTICS,
-)();
-
-// v2 전체 문자 통계 데이터 초기화하기
-export const SET_INITIALIZE_ALL_MESSAGE_STATISTICS =
-  'SET_INITIALIZE_ALL_MESSAGE_STATISTICS';
-
-// v2 전체 문자 통계 데이터 초기화하기 Action
-export const setInitializeAllMessageStatistics = createAction(
-  SET_INITIALIZE_ALL_MESSAGE_STATISTICS,
 )();

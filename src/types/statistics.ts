@@ -17,10 +17,6 @@ export interface IStatisticsState {
   autoMessageStatisticsAllCount: number; // 자동 문자 통계
   messageStatistics: Array<IMessageStatisticsItem>; // 문자 통계
   messageStatisticsAllCount: number; // 문자 통계 총 수
-  allAutoMessageStatistics: Array<IAutoMessageStatisticsItem>; // 자동 문자 통계 전체 데이터
-  allMessageStatistics: Array<IMessageStatisticsItem>; // 문자 통계 전체 데이터
-  allCallStatisticsByConsultant: Array<ICustomCallStatisticeByConsultantItem>; // 상담원별 통화 통계 전체 데이터
-  allCallStatisticsByTeam: Array<ICustomCallStatisticeByTeamItem>; // 팀별 통화 통계 전체 데이터
 }
 
 export interface IRequestType {
@@ -42,10 +38,6 @@ export interface StatisticsData {
   success_ratio: number;
   inbound_count: number;
   all_call_time: number;
-}
-
-export interface IExcelItem {
-  isExcel: boolean;
 }
 
 export interface IPageItem {
@@ -200,9 +192,7 @@ export interface IRequestGetCallStatisticsByConsultant {
 }
 
 // 상담원별 통화 통계 응답 파라미터
-export interface IResponseGetCallStatisticsByConsultant
-  extends IPageItem,
-    IExcelItem {
+export interface IResponseGetCallStatisticsByConsultant extends IPageItem {
   common: IResponseGetCallStatisticsByConsultantCommonItem;
   list: Array<ICallStatisticeByConsultantItem>;
 }
@@ -227,9 +217,7 @@ export interface IRequestGetCallStatisticsByTeam {
 }
 
 // 팀별 통화 통계 응답 파라미터
-export interface IResponseGetCallStatisticsByTeam
-  extends IPageItem,
-    IExcelItem {
+export interface IResponseGetCallStatisticsByTeam extends IPageItem {
   common: IResponseGetCallStatisticsByTeamCommonItem;
   list: Array<ICallStatisticeByTeamItem>;
 }
@@ -250,7 +238,7 @@ export interface IRequestGetAutoMessageStatistics {
   page_count: number; // 페이지당 노출 개수
 }
 
-export interface IResponseGetAutoMessageStatistics extends IExcelItem {
+export interface IResponseGetAutoMessageStatistics {
   cnt: number;
   list: Array<IAutoMessageStatisticsItem>;
 }
@@ -266,7 +254,7 @@ export interface IRequestGetMessageStatistics {
   page_count: number; // 페이지당 노출 개수
 }
 
-export interface IResponseGetMessageStatistics extends IExcelItem {
+export interface IResponseGetMessageStatistics {
   cnt: number;
   list: Array<IMessageStatisticsItem>;
 }
