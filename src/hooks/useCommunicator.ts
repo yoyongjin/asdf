@@ -32,11 +32,12 @@ import {
   PhoneStatus,
   UserData,
 } from 'types/user';
-import {
+import constants, {
   ZIBOX_MONIT_STATUS,
   SOCKET_EVENT_TYPE,
   USER_TYPE,
   RESPONSE_STATUS_V2,
+  API_FETCH,
 } from 'utils/constants';
 import Logger from 'utils/log';
 import SocketOCX from 'lib/socketOCX';
@@ -158,6 +159,22 @@ function useCommunicator() {
           };
           dispatch(modifyUser(payload));
           break;
+        case 'excel':
+          const { status, fileName } = data.result;
+
+          if (status === API_FETCH.SUCCESS) {
+            const url = constants.API_SERVER + '/' + fileName;
+
+            const windowPopup = window.open(url); // 팝업 허용 해줘야 함
+            windowPopup?.close();
+
+            // 아래는 beforeunload 이벤트 호출 시 소켓이 끊어짐 (아래 beforeunload 이벤트 호출됨)
+            // window.location.replace(url);
+            // window.location.href = url;
+            // window.location.assign(url);
+          }
+
+          break;
         default:
           break;
       }
@@ -169,6 +186,7 @@ function useCommunicator() {
     const zibox = Communicator.getInstance().getZiboxInstance();
 
     window.addEventListener('beforeunload', function (event) {
+      console.log('--catch beforeunload--');
       if (zibox instanceof MQTT) {
         const targetData = zibox.getTargetData();
         if (targetData.id > -1) {

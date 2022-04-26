@@ -1,4 +1,4 @@
-import { all, call, fork, put, takeLatest } from 'redux-saga/effects';
+import { all, call, delay, fork, put, takeLatest } from 'redux-saga/effects';
 
 import { ResponseSuccessData, ResponseFailureData } from 'types/common';
 import {
@@ -17,6 +17,7 @@ import {
   REQUEST_GET_CALL_STATISTICS_BY_TEAM,
   REQUEST_GET_MESSAGE_STATISTICS,
   REQUEST_GET_STATISTICS,
+  successGetAllCallStatisticsByConsultant,
   successGetAutoMessageStatistics,
   successGetCallStatisticsByConsultant,
   successGetCallStatisticsByTeam,
@@ -90,7 +91,18 @@ function* getCallStatisticsByConsultantProcess(
   if (response.status === API_FETCH.SUCCESS) {
     const { data } = response as ResponseSuccessData;
 
-    data.isExcel = isExcel;
+    if (isExcel) {
+      yield put(successGetAllCallStatisticsByConsultant());
+
+      Toast.notification('엑셀 만들기를 시작합니다..😊');
+
+      yield delay(500);
+
+      Toast.notification('최대 1분 정도 소요됩니다..😊');
+
+      return;
+    }
+
     data.page = page;
     data.limit = page_count;
 
@@ -142,11 +154,24 @@ function* getCallStatisticsByTeamProcess(
   if (response.status === API_FETCH.SUCCESS) {
     const { data } = response as ResponseSuccessData;
 
-    data.isExcel = isExcel;
+    if (isExcel) {
+      yield put(successGetAllCallStatisticsByConsultant());
+
+      Toast.notification('엑셀 만들기를 시작합니다..😊');
+
+      yield delay(500);
+
+      Toast.notification('최대 1분 정도 소요됩니다..😊');
+
+      return;
+    }
+
     data.page = page;
     data.limit = page_count;
 
     yield put(successGetCallStatisticsByTeam(data));
+
+    Toast.success('가져오기 완료😊');
 
     return;
   }
@@ -186,13 +211,29 @@ function* getAutoMessageStatisticsProcess(
   if (response.status === API_FETCH.SUCCESS) {
     const { data } = response as ResponseSuccessData;
 
+    if (isExcel) {
+      if (!data) {
+        Toast.warning('데이터가 없습니다🙄');
+
+        return;
+      }
+
+      yield put(successGetAllCallStatisticsByConsultant());
+
+      Toast.notification('엑셀 만들기를 시작합니다..😊');
+
+      yield delay(500);
+
+      Toast.notification('최대 1분 정도 소요됩니다..😊');
+
+      return;
+    }
+
     if (data.cnt < 1) {
       Toast.warning('데이터가 없습니다🙄');
 
       return;
     }
-
-    data.isExcel = isExcel;
 
     yield put(successGetAutoMessageStatistics(data));
 
@@ -236,13 +277,29 @@ function* getMessageStatisticsProcess(
   if (response.status === API_FETCH.SUCCESS) {
     const { data } = response as ResponseSuccessData;
 
+    if (isExcel) {
+      if (!data) {
+        Toast.warning('데이터가 없습니다🙄');
+
+        return;
+      }
+
+      yield put(successGetAllCallStatisticsByConsultant());
+
+      Toast.notification('엑셀 만들기를 시작합니다..😊');
+
+      yield delay(500);
+
+      Toast.notification('최대 1분 정도 소요됩니다..😊');
+
+      return;
+    }
+
     if (data.cnt < 1) {
       Toast.warning('데이터가 없습니다🙄');
 
       return;
     }
-
-    data.isExcel = isExcel;
 
     yield put(successGetMessageStatistics(data));
 

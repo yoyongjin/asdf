@@ -36,6 +36,8 @@ export const REQUEST_GET_CALL_STATISTICS_BY_CONSULTANT =
   'REQUEST_GET_CALL_STATISTICS_BY_CONSULTANT';
 export const SUCCESS_GET_CALL_STATISTICS_BY_CONSULTANT =
   'SUCCESS_GET_CALL_STATISTICS_BY_CONSULTANT';
+export const SUCCESS_GET_ALL_CALL_STATISTICS_BY_CONSULTANT =
+  'SUCCESS_GET_ALL_CALL_STATISTICS_BY_CONSULTANT';
 export const FAILURE_GET_CALL_STATISTICS_BY_CONSULTANT =
   'FAILURE_GET_CALL_STATISTICS_BY_CONSULTANT';
 
@@ -46,6 +48,9 @@ export const requestGetCallStatisticsByConsultant = createAction(
 export const successGetCallStatisticsByConsultant = createAction(
   SUCCESS_GET_CALL_STATISTICS_BY_CONSULTANT,
 )<IResponseGetCallStatisticsByConsultant>();
+export const successGetAllCallStatisticsByConsultant = createAction(
+  SUCCESS_GET_ALL_CALL_STATISTICS_BY_CONSULTANT,
+)();
 export const failureGetCallStatisticsByConsultant = createAction(
   FAILURE_GET_CALL_STATISTICS_BY_CONSULTANT,
 )<string>();
@@ -55,6 +60,8 @@ export const REQUEST_GET_CALL_STATISTICS_BY_TEAM =
   'REQUEST_GET_CALL_STATISTICS_BY_TEAM';
 export const SUCCESS_GET_CALL_STATISTICS_BY_TEAM =
   'SUCCESS_GET_CALL_STATISTICS_BY_TEAM';
+export const SUCCESS_GET_ALL_CALL_STATISTICS_BY_TEAM =
+  'SUCCESS_GET_ALL_CALL_STATISTICS_BY_TEAM';
 export const FAILURE_GET_CALL_STATISTICS_BY_TEAM =
   'FAILURE_GET_CALL_STATISTICS_BY_TEAM';
 
@@ -65,6 +72,9 @@ export const requestGetCallStatisticsByTeam = createAction(
 export const successGetCallStatisticsByTeam = createAction(
   SUCCESS_GET_CALL_STATISTICS_BY_TEAM,
 )<IResponseGetCallStatisticsByTeam>();
+export const successGetAllCallStatisticsByTeam = createAction(
+  SUCCESS_GET_ALL_CALL_STATISTICS_BY_TEAM,
+)();
 export const failureGetCallStatisticsByTeam = createAction(
   FAILURE_GET_CALL_STATISTICS_BY_TEAM,
 )<string>();
@@ -74,6 +84,8 @@ export const REQUEST_GET_AUTO_MESSAGE_STATISTICS =
   'REQUEST_GET_AUTO_MESSAGE_STATISTICS';
 export const SUCCESS_GET_AUTO_MESSAGE_STATISTICS =
   'SUCCESS_GET_AUTO_MESSAGE_STATISTICS';
+export const SUCCESS_GET_ALL_AUTO_MESSAGE_STATISTICS =
+  'SUCCESS_GET_ALL_AUTO_MESSAGE_STATISTICS';
 export const FAILURE_GET_AUTO_MESSAGE_STATISTICS =
   'FAILURE_GET_AUTO_MESSAGE_STATISTICS';
 
@@ -84,6 +96,9 @@ export const requestGetAutoMessageStatistics = createAction(
 export const successGetAutoMessageStatistics = createAction(
   SUCCESS_GET_AUTO_MESSAGE_STATISTICS,
 )<IResponseGetAutoMessageStatistics>();
+export const successGetAllAutoMessageStatistics = createAction(
+  SUCCESS_GET_ALL_AUTO_MESSAGE_STATISTICS,
+)();
 export const failureGetAutoMessageStatistics = createAction(
   FAILURE_GET_AUTO_MESSAGE_STATISTICS,
 )<string>();
@@ -91,6 +106,8 @@ export const failureGetAutoMessageStatistics = createAction(
 // v2 문자 통계 가져오기
 export const REQUEST_GET_MESSAGE_STATISTICS = 'REQUEST_GET_MESSAGE_STATISTICS';
 export const SUCCESS_GET_MESSAGE_STATISTICS = 'SUCCESS_GET_MESSAGE_STATISTICS';
+export const SUCCESS_GET_ALL_MESSAGE_STATISTICS =
+  'SUCCESS_GET_ALL_MESSAGE_STATISTICS';
 export const FAILURE_GET_MESSAGE_STATISTICS = 'FAILURE_GET_MESSAGE_STATISTICS';
 
 // v2 문자 통계 가져오기 Action
@@ -100,6 +117,9 @@ export const requestGetMessageStatistics = createAction(
 export const successGetMessageStatistics = createAction(
   SUCCESS_GET_MESSAGE_STATISTICS,
 )<IResponseGetMessageStatistics>();
+export const successGetAllMessageStatistics = createAction(
+  SUCCESS_GET_ALL_MESSAGE_STATISTICS,
+)();
 export const failureGetMessageStatistics = createAction(
   FAILURE_GET_MESSAGE_STATISTICS,
 )<string>();

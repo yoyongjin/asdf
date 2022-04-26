@@ -170,11 +170,21 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
         draft.callStatisticsByConsultant = callStatisticsByConsultant;
       });
     },
+    [actions.SUCCESS_GET_ALL_CALL_STATISTICS_BY_CONSULTANT]: (
+      state,
+      action,
+    ) => {
+      // 상담원별 전체 통화 통계 가져오기 실패
+      return produce(state, (draft) => {
+        draft.request.getCallStatisticsByConsultant.fetch = false;
+        draft.request.getCallStatisticsByConsultant.error = '';
+      });
+    },
     [actions.FAILURE_GET_CALL_STATISTICS_BY_CONSULTANT]: (state, action) => {
       // 상담원별 통화 통계 가져오기 실패
       return produce(state, (draft) => {
-        draft.request.getStatistics.fetch = false;
-        draft.request.getStatistics.error = action.payload;
+        draft.request.getCallStatisticsByConsultant.fetch = false;
+        draft.request.getCallStatisticsByConsultant.error = action.payload;
       });
     },
     [actions.REQUEST_GET_CALL_STATISTICS_BY_TEAM]: (state, action) => {
@@ -256,6 +266,13 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
         draft.callStatisticsByTeam = callStatisticsByTeam;
       });
     },
+    [actions.SUCCESS_GET_ALL_CALL_STATISTICS_BY_TEAM]: (state, action) => {
+      // 팀별 전체 통화 통계 가져오기 성공
+      return produce(state, (draft) => {
+        draft.request.getCallStatisticsByTeam.fetch = false;
+        draft.request.getCallStatisticsByTeam.error = '';
+      });
+    },
     [actions.FAILURE_GET_CALL_STATISTICS_BY_TEAM]: (state, action) => {
       // 팀별 통화 통계 가져오기 실패
       return produce(state, (draft) => {
@@ -279,6 +296,13 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
         draft.autoMessageStatisticsAllCount = action.payload.cnt;
       });
     },
+    [actions.SUCCESS_GET_ALL_AUTO_MESSAGE_STATISTICS]: (state, action) => {
+      // 자동 문자 전체 통계 가져오기 성공
+      return produce(state, (draft) => {
+        draft.request.getAutoMessageStatistics.fetch = false;
+        draft.request.getAutoMessageStatistics.error = '';
+      });
+    },
     [actions.FAILURE_GET_AUTO_MESSAGE_STATISTICS]: (state, action) => {
       // 자동 문자 통계 가져오기 실패
       return produce(state, (draft) => {
@@ -300,6 +324,13 @@ const authReducer = createReducer<IStatisticsState, TStatisticsAction>(
 
         draft.messageStatistics = action.payload.list;
         draft.messageStatisticsAllCount = action.payload.cnt;
+      });
+    },
+    [actions.SUCCESS_GET_ALL_MESSAGE_STATISTICS]: (state, action) => {
+      // 문자 전체 통계 가져오기 성공
+      return produce(state, (draft) => {
+        draft.request.getMessageStatistics.fetch = false;
+        draft.request.getMessageStatistics.error = '';
       });
     },
     [actions.FAILURE_GET_MESSAGE_STATISTICS]: (state, action) => {
