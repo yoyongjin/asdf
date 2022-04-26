@@ -174,6 +174,8 @@ function useCommunicator() {
             // window.location.replace(url);
             // window.location.href = url;
             // window.location.assign(url);
+          } else {
+            dispatch(setExcelDownloadStatus(false));
           }
 
           break;
