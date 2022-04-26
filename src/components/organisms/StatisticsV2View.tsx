@@ -547,15 +547,24 @@ function StatisticsV2View() {
    * @description 타이틀에 들어갈 버튼 정보들
    */
   const buttonData = useMemo(() => {
-    let onClickExcel: (() => void) | null = null;
+    let onClickExcel: any;
     if (selectedTabIndex === 0) {
-      onClickExcel = () => getCallStatisticeByConsultant(true, true);
+      onClickExcel = _.debounce(
+        () => getCallStatisticeByConsultant(true, true),
+        1000,
+      );
     } else if (selectedTabIndex === 1) {
-      onClickExcel = () => getCallStatisticeByTeam(true, true);
+      onClickExcel = _.debounce(
+        () => getCallStatisticeByTeam(true, true),
+        1000,
+      );
     } else if (selectedTabIndex === 2) {
-      onClickExcel = () => getMessageStatistice(true, true);
+      onClickExcel = _.debounce(() => getMessageStatistice(true, true), 1000);
     } else if (selectedTabIndex === 3) {
-      onClickExcel = () => getAutoMessageStatistice(true, true);
+      onClickExcel = _.debounce(
+        () => getAutoMessageStatistice(true, true),
+        1000,
+      );
     }
 
     const buttonConfig1 = {
@@ -578,22 +587,22 @@ function StatisticsV2View() {
       },
     };
 
-    let onClick: any;
+    let onClick: any = null;
     if (selectedTabIndex === 0) {
-      onClick = getCallStatisticeByConsultant;
+      onClick = _.debounce(getCallStatisticeByConsultant, 500);
     } else if (selectedTabIndex === 1) {
-      onClick = getCallStatisticeByTeam;
+      onClick = _.debounce(getCallStatisticeByTeam, 500);
     } else if (selectedTabIndex === 2) {
-      onClick = getMessageStatistice;
+      onClick = _.debounce(getMessageStatistice, 500);
     } else if (selectedTabIndex === 3) {
-      onClick = getAutoMessageStatistice;
+      onClick = _.debounce(getAutoMessageStatistice, 500);
     }
 
     const buttonConfig2 = {
       type: 'button',
       data: {
         text: '조회',
-        onClick,
+        onClick: onClick,
       },
       styles: {
         backgroundColor: Colors.blue4,
