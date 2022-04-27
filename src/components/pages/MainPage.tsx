@@ -48,6 +48,7 @@ function MainPage({ location }: MainPageProps) {
     if (loginInfo.id) {
       SocketEventHandler.changeStatusEvent = (type: string, data: any) => {
         setChangedStatus(
+          loginInfo.id,
           loginInfo.branch_id,
           loginInfo.team_id,
           loginInfo.admin_id,

@@ -38,15 +38,20 @@ import constants, {
   USER_TYPE,
   RESPONSE_STATUS_V2,
   API_FETCH,
+  ROUTER_TYPE,
 } from 'utils/constants';
 import Logger from 'utils/log';
 import SocketOCX from 'lib/socketOCX';
 import MonitorOcx from 'lib/monitorOCX';
 import _ from 'lodash';
 import { setExcelDownloadStatus } from 'modules/actions/statistics';
+import Toast from 'utils/toast';
+import ZMSMain from 'lib/api/zms/main';
+import { useHistory } from 'react-router-dom';
 
 function useCommunicator() {
   const dispatch = useDispatch();
+  const { push } = useHistory();
 
   const setServerData = useCallback(
     (connectionStatus: number, timestamp: number) => {
@@ -58,6 +63,7 @@ function useCommunicator() {
 
   const setChangedStatus = useCallback(
     (
+      loginId: number,
       branchId: number,
       teamId: number,
       adminId: number,
@@ -163,6 +169,11 @@ function useCommunicator() {
         case 'excel':
           const { status, fileName } = data.result;
 
+          if (data.user_id !== loginId) {
+            // 방어 코드
+            break;
+          }
+
           if (status === API_FETCH.SUCCESS) {
             const url = constants.API_SERVER + '/' + fileName;
 
@@ -179,11 +190,26 @@ function useCommunicator() {
           }
 
           break;
+        case 'login': {
+          // 로그인 시 이미 로그인된 유저 강제 로그아웃
+          if (data === loginId) {
+            Toast.notification('다른 곳에서 로그인되어 로그아웃 처리됩니다.');
+
+            setTimeout(() => {
+              ZMSMain.removeAccessToken();
+
+              push(ROUTER_TYPE.LOGIN);
+
+              window.location.reload();
+            }, 2000);
+          }
+          break;
+        }
         default:
           break;
       }
     },
-    [dispatch],
+    [dispatch, push],
   );
 
   const beforeUnloadEvent = useCallback(() => {
