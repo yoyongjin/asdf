@@ -10,6 +10,7 @@ import useStatistics from 'hooks/useStatistics';
 import useAuth from 'hooks/useAuth';
 import Utils from 'utils/new_utils';
 import { USER_TYPE } from 'utils/constants';
+import Toast from 'utils/toast';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -177,23 +178,23 @@ function StatisticsView() {
 
     if (currentStart > currentEnd) {
       // 시작 날짜가 끝 날짜보다 큰 경우
-      alert('한달 조회만 가능합니다.');
+      Toast.warning('한달 조회만 가능합니다.🙄');
       return;
     }
 
     if (currentEndYear - currentStartYear > 1) {
-      alert('한달 조회만 가능합니다.');
+      Toast.warning('한달 조회만 가능합니다.🙄');
       return;
     }
 
     if (currentEndYear - currentStartYear === 1) {
       if (currentEndMonth === 1 && currentStartMonth === 12) {
         if (currentStartDate < currentEndDate) {
-          alert('한달 조회만 가능합니다.');
+          Toast.warning('한달 조회만 가능합니다.🙄');
           return;
         }
       } else {
-        alert('한달 조회만 가능합니다.');
+        Toast.warning('한달 조회만 가능합니다.🙄');
         return;
       }
     }
@@ -201,14 +202,14 @@ function StatisticsView() {
     if (currentEndMonth - currentStartMonth === 1) {
       // 1달 차이가 날 경우
       if (currentStartDate < currentEndDate) {
-        alert('한달 조회만 가능합니다.');
+        Toast.warning('한달 조회만 가능합니다.🙄');
         return;
       }
     }
 
     if (currentEndMonth - currentStartMonth > 1) {
       // 1달 이상 차이가 날 경우
-      alert('한달 조회만 가능합니다.');
+      Toast.warning('한달 조회만 가능합니다.🙄');
       return;
     }
 

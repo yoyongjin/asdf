@@ -30,6 +30,7 @@ import constants, {
   ZIBOX_VERSION,
 } from 'utils/constants';
 import Utils from 'utils/new_utils';
+import Toast from 'utils/toast';
 
 const StyledWrapper = styled.div`
   width: 100%;
@@ -267,56 +268,57 @@ function UserData({
       ziBoxMac: string,
     ) => {
       if (admin < USER_TYPE.ADMIN && branchId === -1) {
-        alert('센터을 선택해주세요.');
+        Toast.warning('센터을 선택해주세요🙄');
 
         return false;
       }
 
       if (admin < USER_TYPE.BRANCH_ADMIN && teamId === -1) {
-        alert('팀을 선택해주세요.');
+        Toast.warning('팀을 선택해주세요🙄');
 
         return false;
       }
 
       if (!name || !name.trim()) {
-        alert('이름은 필수 입력값입니다.');
+        Toast.warning('이름은 필수 입력값입니다🙄');
 
         return false;
       }
 
       if (id) {
         if (id.length < 4) {
-          alert('ID는 공백없이 4자리 이상입니다.');
+          Toast.warning('ID는 공백없이 4자리 이상입니다🙄');
 
           return false;
         }
 
         if (!REG_EXR.id.test(id)) {
-          alert('ID는 숫자와 영어만 입력가능합니다.');
+          Toast.warning('ID는 숫자와 영어만 입력가능합니다🙄');
 
           return false;
         }
       } else {
         if (admin !== USER_TYPE.CONSULTANT) {
-          alert('ID를 입력해주세요.');
+          Toast.warning('ID를 입력해주세요🙄');
+
           return false;
         }
       }
 
       if (pcip && !REG_EXR.ip.test(pcip)) {
-        alert('IP주소 형식에 맞게 입력해주세요.');
+        Toast.warning('IP주소 형식에 맞게 입력해주세요🙄');
 
         return false;
       }
 
       if (ziBoxIp && !REG_EXR.ip.test(ziBoxIp)) {
-        alert('IP주소 형식에 맞게 입력해주세요.');
+        Toast.warning('IP주소 형식에 맞게 입력해주세요🙄');
 
         return false;
       }
 
       if (ziBoxMac && !REG_EXR.mac.test(ziBoxMac)) {
-        alert('MAC주소 형식에 맞게 입력해주세요.');
+        Toast.warning('MAC주소 형식에 맞게 입력해주세요🙄');
 
         return false;
       }
@@ -411,7 +413,8 @@ function UserData({
       // 사용자 정보가 있을 경우 업데이트
       if (loginData.admin_id < constants.ADMIN.MODIFY_USER) {
         // 로그인 유저의 권한이 정의된 사용자 수정 권한보다 작을 경우
-        alert('수정할 수 없는 권한입니다.');
+        Toast.warning('수정할 수 없는 권한입니다🙄');
+
         return false;
       }
 

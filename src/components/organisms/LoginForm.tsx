@@ -6,6 +6,7 @@ import useAuth from 'hooks/useAuth';
 import useInputForm from 'hooks/useInputForm';
 import { Colors } from 'utils/color';
 import constants, { COMPANY_TYPE } from 'utils/constants';
+import Toast from 'utils/toast';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -75,7 +76,7 @@ function LoginForm() {
             break;
           case 'password':
             if (!id || !password) {
-              alert('아이디와 패스워드를 정확히 입력해주세요.');
+              Toast.warning('아이디와 패스워드를 정확히 입력해주세요.🙄');
               return;
             }
 

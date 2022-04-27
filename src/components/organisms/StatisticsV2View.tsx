@@ -25,6 +25,7 @@ import {
 } from 'utils/table/title';
 import TableRow from 'utils/table/row';
 import { USER_TYPE } from 'utils/constants';
+import Toast from 'utils/toast';
 
 const tabTitle = [
   {
@@ -407,8 +408,9 @@ function StatisticsV2View() {
 
       if (!status) {
         if (isAlert) {
-          alert(message);
+          Toast.warning(`${message}🙄`);
         }
+
         return;
       }
 
@@ -456,8 +458,9 @@ function StatisticsV2View() {
 
       if (!status) {
         if (isAlert) {
-          alert(message);
+          Toast.warning(`${message}🙄`);
         }
+
         return;
       }
 
@@ -490,8 +493,9 @@ function StatisticsV2View() {
 
       if (!status) {
         if (isAlert) {
-          alert(message);
+          Toast.warning(`${message}🙄`);
         }
+
         return;
       }
 
@@ -521,8 +525,9 @@ function StatisticsV2View() {
 
       if (!status) {
         if (isAlert) {
-          alert(message);
+          Toast.warning(`${message}🙄`);
         }
+
         return;
       }
 

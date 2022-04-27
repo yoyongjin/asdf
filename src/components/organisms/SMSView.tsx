@@ -24,6 +24,7 @@ import Utils from 'utils/new_utils';
 
 import AUTO_MESSAGE_IMAGE from 'images/bt-add-auto-msg.png';
 import useFetch from 'hooks/useFetch';
+import Toast from 'utils/toast';
 
 const tabTitle = [
   {
@@ -198,7 +199,7 @@ function SMSView() {
   const handleRemoveAutoMessage = useCallback(
     (id: number) => {
       if (loginInfo.admin_id < constants.ADMIN.REMOVE_AUTO_MESSAGE) {
-        alert('삭제 권한이 없습니다.');
+        Toast.warning('삭제 권한이 없습니다.🙄');
 
         return;
       }
@@ -211,7 +212,7 @@ function SMSView() {
   const handleUsedAutoMessage = useCallback(
     (id: number, used: string) => {
       if (loginInfo.admin_id < constants.ADMIN.MODIFY_AUTO_MESSAGE) {
-        alert('수정 권한이 없습니다.');
+        Toast.warning('수정 권한이 없습니다.🙄');
 
         return;
       }
@@ -224,7 +225,7 @@ function SMSView() {
   const handleModifyMessageCount = useCallback(
     (id: number, maxCountDate: number, maxCountMonth: number) => {
       if (loginInfo.admin_id < constants.ADMIN.MODIFY_MESSAGE_COUNT_ADMIN) {
-        alert('수정 권한이 없습니다.');
+        Toast.warning('수정 권한이 없습니다.🙄');
 
         return;
       }

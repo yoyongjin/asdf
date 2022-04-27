@@ -22,6 +22,7 @@ import { IAutoMessageItem } from 'types/message';
 import { Colors } from 'utils/color';
 import constants, { USER_TYPE } from 'utils/constants';
 import Utils from 'utils/new_utils';
+import Toast from 'utils/toast';
 
 const renderSettingTitleData = [
   { id: 0, name: 'subject', text: '', paddingTop: 14, placeholder: '제목' },
@@ -362,25 +363,28 @@ function AutoMessagePopup({
       adminId: number,
     ) => {
       if (!title) {
-        alert('제목을 입력해주세요.');
+        Toast.warning('제목을 입력해주세요🙄');
+
         return false;
       }
 
       if (!content) {
-        alert('문자 내용을 입력해주세요.');
+        Toast.warning('문자 내용을 입력해주세요🙄');
+
         return false;
       }
 
       if (_.isEmpty(selectedAutoMessageData)) {
         // 등록인 경우
         if (branchId === constants.DEFAULT_ID) {
-          alert('센터을 선택해주세요.');
+          Toast.warning('센터를 선택해주세요🙄');
+
           return false;
         }
       } else {
         // 수정인 경우
         if (adminId < USER_TYPE.ADMIN && branchId === constants.DEFAULT_ID) {
-          alert('센터을 선택해주세요.');
+          Toast.warning('센터를 선택해주세요🙄');
           return false;
         }
 
@@ -389,19 +393,22 @@ function AutoMessagePopup({
           branchId === constants.DEFAULT_ID
         ) {
           // 기존 센터이 정해져있었는데 공통 선택으로 바뀐 경우
-          alert('공통으로 변경할 수 없습니다.');
+          Toast.warning('공통으로 변경할 수 없습니다🙄');
+
           return false;
         }
       }
 
       if (!days) {
-        alert('요일을 선택해주세요.');
+        Toast.warning('요일을 선택해주세요🙄');
+
         return false;
       }
 
       if (startDate && endDate && startDate > endDate) {
         // 시작날짜가 끝날짜보다 큰 경우
-        alert('날짜 조건을 확인해주세요.');
+        Toast.warning('날짜 조건을 확인해주세요🙄');
+
         return false;
       }
 
@@ -454,7 +461,7 @@ function AutoMessagePopup({
     if (selectedAutoMessageData) {
       if (loginInfo.admin_id < constants.ADMIN.MODIFY_AUTO_MESSAGE) {
         // 로그인 유저의 권한이 정의된 자동 문자 추가 권한보다 작은 경우
-        alert('수정 권한이 없습니다.');
+        Toast.warning('수정 권한이 없습니다🙄');
         return null;
       }
 

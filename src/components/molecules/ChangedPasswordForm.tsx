@@ -7,6 +7,7 @@ import Title from './Title';
 import useInputForm from 'hooks/useInputForm';
 import useAuth from 'hooks/useAuth';
 import { REG_EXR } from 'utils/constants';
+import Toast from 'utils/toast';
 
 const StyledWrapper = styled.div`
   height: 100%;
@@ -77,7 +78,7 @@ function ChangedPasswordForm() {
     const confirmPW = form.new_confirm_password;
 
     if (newPW !== confirmPW) {
-      alert('변경하는 비밀번호가 일치하지 않습니다.');
+      Toast.warning('변경하는 비밀번호가 일치하지 않습니다🙄');
 
       return false;
     }
@@ -87,7 +88,9 @@ function ChangedPasswordForm() {
       !REG_EXR.password.test(newPW) ||
       !REG_EXR.password.test(confirmPW)
     ) {
-      alert('8자리 이상 32자리 이하, 영어/숫자/특수문자가 포함되어야 합니다.');
+      Toast.warning(
+        '8자리 이상 32자리 이하, 영어/숫자/특수문자가 포함되어야 합니다🙄',
+      );
 
       return false;
     }
