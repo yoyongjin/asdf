@@ -192,7 +192,7 @@ function useCommunicator() {
           break;
         case 'login': {
           // 로그인 시 이미 로그인된 유저 강제 로그아웃
-          if (data === loginId) {
+          if (data.user_id === loginId) {
             Toast.notification('다른 곳에서 로그인되어 로그아웃 처리됩니다.');
 
             setTimeout(() => {
