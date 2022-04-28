@@ -388,7 +388,7 @@ class TableRow {
 
     row.push(name); // 사용자명
     row.push(`${user_name ?? ''}`); // 아이디
-    row.push(`${number ?? ''}`); // 전화번호
+    row.push(`${number ? Utils.formatPhoneNumber(number) : ''}`); // 전화번호
     row.push(`${pc_ip ?? ''}`); // PC IP
 
     if (constants.ZIBOX_VERSION === ZIBOX_VERSION.ZIBOX) {
