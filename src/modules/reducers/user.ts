@@ -66,24 +66,10 @@ const userReducer = createReducer<UserState, UserAction>(initialState, {
       draft.request.getUser.error = '';
 
       if (url === '/main') {
-        draft.consultant = consultants.sort((r1, r2) => {
-          if (r1.branch_id === r2.branch_id) {
-            // id가 같으면 team_name순 정렬 (레벨값 우선 정렬)
-            if (r1.team_name && r2.team_name && r1.team_name !== r2.team_name) {
-              return r1.team_name < r2.team_name
-                ? -1
-                : r1.team_name > r2.team_name
-                ? 1
-                : 0;
-            }
-
-            return r1.name < r2.name ? -1 : r1.name > r2.name ? 1 : 0;
-          }
-          return r1.branch_id - r2.branch_id;
-        });
+        draft.consultant = consultants;
       } else if (url === '/main/manage/user') {
         draft.numberOfUsers = count;
-        draft.user = users.sort((r1, r2) => r2.id - r1.id); // 등록 순서로 정렬
+        draft.user = users;
       }
     });
   },
@@ -292,21 +278,7 @@ const userReducer = createReducer<UserState, UserAction>(initialState, {
         const constants = _.cloneDeep(state.consultant);
         constants.push(newUser);
 
-        draft.consultant = constants.sort((r1, r2) => {
-          if (r1.branch_id === r2.branch_id) {
-            // id가 같으면 team_name순 정렬 (레벨값 우선 정렬)
-            if (r1.team_name !== r2.team_name) {
-              return r1.team_name! < r2.team_name!
-                ? -1
-                : r1.team_name! > r2.team_name!
-                ? 1
-                : 0;
-            }
-
-            return r1.name < r2.name ? -1 : r1.name > r2.name ? 1 : 0;
-          }
-          return r1.branch_id - r2.branch_id;
-        });
+        draft.consultant = constants;
       }
 
       draft.numberOfUsers += 1;
