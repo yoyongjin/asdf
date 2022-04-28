@@ -1,11 +1,48 @@
 import _ from 'lodash';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import * as XLSX from 'xlsx';
 
 import { ITableTitleData } from 'components/molecules/TableTitle';
+import { setExcelDownloadStatus } from 'modules/actions/statistics';
+import { RootState } from 'modules/reducers';
 import Utils from 'utils/new_utils';
+import Toast from 'utils/toast';
+
+let excelDownloadTimeout: NodeJS.Timeout | null = null;
 
 function useExcel() {
+  const excelDownloadStatus = useSelector(
+    (state: RootState) => state.statistics.excelDownloadStatus,
+  );
+
+  const dispatch = useDispatch();
+
+  /**
+   * @description 소켓으로 이벤트를 받지 못할 경우를 처리하기 위한 로직
+   */
+  useEffect(() => {
+    if (excelDownloadStatus) {
+      excelDownloadTimeout = setTimeout(() => {
+        Toast.warning('다운로드에 실패했어요..😭');
+
+        dispatch(setExcelDownloadStatus(false));
+
+        if (excelDownloadTimeout) {
+          clearTimeout(excelDownloadTimeout);
+          excelDownloadTimeout = null;
+        }
+      }, 1000 * 120);
+
+      return;
+    }
+
+    if (excelDownloadTimeout) {
+      clearTimeout(excelDownloadTimeout);
+      excelDownloadTimeout = null;
+    }
+  }, [dispatch, excelDownloadStatus]);
+
   const handleExcelDownload = useCallback(
     (titles: Array<ITableTitleData>, contents: Array<any>) => {
       const titleName: Array<string> = [];
@@ -60,6 +97,7 @@ function useExcel() {
   );
 
   return {
+    excelDownloadStatus,
     handleExcelDownload,
   };
 }

@@ -77,6 +77,8 @@ function* getCallStatisticsByConsultantProcess(
 
   if (isExcel) {
     yield put(setExcelDownloadStatus(true));
+    yield delay(500);
+    Toast.notification('최대 2분 정도 소요됩니다..😊');
   }
 
   const response: ResponseSuccessData | ResponseFailureData = yield call(
@@ -101,10 +103,6 @@ function* getCallStatisticsByConsultantProcess(
 
       Toast.notification('엑셀 만들기를 시작합니다..😊');
 
-      yield delay(500);
-
-      Toast.notification('최대 1분 정도 소요됩니다..😊');
-
       return;
     }
 
@@ -120,6 +118,10 @@ function* getCallStatisticsByConsultantProcess(
 
   const { error_msg } = response as ResponseFailureData;
   yield put(failureGetCallStatisticsByConsultant(error_msg));
+
+  if (isExcel) {
+    yield put(setExcelDownloadStatus(false));
+  }
 
   Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
@@ -144,6 +146,8 @@ function* getCallStatisticsByTeamProcess(
 
   if (isExcel) {
     yield put(setExcelDownloadStatus(true));
+    yield delay(500);
+    Toast.notification('최대 2분 정도 소요됩니다..😊');
   }
 
   const response: ResponseSuccessData | ResponseFailureData = yield call(
@@ -168,10 +172,6 @@ function* getCallStatisticsByTeamProcess(
 
       Toast.notification('엑셀 만들기를 시작합니다..😊');
 
-      yield delay(500);
-
-      Toast.notification('최대 1분 정도 소요됩니다..😊');
-
       return;
     }
 
@@ -187,6 +187,10 @@ function* getCallStatisticsByTeamProcess(
 
   const { error_msg } = response as ResponseFailureData;
   yield put(failureGetCallStatisticsByTeam(error_msg));
+
+  if (isExcel) {
+    yield put(setExcelDownloadStatus(false));
+  }
 
   Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
@@ -208,6 +212,8 @@ function* getAutoMessageStatisticsProcess(
 
   if (isExcel) {
     yield put(setExcelDownloadStatus(true));
+    yield delay(500);
+    Toast.notification('최대 2분 정도 소요됩니다..😊');
   }
 
   const response: ResponseSuccessData | ResponseFailureData = yield call(
@@ -226,6 +232,8 @@ function* getAutoMessageStatisticsProcess(
 
     if (isExcel) {
       if (!data) {
+        yield put(setExcelDownloadStatus(false));
+
         Toast.warning('데이터가 없습니다🙄');
 
         return;
@@ -234,10 +242,6 @@ function* getAutoMessageStatisticsProcess(
       yield put(successGetAllCallStatisticsByConsultant());
 
       Toast.notification('엑셀 만들기를 시작합니다..😊');
-
-      yield delay(500);
-
-      Toast.notification('최대 1분 정도 소요됩니다..😊');
 
       return;
     }
@@ -257,6 +261,10 @@ function* getAutoMessageStatisticsProcess(
 
   const { error_msg } = response as ResponseFailureData;
   yield put(failureGetAutoMessageStatistics(error_msg));
+
+  if (isExcel) {
+    yield put(setExcelDownloadStatus(false));
+  }
 
   Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
@@ -278,6 +286,8 @@ function* getMessageStatisticsProcess(
 
   if (isExcel) {
     yield put(setExcelDownloadStatus(true));
+    yield delay(500);
+    Toast.notification('최대 2분 정도 소요됩니다..😊');
   }
 
   const response: ResponseSuccessData | ResponseFailureData = yield call(
@@ -296,6 +306,8 @@ function* getMessageStatisticsProcess(
 
     if (isExcel) {
       if (!data) {
+        yield put(setExcelDownloadStatus(false));
+
         Toast.warning('데이터가 없습니다🙄');
 
         return;
@@ -304,10 +316,6 @@ function* getMessageStatisticsProcess(
       yield put(successGetAllCallStatisticsByConsultant());
 
       Toast.notification('엑셀 만들기를 시작합니다..😊');
-
-      yield delay(500);
-
-      Toast.notification('최대 1분 정도 소요됩니다..😊');
 
       return;
     }
@@ -327,6 +335,10 @@ function* getMessageStatisticsProcess(
 
   const { error_msg } = response as ResponseFailureData;
   yield put(failureGetMessageStatistics(error_msg));
+
+  if (isExcel) {
+    yield put(setExcelDownloadStatus(false));
+  }
 
   Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }

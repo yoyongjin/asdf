@@ -7,6 +7,7 @@ import { IProperty as ITableProperty } from 'components/molecules/TableProperty'
 import { Table } from 'components/organisms';
 import useAuth from 'hooks/useAuth';
 import useDatePicker from 'hooks/useDatePicker';
+import useExcel from 'hooks/useExcel';
 import useInputForm from 'hooks/useInputForm';
 import useMultiSelect from 'hooks/useMultiSelect';
 import useOrganization from 'hooks/useOrganization';
@@ -164,7 +165,6 @@ function StatisticsV2View() {
     selectedOption: pluralConsultantSelectedOption,
   } = useMultiSelect();
   const {
-    excelDownloadStatus,
     callStatisticsByConsultantData,
     handleGetCallStatisticsByConsultant,
     autoMessageStatisticsData,
@@ -206,6 +206,7 @@ function StatisticsV2View() {
     onClickPrevPage: onClickPrevPageCallStatisticsByTeam,
     onChangeCurrentPage: onChangeCurrentPageCallStatisticsByTeam,
   } = usePage();
+  const { excelDownloadStatus } = useExcel();
 
   const pluralBranchOption = useMemo(() => {
     return pluralBranch.map((values) => {
