@@ -438,6 +438,12 @@ function UserView({ location }: UserViewProps) {
   const tablePropertyUserInfo = useMemo(() => {
     return userInfo.map((values) => {
       const row = TableRow.getRowUserInfo(values);
+
+      let backgroundColor = '';
+      if (values.breakup_at) {
+        backgroundColor = Colors.red1;
+      }
+
       const userInfoItems: Array<ITableProperty> = row.map((value, index) => {
         return {
           data: {
@@ -450,6 +456,7 @@ function UserView({ location }: UserViewProps) {
           },
           type: 'text',
           propertyStyles: {
+            backgroundColor,
             textAlign: 'center',
           },
         };
@@ -498,6 +505,7 @@ function UserView({ location }: UserViewProps) {
         },
         type: 'option',
         propertyStyles: {
+          backgroundColor,
           textAlign: 'right',
         },
       };
