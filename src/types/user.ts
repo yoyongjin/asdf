@@ -228,11 +228,6 @@ export interface RequestModifyUser extends RequestAddUser {
 
 export interface RequestRemoveUser {
   id: number;
-  branch_id: number;
-  team_id: number;
-  limit: number;
-  page: number;
-  search: string;
 }
 
 export interface RequestResetPassword {

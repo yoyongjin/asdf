@@ -4,6 +4,8 @@ import { RouteComponentProps } from 'react-router-dom';
 
 import { Modal } from 'components/atoms';
 import { TablePagination, UserData, TitleV2 } from 'components/molecules';
+import { IMenuItem } from 'components/molecules/MenuList';
+import { IProperty as ITableProperty } from 'components/molecules/TableProperty';
 import { Table } from 'components/organisms';
 import useUser from 'hooks/useUser';
 import usePage from 'hooks/usePage';
@@ -15,9 +17,13 @@ import { UserData as UserDataV2 } from 'types/user';
 import { Colors } from 'utils/color';
 import constants, { COMPANY_TYPE, USER_TYPE } from 'utils/constants';
 import { tableTitleUserInfo } from 'utils/table/title';
+import TableRow from 'utils/table/row';
 
 import DB_ADD_USER_BUTTON_IMAGE from 'images/bt-add-u-1-nor.png';
 import ADD_USER_BUTTON_IMAGE from 'images/zms/bt-add-u-1-nor.png';
+import OPTION_IMAGE from 'images/bt-user-modi-nor.png';
+import OPTION_HOVER_IMAGE from 'images/bt-user-modi-over.png';
+
 import useFetch from 'hooks/useFetch';
 
 const StyledWrapper = styled.div`
@@ -50,8 +56,36 @@ const selectBoxPageLimitOption = [...new Array(3)].map((values, index) => {
   };
 });
 
+const userInfoOptionMenu = [...new Array(3)].map((values, index) => {
+  const property: IMenuItem = {
+    id: index + 1,
+    isVisible: true,
+    text: '',
+  };
+
+  switch (index) {
+    case 0: {
+      property.text = '정보 수정';
+
+      break;
+    }
+    case 1: {
+      property.text = '비밀번호 초기화';
+
+      break;
+    }
+    case 2: {
+      property.text = '삭제';
+
+      break;
+    }
+  }
+
+  return property;
+});
+
 function UserView({ location }: UserViewProps) {
-  const [selectedConsultant, setSelectedConsultant] = useState<UserDataV2>();
+  const [selectedUserInfo, setSelectedUserInfo] = useState<UserDataV2>();
   const [searchText, setSearchText] = useState<string>('');
   const { loginInfo } = useAuth();
   const { getBranches, getTeams, selectBoxBranchOption, selectBoxTeamOption } =
@@ -69,8 +103,8 @@ function UserView({ location }: UserViewProps) {
     onChangeUserCount,
     onClickAddUser,
     onClickModifyUser,
-    onClickRemoveUser,
-    onClickResetPassword,
+    handleRemoveUser,
+    handleResetPassword,
   } = useUser();
   const {
     maxUser,
@@ -131,9 +165,9 @@ function UserView({ location }: UserViewProps) {
   /**
    * @description 팝업 클릭 시 선택된 유저의 정보 설정
    */
-  const setSeletedConsultantData = useCallback(
+  const handleUserInfoPopup = useCallback(
     (userInfo: UserDataV2) => {
-      setSelectedConsultant(userInfo);
+      setSelectedUserInfo(userInfo);
       onClickVisible();
     },
     [onClickVisible],
@@ -398,45 +432,101 @@ function UserView({ location }: UserViewProps) {
     };
   }, []);
 
-  const tableContents = useMemo(() => {
+  /**
+   * @description 사용자 관리 테이블 상세 내용 정보들
+   */
+  const tablePropertyUserInfo = useMemo(() => {
+    return userInfo.map((values) => {
+      const row = TableRow.getRowUserInfo(values);
+      const userInfoItems: Array<ITableProperty> = row.map((value, index) => {
+        return {
+          data: {
+            text: value,
+          },
+          styles: {
+            fontFamily: 'NanumBarunGothic',
+            fontSize: 13,
+            fontWeight: 800,
+          },
+          type: 'text',
+          propertyStyles: {
+            textAlign: 'center',
+          },
+        };
+      });
+
+      const customUserInfoOptionMenu = userInfoOptionMenu.map((item, index) => {
+        switch (index) {
+          case 0: {
+            item.onClick = handleUserInfoPopup;
+
+            break;
+          }
+          case 1: {
+            item.isVisible = loginInfo.admin_id >= constants.ADMIN.MODIFY_USER;
+            item.onClick = handleResetPassword;
+
+            break;
+          }
+          case 2: {
+            item.isVisible = loginInfo.admin_id >= constants.ADMIN.REMOVE_USER;
+            item.onClick = handleRemoveUser;
+
+            break;
+          }
+        }
+
+        return item;
+      });
+
+      const optionData = {
+        data: {
+          image: OPTION_IMAGE,
+          hoverImage: OPTION_HOVER_IMAGE,
+          menu: customUserInfoOptionMenu,
+        },
+        styles: {
+          backgroundColor: Colors.white,
+          borderColor: Colors.gray13,
+          borderRadius: 12,
+          borderStyle: 'solid',
+          borderWidth: 1,
+          fontColor: Colors.gray13,
+          fontSize: 12,
+          height: 2.4,
+          width: 6.8,
+        },
+        type: 'option',
+        propertyStyles: {
+          textAlign: 'right',
+        },
+      };
+
+      userInfoItems.push(optionData);
+
+      return userInfoItems;
+    });
+  }, [
+    handleRemoveUser,
+    handleResetPassword,
+    handleUserInfoPopup,
+    loginInfo.admin_id,
+    userInfo,
+  ]);
+
+  /**
+   * @description 사용자 관리 테이 내용 정보들
+   */
+  const tableContentUserInfo = useMemo(() => {
     return {
-      data: userInfo,
-      click: [
-        setSeletedConsultantData,
-        onClickResetPassword,
-        onClickRemoveUser,
-      ],
-      option: {
-        currentBranchId:
-          loginInfo.admin_id === USER_TYPE.ADMIN ||
-          loginInfo.admin_id === USER_TYPE.SUPER_ADMIN
-            ? form.branch
-            : loginInfo.admin_id,
-        currentPage: page,
-        currentSearchText: searchText,
-        currentTeamId:
-          loginInfo.admin_id === USER_TYPE.TEAM_ADMIN
-            ? loginInfo.admin_id
-            : form.team,
-        currentLimit: form.limit,
-      },
+      data: tablePropertyUserInfo,
+      originData: userInfo,
       styles: {
         rowHeight: 50,
       },
-      type: 'user',
+      type: 'user-info',
     };
-  }, [
-    form.branch,
-    form.limit,
-    form.team,
-    loginInfo.admin_id,
-    onClickRemoveUser,
-    onClickResetPassword,
-    page,
-    searchText,
-    setSeletedConsultantData,
-    userInfo,
-  ]);
+  }, [tablePropertyUserInfo, userInfo]);
 
   /**
    * @description 유저 정보 가져오기
@@ -541,7 +631,7 @@ function UserView({ location }: UserViewProps) {
     }
 
     if (!visible) {
-      setSelectedConsultant(undefined);
+      setSelectedUserInfo(undefined);
     }
   }, [loginInfo.id, visible]);
 
@@ -557,7 +647,10 @@ function UserView({ location }: UserViewProps) {
         </StyledTitle>
         <StyledContent>
           <div>
-            <Table contents={tableContents} titles={tableTitleUserInfo} />
+            <Table
+              contents={tableContentUserInfo}
+              titles={tableTitleUserInfo}
+            />
           </div>
         </StyledContent>
         <StyledFooter>
@@ -579,7 +672,7 @@ function UserView({ location }: UserViewProps) {
             onClickAddUser={onClickAddUser}
             onClickModifyUser={onClickModifyUser}
             onClickVisible={onClickVisible}
-            userData={selectedConsultant}
+            userData={selectedUserInfo}
           />
         }
       />
@@ -589,7 +682,7 @@ function UserView({ location }: UserViewProps) {
 
 interface UserViewProps extends RouteComponentProps {}
 
-export type SetSeletedConsultantData = (consultantData: UserDataV2) => void;
+export type THandleUserInfoPopup = (userInfo: UserDataV2) => void;
 
 UserView.defaultProps = {};
 

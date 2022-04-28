@@ -552,83 +552,78 @@ export const tableTitleAutoMessageStatistics = [...new Array(8)].map((v, i) => {
   return property;
 });
 
-export const tableTitleUserInfo = [...new Array(11)].map((v, i) => {
+export const tableTitleUserInfo = [...new Array(10)].map((v, i) => {
   const property = {
     fontColor: Colors.white,
     fontSize: 13,
     isNotShow: false,
     isWidthPercent: true,
     title: '',
-    width: 15,
+    width: 0,
   };
+
+  const addWidth = constants.ZIBOX_VERSION === ZIBOX_VERSION.ZIBOX ? 0 : 5;
 
   switch (i) {
     case 0: {
-      property.isNotShow = true;
-      property.title = 'No.';
-      property.width = 7;
+      property.title = '센터명';
+      property.width = 10 + addWidth;
 
       break;
     }
     case 1: {
-      property.title = '센터명';
-      property.width = 10;
+      property.title = '팀명';
+      property.width = 10 + addWidth;
 
       break;
     }
     case 2: {
-      property.title = '팀명';
-      property.width = 10;
+      property.title = '권한';
+      property.width = 7 + addWidth;
 
       break;
     }
     case 3: {
-      property.title = '권한';
-      property.width = 5;
+      property.title = '이름';
+      property.width = 5 + addWidth;
 
       break;
     }
     case 4: {
-      property.title = '이름';
-      property.width = 5;
+      property.title = '아이디.';
+      property.width = 10 + addWidth;
 
       break;
     }
     case 5: {
-      property.title = '아이디.';
+      property.title = '전화번호.';
+      property.width = 15 + addWidth;
 
       break;
     }
     case 6: {
-      property.title = '전화번호.';
+      property.title = 'PC IP';
+      property.width = 15 + addWidth;
 
       break;
     }
     case 7: {
-      property.isNotShow = constants.TRANSPORT !== ZIBOX_TRANSPORT.OCX;
-      property.title = 'PC IP';
+      property.isNotShow = constants.ZIBOX_VERSION === ZIBOX_VERSION.ZIBOX2;
+      property.title = 'ZiBox IP';
+      property.width = 15;
 
       break;
     }
     case 8: {
-      property.isNotShow =
-        constants.TRANSPORT === ZIBOX_TRANSPORT.OCX &&
-        constants.ZIBOX_VERSION === ZIBOX_VERSION.ZIBOX2;
-      property.title = 'ZiBox IP';
+      property.isNotShow = constants.ZIBOX_VERSION === ZIBOX_VERSION.ZIBOX2;
+      property.title = 'ZiBox MAC.';
+      property.width = 15;
 
       break;
     }
     case 9: {
-      property.isNotShow =
-        constants.TRANSPORT === ZIBOX_TRANSPORT.OCX &&
-        constants.ZIBOX_VERSION === ZIBOX_VERSION.ZIBOX2;
-      property.title = 'ZiBox MAC.';
-
-      break;
-    }
-    case 10: {
       property.title = '';
-      property.width = 10;
+      property.width = 5 + addWidth;
 
       break;
     }

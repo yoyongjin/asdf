@@ -2,18 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { Text } from 'components/atoms';
-import { ITableContentOption } from 'components/molecules/TableContent';
 import { StatisticsData } from 'types/statistics';
 import { Colors } from 'utils/color';
 import Utils from 'utils/new_utils';
 
 const StyledWrapper = styled.td``;
 
-function StatisticsProperty({
-  options,
-  orderId,
-  statisticsData,
-}: TableContentProps) {
+function StatisticsProperty({ orderId, statisticsData }: TableContentProps) {
   return (
     <>
       {Object.keys(statisticsData).map((values, i) => {
@@ -51,7 +46,6 @@ function StatisticsProperty({
 }
 
 interface TableContentProps {
-  options: ITableContentOption;
   orderId: number;
   statisticsData: StatisticsData;
 }

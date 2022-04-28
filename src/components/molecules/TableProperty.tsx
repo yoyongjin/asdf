@@ -1,9 +1,11 @@
 import React, { useCallback, useRef } from 'react';
 import styled from 'styled-components';
 
-import { Button, Input, Text } from 'components/atoms';
-import { TextSlideToggle } from 'components/molecules';
+import { Button, Image, Input, Text } from 'components/atoms';
+import { MenuList, TextSlideToggle } from 'components/molecules';
+import { IMenuItem } from 'components/molecules/MenuList';
 import useInputForm, { TonChangeInput } from 'hooks/useInputForm';
+import useHover from 'hooks/useHover';
 import { Colors } from 'utils/color';
 import {
   TModifySmsCount,
@@ -29,6 +31,13 @@ const StyledTextWrapper = styled.div`
   padding-bottom: 4px;
 `;
 
+const StyledOptionWrapper = styled.div``;
+
+const StyledMenuWrapper = styled.div`
+  min-width: 120px;
+  position: relative;
+`;
+
 /**
  * @description 테이블 한 row에 해당하는 컴포넌트
  */
@@ -37,6 +46,7 @@ function TableProperty({
   contentType,
   originItem,
 }: ITablePropertyProps) {
+  const { isHover, onMouseIn, onMouseOut } = useHover();
   const { form, onChangeInput } = useInputForm<DynamicJSON>({});
   const inputRef = useRef<HTMLInputElement[]>([]) as React.MutableRefObject<
     HTMLInputElement[]
@@ -109,6 +119,29 @@ function TableProperty({
     [contentType, inputRef, originItem],
   );
 
+  const OptionView = useCallback(
+    (data: IOptionItem) => {
+      return (
+        <StyledOptionWrapper onMouseEnter={onMouseIn} onMouseLeave={onMouseOut}>
+          {isHover && (
+            <StyledMenuWrapper>
+              <MenuList menu={data.menu} type={contentType} data={originItem} />
+            </StyledMenuWrapper>
+          )}
+          {data.image && (
+            <Image
+              src={data.image}
+              width={40}
+              height={40}
+              hoverImg={data.hoverImage}
+            />
+          )}
+        </StyledOptionWrapper>
+      );
+    },
+    [contentType, isHover, onMouseIn, onMouseOut, originItem],
+  );
+
   const InputView = (
     key: number,
     data: IInputItem,
@@ -122,9 +155,7 @@ function TableProperty({
       originId = _originItem.branch_id;
     }
     const name = `${contentType}-input-${key}${originId && `-${originId}`}`;
-    console.log(name);
     const value = form[name] || form[name] === '' ? form[name] : data.value;
-    console.log(data.value, value);
 
     return (
       <Input
@@ -234,6 +265,10 @@ function TableProperty({
         const inputStyles = styles as IInputItemStyle;
         return InputView(tablePropertyKey, inputData, inputStyles);
       }
+      case 'option': {
+        const optionData = data as IOptionItem;
+        return OptionView(optionData);
+      }
       case 'text-slide-toggle': {
         const textSlideToggleData = data as ITextSlideToggleItem;
         const textSlideToggleStyles = styles as ITextSlideToggleStyle;
@@ -311,6 +346,12 @@ interface IButtonItem {
   text?: string;
 }
 
+interface IOptionItem {
+  image?: string;
+  hoverImage?: string;
+  menu: Array<IMenuItem>;
+}
+
 // input 요소 정보
 interface IInputItem {
   disabled?: boolean;
@@ -351,7 +392,12 @@ interface ITdStyle {
 
 export interface IProperty {
   type: string;
-  data: IButtonItem | IInputItem | ITextItem | ITextSlideToggleItem;
+  data:
+    | IButtonItem
+    | IInputItem
+    | IOptionItem
+    | ITextItem
+    | ITextSlideToggleItem;
   styles?: // 사용하는 컴포넌트의 style
   IButtonItemStyle | IInputItemStyle | ITextItemStyle | ITextSlideToggleStyle;
   propertyStyles?: ITdStyle; // 해당 요소의 style

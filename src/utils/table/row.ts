@@ -4,6 +4,8 @@ import {
   ICustomCallStatisticeByTeamItem,
   IMessageStatisticsItem,
 } from 'types/statistics';
+import { UserData } from 'types/user';
+import constants, { USER_TYPE, ZIBOX_VERSION } from 'utils/constants';
 import Utils from 'utils/new_utils';
 
 class TableRow {
@@ -347,6 +349,53 @@ class TableRow {
     row.push(conditionOfSendMessage);
 
     row.push(`${cnt}`);
+
+    return row;
+  }
+
+  static getRowUserInfo(contents: UserData) {
+    const row: Array<string> = [];
+
+    const {
+      admin_id,
+      branch_name,
+      name,
+      number,
+      pc_ip,
+      team_name,
+      user_name,
+      zibox_ip,
+      zibox_mac,
+    } = contents;
+
+    row.push(branch_name); // 센터명
+    row.push(team_name); // 팀명
+
+    let admin = '';
+    if (admin_id > USER_TYPE.BRANCH_ADMIN) {
+      admin = '관리자';
+    } else if (admin_id === USER_TYPE.BRANCH_ADMIN) {
+      admin = '센터관리자';
+    } else if (admin_id === USER_TYPE.TEAM_ADMIN) {
+      admin = '팀관리자';
+    } else if (admin_id === USER_TYPE.CONSULTANT) {
+      admin = '상담원';
+    } else {
+      admin = '알수없음';
+    }
+
+    row.push(admin); // 권한
+
+    row.push(name); // 사용자명
+    row.push(`${user_name ?? ''}`); // 아이디
+    row.push(`${number ?? ''}`); // 전화번호
+    row.push(`${pc_ip ?? ''}`); // PC IP
+
+    if (constants.ZIBOX_VERSION === ZIBOX_VERSION.ZIBOX) {
+      // ZiBox1인 경우
+      row.push(`${zibox_ip ?? ''}`); // 지박스 IP
+      row.push(`${zibox_mac ?? ''}`); // 지박스 MAC
+    }
 
     return row;
   }

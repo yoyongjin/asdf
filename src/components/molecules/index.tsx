@@ -3,7 +3,7 @@ import ChangedPasswordForm from './ChangedPasswordForm';
 import Consultant from './Consultant';
 import DateRangePicker from './DateRangePikcer';
 import LinkSelector from './LinkSelector';
-import List from './List';
+import MenuList from './MenuList';
 import Organization from './Organization';
 import PageCount from './PageCount';
 import PhoneData from './PhoneData';
@@ -27,7 +27,6 @@ import Title from './Title';
 import TitleV2 from './TitleV2';
 import UserData from './UserData';
 import UserLog from './UserLog';
-import UserProperty from './UserProperty';
 
 export {
   AutoMessagePopup,
@@ -35,7 +34,7 @@ export {
   Consultant,
   DateRangePicker,
   LinkSelector,
-  List,
+  MenuList,
   Organization,
   PageCount,
   PhoneData,
@@ -58,6 +57,5 @@ export {
   TitleV2,
   UserData,
   UserLog,
-  UserProperty,
   ZiboxData,
 };

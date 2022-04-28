@@ -193,7 +193,7 @@ function* modifyUserProcess(action: ReturnType<typeof requestModifyUser>) {
 }
 
 function* removeUserProcess(action: ReturnType<typeof requestRemoveUser>) {
-  const { id, branch_id, team_id, limit, page, search } = action.payload;
+  const { id } = action.payload;
 
   const response: ResponseSuccessData | ResponseFailureData = yield call(
     ZMSUser.removeUser,

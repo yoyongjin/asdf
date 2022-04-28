@@ -152,22 +152,10 @@ function useUser() {
     [dispatch],
   );
 
-  const onClickRemoveUser = useCallback(
-    (
-      id: number,
-      branchId: number,
-      teamId: number,
-      limit: number,
-      page: number,
-      search: string,
-    ) => {
+  const handleRemoveUser = useCallback(
+    (id: number) => {
       const payload = {
         id,
-        branch_id: branchId,
-        team_id: teamId,
-        limit,
-        page,
-        search,
       };
 
       dispatch(requestRemoveUser(payload));
@@ -175,7 +163,7 @@ function useUser() {
     [dispatch],
   );
 
-  const onClickResetPassword = useCallback(
+  const handleResetPassword = useCallback(
     (id: number) => {
       const payload = {
         id,
@@ -201,8 +189,8 @@ function useUser() {
     getUsers,
     onClickAddUser,
     onClickModifyUser,
-    onClickRemoveUser,
-    onClickResetPassword,
+    handleRemoveUser,
+    handleResetPassword,
     onChangeUserCount,
     setInitializePluralConsultant,
   };
@@ -245,17 +233,7 @@ export type TOnClickModifyUser = (
   serialNumber?: string,
 ) => void;
 
-export type OnClickRemoveUser = (
-  id: number,
-  branchId: number,
-  teamId: number,
-  limit: number,
-  page: number,
-  search: string,
-) => void;
-
-export type OnClickResetPassword = (id: number) => void;
-
-export type OnClickDisconnect = (number: string) => void;
+export type THandleRemoveUser = (id: number) => void;
+export type THandleResetPassword = (id: number) => void;
 
 export default useUser;
