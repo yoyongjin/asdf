@@ -3,29 +3,29 @@ import { all, call, fork, takeLatest, put } from 'redux-saga/effects';
 import {
   failureAddAutoMessage,
   failureGetAutoMessage,
-  failureGetSmsCount,
-  failureModifySmsCount,
+  failureGetMessageCount,
+  failureModifyMessageCount,
   failureRemoveAutoMessage,
   failureSetUsedAutoMessage,
   requestAddAutoMessage,
   requestGetAutoMessage,
-  requestGetSmsCount,
+  requestGetMessageCount,
   requestModifyAutoMessage,
-  requestModifySmsCount,
+  requestModifyMessageCount,
   requestRemoveAutoMessage,
   requestSetUsedAutoMessage,
   REQUEST_ADD_AUTO_MESSAGE,
   REQUEST_GET_AUTO_MESSAGE,
-  REQUEST_GET_SMS_COUNT,
+  REQUEST_GET_MESSAGE_COUNT,
   REQUEST_MODIFY_AUTO_MESSAGE,
-  REQUEST_MODIFY_SMS_COUNT,
+  REQUEST_MODIFY_MESSAGE_COUNT,
   REQUEST_REMOVE_AUTO_MESSAGE,
   REQUEST_SET_USED_AUTO_MESSAGE,
   successAddAutoMessage,
   successGetAutoMessage,
-  successGetSmsCount,
+  successGetMessageCount,
   successModifyAutoMessage,
-  successModifySmsCount,
+  successModifyMessageCount,
   successRemoveAutoMessage,
   successSetUsedAutoMessage,
 } from 'modules/actions/message';
@@ -102,21 +102,23 @@ function* getAutoMessageProcess(
   Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
-function* getSmsCountProcess(action: ReturnType<typeof requestGetSmsCount>) {
+function* getMessageCountProcess(
+  action: ReturnType<typeof requestGetMessageCount>,
+) {
   const response: ResponseSuccessData | ResponseFailureData = yield call(
-    ZMSMessage.getSmsCount,
+    ZMSMessage.getMessageCount,
   );
 
   if (response.status === API_FETCH.SUCCESS) {
     const { data } = response as ResponseSuccessData;
 
-    yield put(successGetSmsCount(data));
+    yield put(successGetMessageCount(data));
 
     return;
   }
 
   const { error_msg } = response as ResponseFailureData;
-  yield put(failureGetSmsCount(error_msg));
+  yield put(failureGetMessageCount(error_msg));
 
   Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
@@ -165,13 +167,13 @@ function* modifyAutoMessageProcess(
   Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
-function* modifySmsCountProcess(
-  action: ReturnType<typeof requestModifySmsCount>,
+function* modifyMessageCountProcess(
+  action: ReturnType<typeof requestModifyMessageCount>,
 ) {
   const { branch_id, max_count_date, max_count_month } = action.payload;
 
   const response: ResponseSuccessData | ResponseFailureData = yield call(
-    ZMSMessage.modifySmsCount,
+    ZMSMessage.modifyMessageCount,
     branch_id,
     max_count_date,
     max_count_month,
@@ -180,7 +182,7 @@ function* modifySmsCountProcess(
   if (response.status === API_FETCH.SUCCESS) {
     const { data } = response as ResponseSuccessData;
 
-    yield put(successModifySmsCount(action.payload));
+    yield put(successModifyMessageCount(action.payload));
 
     Toast.success('수정 완료😊');
 
@@ -188,7 +190,7 @@ function* modifySmsCountProcess(
   }
 
   const { error_msg } = response as ResponseFailureData;
-  yield put(failureModifySmsCount(error_msg));
+  yield put(failureModifyMessageCount(error_msg));
 
   Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
@@ -258,16 +260,16 @@ function* watchGetAutoMessage() {
   yield takeLatest(REQUEST_GET_AUTO_MESSAGE, getAutoMessageProcess);
 }
 
-function* watchGetSmsCount() {
-  yield takeLatest(REQUEST_GET_SMS_COUNT, getSmsCountProcess);
+function* watchGetMessageCount() {
+  yield takeLatest(REQUEST_GET_MESSAGE_COUNT, getMessageCountProcess);
 }
 
 function* watchModifyAutoMessage() {
   yield takeLatest(REQUEST_MODIFY_AUTO_MESSAGE, modifyAutoMessageProcess);
 }
 
-function* watchModifySmsCount() {
-  yield takeLatest(REQUEST_MODIFY_SMS_COUNT, modifySmsCountProcess);
+function* watchModifyMessageCount() {
+  yield takeLatest(REQUEST_MODIFY_MESSAGE_COUNT, modifyMessageCountProcess);
 }
 
 function* watchRemoveAutoMessage() {
@@ -282,9 +284,9 @@ function* messageSaga() {
   yield all([
     fork(watchAddAutoMessage),
     fork(watchGetAutoMessage),
-    fork(watchGetSmsCount),
+    fork(watchGetMessageCount),
     fork(watchModifyAutoMessage),
-    fork(watchModifySmsCount),
+    fork(watchModifyMessageCount),
     fork(watchRemoveAutoMessage),
     fork(watchSetUsedAutoMessage),
   ]);

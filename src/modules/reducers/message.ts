@@ -42,20 +42,20 @@ const initialState: IMessageState = {
 };
 
 const userReducer = createReducer<IMessageState, TMessageAction>(initialState, {
-  [types.FAILURE_GET_SMS_COUNT]: (state, action) => {
+  [types.FAILURE_GET_MESSAGE_COUNT]: (state, action) => {
     // 발송 수량 가져오기 실패
     return produce(state, (draft) => {
       draft.request.getSmsCount.fetch = false;
       draft.request.getSmsCount.error = action.payload;
     });
   },
-  [types.REQUEST_GET_SMS_COUNT]: (state, action) => {
+  [types.REQUEST_GET_MESSAGE_COUNT]: (state, action) => {
     // 발송 수량 가져오기 요청
     return produce(state, (draft) => {
       draft.request.getSmsCount.fetch = true;
     });
   },
-  [types.SUCCESS_GET_SMS_COUNT]: (state, action) => {
+  [types.SUCCESS_GET_MESSAGE_COUNT]: (state, action) => {
     // 발송 수량 가져오기 성공
     return produce(state, (draft) => {
       draft.max_count_data = action.payload;
@@ -63,20 +63,20 @@ const userReducer = createReducer<IMessageState, TMessageAction>(initialState, {
       draft.request.getSmsCount.error = '';
     });
   },
-  [types.FAILURE_MODIFY_SMS_COUNT]: (state, action) => {
+  [types.FAILURE_MODIFY_MESSAGE_COUNT]: (state, action) => {
     // 발송 수량 수정하기 실패
     return produce(state, (draft) => {
       draft.request.modifySmsCount.fetch = false;
       draft.request.modifySmsCount.error = action.payload;
     });
   },
-  [types.REQUEST_MODIFY_SMS_COUNT]: (state, action) => {
+  [types.REQUEST_MODIFY_MESSAGE_COUNT]: (state, action) => {
     // 발송 수량 수정하기 요청
     return produce(state, (draft) => {
       draft.request.modifySmsCount.fetch = true;
     });
   },
-  [types.SUCCESS_MODIFY_SMS_COUNT]: (state, action) => {
+  [types.SUCCESS_MODIFY_MESSAGE_COUNT]: (state, action) => {
     // 발송 수량 수정하기 성공
     return produce(state, (draft) => {
       draft.request.modifySmsCount.fetch = false;

@@ -28,7 +28,7 @@ export default {
         get_telecom: '/api/phone/telecom',
         get_plan: '/api/phone/plan',
         get_info: '/api/phone/info',
-        get_sms_count: '/api/message/sms-count',
+        get_message_count: '/api/message/sms-count',
         get_auto_message: '/api/message/auto-message',
         set_used_auto_message: '/api/message/auto-message-usage',
         remove_auto_message: '/api/message/auto-message',

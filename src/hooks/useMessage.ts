@@ -5,9 +5,9 @@ import { RootState } from 'modules/reducers';
 import {
   requestAddAutoMessage,
   requestGetAutoMessage,
-  requestGetSmsCount,
+  requestGetMessageCount,
   requestModifyAutoMessage,
-  requestModifySmsCount,
+  requestModifyMessageCount,
   requestRemoveAutoMessage,
   requestSetUsedAutoMessage,
 } from 'modules/actions/message';
@@ -56,7 +56,7 @@ function useMessage() {
    * @description 발송 수량 가져오기
    */
   const getSmsCount = useCallback(() => {
-    dispatch(requestGetSmsCount());
+    dispatch(requestGetMessageCount());
   }, [dispatch]);
 
   /**
@@ -118,7 +118,7 @@ function useMessage() {
         max_count_month: maxCountMonth,
       };
 
-      dispatch(requestModifySmsCount(payload));
+      dispatch(requestModifyMessageCount(payload));
     },
     [dispatch],
   );

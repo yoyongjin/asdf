@@ -3,10 +3,10 @@ import { Switch, Route } from 'react-router-dom';
 
 import {
   LoginForm,
+  MessageView,
   MonitoringView,
   OrganizationView,
   PhoneView,
-  SMSView,
   StatisticsV2View,
   StatisticsView,
   UserView,
@@ -34,7 +34,7 @@ function MainRouter() {
             : StatisticsView
         }
       />
-      <Route exact path="/main/manage/sms" component={SMSView} />
+      <Route exact path="/main/manage/message" component={MessageView} />
       <Route exact path="/main/manage/phone" component={PhoneView} />
       <Route component={NotFound} />
     </Switch>

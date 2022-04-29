@@ -110,12 +110,12 @@ class Message {
   /**
    * @description 발송 수량 가져오기
    */
-  static async getSmsCount() {
+  static async getMessageCount() {
     try {
       const token = Main.getAccessToken();
 
       const { data } = await APIManager.get(
-        url.zms.api.path.get_sms_count,
+        url.zms.api.path.get_message_count,
         null,
         {
           token,
@@ -216,7 +216,7 @@ class Message {
    * @param {number} maxCountDate 일일 최대 발송 수량
    * @param {number} maxCountMonth 월 최대 발송 수량
    */
-  static async modifySmsCount(
+  static async modifyMessageCount(
     id: number,
     maxCountDate: number,
     maxCountMonth: number,
@@ -231,7 +231,7 @@ class Message {
       const token = Main.getAccessToken();
 
       const { data } = await APIManager.patch(
-        url.zms.api.path.get_sms_count,
+        url.zms.api.path.get_message_count,
         params,
         {
           token,

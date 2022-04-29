@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Button, Image, Input, Text } from 'components/atoms';
 import { MenuList, TextSlideToggle } from 'components/molecules';
 import { IMenuItem } from 'components/molecules/MenuList';
+import { TOnClickModifyAutoMessagePopup } from 'components/organisms/MessageView';
 import useInputForm, { TonChangeInput } from 'hooks/useInputForm';
 import useHover from 'hooks/useHover';
 import { Colors } from 'utils/color';
@@ -17,7 +18,6 @@ import { DynamicJSON } from 'types/common';
 import { IAutoMessageItem, IMaxMessageItem } from 'types/message';
 import constants, { ANSWER_VALUE } from 'utils/constants';
 import Utils from 'utils/new_utils';
-import { TOnClickModifyAutoMessagePopup } from 'components/organisms/SMSView';
 
 const StyledWrapper = styled.td<IStyledWrapper>`
   background-color: ${(props) => props.backgroundColor};
@@ -53,7 +53,7 @@ function TableProperty({
     (key: number, data: IButtonItem, styles?: IButtonItemStyle) => {
       const onClickButton = () => {
         if (data.onClick) {
-          if (contentType === 'sms-count') {
+          if (contentType === 'message-count') {
             const _originItem = originItem as IMaxMessageItem;
 
             const [empty, value1, value2] = inputRef.current.map(
@@ -146,7 +146,7 @@ function TableProperty({
   ) => {
     let originId = 0;
 
-    if (contentType === 'sms-count') {
+    if (contentType === 'message-count') {
       const _originItem = originItem as IMaxMessageItem;
 
       originId = _originItem.branch_id;

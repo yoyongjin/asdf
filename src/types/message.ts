@@ -45,13 +45,13 @@ export interface IMaxMessageItem {
   max_count_month: number;
 }
 
-export interface IRequestModifySmsCount {
+export interface IRequestModifyMessageCount {
   branch_id: number;
   max_count_date: number;
   max_count_month: number;
 }
 
-export interface IResponseModifySmsCount {
+export interface IResponseModifyMessageCount {
   branch_id: number;
   max_count_date: number;
   max_count_month: number;

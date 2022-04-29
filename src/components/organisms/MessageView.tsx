@@ -148,7 +148,7 @@ const StyledFooter = styled.div`
   justify-content: center;
 `;
 
-function SMSView() {
+function MessageView() {
   const [selectedAutoMessage, setSelectedAutoMessage] =
     useState<IAutoMessageItem | null>(null);
   const { loginInfo } = useAuth();
@@ -527,7 +527,7 @@ function SMSView() {
       styles: {
         rowHeight: 45,
       },
-      type: 'sms-count',
+      type: 'message-count',
     };
   }, [form.branch, maxCountData, tablePropertyMaxCount]);
 
@@ -862,8 +862,8 @@ function SMSView() {
   );
 }
 
-SMSView.defaultProps = {};
+MessageView.defaultProps = {};
 
-export default SMSView;
+export default MessageView;
 
 export type TOnClickModifyAutoMessagePopup = (item: IAutoMessageItem) => void;

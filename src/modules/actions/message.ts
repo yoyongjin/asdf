@@ -5,40 +5,42 @@ import {
   IRequestAddAutoMessage,
   IRequestGetAutoMessage,
   IRequestModifyAutoMessage,
-  IRequestModifySmsCount,
+  IRequestModifyMessageCount,
   IRequestRemoveAutoMessage,
   IRequestSetUsedAutoMessage,
   IResponseGetAutoMessage,
-  IResponseModifySmsCount,
+  IResponseModifyMessageCount,
   IResponseSetUsedAutoMessage,
 } from 'types/message';
 
 // 발송 수량 가져오기
-export const REQUEST_GET_SMS_COUNT = 'REQUEST_GET_SMS_COUNT';
-export const SUCCESS_GET_SMS_COUNT = 'SUCCESS_GET_SMS_COUNT';
-export const FAILURE_GET_SMS_COUNT = 'FAILURE_GET_SMS_COUNT';
+export const REQUEST_GET_MESSAGE_COUNT = 'REQUEST_GET_MESSAGE_COUNT';
+export const SUCCESS_GET_MESSAGE_COUNT = 'SUCCESS_GET_MESSAGE_COUNT';
+export const FAILURE_GET_MESSAGE_COUNT = 'FAILURE_GET_MESSAGE_COUNT';
 
 // 발송 수량 가져오기 Action
-export const requestGetSmsCount = createAction(REQUEST_GET_SMS_COUNT)();
-export const successGetSmsCount = createAction(SUCCESS_GET_SMS_COUNT)<
+export const requestGetMessageCount = createAction(REQUEST_GET_MESSAGE_COUNT)();
+export const successGetMessageCount = createAction(SUCCESS_GET_MESSAGE_COUNT)<
   Array<IMaxMessageItem>
 >();
-export const failureGetSmsCount = createAction(FAILURE_GET_SMS_COUNT)<string>();
+export const failureGetMessageCount = createAction(
+  FAILURE_GET_MESSAGE_COUNT,
+)<string>();
 
 // 발송 수량 수정하기
-export const REQUEST_MODIFY_SMS_COUNT = 'REQUEST_MODIFY_SMS_COUNT';
-export const SUCCESS_MODIFY_SMS_COUNT = 'SUCCESS_MODIFY_SMS_COUNT';
-export const FAILURE_MODIFY_SMS_COUNT = 'FAILURE_MODIFY_SMS_COUNT';
+export const REQUEST_MODIFY_MESSAGE_COUNT = 'REQUEST_MODIFY_MESSAGE_COUNT';
+export const SUCCESS_MODIFY_MESSAGE_COUNT = 'SUCCESS_MODIFY_MESSAGE_COUNT';
+export const FAILURE_MODIFY_MESSAGE_COUNT = 'FAILURE_MODIFY_MESSAGE_COUNT';
 
 // 발송 수량 수정하기 Action
-export const requestModifySmsCount = createAction(
-  REQUEST_MODIFY_SMS_COUNT,
-)<IRequestModifySmsCount>();
-export const successModifySmsCount = createAction(
-  SUCCESS_MODIFY_SMS_COUNT,
-)<IResponseModifySmsCount>();
-export const failureModifySmsCount = createAction(
-  FAILURE_MODIFY_SMS_COUNT,
+export const requestModifyMessageCount = createAction(
+  REQUEST_MODIFY_MESSAGE_COUNT,
+)<IRequestModifyMessageCount>();
+export const successModifyMessageCount = createAction(
+  SUCCESS_MODIFY_MESSAGE_COUNT,
+)<IResponseModifyMessageCount>();
+export const failureModifyMessageCount = createAction(
+  FAILURE_MODIFY_MESSAGE_COUNT,
 )<string>();
 
 // 자동 문자 데이터 가져오기
