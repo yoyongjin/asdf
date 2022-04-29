@@ -12,6 +12,7 @@ const StyledWrapper = styled.ul`
   list-style-type: none;
   position: absolute;
   right: 40px;
+  top: -60px;
   width: 100%;
 `;
 

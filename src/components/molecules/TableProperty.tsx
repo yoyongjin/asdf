@@ -31,10 +31,7 @@ const StyledTextWrapper = styled.div`
   padding-bottom: 4px;
 `;
 
-const StyledOptionWrapper = styled.div``;
-
 const StyledMenuWrapper = styled.div`
-  min-width: 120px;
   position: relative;
 `;
 
@@ -122,7 +119,7 @@ function TableProperty({
   const OptionView = useCallback(
     (data: IOptionItem) => {
       return (
-        <StyledOptionWrapper onMouseEnter={onMouseIn} onMouseLeave={onMouseOut}>
+        <div onMouseEnter={onMouseIn} onMouseLeave={onMouseOut}>
           {isHover && (
             <StyledMenuWrapper>
               <MenuList menu={data.menu} type={contentType} data={originItem} />
@@ -136,7 +133,7 @@ function TableProperty({
               hoverImg={data.hoverImage}
             />
           )}
-        </StyledOptionWrapper>
+        </div>
       );
     },
     [contentType, isHover, onMouseIn, onMouseOut, originItem],
