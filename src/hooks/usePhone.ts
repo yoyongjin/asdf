@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from 'modules/reducers';
 import {
   requestGetPhoneInfo,
+  requestGetPhones,
   requestGetPlanByTelecom,
   requestGetTelecom,
   setInitializePhoneInfo,
@@ -60,10 +61,30 @@ function usePhone() {
     [dispatch],
   );
 
+  const getPhones = useCallback(
+    (
+      isMatch: boolean,
+      page: number,
+      limit: number,
+      searchText: string = '',
+    ) => {
+      const payload = {
+        is_match: isMatch,
+        page,
+        page_count: limit,
+        search_text: searchText,
+      };
+
+      dispatch(requestGetPhones(payload));
+    },
+    [dispatch],
+  );
+
   return {
     getPhoneInfo,
     getPlan,
     getTelecom,
+    getPhones,
     onEventInitializePhoneInfo,
     phoneInfo,
     plans,

@@ -5,6 +5,7 @@ import {
   LoginForm,
   MonitoringView,
   OrganizationView,
+  PhoneView,
   SMSView,
   StatisticsV2View,
   StatisticsView,
@@ -34,6 +35,7 @@ function MainRouter() {
         }
       />
       <Route exact path="/main/manage/sms" component={SMSView} />
+      <Route exact path="/main/manage/phone" component={PhoneView} />
       <Route component={NotFound} />
     </Switch>
   );

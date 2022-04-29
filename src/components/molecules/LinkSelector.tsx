@@ -61,16 +61,24 @@ const LINK_DATA = [
     path: '/main/manage/sms',
     pixel: 23.5,
   },
+  {
+    isVisible: true,
+    name: '법인폰 관리',
+    path: '/main/manage/phone',
+    pixel: 23.5,
+  },
 ];
 
 function LinkSelector({ location, permission }: ILinkSelector) {
   const [visible, setVisible] = useState<number>(0);
 
   useEffect(() => {
-    const [monitoring, organization, user, statistics, sms] = LINK_DATA;
+    const [monitoring, organization, user, statistics, sms, phone] = LINK_DATA;
     const { pathname } = location;
 
-    if (pathname === sms.path) {
+    if (pathname === phone.path) {
+      setVisible(5);
+    } else if (pathname === sms.path) {
       setVisible(4);
     } else if (pathname === statistics.path) {
       setVisible(3);

@@ -10,12 +10,14 @@ export interface IPhoneState {
   telecoms: Array<ITelecomItem>; // 통신사
   plans: Array<ITelecomPlnaItem>; // 요금제
   info: IPhoneInfoItem; // phone 정보
+  phones: Array<any>;
 }
 
 export interface IRequestType {
   getTelecom: common.FetchType;
   getPlanByTelecom: common.FetchType;
   getPhoneInfo: common.FetchType;
+  getPhones: common.FetchType;
 }
 
 export interface ITelecomItem {
@@ -41,4 +43,11 @@ export interface IRequestGetPlanParams {
 
 export interface IRequestGetPhoneInfoParams {
   number: string;
+}
+
+export interface IRequestGetAllPhoneInfo {
+  is_match: boolean; // 미할당 여부
+  page: number; // 페이지 수
+  page_count: number; // limit
+  search_text: string; // 검색어
 }

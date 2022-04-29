@@ -4,6 +4,7 @@ import styled, { css } from 'styled-components';
 import {
   Button,
   DatePicker,
+  Input,
   MultiSelect,
   Select,
   Text,
@@ -24,6 +25,8 @@ import { TOnClickVisible } from 'hooks/useVisible';
 import { StyledCommonBothWhiteSpace } from 'styles/common';
 import { Colors } from 'utils/color';
 import SearchBar from './SearchBar';
+import { DynamicJSON } from 'types/common';
+import Utils from 'utils/new_utils';
 
 const StyledWrapper = styled.div<IStyleWrapper>`
   height: 100%;
@@ -53,7 +56,7 @@ function TitleV2({
   renderRight,
   titleStyle,
 }: ITitleProps) {
-  const { form, onChangeInput } = useInputForm({
+  const { form, onChangeInput } = useInputForm<DynamicJSON>({
     search: '',
   });
 
@@ -139,6 +142,30 @@ function TitleV2({
       );
     },
     [],
+  );
+
+  const InputView = useCallback(
+    (key: number, data: IInputItem, styles?: IInputItemStyle) => {
+      const name = `input-${key}`;
+
+      return (
+        <Input
+          borderRadius={styles?.borderRadius}
+          fontFamily={styles?.fontFamily}
+          fontSize={styles?.fontSize}
+          height={styles?.height}
+          name={name}
+          onChange={onChangeInput}
+          placeholder={data.placeholder}
+          textAlign={styles?.textAlign}
+          value={
+            data.isNumber ? Utils.formatNumber(String(form[name])) : form[name]
+          }
+          width={styles?.width}
+        />
+      );
+    },
+    [form, onChangeInput],
   );
 
   const MultiSelectView = useCallback((data: IMultiSelectItem) => {
@@ -268,6 +295,11 @@ function TitleV2({
             dateRangePickerStyles,
           );
         }
+        case 'input': {
+          const inputData = data as IInputItem;
+          const inputStyles = styles as IInputItemStyle;
+          return InputView(propertyKey, inputData, inputStyles);
+        }
         case 'multi-select': {
           const multiSelectData = data as IMultiSelectItem;
           return MultiSelectView(multiSelectData);
@@ -302,6 +334,7 @@ function TitleV2({
       ButtonView,
       DatePickerView,
       DateRangePickerView,
+      InputView,
       MultiSelectView,
       SearchBarView,
       SelectView,
@@ -436,6 +469,9 @@ interface ITextCheckBoxStyle extends ITextItemStyle {}
 
 // input style
 interface IInputItemStyle extends ITextItemStyle {
+  borderRadius: number;
+  height: number;
+  textAlign?: number;
   width?: number;
 }
 
@@ -467,6 +503,7 @@ interface IMultiSelectItem {
 interface IInputItem {
   placeholder?: string;
   name?: string;
+  isNumber?: boolean;
   onChange?: TonChangeInput;
   value: string;
 }
@@ -538,6 +575,7 @@ interface IRenderConfig {
     | ICheckBoxItem
     | IDatePickerItem
     | IDateRangePickerItem
+    | IInputItem
     | IMultiSelectItem
     | ISearchBarItem
     | ISelectItem
@@ -547,6 +585,7 @@ interface IRenderConfig {
   | IButtonItemStyle
     | IDatePickerItemStyle
     | IDateRangePickerItemStyle
+    | IInputItemStyle
     | ISearchBarItemStyle
     | ISelectItemStyle
     | ITextCheckBoxStyle

@@ -40,13 +40,25 @@ const initialState: IPhoneState = {
       fetch: false,
       error: '',
     },
+    getPhones: {
+      fetch: false,
+      error: '',
+    },
   },
   telecoms: defaultTelecomValue,
   plans: defaultPlanByTelecomValue,
   info: defaultPhoneInfoValue,
+  phones: [],
 };
 
 const userReducer = createReducer<IPhoneState, TPhoneAction>(initialState, {
+  [types.FAILURE_GET_PHONES]: (state, action) => {
+    // 전체 휴대전화 정보 가져오기 실패
+    return produce(state, (draft) => {
+      draft.request.getPhones.fetch = false;
+      draft.request.getPhones.error = action.payload;
+    });
+  },
   [types.FAILURE_GET_PHONE_INFO]: (state, action) => {
     // 휴대전화 정보 가져오기 실패
     return produce(state, (draft) => {
@@ -72,6 +84,12 @@ const userReducer = createReducer<IPhoneState, TPhoneAction>(initialState, {
     // 휴대전화 정보 가져오기 요청
     return produce(state, (draft) => {
       draft.request.getPhoneInfo.fetch = true;
+    });
+  },
+  [types.REQUEST_GET_PHONES]: (state, action) => {
+    // 전체 휴대전화 정보 가져오기 요청
+    return produce(state, (draft) => {
+      draft.request.getPhones.fetch = true;
     });
   },
   [types.REQUEST_GET_PLAN_BY_TELECOM]: (state, action) => {
@@ -119,6 +137,13 @@ const userReducer = createReducer<IPhoneState, TPhoneAction>(initialState, {
       draft.telecoms = newTelecom;
       draft.request.getTelecom.fetch = false;
       draft.request.getTelecom.error = '';
+    });
+  },
+  [types.SUCCESS_GET_PHONES]: (state, action) => {
+    // 전체 휴대전화 정보 가져오기 성공
+    return produce(state, (draft) => {
+      draft.request.getPhones.fetch = false;
+      draft.request.getPhones.error = '';
     });
   },
 });
