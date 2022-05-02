@@ -1,3 +1,4 @@
+import { IPhoneItem } from 'types/phone';
 import {
   IAutoMessageStatisticsItem,
   ICustomCallStatisticeByConsultantItem,
@@ -5,7 +6,11 @@ import {
   IMessageStatisticsItem,
 } from 'types/statistics';
 import { UserData } from 'types/user';
-import constants, { USER_TYPE, ZIBOX_VERSION } from 'utils/constants';
+import constants, {
+  USED_PHONE_STATUS,
+  USER_TYPE,
+  ZIBOX_VERSION,
+} from 'utils/constants';
 import Utils from 'utils/new_utils';
 
 class TableRow {
@@ -396,6 +401,46 @@ class TableRow {
       row.push(`${zibox_ip ?? ''}`); // 지박스 IP
       row.push(`${zibox_mac ?? ''}`); // 지박스 MAC
     }
+
+    return row;
+  }
+
+  static getRowPhoneInfo(contents: IPhoneItem) {
+    const row: Array<string> = [];
+
+    const {
+      branch_name,
+      name,
+      number,
+      plan,
+      team_name,
+      telecom,
+      updated_at,
+      used,
+      user_name,
+    } = contents;
+
+    row.push(Utils.formatPhoneNumber(number)); // 전화번호
+    row.push(`${telecom ?? ''}`); // 통신사
+    row.push(`${plan ?? ''}`); // 요금제
+
+    let open = '';
+    if (used === USED_PHONE_STATUS.OPEN) {
+      open = '개통';
+    } else if (used === USED_PHONE_STATUS.PAUSE) {
+      open = '일시정지';
+    } else if (used === USED_PHONE_STATUS.TERMINATION) {
+      open = '해지';
+    } else {
+      open = '알수없음';
+    }
+    row.push(open); // 개통상태
+
+    row.push(`${branch_name ?? ''}`); // 센터명
+    row.push(`${team_name ?? ''}`); // 팀명
+    row.push(`${name ?? ''}`); // 사용자명
+    row.push(`${user_name ?? ''}`); // 아이디
+    row.push(updated_at); // 변경 일시
 
     return row;
   }

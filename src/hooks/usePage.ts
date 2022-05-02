@@ -5,6 +5,9 @@ import { RootState } from 'modules/reducers';
 import Utils from 'utils/new_utils';
 
 function usePage() {
+  const maxPhones = useSelector(
+    (state: RootState) => state.phone.phonesAllCount,
+  );
   const maxBranch = useSelector(
     (state: RootState) => state.organization.numberOfBranch,
   );
@@ -66,6 +69,7 @@ function usePage() {
 
   return {
     page,
+    maxPhones,
     maxUser,
     maxBranch,
     maxAutoMessage,

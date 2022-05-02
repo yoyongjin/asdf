@@ -14,6 +14,7 @@ function usePhone() {
   const phoneInfo = useSelector((state: RootState) => state.phone.info);
   const plans = useSelector((state: RootState) => state.phone.plans);
   const telecoms = useSelector((state: RootState) => state.phone.telecoms);
+  const phones = useSelector((state: RootState) => state.phone.phones);
 
   const dispatch = useDispatch();
 
@@ -89,6 +90,7 @@ function usePhone() {
     phoneInfo,
     plans,
     telecoms,
+    phones,
   };
 }
 

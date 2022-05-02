@@ -1,13 +1,17 @@
-import _ from 'lodash';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
-import { TitleV2 } from 'components/molecules';
+import { TablePagination, TitleV2 } from 'components/molecules';
+import { IProperty as ITableProperty } from 'components/molecules/TableProperty';
 import { Table } from 'components/organisms';
+import useAuth from 'hooks/useAuth';
 import useExcel from 'hooks/useExcel';
 import useInputForm from 'hooks/useInputForm';
+import usePage from 'hooks/usePage';
+import usePhone from 'hooks/usePhone';
 import { Colors } from 'utils/color';
 import { tableTitlePhoneInfo } from 'utils/table/title';
+import TableRow from 'utils/table/row';
 
 const StyledWrapper = styled.div`
   height: 100%;
@@ -40,11 +44,20 @@ const selectBoxPageLimitOption = [...new Array(3)].map((values, index) => {
 
 function PhoneView() {
   const [searchText, setSearchText] = useState<string>('');
+  const { loginInfo } = useAuth();
   const { excelDownloadStatus } = useExcel();
   const { form, onChangeCheckBox, onChangeSelect } = useInputForm({
     match: false, // 할당여부
     limit: 15, // 페이징 개수
   });
+  const { phones, getPhones } = usePhone();
+  const {
+    maxPhones,
+    page,
+    onChangeCurrentPage,
+    onClickNextPage,
+    onClickPrevPage,
+  } = usePage();
 
   /**
    * @description 검색어 반영하기
@@ -70,6 +83,121 @@ function PhoneView() {
       },
     };
   }, []);
+
+  /**
+   * @description 사용자 관리 테이블 상세 내용 정보들
+   */
+  const tablePropertyPhoneInfo = useMemo(() => {
+    return phones.map((values) => {
+      const row = TableRow.getRowPhoneInfo(values);
+
+      let backgroundColor = '';
+      if (!values.user_name) {
+        backgroundColor = Colors.red1;
+      }
+
+      const userInfoItems: Array<ITableProperty> = row.map((value, index) => {
+        return {
+          data: {
+            text: value,
+          },
+          styles: {
+            fontFamily: 'Malgun Gothic',
+            fontSize: 12,
+          },
+          type: 'text',
+          propertyStyles: {
+            backgroundColor,
+            paddingLeft: 10,
+          },
+        };
+      });
+
+      const historyData = {
+        data: {
+          text: '내역',
+          // onClick: onClickModifyAutoMessagePopup,
+        },
+        styles: {
+          backgroundColor: Colors.white,
+          borderColor: Colors.gray13,
+          borderRadius: 12,
+          borderStyle: 'solid',
+          borderWidth: 1,
+          fontColor: Colors.gray13,
+          fontSize: 12,
+          height: 2.4,
+          width: 6.8,
+        },
+        type: 'button',
+        propertyStyles: {
+          backgroundColor,
+        },
+      };
+
+      const modifyData = {
+        data: {
+          text: '수정',
+          // onClick: onClickModifyAutoMessagePopup,
+        },
+        styles: {
+          backgroundColor: Colors.white,
+          borderColor: Colors.gray13,
+          borderRadius: 12,
+          borderStyle: 'solid',
+          borderWidth: 1,
+          fontColor: Colors.gray13,
+          fontSize: 12,
+          height: 2.4,
+          width: 6.8,
+        },
+        type: 'button',
+        propertyStyles: {
+          backgroundColor,
+        },
+      };
+
+      const removeData = {
+        data: {
+          text: '삭제',
+          // onClick: handleRemoveAutoMessage,
+        },
+        styles: {
+          backgroundColor: Colors.white,
+          borderColor: Colors.gray13,
+          borderRadius: 12,
+          borderStyle: 'solid',
+          borderWidth: 1,
+          fontColor: Colors.gray13,
+          fontSize: 12,
+          height: 2.4,
+          width: 6.8,
+        },
+        type: 'button',
+        propertyStyles: {
+          backgroundColor,
+        },
+      };
+
+      userInfoItems.push(historyData, modifyData, removeData);
+
+      return userInfoItems;
+    });
+  }, [phones]);
+
+  /**
+   * @description 사용자 관리 테이 내용 정보들
+   */
+  const tableContentPhoneInfo = useMemo(() => {
+    return {
+      data: tablePropertyPhoneInfo,
+      originData: phones,
+      styles: {
+        rowHeight: 50,
+      },
+      type: 'phone-info',
+    };
+  }, [phones, tablePropertyPhoneInfo]);
 
   /**
    * @description 타이틀에 들어갈 버튼 정보들
@@ -295,6 +423,22 @@ function PhoneView() {
     }
   }, []);
 
+  useEffect(() => {
+    getPhones(form.match, page, form.limit, searchText);
+  }, [form.limit, form.match, getPhones, page, searchText]);
+
+  /**
+   * @description 현재 페이지가 최대 페이지보다 큰 경우 현재 페이지를 최대 페이지로 변경
+   */
+  useEffect(() => {
+    if (!loginInfo.id) {
+      // 비로그인인 경우
+      return;
+    }
+
+    onChangeCurrentPage(page, maxPhones, form.limit);
+  }, [maxPhones, form.limit, onChangeCurrentPage, page, loginInfo.id]);
+
   return (
     <>
       <StyledWrapper>
@@ -315,17 +459,22 @@ function PhoneView() {
           <div>
             <Table
               borderItem={tableHeadBorderStyle}
-              contents={{
-                data: [],
-                type: 'none',
-              }}
+              contents={tableContentPhoneInfo}
               headColor={Colors.white}
               headHeight={33.5}
               titles={tableTitlePhoneInfo}
             />
           </div>
         </StyledContent>
-        <StyledFooter></StyledFooter>
+        <StyledFooter>
+          <TablePagination
+            count={maxPhones}
+            divide={form.limit}
+            curPage={page}
+            onClickNextPage={onClickNextPage}
+            onClickPrevPage={onClickPrevPage}
+          />
+        </StyledFooter>
       </StyledWrapper>
     </>
   );

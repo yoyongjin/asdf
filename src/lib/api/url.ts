@@ -40,6 +40,7 @@ export default {
         get_call_statistics_by_team: 'api/statistics_v2/call',
         get_auto_message_statistics: 'api/statistics_v2/auto-message',
         get_message_statistics: 'api/statistics_v2/message',
+        get_phone: '/api/phone/list',
       },
     },
   },

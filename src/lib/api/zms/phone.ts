@@ -20,9 +20,13 @@ class Phone {
     try {
       const token = Main.getAccessToken();
 
-      const { data } = await APIManager.get(url.zms.api.path.get_info, params, {
-        token,
-      });
+      const { data } = await APIManager.get(
+        url.zms.api.path.get_phone,
+        params,
+        {
+          token,
+        },
+      );
 
       Logger.log('Get Phones Data', JSON.stringify(data));
 

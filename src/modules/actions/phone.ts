@@ -5,6 +5,7 @@ import {
   IRequestGetAllPhoneInfo,
   IRequestGetPhoneInfoParams,
   IRequestGetPlanParams,
+  IResponseGetAllPhoneInfo,
   ITelecomItem,
   ITelecomPlnaItem,
 } from 'types/phone';
@@ -60,7 +61,8 @@ export const FAILURE_GET_PHONES = 'FAILURE_GET_PHONES';
 // 전체 휴대폰에 대한 정보 가져오기 Action
 export const requestGetPhones =
   createAction(REQUEST_GET_PHONES)<IRequestGetAllPhoneInfo>();
-export const successGetPhones = createAction(SUCCESS_GET_PHONES)<any>();
+export const successGetPhones =
+  createAction(SUCCESS_GET_PHONES)<IResponseGetAllPhoneInfo>();
 export const failureGetPhones = createAction(FAILURE_GET_PHONES)<string>();
 
 // 아래는 내부적으로 사용될 Actions

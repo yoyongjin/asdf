@@ -49,6 +49,7 @@ const initialState: IPhoneState = {
   plans: defaultPlanByTelecomValue,
   info: defaultPhoneInfoValue,
   phones: [],
+  phonesAllCount: 0,
 };
 
 const userReducer = createReducer<IPhoneState, TPhoneAction>(initialState, {
@@ -144,6 +145,11 @@ const userReducer = createReducer<IPhoneState, TPhoneAction>(initialState, {
     return produce(state, (draft) => {
       draft.request.getPhones.fetch = false;
       draft.request.getPhones.error = '';
+
+      console.log(action.payload);
+
+      draft.phones = action.payload.list;
+      draft.phonesAllCount = action.payload.cnt;
     });
   },
 });

@@ -632,7 +632,7 @@ export const tableTitleUserInfo = [...new Array(10)].map((v, i) => {
   return property;
 });
 
-export const tableTitlePhoneInfo = [...new Array(10)].map((v, i) => {
+export const tableTitlePhoneInfo = [...new Array(12)].map((v, i) => {
   const property = {
     fontFamily: 'Malgun Gothic',
     fontSize: 12,
@@ -697,11 +697,9 @@ export const tableTitlePhoneInfo = [...new Array(10)].map((v, i) => {
 
       break;
     }
-    case 9: {
-      property.title = '';
-      property.isWidthPercent = false;
-      property.width = 80;
-
+    case 9:
+    case 10:
+    case 11: {
       break;
     }
   }
