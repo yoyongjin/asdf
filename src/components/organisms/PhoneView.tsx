@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import { TitleV2 } from 'components/molecules';
@@ -31,12 +31,27 @@ const StyledFooter = styled.div`
   justify-content: center;
 `;
 
+const selectBoxPageLimitOption = [...new Array(3)].map((values, index) => {
+  return {
+    id: 5 * (index + 1),
+    data: `${5 * (index + 1)}`,
+  };
+});
+
 function PhoneView() {
+  const [searchText, setSearchText] = useState<string>('');
   const { excelDownloadStatus } = useExcel();
-  const { form, onChangeCheckBox } = useInputForm({
+  const { form, onChangeCheckBox, onChangeSelect } = useInputForm({
     match: false, // 할당여부
     limit: 15, // 페이징 개수
   });
+
+  /**
+   * @description 검색어 반영하기
+   */
+  const applySearchText = useCallback((text: string) => {
+    setSearchText(text);
+  }, []);
 
   /**
    * @description 테이블 헤더 border style
@@ -83,49 +98,50 @@ function PhoneView() {
       },
     };
 
-    let onClick: any = null;
-
-    const buttonConfig2 = {
-      type: 'button',
-      data: {
-        text: '조회',
-        onClick: onClick,
-      },
-      styles: {
-        backgroundColor: Colors.blue4,
-        borderRadius: 8,
-        fontColor: Colors.white,
-        fontSize: 12,
-        fontWeight: 800,
-        height: 2.8,
-        width: 6.4,
-      },
-    };
-
-    return [buttonConfig1, buttonConfig2];
+    return [buttonConfig1];
   }, [excelDownloadStatus]);
 
   /**
-   * @description 타이틀에 들어갈 input 정보들
+   * @description 타이틀에 들어갈 search bar 정보들
    */
-  const titleInputData = useMemo(() => {
-    const inputConfig1 = {
-      type: 'input',
+  const titleSearchBarData = useMemo(() => {
+    const searchBarConfig1 = {
+      type: 'search-bar',
       data: {
-        isNumber: true,
-        placeholder: '법인폰 번호',
-        value: '',
+        buttonOnClick: applySearchText,
+        name: 'search',
+        placeholder: '전화번호',
       },
       styles: {
-        borderRadius: 8,
-        height: 2.8,
-        width: 15,
-        textAlign: 1,
+        width: 20,
       },
     };
 
-    return [inputConfig1];
-  }, []);
+    return [searchBarConfig1];
+  }, [applySearchText]);
+
+  /**
+   * @description 타이틀에 들어갈 selectbox 정보들
+   */
+  const titleSelectData = useMemo(() => {
+    const selectConfig1 = {
+      type: 'select',
+      data: {
+        name: 'limit',
+        onChange: onChangeSelect,
+        options: selectBoxPageLimitOption,
+        value: form.limit,
+      },
+      styles: {
+        borderColor: Colors.gray7,
+        borderRadius: 12.5,
+        fontColor: Colors.gray4,
+        width: 50,
+      },
+    }; // 페이지 개수
+
+    return [selectConfig1];
+  }, [form.limit, onChangeSelect]);
 
   /**
    * @description 타이틀에 들어갈 text + checkbox 정보들
@@ -162,7 +178,20 @@ function PhoneView() {
       },
     };
 
-    return [textConfig1];
+    const textConfig2 = {
+      type: 'text',
+      data: {
+        text: '조회 개수 : ',
+      },
+      styles: {
+        fontColor: Colors.gray1,
+        fontFamily: 'Malgun Gothic',
+        fontSize: 12,
+        minWidth: 30,
+      },
+    };
+
+    return [textConfig1, textConfig2];
   }, []);
 
   /**
@@ -172,46 +201,19 @@ function PhoneView() {
   const getTitleRenderLeft = useCallback(
     (type: number) => {
       if (type === 1) {
-        const renderData = [];
-
-        renderData.push(...titleTextData);
-
-        return {
-          renderConfig: renderData,
-        };
       } else if (type === 2) {
         const renderData = [];
-        const renderStyle = [];
 
-        const [buttonConfig1, buttonConfig2] = titleButtonData;
+        const [textConfig1] = titleTextData;
 
-        renderData.push(...titleInputData);
-        renderData.push(...titleTextCheckBoxData);
-        renderData.push(buttonConfig2);
-
-        for (let i = 0; i < renderData.length; i++) {
-          const defaultRenderStyle = {
-            paddingRight: 0,
-          };
-
-          if (i === 0) {
-            defaultRenderStyle.paddingRight = 20;
-          }
-
-          if (i === 1) {
-            defaultRenderStyle.paddingRight = 10;
-          }
-
-          renderStyle.push(defaultRenderStyle);
-        }
+        renderData.push(textConfig1);
 
         return {
           renderConfig: renderData,
-          renderStyle,
         };
       }
     },
-    [titleTextCheckBoxData, titleButtonData, titleInputData, titleTextData],
+    [titleTextData],
   );
 
   /**
@@ -231,9 +233,45 @@ function PhoneView() {
           renderConfig: renderData,
         };
       } else if (type === 2) {
+        const renderData = [];
+        const renderStyle = [];
+
+        const [textConfig1, textCofngi2] = titleTextData;
+
+        renderData.push(textCofngi2);
+        renderData.push(...titleSelectData);
+        renderData.push(...titleTextCheckBoxData);
+        renderData.push(...titleSearchBarData);
+
+        for (let i = 0; i < renderData.length; i++) {
+          const defaultRenderStyle = {
+            paddingRight: 0,
+          };
+
+          if (i === 0) {
+            defaultRenderStyle.paddingRight = 10;
+          }
+
+          if (i === 1 || i === 2) {
+            defaultRenderStyle.paddingRight = 18;
+          }
+
+          renderStyle.push(defaultRenderStyle);
+        }
+
+        return {
+          renderConfig: renderData,
+          renderStyle,
+        };
       }
     },
-    [titleButtonData],
+    [
+      titleButtonData,
+      titleSearchBarData,
+      titleSelectData,
+      titleTextCheckBoxData,
+      titleTextData,
+    ],
   );
 
   /**
@@ -245,7 +283,7 @@ function PhoneView() {
       return {
         borderBottomStyle: 'none',
         borderBottomWidth: 0,
-        leftMarginTop: 15,
+        rightMarginTop: 10,
       };
     } else if (type === 2) {
       return {
@@ -262,7 +300,6 @@ function PhoneView() {
       <StyledWrapper>
         <StyledTitle>
           <TitleV2
-            renderLeft={getTitleRenderLeft(1)}
             renderRight={getTitleRenderRight(1)}
             titleStyle={getTitleStyle(1)}
           />
@@ -270,6 +307,7 @@ function PhoneView() {
         <StyledTitle>
           <TitleV2
             renderLeft={getTitleRenderLeft(2)}
+            renderRight={getTitleRenderRight(2)}
             titleStyle={getTitleStyle(2)}
           />
         </StyledTitle>
