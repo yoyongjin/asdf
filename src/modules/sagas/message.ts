@@ -81,6 +81,8 @@ function* getAutoMessageProcess(
 ) {
   const { count, id, page } = action.payload;
 
+  Toast.notification('잠시만 기다려주세요..🙄');
+
   const response: ResponseSuccessData | ResponseFailureData = yield call(
     ZMSMessage.getAutoMessage,
     id,
@@ -92,6 +94,8 @@ function* getAutoMessageProcess(
     const { data } = response as ResponseSuccessData;
 
     yield put(successGetAutoMessage(data));
+
+    Toast.success('가져오기 완료😊');
 
     return;
   }
@@ -109,10 +113,14 @@ function* getMessageCountProcess(
     ZMSMessage.getMessageCount,
   );
 
+  Toast.notification('잠시만 기다려주세요..🙄');
+
   if (response.status === API_FETCH.SUCCESS) {
     const { data } = response as ResponseSuccessData;
 
     yield put(successGetMessageCount(data));
+
+    Toast.success('가져오기 완료😊');
 
     return;
   }

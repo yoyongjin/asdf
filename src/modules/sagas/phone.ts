@@ -26,6 +26,8 @@ import Toast from 'utils/toast';
 function* getPhonesProcess(action: ReturnType<typeof requestGetPhones>) {
   const { is_match, page, page_count, search_text } = action.payload;
 
+  Toast.notification('잠시만 기다려주세요..🙄');
+
   const response: ResponseSuccessData | ResponseFailureData = yield call(
     ZMSPhone.getPhones,
     is_match,
@@ -38,6 +40,8 @@ function* getPhonesProcess(action: ReturnType<typeof requestGetPhones>) {
     const { data } = response as ResponseSuccessData;
 
     yield put(successGetPhones(data));
+
+    Toast.success('가져오기 완료😊');
 
     return;
   }
