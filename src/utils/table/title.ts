@@ -1,6 +1,92 @@
 import { Colors } from 'utils/color';
-import constants, { ZIBOX_TRANSPORT, ZIBOX_VERSION } from 'utils/constants';
+import constants, { ZIBOX_VERSION } from 'utils/constants';
 
+/**
+ * @description 사용자 관리 테이블 제목
+ */
+export const tableTitleUserManagement = [...new Array(10)].map((v, i) => {
+  const property = {
+    fontColor: Colors.white,
+    fontSize: 13,
+    isNotShow: false,
+    isWidthPercent: true,
+    title: '',
+    width: 0,
+  };
+
+  const addWidth = constants.ZIBOX_VERSION === ZIBOX_VERSION.ZIBOX ? 0 : 5;
+
+  switch (i) {
+    case 0: {
+      property.title = '센터명';
+      property.width = 10 + addWidth;
+
+      break;
+    }
+    case 1: {
+      property.title = '팀명';
+      property.width = 10 + addWidth;
+
+      break;
+    }
+    case 2: {
+      property.title = '권한';
+      property.width = 7 + addWidth;
+
+      break;
+    }
+    case 3: {
+      property.title = '이름';
+      property.width = 5 + addWidth;
+
+      break;
+    }
+    case 4: {
+      property.title = '아이디.';
+      property.width = 10 + addWidth;
+
+      break;
+    }
+    case 5: {
+      property.title = '전화번호.';
+      property.width = 15 + addWidth;
+
+      break;
+    }
+    case 6: {
+      property.title = 'PC IP';
+      property.width = 15 + addWidth;
+
+      break;
+    }
+    case 7: {
+      property.isNotShow = constants.ZIBOX_VERSION === ZIBOX_VERSION.ZIBOX2;
+      property.title = 'ZiBox IP';
+      property.width = 15;
+
+      break;
+    }
+    case 8: {
+      property.isNotShow = constants.ZIBOX_VERSION === ZIBOX_VERSION.ZIBOX2;
+      property.title = 'ZiBox MAC.';
+      property.width = 15;
+
+      break;
+    }
+    case 9: {
+      property.title = '';
+      property.width = 5 + addWidth;
+
+      break;
+    }
+  }
+
+  return property;
+});
+
+/**
+ * @description 통화 통계에서 수/발신 상세 정보에 대한 테이블 제목
+ */
 export const tableTitleDependencyAllCallStatistics = [...new Array(11)].map(
   (v, i) => {
     const property = {
@@ -85,6 +171,9 @@ export const tableTitleDependencyAllCallStatistics = [...new Array(11)].map(
   },
 );
 
+/**
+ * @description 통화 통계에서 발신 상세 정보에 대한 테이블 제목
+ */
 export const tableTitleDependencyOutcomingCallStatistics = [
   ...new Array(11),
 ].map((v, i) => {
@@ -169,6 +258,9 @@ export const tableTitleDependencyOutcomingCallStatistics = [
   return property;
 });
 
+/**
+ * @description 통화 통계에서 수신 상세 정보에 대한 테이블 제목
+ */
 export const tableTitleDependencyIncomingCallStatistics = [
   ...new Array(11),
 ].map((v, i) => {
@@ -253,6 +345,20 @@ export const tableTitleDependencyIncomingCallStatistics = [
   return property;
 });
 
+/**
+ * @description 통화 통계의 상세 테이블 제목 병합 (전체/발신/수신)
+ */
+export const tableTitleDependencyCallStatistics = [
+  [
+    ...tableTitleDependencyAllCallStatistics,
+    ...tableTitleDependencyOutcomingCallStatistics,
+    ...tableTitleDependencyIncomingCallStatistics,
+  ],
+];
+
+/**
+ * @description 상담원별 통화 통계 테이블 제목
+ */
 export const tableTitleCallStatisticsByConsultant = [...new Array(8)].map(
   (v, i) => {
     const property = {
@@ -332,14 +438,9 @@ export const tableTitleCallStatisticsByConsultant = [...new Array(8)].map(
   },
 );
 
-export const tableTitleDependencyCallStatistics = [
-  [
-    ...tableTitleDependencyAllCallStatistics,
-    ...tableTitleDependencyOutcomingCallStatistics,
-    ...tableTitleDependencyIncomingCallStatistics,
-  ],
-];
-
+/**
+ * @description 팀별 통화 통계 테이블 제목
+ */
 export const tableTitleCallStatisticsByTeam = [...new Array(6)].map((v, i) => {
   const property = {
     backgroundColor: 'inherit',
@@ -403,6 +504,9 @@ export const tableTitleCallStatisticsByTeam = [...new Array(6)].map((v, i) => {
   return property;
 });
 
+/**
+ * @description 문자 통계 테이블 제목
+ */
 export const tableTitleMessageStatistics = [...new Array(13)].map((v, i) => {
   const property = {
     fontFamily: 'Malgun Gothic',
@@ -488,6 +592,9 @@ export const tableTitleMessageStatistics = [...new Array(13)].map((v, i) => {
   return property;
 });
 
+/**
+ * @description 자동 문자 통계 테이블 제목
+ */
 export const tableTitleAutoMessageStatistics = [...new Array(8)].map((v, i) => {
   const property = {
     fontFamily: 'Malgun Gothic',
@@ -552,78 +659,48 @@ export const tableTitleAutoMessageStatistics = [...new Array(8)].map((v, i) => {
   return property;
 });
 
-export const tableTitleUserInfo = [...new Array(10)].map((v, i) => {
+/**
+ * @description 자동 문자 설정 테이블 제목
+ */
+export const tableTitleSettingAutoMessage = [...new Array(5)].map((v, i) => {
   const property = {
-    fontColor: Colors.white,
-    fontSize: 13,
-    isNotShow: false,
+    fontFamily: 'Malgun Gothic',
+    fontSize: 12,
     isWidthPercent: true,
+    letterSpacing: -0.6,
+    paddingLeft: 10,
+    textAlign: 'left',
     title: '',
-    width: 0,
+    width: 15,
   };
-
-  const addWidth = constants.ZIBOX_VERSION === ZIBOX_VERSION.ZIBOX ? 0 : 5;
 
   switch (i) {
     case 0: {
-      property.title = '센터명';
-      property.width = 10 + addWidth;
+      property.title = '등록일시 / 번호';
+      property.width = 10;
 
       break;
     }
     case 1: {
-      property.title = '팀명';
-      property.width = 10 + addWidth;
+      property.title = '제목';
 
       break;
     }
     case 2: {
-      property.title = '권한';
-      property.width = 7 + addWidth;
+      property.title = '발송 조건 / 문자 내용';
+      property.width = 45;
 
       break;
     }
     case 3: {
-      property.title = '이름';
-      property.width = 5 + addWidth;
+      property.title = '사용 / 미사용';
 
       break;
     }
     case 4: {
-      property.title = '아이디.';
-      property.width = 10 + addWidth;
-
-      break;
-    }
-    case 5: {
-      property.title = '전화번호.';
-      property.width = 15 + addWidth;
-
-      break;
-    }
-    case 6: {
-      property.title = 'PC IP';
-      property.width = 15 + addWidth;
-
-      break;
-    }
-    case 7: {
-      property.isNotShow = constants.ZIBOX_VERSION === ZIBOX_VERSION.ZIBOX2;
-      property.title = 'ZiBox IP';
-      property.width = 15;
-
-      break;
-    }
-    case 8: {
-      property.isNotShow = constants.ZIBOX_VERSION === ZIBOX_VERSION.ZIBOX2;
-      property.title = 'ZiBox MAC.';
-      property.width = 15;
-
-      break;
-    }
-    case 9: {
-      property.title = '';
-      property.width = 5 + addWidth;
+      property.isWidthPercent = false;
+      property.title = '삭제 / 수정';
+      property.width = 70;
 
       break;
     }
@@ -632,7 +709,53 @@ export const tableTitleUserInfo = [...new Array(10)].map((v, i) => {
   return property;
 });
 
-export const tableTitlePhoneInfo = [...new Array(12)].map((v, i) => {
+/**
+ * @description 메시지 발송 수량 설정 테이블 제목
+ */
+export const tableTitleSettingMessageCount = [...new Array(5)].map((v, i) => {
+  const property = {
+    fontFamily: 'Malgun Gothic',
+    fontSize: 12,
+    isWidthPercent: true,
+    letterSpacing: -0.6,
+    paddingLeft: 10,
+    textAlign: 'left',
+    title: '',
+    width: 15,
+  };
+
+  switch (i) {
+    case 0: {
+      property.title = '센터명';
+      property.width = 20;
+
+      break;
+    }
+    case 1: {
+      property.title = '일일 최대 발송수량';
+
+      break;
+    }
+    case 2: {
+      property.title = '월 최대 발송수량';
+      property.width = 45;
+
+      break;
+    }
+    case 3: {
+      property.width = 50;
+
+      break;
+    }
+  }
+
+  return property;
+});
+
+/**
+ * @description 휴대폰 관리 테이블 제목
+ */
+export const tableTitlePhoneManagement = [...new Array(12)].map((v, i) => {
   const property = {
     fontFamily: 'Malgun Gothic',
     fontSize: 12,

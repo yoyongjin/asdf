@@ -10,7 +10,7 @@ import useInputForm from 'hooks/useInputForm';
 import usePage from 'hooks/usePage';
 import usePhone from 'hooks/usePhone';
 import { Colors } from 'utils/color';
-import { tableTitlePhoneInfo } from 'utils/table/title';
+import { tableTitlePhoneManagement } from 'utils/table/title';
 import TableRow from 'utils/table/row';
 
 const StyledWrapper = styled.div`
@@ -462,7 +462,7 @@ function PhoneView() {
               contents={tableContentPhoneInfo}
               headColor={Colors.white}
               headHeight={33.5}
-              titles={tableTitlePhoneInfo}
+              titles={tableTitlePhoneManagement}
             />
           </div>
         </StyledContent>

@@ -16,7 +16,7 @@ import useAuth from 'hooks/useAuth';
 import { UserData as UserDataV2 } from 'types/user';
 import { Colors } from 'utils/color';
 import constants, { COMPANY_TYPE, USER_TYPE } from 'utils/constants';
-import { tableTitleUserInfo } from 'utils/table/title';
+import { tableTitleUserManagement } from 'utils/table/title';
 import TableRow from 'utils/table/row';
 
 import DB_ADD_USER_BUTTON_IMAGE from 'images/bt-add-u-1-nor.png';
@@ -657,7 +657,7 @@ function UserView({ location }: UserViewProps) {
           <div>
             <Table
               contents={tableContentUserInfo}
-              titles={tableTitleUserInfo}
+              titles={tableTitleUserManagement}
             />
           </div>
         </StyledContent>
