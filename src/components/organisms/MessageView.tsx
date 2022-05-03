@@ -11,19 +11,22 @@ import {
 import { IProperty as ITableProperty } from 'components/molecules/TableProperty';
 import { Table } from 'components/organisms';
 import useAuth from 'hooks/useAuth';
+import useFetch from 'hooks/useFetch';
 import useInputForm from 'hooks/useInputForm';
 import useMessage from 'hooks/useMessage';
 import useOrganization from 'hooks/useOrganization';
 import useTab from 'hooks/useTab';
 import usePage from 'hooks/usePage';
 import useVisible from 'hooks/useVisible';
+import AUTO_MESSAGE_IMAGE from 'images/bt-add-auto-msg.png';
 import { IAutoMessageItem } from 'types/message';
 import { Colors } from 'utils/color';
 import constants, { ANSWER_VALUE, USER_TYPE } from 'utils/constants';
-import Utils from 'utils/new_utils';
-
-import AUTO_MESSAGE_IMAGE from 'images/bt-add-auto-msg.png';
-import useFetch from 'hooks/useFetch';
+import TableRow from 'utils/table/row';
+import {
+  tableTitleSettingAutoMessage,
+  tableTitleSettingMessageCount,
+} from 'utils/table/title';
 import Toast from 'utils/toast';
 
 const tabTitle = [
@@ -32,95 +35,6 @@ const tabTitle = [
   },
   {
     name: '발송 수량 설정',
-  },
-];
-
-const settingAutoMessageTableTitles = [
-  {
-    fontFamily: 'Malgun Gothic',
-    fontSize: 12,
-    isWidthPercent: true,
-    letterSpacing: -0.6,
-    paddingLeft: 10,
-    textAlign: 'left',
-    title: '등록일시 / 번호',
-    width: 10,
-  },
-  {
-    fontFamily: 'Malgun Gothic',
-    fontSize: 12,
-    isWidthPercent: true,
-    letterSpacing: -0.6,
-    textAlign: 'left',
-    title: '제목',
-    width: 15,
-  },
-  {
-    fontFamily: 'Malgun Gothic',
-    fontSize: 12,
-    isWidthPercent: true,
-    letterSpacing: -0.6,
-    textAlign: 'left',
-    title: '발송 조건 / 문자 내용',
-    width: 45,
-  },
-  {
-    fontFamily: 'Malgun Gothic',
-    fontSize: 12,
-    isWidthPercent: true,
-    letterSpacing: -0.6,
-    textAlign: 'left',
-    title: '사용 / 미사용',
-    width: 15,
-  },
-  {
-    fontFamily: 'Malgun Gothic',
-    fontSize: 12,
-    // isWidthPercent: true,
-    letterSpacing: -0.6,
-    textAlign: 'left',
-    title: '삭제 / 수정',
-    width: 70,
-  },
-];
-
-const settingMessageCountTableTitles = [
-  {
-    fontFamily: 'Malgun Gothic',
-    fontSize: 12,
-    isWidthPercent: true,
-    letterSpacing: -0.6,
-    paddingLeft: 10,
-    textAlign: 'left',
-    title: '센터명',
-    width: 20,
-  },
-  {
-    fontFamily: 'Malgun Gothic',
-    fontSize: 12,
-    isWidthPercent: true,
-    letterSpacing: -0.6,
-    textAlign: 'left',
-    title: '일일 최대 발송수량',
-    width: 15,
-  },
-  {
-    fontFamily: 'Malgun Gothic',
-    fontSize: 12,
-    isWidthPercent: true,
-    letterSpacing: -0.6,
-    textAlign: 'left',
-    title: '월 최대 발송수량',
-    width: 15,
-  },
-  {
-    fontFamily: 'Malgun Gothic',
-    fontSize: 12,
-    isWidthPercent: true,
-    letterSpacing: -0.6,
-    textAlign: 'left',
-    title: '',
-    width: 50,
   },
 ];
 
@@ -242,88 +156,9 @@ function MessageView() {
     let _autoMessageData = _.cloneDeep(autoMessageData);
 
     return _autoMessageData.map((values) => {
-      const {
-        branch_id,
-        code,
-        content,
-        created_at,
-        days,
-        end_date,
-        end_time,
-        id,
-        priority,
-        start_date,
-        start_time,
-        title,
-        use_yn,
-      } = values;
+      const row = TableRow.getRowAutoMessage(values);
 
-      let startYear = '';
-      let startMonth = '';
-      let startDay = '';
-      let startDate = '';
-      let endYear = '';
-      let endMonth = '';
-      let endDay = '';
-      let endDate = '';
-
-      if (start_date) {
-        const { year, month, day } = Utils.parsingYYYYMMDD(start_date);
-        startYear = year;
-        startMonth = month;
-        startDay = day;
-        startDate = `${startYear}년 ${startMonth}월 ${startDay}일`;
-      }
-
-      if (end_date) {
-        const { year, month, day } = Utils.parsingYYYYMMDD(end_date);
-        endYear = year;
-        endMonth = month;
-        endDay = day;
-        endDate = `${endYear}년 ${endMonth}월 ${endDay}일`;
-      }
-
-      const createdAt = Utils.replace(created_at, '-', '/');
-      const createdAtfullDate = Utils.getFullDate(
-        new Date(createdAt).getTime(),
-        false,
-        '.',
-        '.',
-      );
-
-      const fullDate = startDate && endDate && `[${startDate} ~ ${endDate}]`;
-
-      let startTime = '';
-      let endTime = '';
-
-      if (start_time) {
-        const { hours, minutes, seconds } = Utils.parsingHHMMSS(start_time);
-
-        startTime = `${hours}:${minutes}`;
-      }
-
-      if (end_time) {
-        const { hours, minutes, seconds } = Utils.parsingHHMMSS(end_time);
-
-        endTime = `${hours}:${minutes}`;
-      }
-
-      const fullTime = startTime && endTime && `[${startTime} ~ ${endTime}]`;
-
-      let fullDays = '';
-      if (days) {
-        fullDays = Utils.parsingDays(days).join(', ');
-        fullDays = `[${fullDays}]`;
-      }
-
-      const autoMessageValues = [
-        `${createdAtfullDate}${constants.PARSING_KEY}${id}`,
-        title,
-        `${fullDate} ${fullTime} ${fullDays}${constants.PARSING_KEY}${content}`,
-        use_yn,
-      ];
-
-      const autoMessageItems: Array<ITableProperty> = autoMessageValues.map(
+      const autoMessageItems: Array<ITableProperty> = row.map(
         (value, index) => {
           if (index === 3) {
             const commonColor =
@@ -357,7 +192,7 @@ function MessageView() {
             },
             type: 'text',
             propertyStyles: {
-              paddingLeft: index === 0 ? 10 : 0, // 처음 요소만 padding left 적용
+              paddingLeft: 10,
             },
           };
         },
@@ -425,45 +260,40 @@ function MessageView() {
       );
     }
 
-    return _maxCountData.map((values: any) => {
-      const maxCountKeys = Object.keys(values);
-      const maxCountValues = Object.values(values);
+    return _maxCountData.map((values) => {
+      const row = TableRow.getRowMaxMessage(values);
 
-      const maxCountItems: Array<ITableProperty> = maxCountKeys
-        .map((key, index) => {
-          if (key === 'branch_name') {
-            return {
-              data: {
-                text: String(maxCountValues[index] ?? ''),
-              },
-              type: 'text',
-              propertyStyles: {
-                paddingLeft: 10,
-              },
-            };
-          } else if (key === 'max_count_date' || key === 'max_count_month') {
-            return {
-              data: {
-                disabled: loginInfo.admin_id < USER_TYPE.BRANCH_ADMIN, // 센터관리자보다 낮을 경우 수정 불가
-                isNumber: true,
-                value: maxCountValues[index],
-              },
-              styles: {
-                borderRadius: 0,
-                height: 2.8,
-                textAlign: 1,
-                width: 9.9,
-              },
-              type: 'input',
-            };
-          } else {
-            return {
-              data: {},
-              type: 'none',
-            };
-          }
-        })
-        .filter((values) => values.type !== 'none');
+      const maxCountItems: Array<ITableProperty> = row.map((value, index) => {
+        if (index === 1 || index === 2) {
+          return {
+            data: {
+              disabled: loginInfo.admin_id < USER_TYPE.BRANCH_ADMIN, // 센터관리자보다 낮을 경우 수정 불가
+              isNumber: true,
+              value: value,
+            },
+            styles: {
+              borderRadius: 0,
+              height: 2.8,
+              textAlign: 1,
+              width: 9.9,
+            },
+            type: 'input',
+            propertyStyles: {
+              paddingLeft: 10,
+            },
+          };
+        }
+
+        return {
+          data: {
+            text: value,
+          },
+          type: 'text',
+          propertyStyles: {
+            paddingLeft: 10,
+          },
+        };
+      });
 
       const addData = {
         data: {
@@ -484,7 +314,6 @@ function MessageView() {
         type: 'button',
         propertyStyles: {
           textAlign: 'right',
-          paddingRight: 10,
         },
       };
 
@@ -811,7 +640,7 @@ function MessageView() {
                 contents={getTableContent()}
                 headColor={Colors.white}
                 headHeight={33.5}
-                titles={settingAutoMessageTableTitles}
+                titles={tableTitleSettingAutoMessage}
               />
             ) : (
               // 발송 수량 설정
@@ -820,7 +649,7 @@ function MessageView() {
                 contents={getTableContent()}
                 headColor={Colors.white}
                 headHeight={33.5}
-                titles={settingMessageCountTableTitles}
+                titles={tableTitleSettingMessageCount}
               />
             )}
           </div>

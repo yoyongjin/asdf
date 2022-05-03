@@ -1,3 +1,4 @@
+import { IAutoMessageItem, IMaxMessageItem } from 'types/message';
 import { IPhoneItem } from 'types/phone';
 import {
   IAutoMessageStatisticsItem,
@@ -354,6 +355,105 @@ class TableRow {
     row.push(conditionOfSendMessage);
 
     row.push(`${cnt}`);
+
+    return row;
+  }
+
+  static getRowAutoMessage(contents: IAutoMessageItem) {
+    const row: Array<string> = [];
+    const {
+      branch_id,
+      code,
+      content,
+      created_at,
+      days,
+      end_date,
+      end_time,
+      id,
+      priority,
+      start_date,
+      start_time,
+      title,
+      use_yn,
+    } = contents;
+
+    let startYear = '';
+    let startMonth = '';
+    let startDay = '';
+    let startDate = '';
+    let endYear = '';
+    let endMonth = '';
+    let endDay = '';
+    let endDate = '';
+
+    if (start_date) {
+      const { year, month, day } = Utils.parsingYYYYMMDD(start_date);
+      startYear = year;
+      startMonth = month;
+      startDay = day;
+      startDate = `${startYear}년 ${startMonth}월 ${startDay}일`;
+    }
+
+    if (end_date) {
+      const { year, month, day } = Utils.parsingYYYYMMDD(end_date);
+      endYear = year;
+      endMonth = month;
+      endDay = day;
+      endDate = `${endYear}년 ${endMonth}월 ${endDay}일`;
+    }
+
+    const createdAt = Utils.replace(created_at, '-', '/');
+    const createdAtfullDate = Utils.getFullDate(
+      new Date(createdAt).getTime(),
+      false,
+      '.',
+      '.',
+    );
+
+    row.push(`${createdAtfullDate}${constants.PARSING_KEY}${id}`); // 등록 일시, 번호
+    row.push(title); // 제목
+
+    const fullDate = startDate && endDate && `[${startDate} ~ ${endDate}]`;
+
+    let startTime = '';
+    let endTime = '';
+
+    if (start_time) {
+      const { hours, minutes, seconds } = Utils.parsingHHMMSS(start_time);
+
+      startTime = `${hours}:${minutes}`;
+    }
+
+    if (end_time) {
+      const { hours, minutes, seconds } = Utils.parsingHHMMSS(end_time);
+
+      endTime = `${hours}:${minutes}`;
+    }
+
+    const fullTime = startTime && endTime && `[${startTime} ~ ${endTime}]`;
+
+    let fullDays = '';
+    if (days) {
+      fullDays = Utils.parsingDays(days).join(', ');
+      fullDays = `[${fullDays}]`;
+    }
+
+    row.push(
+      `${fullDate} ${fullTime} ${fullDays}${constants.PARSING_KEY}${content}`,
+    ); // 발송 조건, 문자 내용
+    row.push(use_yn); // 사용, 미사용
+
+    return row;
+  }
+
+  static getRowMaxMessage(contents: IMaxMessageItem) {
+    const row: Array<string> = [];
+    const { branch_id, branch_name, max_count_date, max_count_month } =
+      contents;
+
+    row.push(branch_name); // 센터명
+    row.push(`${max_count_date}`); // 일일 최대 발송수량
+    row.push(`${max_count_month}`); // 월 최대 발송수량
 
     return row;
   }
