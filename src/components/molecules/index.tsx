@@ -7,6 +7,7 @@ import MenuList from './MenuList';
 import Organization from './Organization';
 import PageCount from './PageCount';
 import PhoneData from './PhoneData';
+import PhoneInfoPopup from './PhoneInfoPopup';
 import SearchBar from './SearchBar';
 import StatisticsProperty from './StatisticsProperty';
 import StatisticsTotal from './StatisticsTotal';
@@ -38,6 +39,7 @@ export {
   Organization,
   PageCount,
   PhoneData,
+  PhoneInfoPopup,
   SearchBar,
   StatisticsProperty,
   StatisticsTotal,

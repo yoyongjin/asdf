@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
-import { TablePagination, TitleV2 } from 'components/molecules';
+import { Modal } from 'components/atoms';
+import { PhoneInfoPopup, TablePagination, TitleV2 } from 'components/molecules';
 import { IProperty as ITableProperty } from 'components/molecules/TableProperty';
 import { Table } from 'components/organisms';
 import useAuth from 'hooks/useAuth';
@@ -9,6 +10,8 @@ import useExcel from 'hooks/useExcel';
 import useInputForm from 'hooks/useInputForm';
 import usePage from 'hooks/usePage';
 import usePhone from 'hooks/usePhone';
+import useVisible from 'hooks/useVisible';
+import { IPhoneItem } from 'types/phone';
 import { Colors } from 'utils/color';
 import { tableTitlePhoneManagement } from 'utils/table/title';
 import TableRow from 'utils/table/row';
@@ -43,7 +46,11 @@ const selectBoxPageLimitOption = [...new Array(3)].map((values, index) => {
 });
 
 function PhoneView() {
+  const { visible, onClickVisible } = useVisible();
   const [searchText, setSearchText] = useState<string>('');
+  const [selectedPhoneInfo, setSelectedPhoneInfo] = useState<IPhoneItem | null>(
+    null,
+  );
   const { loginInfo } = useAuth();
   const { excelDownloadStatus } = useExcel();
   const { form, onChangeCheckBox, onChangeSelect } = useInputForm({
@@ -58,6 +65,17 @@ function PhoneView() {
     onClickNextPage,
     onClickPrevPage,
   } = usePage();
+
+  /**
+   * @description 팝업 클릭 시 선택된 휴대폰의 정보 설정
+   */
+  const handlePhoneInfoPopup = useCallback(
+    (phoneInfo: IPhoneItem) => {
+      setSelectedPhoneInfo(phoneInfo);
+      onClickVisible();
+    },
+    [onClickVisible],
+  );
 
   /**
    * @description 검색어 반영하기
@@ -138,7 +156,7 @@ function PhoneView() {
       const modifyData = {
         data: {
           text: '수정',
-          // onClick: onClickModifyAutoMessagePopup,
+          onClick: handlePhoneInfoPopup,
         },
         styles: {
           backgroundColor: Colors.white,
@@ -183,7 +201,7 @@ function PhoneView() {
 
       return userInfoItems;
     });
-  }, [phones]);
+  }, [handlePhoneInfoPopup, phones]);
 
   /**
    * @description 사용자 관리 테이 내용 정보들
@@ -476,10 +494,28 @@ function PhoneView() {
           />
         </StyledFooter>
       </StyledWrapper>
+      <Modal
+        isVisible={visible}
+        Component={
+          <PhoneInfoPopup
+            isVisible={visible}
+            onClickVisible={onClickVisible}
+            phoneInfo={selectedPhoneInfo}
+          />
+        }
+        paddingBottom={21}
+        paddingLeft={36}
+        paddingRight={36}
+        paddingTop={24}
+        width={300}
+        height={300}
+      />
     </>
   );
 }
 
 PhoneView.defaultProps = {};
+
+export type THandlePhoneInfoPopup = (phoneInfo: IPhoneItem) => void;
 
 export default PhoneView;

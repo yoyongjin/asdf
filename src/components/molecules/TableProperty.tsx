@@ -5,6 +5,7 @@ import { Button, Image, Input, Text } from 'components/atoms';
 import { MenuList, TextSlideToggle } from 'components/molecules';
 import { IMenuItem } from 'components/molecules/MenuList';
 import { TOnClickModifyAutoMessagePopup } from 'components/organisms/MessageView';
+import { THandlePhoneInfoPopup } from 'components/organisms/PhoneView';
 import useInputForm, { TonChangeInput } from 'hooks/useInputForm';
 import useHover from 'hooks/useHover';
 import { Colors } from 'utils/color';
@@ -16,6 +17,7 @@ import {
 import { TOnClickToggle } from 'hooks/useToggle';
 import { DynamicJSON } from 'types/common';
 import { IAutoMessageItem, IMaxMessageItem } from 'types/message';
+import { IPhoneItem } from 'types/phone';
 import constants, { ANSWER_VALUE } from 'utils/constants';
 import Utils from 'utils/new_utils';
 
@@ -76,6 +78,12 @@ function TableProperty({
             } else if (key === 5) {
               // 6번째 요소(수정)
               (data.onClick as TOnClickModifyAutoMessagePopup)(_originItem);
+            }
+          } else if (contentType === 'phone-info') {
+            const _originItem = originItem as IPhoneItem;
+
+            if (key === 10) {
+              (data.onClick as THandlePhoneInfoPopup)(_originItem);
             }
           }
         }
@@ -339,7 +347,8 @@ interface IButtonItem {
   onClick?:
     | TModifySmsCount
     | TRemoveAutoMessage
-    | TOnClickModifyAutoMessagePopup;
+    | TOnClickModifyAutoMessagePopup
+    | THandlePhoneInfoPopup;
   text?: string;
 }
 
@@ -403,7 +412,7 @@ export interface IProperty {
 interface ITablePropertyProps {
   contents: Array<IProperty>;
   contentType: string; // 컴포넌트 재사용 시 데이터 구분하기 위해
-  originItem: IMaxMessageItem | IAutoMessageItem; // 원본 데이터
+  originItem: IMaxMessageItem | IAutoMessageItem | IPhoneItem; // 원본 데이터
 }
 
 TableProperty.defaultProps = {};
