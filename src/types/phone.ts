@@ -40,6 +40,7 @@ export interface IPhoneInfoItem {
 
 export interface IPhoneItem {
   branch_name: string | null; // 센터명
+  id: number; // key 값
   name: string | null; // 유저명
   number: string; // 전화번호
   plan: string | null; // 요금제
