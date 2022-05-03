@@ -2,6 +2,7 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
 import {
+  BatchView,
   LoginForm,
   MessageView,
   MonitoringView,
@@ -36,6 +37,7 @@ function MainRouter() {
       />
       <Route exact path="/main/manage/message" component={MessageView} />
       <Route exact path="/main/manage/phone" component={PhoneView} />
+      <Route exact path="/main/manage/batch" component={BatchView} />
       <Route component={NotFound} />
     </Switch>
   );

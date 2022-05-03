@@ -1,3 +1,4 @@
+import BatchView from './BatchView';
 import GNB from './GNB';
 import LoginForm from './LoginForm';
 import MessageView from './MessageView';
@@ -10,6 +11,7 @@ import Table from './Table';
 import UserView from './UserView';
 
 export {
+  BatchView,
   GNB,
   LoginForm,
   MessageView,

@@ -67,17 +67,25 @@ const LINK_DATA = [
     path: '/main/manage/phone',
     pixel: 23.5,
   },
+  {
+    isVisible: true,
+    name: '배치',
+    path: '/main/manage/batch',
+    pixel: 23.5,
+  },
 ];
 
 function LinkSelector({ location, permission }: ILinkSelector) {
   const [visible, setVisible] = useState<number>(0);
 
   useEffect(() => {
-    const [monitoring, organization, user, statistics, message, phone] =
+    const [monitoring, organization, user, statistics, message, phone, batch] =
       LINK_DATA;
     const { pathname } = location;
 
-    if (pathname === phone.path) {
+    if (pathname === batch.path) {
+      setVisible(6);
+    } else if (pathname === phone.path) {
       setVisible(5);
     } else if (pathname === message.path) {
       setVisible(4);

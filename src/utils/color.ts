@@ -28,6 +28,8 @@ export enum Colors {
   yellow = '#FFFF00',
   yellow1 = '#ecf8d0',
   yellow2 = '#FFC000',
+  yellow3 = '#FFFAA0',
+  yellow4 = '#FFD014',
   olive = '#808000',
   lime = '#00FF00',
   green = '#008000',
@@ -52,4 +54,5 @@ export enum Colors {
   navy2 = '#35383b',
   fuchsia = '#FF00FF',
   purple = '#800080',
+  orange = '#FE8800',
 }

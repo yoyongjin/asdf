@@ -1,4 +1,5 @@
 import AutoMessagePopup from './AutoMessagePopup';
+import BatchItem from './BatchItem';
 import ChangedPasswordForm from './ChangedPasswordForm';
 import Consultant from './Consultant';
 import DateRangePicker from './DateRangePikcer';
@@ -31,6 +32,7 @@ import UserLog from './UserLog';
 
 export {
   AutoMessagePopup,
+  BatchItem,
   ChangedPasswordForm,
   Consultant,
   DateRangePicker,
