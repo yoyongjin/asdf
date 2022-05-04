@@ -662,7 +662,7 @@ export const tableTitleAutoMessageStatistics = [...new Array(8)].map((v, i) => {
 /**
  * @description 자동 문자 설정 테이블 제목
  */
-export const tableTitleSettingAutoMessage = [...new Array(5)].map((v, i) => {
+export const tableTitleSettingAutoMessage = [...new Array(6)].map((v, i) => {
   const property = {
     fontFamily: 'Malgun Gothic',
     fontSize: 12,
@@ -704,6 +704,11 @@ export const tableTitleSettingAutoMessage = [...new Array(5)].map((v, i) => {
 
       break;
     }
+    case 5: {
+      property.width = 10;
+
+      break;
+    }
   }
 
   return property;
@@ -712,7 +717,7 @@ export const tableTitleSettingAutoMessage = [...new Array(5)].map((v, i) => {
 /**
  * @description 메시지 발송 수량 설정 테이블 제목
  */
-export const tableTitleSettingMessageCount = [...new Array(5)].map((v, i) => {
+export const tableTitleSettingMessageCount = [...new Array(4)].map((v, i) => {
   const property = {
     fontFamily: 'Malgun Gothic',
     fontSize: 12,
