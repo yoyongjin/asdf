@@ -38,8 +38,6 @@ const tabTitle = [
   },
 ];
 
-const defaultPageCount = 10;
-
 const StyledWrapper = styled.div`
   height: 100%;
   width: 100%;
@@ -62,6 +60,13 @@ const StyledFooter = styled.div`
   justify-content: center;
 `;
 
+const selectBoxPageLimitOption = [...new Array(3)].map((values, index) => {
+  return {
+    id: 5 * (index + 1),
+    data: `${5 * (index + 1)}`,
+  };
+});
+
 function MessageView() {
   const [selectedAutoMessage, setSelectedAutoMessage] =
     useState<IAutoMessageItem | null>(null);
@@ -72,6 +77,7 @@ function MessageView() {
       loginInfo.admin_id < USER_TYPE.ADMIN
         ? loginInfo.branch_id
         : constants.DEFAULT_ID, // 센터 관리자부터 하위 관리자들은 자신의 센터만 볼 수 있다.
+    limit: 15,
   });
   const { branches, getBranches } = useOrganization();
   const {
@@ -86,7 +92,13 @@ function MessageView() {
     modifySmsCount,
   } = useMessage();
   const { visible, onClickVisible } = useVisible();
-  const { maxAutoMessage, page, onClickNextPage, onClickPrevPage } = usePage();
+  const {
+    maxAutoMessage,
+    page,
+    onChangeCurrentPage,
+    onClickNextPage,
+    onClickPrevPage,
+  } = usePage();
   const {
     addAutoMessageStatus,
     modifyAutoMessageStatus,
@@ -418,8 +430,30 @@ function MessageView() {
       },
     };
 
-    return [selectConfig1];
-  }, [branchSelectOption, form.branch, loginInfo.admin_id, onChangeSelect]);
+    const selectConfig2 = {
+      type: 'select',
+      data: {
+        name: 'limit',
+        onChange: onChangeSelect,
+        options: selectBoxPageLimitOption,
+        value: form.limit,
+      },
+      styles: {
+        borderColor: Colors.gray7,
+        borderRadius: 12.5,
+        fontColor: Colors.gray4,
+        width: 50,
+      },
+    }; // 페이지 개수
+
+    return [selectConfig1, selectConfig2];
+  }, [
+    branchSelectOption,
+    form.branch,
+    form.limit,
+    loginInfo.admin_id,
+    onChangeSelect,
+  ]);
 
   /**
    * @description 타이틀에 들어갈 tab 정보들
@@ -451,7 +485,20 @@ function MessageView() {
       },
     };
 
-    return [textConfig1];
+    const textConfig2 = {
+      type: 'text',
+      data: {
+        text: '조회 개수 : ',
+      },
+      styles: {
+        fontColor: Colors.gray1,
+        fontFamily: 'Malgun Gothic',
+        fontSize: 12,
+        minWidth: 30,
+      },
+    };
+
+    return [textConfig1, textConfig2];
   }, []);
 
   /**
@@ -463,7 +510,9 @@ function MessageView() {
       if (type === 1) {
         const renderData = [];
 
-        renderData.push(...titleSelectData);
+        const [selectConfig1] = titleSelectData;
+
+        renderData.push(selectConfig1);
 
         return {
           renderConfig: renderData,
@@ -475,7 +524,9 @@ function MessageView() {
 
         if (selectedTabIndex === 1) {
           // 발송 수량 설정 화면에 설명 text 필요
-          renderData.push(...titleTextData);
+          const [textConfig1] = titleTextData;
+
+          renderData.push(textConfig1);
         }
 
         const renderStyle = [];
@@ -509,23 +560,52 @@ function MessageView() {
       if (type === 1) {
       } else if (type === 2) {
         const renderData = [];
+        const renderStyle = [];
 
-        if (loginInfo.admin_id >= constants.ADMIN.ADD_AUTO_MESSAGE) {
-          // 로그인 유저의 권한이 정의된 자동 문자 추가 권한보다 클 경우
-          renderData.push(...titleButtonData);
+        if (selectedTabIndex === 0) {
+          // 자동 문자 설정
+          const [selectConfig1, selectConfig2] = titleSelectData;
+          const [textConfig1, textConfig2] = titleTextData;
+
+          renderData.push(textConfig2);
+          renderData.push(selectConfig2);
+
+          if (loginInfo.admin_id >= constants.ADMIN.ADD_AUTO_MESSAGE) {
+            // 로그인 유저의 권한이 정의된 자동 문자 추가 권한보다 클 경우
+            renderData.push(...titleButtonData);
+          }
+
+          for (let i = 0; i < renderData.length; i++) {
+            const defaultRenderStyle = {
+              paddingRight: 0,
+            };
+
+            if (i === 0) {
+              defaultRenderStyle.paddingRight = 10;
+            }
+
+            if (i === 1) {
+              defaultRenderStyle.paddingRight = 20;
+            }
+
+            renderStyle.push(defaultRenderStyle);
+          }
+
+          return {
+            renderConfig: renderData,
+            renderStyle,
+          };
+        } else if (selectedTabIndex === 1) {
         }
-
-        if (selectedTabIndex === 1) {
-          // 발송 수량은 버튼이 필요 없음
-          renderData.pop();
-        }
-
-        return {
-          renderConfig: renderData,
-        };
       }
     },
-    [loginInfo.admin_id, selectedTabIndex, titleButtonData],
+    [
+      loginInfo.admin_id,
+      selectedTabIndex,
+      titleButtonData,
+      titleSelectData,
+      titleTextData,
+    ],
   );
 
   /**
@@ -591,13 +671,14 @@ function MessageView() {
           !addAutoMessageStatus &&
           !modifyAutoMessageStatus
         ) {
-          getAutoMessage(branchId, page, defaultPageCount);
+          getAutoMessage(branchId, page, form.limit);
         }
       }
     }
   }, [
     addAutoMessageStatus,
     form.branch,
+    form.limit,
     getAutoMessage,
     loginInfo.admin_id,
     loginInfo.branch_id,
@@ -614,6 +695,18 @@ function MessageView() {
       getSmsCount();
     }
   }, [getSmsCount, selectedTabIndex]);
+
+  /**
+   * @description 현재 페이지가 최대 페이지보다 큰 경우 현재 페이지를 최대 페이지로 변경
+   */
+  useEffect(() => {
+    if (!loginInfo.id) {
+      // 비로그인인 경우
+      return;
+    }
+
+    onChangeCurrentPage(page, maxAutoMessage, form.limit);
+  }, [form.limit, loginInfo.id, maxAutoMessage, onChangeCurrentPage, page]);
 
   return (
     <>
@@ -659,7 +752,7 @@ function MessageView() {
             // 자동 문자
             <TablePagination
               count={maxAutoMessage}
-              divide={defaultPageCount}
+              divide={form.limit}
               curPage={page}
               onClickNextPage={onClickNextPage}
               onClickPrevPage={onClickPrevPage}
