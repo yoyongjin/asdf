@@ -194,6 +194,9 @@ function MessageView() {
                 fontColor: commonColor,
               },
               type: 'text-slide-toggle',
+              propertyStyles: {
+                paddingLeft: 10,
+              },
             };
           }
 
@@ -227,6 +230,9 @@ function MessageView() {
           width: 6.8,
         },
         type: 'button',
+        propertyStyles: {
+          paddingLeft: 10,
+        },
       };
 
       const modifyData = {
@@ -326,6 +332,7 @@ function MessageView() {
         type: 'button',
         propertyStyles: {
           textAlign: 'right',
+          paddingRight: 10,
         },
       };
 
