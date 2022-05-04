@@ -72,11 +72,8 @@ function MessageView() {
     useState<IAutoMessageItem | null>(null);
   const { loginInfo } = useAuth();
   const { onChangeSelectedTabIndex, selectedTabIndex } = useTab();
-  const { form, onChangeSelect } = useInputForm({
-    branch:
-      loginInfo.admin_id < USER_TYPE.ADMIN
-        ? loginInfo.branch_id
-        : constants.DEFAULT_ID, // 센터 관리자부터 하위 관리자들은 자신의 센터만 볼 수 있다.
+  const { form, onChangeSelect, setSpecificValue } = useInputForm({
+    branch: constants.DEFAULT_ID,
     limit: 15,
   });
   const { branches, getBranches } = useOrganization();
@@ -714,6 +711,16 @@ function MessageView() {
 
     onChangeCurrentPage(page, maxAutoMessage, form.limit);
   }, [form.limit, loginInfo.id, maxAutoMessage, onChangeCurrentPage, page]);
+
+  useEffect(() => {
+    if (!loginInfo.id) {
+      return;
+    }
+
+    if (loginInfo.admin_id < USER_TYPE.ADMIN) {
+      setSpecificValue('branch', loginInfo.branch_id);
+    }
+  }, [loginInfo.admin_id, loginInfo.branch_id, loginInfo.id, setSpecificValue]);
 
   return (
     <>
