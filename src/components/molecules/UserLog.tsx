@@ -65,8 +65,7 @@ function UserLog({ loginTime, userName, onClickLogout }: UserLogProps) {
         />
         <StyledText>
           <Text fontColor={Colors.green1} fontSize={12} fontWeight={700}>
-            {`${Utils.getYYYYMMDD(loginTime)} 
-            ${Utils.getHourMinSecByTimestamp(loginTime)}`}
+            {`${Utils.getFullDate(loginTime)}`}
           </Text>
         </StyledText>
       </StyledLoginTime>
