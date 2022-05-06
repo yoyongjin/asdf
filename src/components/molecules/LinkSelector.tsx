@@ -1,4 +1,5 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import _ from 'lodash';
+import React, { useState, useEffect, Fragment, useMemo } from 'react';
 import styled, { css } from 'styled-components';
 import { Location } from 'history';
 
@@ -32,43 +33,45 @@ const StyledLink = styled.span<IStyledLink>`
 
 const LINK_DATA = [
   {
-    isVisible: true,
+    isVisible: constants.VISIBLE_MENU.MONITORING,
     name: '모니터링',
     path: '/main',
     pixel: 0,
   },
   {
-    isVisible: !constants.IS_AUTO_ORGANISMS,
+    isVisible: constants.VISIBLE_MENU.ORGANISMS,
     name: '조직 관리',
     path: '/main/manage/organization',
     pixel: 23.5,
   },
   {
-    isVisible: true,
+    isVisible: constants.VISIBLE_MENU.USER,
     name: '사용자 관리',
     path: '/main/manage/user',
     pixel: 18,
   },
   {
-    isVisible: true,
+    isVisible: constants.VISIBLE_MENU.STATISTICS,
     name: '통 계',
     path: '/main/manage/stat',
     pixel: 23.5,
   },
   {
-    isVisible: constants.AUTO_MESSAGE_VERSION !== AUTO_MESSAGE_VERSION.ONE,
+    isVisible:
+      constants.VISIBLE_MENU.MESSAGE &&
+      constants.AUTO_MESSAGE_VERSION !== AUTO_MESSAGE_VERSION.ONE,
     name: '문자 설정',
     path: '/main/manage/message',
     pixel: 23.5,
   },
   {
-    isVisible: true,
+    isVisible: constants.VISIBLE_MENU.PHONE,
     name: '법인폰 관리',
     path: '/main/manage/phone',
     pixel: 23.5,
   },
   {
-    isVisible: true,
+    isVisible: constants.VISIBLE_MENU.BATCH,
     name: '배치',
     path: '/main/manage/batch',
     pixel: 23.5,
@@ -100,10 +103,28 @@ function LinkSelector({ location, permission }: ILinkSelector) {
     }
   }, [location]);
 
+  const links = useMemo(() => {
+    const linkData = _.cloneDeep(LINK_DATA);
+    const [monitoring, organization, user, statistics, message, phone, batch] =
+      linkData;
+
+    if (permission < constants.ADMIN.SHOW_BATCH_ADMIN) {
+      // 설정된 권한보다 로그인 권한이 작을 경우
+      batch.isVisible = false;
+    }
+
+    if (permission < constants.ADMIN.SHOW_PHONE_INFO_ADMIN) {
+      // 설정된 권한보다 로그인 권한이 작을 경우
+      phone.isVisible = false;
+    }
+
+    return [monitoring, organization, user, statistics, message, phone, batch];
+  }, [permission]);
+
   return (
     <StyledWrapper>
       {permission !== USER_TYPE.CONSULTANT &&
-        LINK_DATA.map((data, index) => {
+        links.map((data, index) => {
           if (!data.isVisible) {
             // 화면에서 보이지 않도록 하기
             return null;

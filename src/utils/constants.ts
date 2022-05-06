@@ -165,8 +165,15 @@ export default {
   PAGE: 1,
   COOKIE_NAME: '4d751c5adb209285c49f2140e1cfb01c',
   AUTO_MESSAGE_VERSION: Number(process.env.REACT_APP_AUTO_MESSAGE_VERSION) || 1,
-  IS_AUTO_ORGANISMS: process.env.REACT_APP_IS_AUTO_ORGANISMS === 'true',
-  IS_AUTO_USER: process.env.REACT_APP_IS_AUTO_USER === 'true',
+  VISIBLE_MENU: {
+    MONITORING: process.env.REACT_APP_VISIBLE_MONITORING_MENU === 'true',
+    ORGANISMS: process.env.REACT_APP_VISIBLE_ORGANISMS_MENU === 'true',
+    USER: process.env.REACT_APP_VISIBLE_USER_MENU === 'true',
+    STATISTICS: process.env.REACT_APP_VISIBLE_STATISTICS_MENU === 'true',
+    MESSAGE: process.env.REACT_APP_VISIBLE_MESSAGE_MENU === 'true',
+    PHONE: process.env.REACT_APP_VISIBLE_PHONE_MENU === 'true',
+    BATCH: process.env.REACT_APP_VISIBLE_BATCH_MENU === 'true',
+  },
   DEFAULT_ID: -1,
   PARSING_KEY: 'YxAdwk22Fx',
   ADMIN: {
@@ -213,5 +220,17 @@ export default {
         USER_TYPE.SUPER_ADMIN
         ? Number(process.env.REACT_APP_MODIFY_MESSAGE_COUNT_ADMIN)
         : USER_TYPE.SUPER_ADMIN, // 발송 문자 수량 수정 권한
+    SHOW_PHONE_INFO_ADMIN:
+      Number(process.env.REACT_APP_SHOW_PHONE_INFO_ADMIN) >=
+        USER_TYPE.CONSULTANT &&
+      Number(process.env.REACT_APP_SHOW_PHONE_INFO_ADMIN) <=
+        USER_TYPE.SUPER_ADMIN
+        ? Number(process.env.REACT_APP_SHOW_PHONE_INFO_ADMIN)
+        : USER_TYPE.SUPER_ADMIN,
+    SHOW_BATCH_ADMIN:
+      Number(process.env.REACT_APP_SHOW_BATCH_ADMIN) >= USER_TYPE.CONSULTANT &&
+      Number(process.env.REACT_APP_SHOW_BATCH_ADMIN) <= USER_TYPE.SUPER_ADMIN
+        ? Number(process.env.REACT_APP_SHOW_BATCH_ADMIN)
+        : USER_TYPE.SUPER_ADMIN,
   },
 };
