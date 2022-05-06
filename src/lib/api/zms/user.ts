@@ -181,7 +181,6 @@ class User {
     name: string,
     userName?: string,
     number?: string,
-    originNumber?: string,
     pcip?: string,
     ip?: string,
     mac?: string,
@@ -190,10 +189,6 @@ class User {
     availableTime?: string,
     inMessage?: string,
     outMessage?: string,
-    telecom?: string,
-    plan?: string,
-    used?: number,
-    serialNumber?: string,
   ) {
     try {
       const token = Main.getAccessToken();
@@ -212,10 +207,6 @@ class User {
 
       if (number) {
         payload.number = number;
-      }
-
-      if (originNumber) {
-        payload.origin_number = originNumber;
       }
 
       if (pcip) {
@@ -248,22 +239,6 @@ class User {
 
       if (outMessage) {
         payload.out_message = outMessage;
-      }
-
-      if (telecom) {
-        payload.telecom = telecom;
-      }
-
-      if (serialNumber) {
-        payload.serial_number = serialNumber;
-      }
-
-      if (plan) {
-        payload.plan = plan;
-      }
-
-      if (used !== USED_PHONE_STATUS.DEFAULT) {
-        payload.used = used;
       }
 
       const { data } = await APIManager.patch(

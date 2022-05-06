@@ -110,7 +110,6 @@ function useUser() {
       name: string,
       id?: string,
       number?: string,
-      originNumber?: string,
       pcip?: string,
       ip?: string,
       mac?: string,
@@ -119,10 +118,6 @@ function useUser() {
       availableTime?: string,
       inMessage?: string,
       outMessage?: string,
-      telecom?: string,
-      plan?: string,
-      usedPhone?: number,
-      serialNumber?: string,
     ) => {
       const payload = {
         id: key,
@@ -132,7 +127,6 @@ function useUser() {
         name,
         user_name: id,
         number: number?.replace(/-/g, ''),
-        origin_number: originNumber,
         pc_ip: pcip,
         ziboxip: ip,
         ziboxmac: mac,
@@ -141,10 +135,6 @@ function useUser() {
         available_time: availableTime,
         in_message: inMessage,
         out_message: outMessage,
-        telecom,
-        plan,
-        used: usedPhone,
-        serial_number: serialNumber,
       };
 
       dispatch(requestModifyUser(payload));
@@ -218,7 +208,6 @@ export type TOnClickModifyUser = (
   name: string,
   id?: string,
   number?: string,
-  origin_number?: string,
   pcip?: string,
   ip?: string,
   mac?: string,
@@ -227,10 +216,6 @@ export type TOnClickModifyUser = (
   availableTime?: string,
   inMessage?: string,
   outMessage?: string,
-  telecom?: string,
-  plan?: string,
-  usedPhone?: number,
-  serialNumber?: string,
 ) => void;
 
 export type THandleRemoveUser = (id: number) => void;

@@ -137,7 +137,6 @@ function* modifyUserProcess(action: ReturnType<typeof requestModifyUser>) {
     name,
     user_name,
     number,
-    origin_number,
     pc_ip,
     ziboxip,
     ziboxmac,
@@ -146,10 +145,6 @@ function* modifyUserProcess(action: ReturnType<typeof requestModifyUser>) {
     available_time,
     in_message,
     out_message,
-    telecom,
-    plan,
-    used,
-    serial_number,
   } = action.payload;
 
   const response: ResponseSuccessData | ResponseFailureData = yield call(
@@ -161,7 +156,6 @@ function* modifyUserProcess(action: ReturnType<typeof requestModifyUser>) {
     name,
     user_name,
     number,
-    origin_number,
     pc_ip,
     ziboxip,
     ziboxmac,
@@ -170,10 +164,6 @@ function* modifyUserProcess(action: ReturnType<typeof requestModifyUser>) {
     available_time,
     in_message,
     out_message,
-    telecom,
-    plan,
-    used,
-    serial_number,
   );
 
   if (response.status === API_FETCH.SUCCESS) {

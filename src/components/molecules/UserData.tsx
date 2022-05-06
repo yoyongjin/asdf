@@ -24,7 +24,6 @@ import constants, {
   AUTO_MESSAGE_VERSION,
   COMPANY_TYPE,
   REG_EXR,
-  USED_PHONE_STATUS,
   USER_TYPE,
   ZIBOX_TRANSPORT,
   ZIBOX_VERSION,
@@ -339,7 +338,6 @@ function UserData({
     let branchId = loginData.branch_id; // 센터
     let teamId = loginData.team_id; // 팀
     let number = ''; // 전화번호
-    let originNumber = ''; // 변경 전 전화번호
     let pcIp = ''; // 상담원 pc IP
     let ziBoxIp = ''; // 지박스 IP
     let ziBoxMac = ''; // 지박스 MAC
@@ -348,14 +346,9 @@ function UserData({
     let availableTime = ''; // 업무 이용 가능 시간
     let inMessage = ''; // 업무 내 메시지 내용
     let outMessage = ''; // 업무 외 메시지 내용
-    let telecom = ''; // 통신사
-    let plan = ''; // 요금제
-    let usedPhone = USED_PHONE_STATUS.DEFAULT; // 폰 사용 여부
-    let serialNumber = ''; // 일련번호
 
     if (form.admin === USER_TYPE.CONSULTANT) {
       number = form.number;
-      originNumber = userData?.number || '';
       ziBoxMac = form.zibox_mac;
       pcIp = form.pc_ip;
       ziBoxIp = form.zibox_ip;
@@ -364,13 +357,6 @@ function UserData({
       availableTime = form.available_time;
       inMessage = form.in_message;
       outMessage = form.out_message;
-      telecom = form.telecom;
-      plan = form.plan;
-      usedPhone =
-        form.used_phone === USED_PHONE_STATUS.DEFAULT
-          ? USED_PHONE_STATUS.OPEN
-          : form.used_phone; // 초기 정보가 없을 때 미선택 시, 무조건 개통 상태로 보내도록 예외처리
-      serialNumber = form.serial_number;
     }
 
     if (loginData.admin_id > USER_TYPE.BRANCH_ADMIN) {
@@ -426,7 +412,6 @@ function UserData({
         name,
         id,
         number,
-        originNumber,
         pcIp,
         ziBoxIp,
         ziBoxMac,
@@ -435,10 +420,6 @@ function UserData({
         availableTime,
         inMessage,
         outMessage,
-        telecom,
-        plan,
-        usedPhone,
-        serialNumber,
       );
 
       onClickVisible();
@@ -470,11 +451,7 @@ function UserData({
     form.number,
     form.out_message,
     form.pc_ip,
-    form.plan,
-    form.serial_number,
     form.team,
-    form.telecom,
-    form.used_phone,
     form.zibox_ip,
     form.zibox_mac,
     form.zibox_mic,

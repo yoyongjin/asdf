@@ -217,14 +217,9 @@ export interface RequestAddUser {
 
 export interface RequestModifyUser extends RequestAddUser {
   id: number;
-  origin_number?: string;
   available_time?: string;
   in_message?: string;
   out_message?: string;
-  telecom?: string;
-  plan?: string;
-  used?: number;
-  serial_number?: string;
 }
 
 export interface RequestRemoveUser {
