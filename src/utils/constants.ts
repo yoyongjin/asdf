@@ -227,6 +227,20 @@ export default {
         USER_TYPE.SUPER_ADMIN
         ? Number(process.env.REACT_APP_SHOW_PHONE_INFO_ADMIN)
         : USER_TYPE.SUPER_ADMIN,
+    MODIFY_PHONE_INFO_ADMIN:
+      Number(process.env.REACT_APP_MODIFY_PHONE_INFO_ADMIN) >=
+        USER_TYPE.CONSULTANT &&
+      Number(process.env.REACT_APP_MODIFY_PHONE_INFO_ADMIN) <=
+        USER_TYPE.SUPER_ADMIN
+        ? Number(process.env.REACT_APP_MODIFY_PHONE_INFO_ADMIN)
+        : USER_TYPE.SUPER_ADMIN,
+    REMOVE_PHONE_INFO_ADMIN:
+      Number(process.env.REACT_APP_REMOVE_PHONE_INFO_ADMIN) >=
+        USER_TYPE.CONSULTANT &&
+      Number(process.env.REACT_APP_REMOVE_PHONE_INFO_ADMIN) <=
+        USER_TYPE.SUPER_ADMIN
+        ? Number(process.env.REACT_APP_REMOVE_PHONE_INFO_ADMIN)
+        : USER_TYPE.SUPER_ADMIN,
     SHOW_BATCH_ADMIN:
       Number(process.env.REACT_APP_SHOW_BATCH_ADMIN) >= USER_TYPE.CONSULTANT &&
       Number(process.env.REACT_APP_SHOW_BATCH_ADMIN) <= USER_TYPE.SUPER_ADMIN

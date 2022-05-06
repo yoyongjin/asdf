@@ -5,6 +5,8 @@ import {
   IRequestGetAllPhoneInfo,
   IRequestGetPhoneInfoParams,
   IRequestGetPlanParams,
+  IRequestModifyPhoneInfo,
+  IRequestRemovePhoneInfo,
   IResponseGetAllPhoneInfo,
   ITelecomItem,
   ITelecomPlnaItem,
@@ -64,6 +66,34 @@ export const requestGetPhones =
 export const successGetPhones =
   createAction(SUCCESS_GET_PHONES)<IResponseGetAllPhoneInfo>();
 export const failureGetPhones = createAction(FAILURE_GET_PHONES)<string>();
+
+// 휴대폰에 대한 정보 변경하기
+export const REQUEST_MODIFY_PHONE_INFO = 'REQUEST_MODIFY_PHONE_INFO';
+export const SUCCESS_MODIFY_PHONE_INFO = 'SUCCESS_MODIFY_PHONE_INFO';
+export const FAILURE_MODIFY_PHONE_INFO = 'FAILURE_MODIFY_PHONE_INFO';
+
+// 휴대폰에 대한 정보 변경하기 Action
+export const requestModifyPhoneInfo = createAction(
+  REQUEST_MODIFY_PHONE_INFO,
+)<IRequestModifyPhoneInfo>();
+export const successModifyPhoneInfo = createAction(SUCCESS_MODIFY_PHONE_INFO)();
+export const failureModifyPhoneInfo = createAction(
+  FAILURE_MODIFY_PHONE_INFO,
+)<string>();
+
+// 휴대폰에 대한 정보 삭제하기
+export const REQUEST_REMOVE_PHONE_INFO = 'REQUEST_REMOVE_PHONE_INFO';
+export const SUCCESS_REMOVE_PHONE_INFO = 'SUCCESS_REMOVE_PHONE_INFO';
+export const FAILURE_REMOVE_PHONE_INFO = 'FAILURE_REMOVE_PHONE_INFO';
+
+// 휴대폰에 대한 정보 삭제하기 Action
+export const requestRemovePhoneInfo = createAction(
+  REQUEST_REMOVE_PHONE_INFO,
+)<IRequestRemovePhoneInfo>();
+export const successRemovePhoneInfo = createAction(SUCCESS_REMOVE_PHONE_INFO)();
+export const failureRemovePhoneInfo = createAction(
+  FAILURE_REMOVE_PHONE_INFO,
+)<string>();
 
 // 아래는 내부적으로 사용될 Actions
 

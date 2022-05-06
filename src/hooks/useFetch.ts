@@ -18,12 +18,20 @@ function useFetch() {
   const removeUserStatus = useSelector(
     (state: RootState) => state.user.request.removeUser.fetch,
   );
+  const modifyPhoneInfoStatus = useSelector(
+    (state: RootState) => state.phone.request.modifyPhoneInfo.fetch,
+  ); // 휴대폰 정보 수정 API 상태
+  const removePhoneInfoStatus = useSelector(
+    (state: RootState) => state.phone.request.removePhoneInfo.fetch,
+  ); // 휴대폰 정보 삭제 API 상태
 
   return {
     addAutoMessageStatus,
     modifyAutoMessageStatus,
     removeAutoMessageStatus,
     removeUserStatus,
+    modifyPhoneInfoStatus,
+    removePhoneInfoStatus,
   };
 }
 

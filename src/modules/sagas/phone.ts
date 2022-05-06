@@ -5,18 +5,26 @@ import {
   failureGetPhones,
   failureGetPlanByTelecom,
   failureGetTelecom,
+  failureModifyPhoneInfo,
+  failureRemovePhoneInfo,
   requestGetPhoneInfo,
   requestGetPhones,
   requestGetPlanByTelecom,
   requestGetTelecom,
+  requestModifyPhoneInfo,
+  requestRemovePhoneInfo,
   REQUEST_GET_PHONES,
   REQUEST_GET_PHONE_INFO,
   REQUEST_GET_PLAN_BY_TELECOM,
   REQUEST_GET_TELECOM,
+  REQUEST_MODIFY_PHONE_INFO,
+  REQUEST_REMOVE_PHONE_INFO,
   successGetPhoneInfo,
   successGetPhones,
   successGetPlanByTelecom,
   successGetTelecom,
+  successModifyPhoneInfo,
+  successRemovePhoneInfo,
 } from 'modules/actions/phone';
 import ZMSPhone from 'lib/api/zms/phone';
 import { ResponseFailureData, ResponseSuccessData } from 'types/common';
@@ -117,6 +125,62 @@ function* getTelecomProcess(action: ReturnType<typeof requestGetTelecom>) {
   Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
+function* modifyPhoneInfoProcess(
+  action: ReturnType<typeof requestModifyPhoneInfo>,
+) {
+  const { id, number, plan, telecom, used } = action.payload;
+
+  const response: ResponseSuccessData | ResponseFailureData = yield call(
+    ZMSPhone.modifyPhoneInfo,
+    id,
+    number,
+    telecom,
+    plan,
+    used,
+  );
+
+  if (response.status === API_FETCH.SUCCESS) {
+    const { data } = response as ResponseSuccessData;
+
+    yield put(successModifyPhoneInfo());
+
+    Toast.success('수정 완료😊');
+
+    return;
+  }
+
+  const { error_msg } = response as ResponseFailureData;
+  yield put(failureModifyPhoneInfo(error_msg));
+
+  Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
+}
+
+function* removePhoneInfoProcess(
+  action: ReturnType<typeof requestRemovePhoneInfo>,
+) {
+  const { id } = action.payload;
+
+  const response: ResponseSuccessData | ResponseFailureData = yield call(
+    ZMSPhone.removePhoneInfo,
+    id,
+  );
+
+  if (response.status === API_FETCH.SUCCESS) {
+    const { data } = response as ResponseSuccessData;
+
+    yield put(successRemovePhoneInfo());
+
+    Toast.success('삭제 완료😊');
+
+    return;
+  }
+
+  const { error_msg } = response as ResponseFailureData;
+  yield put(failureRemovePhoneInfo(error_msg));
+
+  Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
+}
+
 function* watchGetPhones() {
   yield takeLatest(REQUEST_GET_PHONES, getPhonesProcess);
 }
@@ -133,12 +197,22 @@ function* watchGetTelecom() {
   yield takeLatest(REQUEST_GET_TELECOM, getTelecomProcess);
 }
 
+function* watchModifyPhoneInfo() {
+  yield takeLatest(REQUEST_MODIFY_PHONE_INFO, modifyPhoneInfoProcess);
+}
+
+function* watchRemovePhoneInfo() {
+  yield takeLatest(REQUEST_REMOVE_PHONE_INFO, removePhoneInfoProcess);
+}
+
 function* phoneSaga() {
   yield all([
     fork(watchGetPhones),
     fork(watchGetPhoneInfo),
     fork(watchGetPlanByTelecom),
     fork(watchGetTelecom),
+    fork(watchModifyPhoneInfo),
+    fork(watchRemovePhoneInfo),
   ]);
 }
 

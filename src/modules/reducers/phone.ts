@@ -44,6 +44,14 @@ const initialState: IPhoneState = {
       fetch: false,
       error: '',
     },
+    modifyPhoneInfo: {
+      fetch: false,
+      error: '',
+    },
+    removePhoneInfo: {
+      fetch: false,
+      error: '',
+    },
   },
   telecoms: defaultTelecomValue,
   plans: defaultPlanByTelecomValue,
@@ -81,6 +89,20 @@ const userReducer = createReducer<IPhoneState, TPhoneAction>(initialState, {
       draft.request.getTelecom.error = action.payload;
     });
   },
+  [types.FAILURE_MODIFY_PHONE_INFO]: (state, action) => {
+    // 휴대폰 정보 변경하기 실패
+    return produce(state, (draft) => {
+      draft.request.modifyPhoneInfo.fetch = false;
+      draft.request.modifyPhoneInfo.error = action.payload;
+    });
+  },
+  [types.FAILURE_REMOVE_PHONE_INFO]: (state, action) => {
+    // 휴대폰 정보 삭제하기 실패
+    return produce(state, (draft) => {
+      draft.request.removePhoneInfo.fetch = false;
+      draft.request.removePhoneInfo.error = action.payload;
+    });
+  },
   [types.REQUEST_GET_PHONE_INFO]: (state, action) => {
     // 휴대전화 정보 가져오기 요청
     return produce(state, (draft) => {
@@ -103,6 +125,18 @@ const userReducer = createReducer<IPhoneState, TPhoneAction>(initialState, {
     // 통신사 가져오기 요청
     return produce(state, (draft) => {
       draft.request.getTelecom.fetch = true;
+    });
+  },
+  [types.REQUEST_MODIFY_PHONE_INFO]: (state, action) => {
+    // 휴대폰 정보 변경하기 요청
+    return produce(state, (draft) => {
+      draft.request.modifyPhoneInfo.fetch = true;
+    });
+  },
+  [types.REQUEST_REMOVE_PHONE_INFO]: (state, action) => {
+    // 휴대폰 정보 삭제하기 요청
+    return produce(state, (draft) => {
+      draft.request.removePhoneInfo.fetch = true;
     });
   },
   [types.SET_INITIALIZE_PHONE_INFO]: (state, action) => {
@@ -150,6 +184,20 @@ const userReducer = createReducer<IPhoneState, TPhoneAction>(initialState, {
 
       draft.phones = action.payload.list;
       draft.phonesAllCount = action.payload.cnt;
+    });
+  },
+  [types.SUCCESS_MODIFY_PHONE_INFO]: (state, action) => {
+    // 휴대전화 정보 수정하기 성공
+    return produce(state, (draft) => {
+      draft.request.modifyPhoneInfo.fetch = false;
+      draft.request.modifyPhoneInfo.error = '';
+    });
+  },
+  [types.SUCCESS_REMOVE_PHONE_INFO]: (state, action) => {
+    // 휴대전화 정보 삭제하기 성공
+    return produce(state, (draft) => {
+      draft.request.removePhoneInfo.fetch = false;
+      draft.request.removePhoneInfo.error = '';
     });
   },
 });

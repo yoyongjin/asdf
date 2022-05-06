@@ -7,6 +7,8 @@ import {
   requestGetPhones,
   requestGetPlanByTelecom,
   requestGetTelecom,
+  requestModifyPhoneInfo,
+  requestRemovePhoneInfo,
   setInitializePhoneInfo,
 } from 'modules/actions/phone';
 
@@ -81,6 +83,38 @@ function usePhone() {
     [dispatch],
   );
 
+  const modifyPhoneInfo = useCallback(
+    (
+      id: number,
+      number: string,
+      telecom: string,
+      plan: string,
+      used: number,
+    ) => {
+      const payload = {
+        id,
+        number,
+        plan,
+        telecom,
+        used,
+      };
+
+      dispatch(requestModifyPhoneInfo(payload));
+    },
+    [dispatch],
+  );
+
+  const removePhoneInfo = useCallback(
+    (id: number) => {
+      const payload = {
+        id,
+      };
+
+      dispatch(requestRemovePhoneInfo(payload));
+    },
+    [dispatch],
+  );
+
   return {
     getPhoneInfo,
     getPlan,
@@ -91,7 +125,11 @@ function usePhone() {
     plans,
     telecoms,
     phones,
+    modifyPhoneInfo,
+    removePhoneInfo,
   };
 }
 
 export default usePhone;
+
+export type TRemovePhoneInfo = (id: number) => void;

@@ -152,6 +152,95 @@ class Phone {
       return false;
     }
   }
+
+  /**
+   * @description 휴대폰 정보 수정하기
+   * @param id 수정될 휴대폰 정보의 ID
+   * @param number 전화번호
+   * @param telecom 통신사
+   * @param plan 요금제
+   * @param used 사용 여부
+   */
+  static async modifyPhoneInfo(
+    id: number,
+    number: string,
+    telecom: string,
+    plan: string,
+    used: number,
+  ) {
+    const params = {
+      number,
+      telecom,
+      plan,
+      used,
+    };
+
+    try {
+      const token = Main.getAccessToken();
+
+      const { data } = await APIManager.patch(
+        `${url.zms.api.path.modify_phone_info}/${id}`,
+        params,
+        {
+          token,
+        },
+      );
+      Logger.log('Modify Phone Info Data', JSON.stringify(data));
+
+      return data;
+    } catch (error) {
+      if (error instanceof Error) {
+        const isSuccess = APIManager.isError(error);
+
+        if (isSuccess) {
+          const info = APIManager.error(error);
+          Logger.log(JSON.stringify(info));
+
+          return info;
+        }
+
+        throw error;
+      }
+
+      return false;
+    }
+  }
+
+  /**
+   * @description 휴대폰 정보 삭제하기
+   * @param id 삭제될 휴대폰 정보의 ID
+   */
+  static async removePhoneInfo(id: number) {
+    try {
+      const token = Main.getAccessToken();
+
+      const { data } = await APIManager.delete(
+        `${url.zms.api.path.modify_phone_info}/${id}`,
+        null,
+        {
+          token,
+        },
+      );
+      Logger.log('Remove Phone Info Data', JSON.stringify(data));
+
+      return data;
+    } catch (error) {
+      if (error instanceof Error) {
+        const isSuccess = APIManager.isError(error);
+
+        if (isSuccess) {
+          const info = APIManager.error(error);
+          Logger.log(JSON.stringify(info));
+
+          return info;
+        }
+
+        throw error;
+      }
+
+      return false;
+    }
+  }
 }
 
 export default Phone;

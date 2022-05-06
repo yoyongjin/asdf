@@ -8,8 +8,11 @@ import { TOnClickVisible } from 'hooks/useVisible';
 import { Colors } from 'utils/color';
 import TextSelect from './TextSelect';
 import usePhone from 'hooks/usePhone';
+import { LoginData } from 'types/auth';
 import { IPhoneItem } from 'types/phone';
 import Utils from 'utils/new_utils';
+import constants, { USER_TYPE } from 'utils/constants';
+import Toast from 'utils/toast';
 
 const selectData = [
   { id: 1, name: 'telecom', value: '통신사' },
@@ -54,10 +57,11 @@ const StyledFooter = styled.div`
 
 function PhoneInfoPopup({
   isVisible,
+  loginInfo,
   onClickVisible,
   phoneInfo,
 }: IPhoneInfoPopup) {
-  const { getPlan, getTelecom, plans, telecoms } = usePhone();
+  const { getPlan, getTelecom, plans, telecoms, modifyPhoneInfo } = usePhone();
 
   const initializedData = useMemo(() => {
     return {
@@ -172,6 +176,75 @@ function PhoneInfoPopup({
     }
   }, []);
 
+  /**
+   * @description validate check
+   */
+  const isValidationValue = useCallback(
+    (number: string, telecom: string, plan: string) => {
+      if (!number || !number.trim()) {
+        Toast.warning('전화번호는 필수 입력값이에요.🙄');
+
+        return false;
+      }
+
+      if (!telecom || !telecom.trim()) {
+        Toast.warning('통신사를 선택해주세요.🙄');
+
+        return false;
+      }
+
+      if (!plan || !plan.trim()) {
+        Toast.warning('요금제를 선택해주세요.🙄');
+
+        return false;
+      }
+
+      return true;
+    },
+    [],
+  );
+
+  const setPhoneInfo = useCallback(() => {
+    const id = phoneInfo?.id ?? constants.DEFAULT_ID;
+
+    if (id === constants.DEFAULT_ID) {
+      return;
+    }
+
+    const isSuccess = isValidationValue(form.number, form.telecom, form.plan);
+
+    if (!isSuccess) {
+      return;
+    }
+
+    if (phoneInfo && phoneInfo.id) {
+      // 사용자 정보가 있을 경우 업데이트
+      if (loginInfo.admin_id < constants.ADMIN.MODIFY_PHONE_INFO_ADMIN) {
+        // 로그인 유저의 권한이 정의된 휴대폰 수정 권한보다 작을 경우
+        Toast.warning('수정할 수 없는 권한입니다🙄');
+
+        return false;
+      }
+
+      modifyPhoneInfo(
+        id,
+        form.number,
+        form.telecom,
+        form.plan,
+        form.used_phone,
+      );
+    }
+  }, [
+    form.number,
+    form.plan,
+    form.telecom,
+    form.used_phone,
+    isValidationValue,
+    loginInfo.admin_id,
+    modifyPhoneInfo,
+    phoneInfo,
+  ]);
+
   useEffect(() => {
     if (isVisible) {
       setInitializedForm(initializedData);
@@ -265,6 +338,24 @@ function PhoneInfoPopup({
         })}
       </StyledContent>
       <StyledFooter>
+        {loginInfo.admin_id > USER_TYPE.CONSULTANT && (
+          <Button
+            bgColor={Colors.blue4}
+            customStyle="float:right;"
+            height={2.6}
+            onClick={setPhoneInfo}
+            width={7}
+          >
+            <Text
+              fontColor={Colors.white}
+              fontFamily="NanumBarunGothic"
+              fontSize={14}
+              fontWeight={700}
+            >
+              저장
+            </Text>
+          </Button>
+        )}
         <Button
           width={7}
           height={2.6}
@@ -291,6 +382,7 @@ function PhoneInfoPopup({
 
 interface IPhoneInfoPopup {
   isVisible: boolean;
+  loginInfo: LoginData;
   onClickVisible: TOnClickVisible;
   phoneInfo: IPhoneItem | null;
 }

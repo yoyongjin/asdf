@@ -45,6 +45,8 @@ export default {
         sync_ksvc: '/api/cron/ksvc',
         sync_ip: '/api/cron/sync-vdi-ip',
         sync_phone_info: '/api/cron/sync-phone-info',
+        modify_phone_info: '/api/phone',
+        remove_phone_info: '/api/phone',
       },
     },
   },

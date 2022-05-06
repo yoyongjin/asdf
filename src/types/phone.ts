@@ -19,6 +19,8 @@ export interface IRequestType {
   getPlanByTelecom: common.FetchType;
   getPhoneInfo: common.FetchType;
   getPhones: common.FetchType;
+  modifyPhoneInfo: common.FetchType;
+  removePhoneInfo: common.FetchType;
 }
 
 export interface ITelecomItem {
@@ -64,6 +66,18 @@ export interface IRequestGetAllPhoneInfo {
   page: number; // 페이지 수
   page_count: number; // limit
   search_text: string; // 검색어
+}
+
+export interface IRequestModifyPhoneInfo {
+  id: number;
+  number: string;
+  plan: string;
+  telecom: string;
+  used: number;
+}
+
+export interface IRequestRemovePhoneInfo {
+  id: number;
 }
 
 export interface IResponseGetAllPhoneInfo {

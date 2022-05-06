@@ -5,7 +5,10 @@ import { Button, Image, Input, Text } from 'components/atoms';
 import { MenuList, TextSlideToggle } from 'components/molecules';
 import { IMenuItem } from 'components/molecules/MenuList';
 import { TOnClickModifyAutoMessagePopup } from 'components/organisms/MessageView';
-import { THandlePhoneInfoPopup } from 'components/organisms/PhoneView';
+import {
+  THandlePhoneInfoPopup,
+  THandleRemovePhoneInfo,
+} from 'components/organisms/PhoneView';
 import useInputForm, { TonChangeInput } from 'hooks/useInputForm';
 import useHover from 'hooks/useHover';
 import { Colors } from 'utils/color';
@@ -84,6 +87,8 @@ function TableProperty({
 
             if (key === 10) {
               (data.onClick as THandlePhoneInfoPopup)(_originItem);
+            } else if (key === 11) {
+              (data.onClick as THandleRemovePhoneInfo)(_originItem.id);
             }
           }
         }

@@ -15,6 +15,9 @@ import { IPhoneItem } from 'types/phone';
 import { Colors } from 'utils/color';
 import { tableTitlePhoneManagement } from 'utils/table/title';
 import TableRow from 'utils/table/row';
+import useFetch from 'hooks/useFetch';
+import constants from 'utils/constants';
+import Toast from 'utils/toast';
 
 const StyledWrapper = styled.div`
   height: 100%;
@@ -57,7 +60,7 @@ function PhoneView() {
     match: false, // 할당여부
     limit: 15, // 페이징 개수
   });
-  const { phones, getPhones } = usePhone();
+  const { phones, getPhones, removePhoneInfo } = usePhone();
   const {
     maxPhones,
     page,
@@ -65,6 +68,7 @@ function PhoneView() {
     onClickNextPage,
     onClickPrevPage,
   } = usePage();
+  const { modifyPhoneInfoStatus, removePhoneInfoStatus } = useFetch();
 
   /**
    * @description 팝업 클릭 시 선택된 휴대폰의 정보 설정
@@ -75,6 +79,22 @@ function PhoneView() {
       onClickVisible();
     },
     [onClickVisible],
+  );
+
+  /**
+   * @description 팝업 클릭 시 선택된 휴대폰의 정보 삭제
+   */
+  const handleRemovePhoneInfo = useCallback(
+    (id: number) => {
+      if (loginInfo.admin_id < constants.ADMIN.REMOVE_PHONE_INFO_ADMIN) {
+        Toast.warning('삭제 권한이 없습니다.🙄');
+
+        return;
+      }
+
+      removePhoneInfo(id);
+    },
+    [loginInfo.admin_id, removePhoneInfo],
   );
 
   /**
@@ -178,7 +198,7 @@ function PhoneView() {
       const removeData = {
         data: {
           text: '삭제',
-          // onClick: handleRemoveAutoMessage,
+          onClick: handleRemovePhoneInfo,
         },
         styles: {
           backgroundColor: Colors.white,
@@ -201,7 +221,7 @@ function PhoneView() {
 
       return userInfoItems;
     });
-  }, [handlePhoneInfoPopup, phones]);
+  }, [handlePhoneInfoPopup, handleRemovePhoneInfo, phones]);
 
   /**
    * @description 사용자 관리 테이 내용 정보들
@@ -442,8 +462,24 @@ function PhoneView() {
   }, []);
 
   useEffect(() => {
-    getPhones(form.match, page, form.limit, searchText);
-  }, [form.limit, form.match, getPhones, page, searchText]);
+    if (!loginInfo.id) {
+      // 비로그인인 경우
+      return;
+    }
+
+    if (!modifyPhoneInfoStatus && !removePhoneInfoStatus) {
+      getPhones(form.match, page, form.limit, searchText);
+    }
+  }, [
+    form.limit,
+    form.match,
+    getPhones,
+    loginInfo.id,
+    modifyPhoneInfoStatus,
+    page,
+    removePhoneInfoStatus,
+    searchText,
+  ]);
 
   /**
    * @description 현재 페이지가 최대 페이지보다 큰 경우 현재 페이지를 최대 페이지로 변경
@@ -499,6 +535,7 @@ function PhoneView() {
         Component={
           <PhoneInfoPopup
             isVisible={visible}
+            loginInfo={loginInfo}
             onClickVisible={onClickVisible}
             phoneInfo={selectedPhoneInfo}
           />
@@ -517,5 +554,6 @@ function PhoneView() {
 PhoneView.defaultProps = {};
 
 export type THandlePhoneInfoPopup = (phoneInfo: IPhoneItem) => void;
+export type THandleRemovePhoneInfo = (id: number) => void;
 
 export default PhoneView;
