@@ -7,12 +7,12 @@ import { THandleRemoveUser, THandleResetPassword } from 'hooks/useUser';
 import { UserData } from 'types/user';
 import { Colors } from 'utils/color';
 
-const StyledWrapper = styled.ul`
+const StyledWrapper = styled.ul<IStyledWrapper>`
   height: 40px;
   list-style-type: none;
   position: absolute;
   right: 40px;
-  top: -60px;
+  top: -${(props) => props.visibleCount * 20}px;
   width: 100%;
 `;
 
@@ -38,9 +38,10 @@ function MenuList({
   textFontSize,
   textFontWeight,
   type,
+  visibleCount,
 }: IMenuList) {
   return (
-    <StyledWrapper>
+    <StyledWrapper visibleCount={visibleCount}>
       {menu.map((item, index) => {
         if (!item.isVisible) {
           return null;
@@ -104,6 +105,10 @@ function MenuList({
   );
 }
 
+export interface IStyledWrapper {
+  visibleCount: number;
+}
+
 export interface IMenuItem {
   id: number; // unique key
   isVisible: boolean; // 보일지말지 여부
@@ -122,6 +127,7 @@ interface IMenuList extends IMenuItemStyle {
   data?: any;
   menu: Array<IMenuItem>;
   type: string;
+  visibleCount: number;
 }
 
 MenuList.defaultProps = {

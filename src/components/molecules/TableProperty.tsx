@@ -131,11 +131,18 @@ function TableProperty({
 
   const OptionView = useCallback(
     (data: IOptionItem) => {
+      const count = data.menu.filter((values) => values.isVisible).length;
+
       return (
         <div onMouseEnter={onMouseIn} onMouseLeave={onMouseOut}>
           {isHover && (
             <StyledMenuWrapper>
-              <MenuList menu={data.menu} type={contentType} data={originItem} />
+              <MenuList
+                menu={data.menu}
+                visibleCount={count}
+                type={contentType}
+                data={originItem}
+              />
             </StyledMenuWrapper>
           )}
           {data.image && (
