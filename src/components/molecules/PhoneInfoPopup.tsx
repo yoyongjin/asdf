@@ -233,6 +233,8 @@ function PhoneInfoPopup({
         form.plan,
         form.used_phone,
       );
+
+      onClickVisible();
     }
   }, [
     form.number,
@@ -242,6 +244,7 @@ function PhoneInfoPopup({
     isValidationValue,
     loginInfo.admin_id,
     modifyPhoneInfo,
+    onClickVisible,
     phoneInfo,
   ]);
 
