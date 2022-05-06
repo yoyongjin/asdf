@@ -148,7 +148,7 @@ class Utils {
   static getFullDate(
     timestamp: number,
     isSec = true,
-    delimYMD = ':',
+    delimYMD = '.',
     delimHMS = ':',
     space = ' ',
   ) {
