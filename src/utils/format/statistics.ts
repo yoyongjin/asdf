@@ -30,11 +30,11 @@ class Statistics {
       incoming_ring_time: incoming.ring_time,
       incoming_talk_time: incoming.talk_time,
       outcoming_total_call: outcoming.total_call,
-      outcoming_connect_call: outcoming.total_call,
-      outcoming_fail_call: outcoming.total_call,
-      outcoming_total_time: outcoming.total_call,
-      outcoming_ring_time: outcoming.total_call,
-      outcoming_talk_time: outcoming.total_call,
+      outcoming_connect_call: outcoming.connect_call,
+      outcoming_fail_call: outcoming.fail_call,
+      outcoming_total_time: outcoming.total_time,
+      outcoming_ring_time: outcoming.ring_time,
+      outcoming_talk_time: outcoming.talk_time,
     };
   }
 
@@ -63,11 +63,11 @@ class Statistics {
       incoming_ring_time: incoming.ring_time,
       incoming_talk_time: incoming.talk_time,
       outcoming_total_call: outcoming.total_call,
-      outcoming_connect_call: outcoming.total_call,
-      outcoming_fail_call: outcoming.total_call,
-      outcoming_total_time: outcoming.total_call,
-      outcoming_ring_time: outcoming.total_call,
-      outcoming_talk_time: outcoming.total_call,
+      outcoming_connect_call: outcoming.connect_call,
+      outcoming_fail_call: outcoming.fail_call,
+      outcoming_total_time: outcoming.total_time,
+      outcoming_ring_time: outcoming.ring_time,
+      outcoming_talk_time: outcoming.talk_time,
     };
   }
 }
