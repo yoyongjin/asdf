@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 
@@ -271,7 +272,7 @@ function Consultant({
               height={2.6}
               bgColor="inherit"
               image={startTappingIcon}
-              onClick={handleTapping}
+              onClick={_.debounce((e) => handleTapping(e), 1000)}
             >
               <Text fontColor={Colors.white} fontSize={13} fontWeight={800}>
                 감청
@@ -291,7 +292,7 @@ function Consultant({
                   bgColor="inherit"
                   image={stopTappingIcon}
                   borderRadius={0.81}
-                  onClick={handleTapping}
+                  onClick={_.debounce((e) => handleTapping(e), 1000)}
                 >
                   <Text fontColor={Colors.white} fontSize={13} fontWeight={800}>
                     감청 종료
