@@ -23,7 +23,7 @@ import callingIcon from 'images/icon-mnt-blue@2x.png';
 import startTappingIcon from 'images/zms/bt-mnt-listen-nor.png';
 import tappingIcon from 'images/zms/bt-mnt-listen-ing.png';
 import stopTappingIcon from 'images/zms/bt-mnt-listen-fin-nor.png';
-import loadingIcon from 'images/loading.svg';
+import loadingIcon from 'images/loading.gif';
 import { SetSeletedConsultantData } from 'components/organisms/MonitoringView';
 
 const StyledWrapper = styled.div`
@@ -239,7 +239,7 @@ function Consultant({
         consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.STOP_REQUEST
       ) {
         return (
-          <Image src={loadingIcon} alt={'loading'} width={75} height={26} />
+          <Image src={loadingIcon} alt={'loading'} width={27.5} height={25} />
         );
       }
 
