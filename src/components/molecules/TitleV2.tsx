@@ -1,9 +1,11 @@
 import React, { Fragment, useCallback } from 'react';
+import { IconType } from 'react-icons/lib';
 import styled, { css } from 'styled-components';
 
 import {
   Button,
   DatePicker,
+  Icon,
   Input,
   MultiSelect,
   Select,
@@ -143,6 +145,10 @@ function TitleV2({
     },
     [],
   );
+
+  const IconView = useCallback((data: IIconItem) => {
+    return <Icon ReactIcon={data.icon} onClick={data.onClick} />;
+  }, []);
 
   const InputView = useCallback(
     (key: number, data: IInputItem, styles?: IInputItemStyle) => {
@@ -295,6 +301,10 @@ function TitleV2({
             dateRangePickerStyles,
           );
         }
+        case 'icon': {
+          const iconData = data as IIconItem;
+          return IconView(iconData);
+        }
         case 'input': {
           const inputData = data as IInputItem;
           const inputStyles = styles as IInputItemStyle;
@@ -334,6 +344,7 @@ function TitleV2({
       ButtonView,
       DatePickerView,
       DateRangePickerView,
+      IconView,
       InputView,
       MultiSelectView,
       SearchBarView,
@@ -490,6 +501,11 @@ interface IButtonItem {
   onClick?: TOnClickVisible;
 }
 
+interface IIconItem {
+  icon: IconType;
+  onClick?: () => void;
+}
+
 // muli select 요소 정보
 interface IMultiSelectItem {
   disabled?: boolean;
@@ -575,6 +591,7 @@ interface IRenderConfig {
     | ICheckBoxItem
     | IDatePickerItem
     | IDateRangePickerItem
+    | IIconItem
     | IInputItem
     | IMultiSelectItem
     | ISearchBarItem
