@@ -130,7 +130,8 @@ function PhoneView() {
       const row = TableRow.getRowPhoneInfo(values);
 
       let backgroundColor = '';
-      if (!values.user_name) {
+      if (!values.tmr_cd) {
+        // 미할당 휴대폰
         backgroundColor = Colors.red1;
       }
 

@@ -510,14 +510,14 @@ class TableRow {
 
     const {
       branch_name,
-      name,
       number,
       plan,
       team_name,
       telecom,
+      tmr_cd,
+      tmr_name,
       updated_at,
       used,
-      user_name,
     } = contents;
 
     row.push(Utils.formatPhoneNumber(number)); // 전화번호
@@ -538,8 +538,8 @@ class TableRow {
 
     row.push(`${branch_name ?? ''}`); // 센터명
     row.push(`${team_name ?? ''}`); // 팀명
-    row.push(`${name ?? ''}`); // 사용자명
-    row.push(`${user_name ?? ''}`); // 아이디
+    row.push(`${tmr_name ?? ''}`); // 상담원명
+    row.push(`${tmr_cd ?? ''}`); // 상담원 코드
     row.push(updated_at); // 변경 일시
 
     return row;

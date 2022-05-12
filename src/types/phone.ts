@@ -43,14 +43,14 @@ export interface IPhoneInfoItem {
 export interface IPhoneItem {
   branch_name: string | null; // 센터명
   id: number; // key 값
-  name: string | null; // 유저명
   number: string; // 전화번호
   plan: string | null; // 요금제
   team_name: string | null; // 팀명
   telecom: string | null; // 통신사
+  tmr_cd: string | null; // 상담원 ID
+  tmr_name: string | null; // 상담원명
   updated_at: string; // 최근 변경일시
   used: number; // 개통 상태
-  user_name: string | null; // 유저 ID
 }
 
 export interface IRequestGetPlanParams {
