@@ -834,3 +834,82 @@ export const tableTitlePhoneManagement = [...new Array(12)].map((v, i) => {
 
   return property;
 });
+
+/**
+ * @description 휴대폰 내역 테이블 제목
+ */
+export const tableTitlePhoneHistory = [...new Array(12)].map((v, i) => {
+  const property = {
+    fontFamily: 'Malgun Gothic',
+    fontSize: 12,
+    isWidthPercent: true,
+    letterSpacing: -0.6,
+    paddingLeft: 10,
+    textAlign: 'left',
+    title: '',
+    width: 5,
+  };
+
+  switch (i) {
+    case 0: {
+      property.title = '법인폰 번호';
+      property.width = 10;
+
+      break;
+    }
+    case 1: {
+      property.title = '통신사';
+
+      break;
+    }
+    case 2: {
+      property.title = '요금제';
+      property.width = 10;
+
+      break;
+    }
+    case 3: {
+      property.title = '개통상태';
+
+      break;
+    }
+    case 4: {
+      property.title = '센터명';
+      property.width = 10;
+
+      break;
+    }
+    case 5: {
+      property.title = '팀명';
+      property.width = 10;
+
+      break;
+    }
+    case 6: {
+      property.title = 'TMR 명';
+      property.width = 5;
+
+      break;
+    }
+    case 7: {
+      property.title = 'TMR 코드';
+      property.width = 10;
+
+      break;
+    }
+    case 8: {
+      property.title = '최근 변경일시';
+      property.width = 10;
+
+      break;
+    }
+    case 9: {
+      property.title = '변경자';
+      property.width = 5;
+
+      break;
+    }
+  }
+
+  return property;
+});
