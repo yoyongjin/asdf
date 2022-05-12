@@ -206,8 +206,6 @@ const userReducer = createReducer<IPhoneState, TPhoneAction>(initialState, {
       draft.request.getPhones.fetch = false;
       draft.request.getPhones.error = '';
 
-      console.log(action.payload);
-
       draft.phones = action.payload.list;
       draft.phonesAllCount = action.payload.cnt;
     });
