@@ -44,6 +44,10 @@ const initialState: IPhoneState = {
       fetch: false,
       error: '',
     },
+    getPhoneHist: {
+      fetch: false,
+      error: '',
+    },
     modifyPhoneInfo: {
       fetch: false,
       error: '',
@@ -58,6 +62,8 @@ const initialState: IPhoneState = {
   info: defaultPhoneInfoValue,
   phones: [],
   phonesAllCount: 0,
+  phoneHist: [],
+  phoneHistAllCount: 0,
 };
 
 const userReducer = createReducer<IPhoneState, TPhoneAction>(initialState, {
@@ -103,6 +109,13 @@ const userReducer = createReducer<IPhoneState, TPhoneAction>(initialState, {
       draft.request.removePhoneInfo.error = action.payload;
     });
   },
+  [types.FAILURE_GET_PHONE_HIST]: (state, action) => {
+    // 휴대폰 이력 가져오기 실패
+    return produce(state, (draft) => {
+      draft.request.getPhoneHist.fetch = false;
+      draft.request.getPhoneHist.error = action.payload;
+    });
+  },
   [types.REQUEST_GET_PHONE_INFO]: (state, action) => {
     // 휴대전화 정보 가져오기 요청
     return produce(state, (draft) => {
@@ -137,6 +150,19 @@ const userReducer = createReducer<IPhoneState, TPhoneAction>(initialState, {
     // 휴대폰 정보 삭제하기 요청
     return produce(state, (draft) => {
       draft.request.removePhoneInfo.fetch = true;
+    });
+  },
+  [types.REQUEST_GET_PHONE_HIST]: (state, action) => {
+    // 휴대폰 이력 가져오기 요청
+    return produce(state, (draft) => {
+      draft.request.getPhoneHist.fetch = true;
+    });
+  },
+  [types.SET_INITIALIZE_PHONE_HISTORY]: (state, action) => {
+    // phone history 초기화하기
+    return produce(state, (draft) => {
+      draft.phoneHist = [];
+      draft.phoneHistAllCount = 0;
     });
   },
   [types.SET_INITIALIZE_PHONE_INFO]: (state, action) => {
@@ -198,6 +224,16 @@ const userReducer = createReducer<IPhoneState, TPhoneAction>(initialState, {
     return produce(state, (draft) => {
       draft.request.removePhoneInfo.fetch = false;
       draft.request.removePhoneInfo.error = '';
+    });
+  },
+  [types.SUCCESS_GET_PHONE_HIST]: (state, action) => {
+    // 휴대전화 이력 가져오기 성공
+    return produce(state, (draft) => {
+      draft.request.getPhoneHist.fetch = false;
+      draft.request.getPhoneHist.error = '';
+
+      draft.phoneHist = action.payload.list;
+      draft.phoneHistAllCount = action.payload.cnt;
     });
   },
 });

@@ -3,16 +3,19 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { RootState } from 'modules/reducers';
 import {
+  requestGetPhoneHist,
   requestGetPhoneInfo,
   requestGetPhones,
   requestGetPlanByTelecom,
   requestGetTelecom,
   requestModifyPhoneInfo,
   requestRemovePhoneInfo,
+  setInitializePhoneHistory,
   setInitializePhoneInfo,
 } from 'modules/actions/phone';
 
 function usePhone() {
+  const phoneHistory = useSelector((state: RootState) => state.phone.phoneHist);
   const phoneInfo = useSelector((state: RootState) => state.phone.info);
   const plans = useSelector((state: RootState) => state.phone.plans);
   const telecoms = useSelector((state: RootState) => state.phone.telecoms);
@@ -115,6 +118,23 @@ function usePhone() {
     [dispatch],
   );
 
+  const getPhoneHistory = useCallback(
+    (id: number, page: number, limit: number) => {
+      const payload = {
+        id,
+        page,
+        page_count: limit,
+      };
+
+      dispatch(requestGetPhoneHist(payload));
+    },
+    [dispatch],
+  );
+
+  const handleInitializePhoneHistory = useCallback(() => {
+    dispatch(setInitializePhoneHistory());
+  }, [dispatch]);
+
   return {
     getPhoneInfo,
     getPlan,
@@ -127,9 +147,13 @@ function usePhone() {
     phones,
     modifyPhoneInfo,
     removePhoneInfo,
+    getPhoneHistory,
+    phoneHistory,
+    handleInitializePhoneHistory,
   };
 }
 
 export default usePhone;
 
 export type TRemovePhoneInfo = (id: number) => void;
+export type TGetPhoneHist = (id: number, page: number, limit: number) => void;

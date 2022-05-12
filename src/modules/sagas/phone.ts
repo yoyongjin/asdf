@@ -1,12 +1,14 @@
 import { all, call, fork, takeLatest, put } from 'redux-saga/effects';
 
 import {
+  failureGetPhoneHist,
   failureGetPhoneInfo,
   failureGetPhones,
   failureGetPlanByTelecom,
   failureGetTelecom,
   failureModifyPhoneInfo,
   failureRemovePhoneInfo,
+  requestGetPhoneHist,
   requestGetPhoneInfo,
   requestGetPhones,
   requestGetPlanByTelecom,
@@ -14,11 +16,13 @@ import {
   requestModifyPhoneInfo,
   requestRemovePhoneInfo,
   REQUEST_GET_PHONES,
+  REQUEST_GET_PHONE_HIST,
   REQUEST_GET_PHONE_INFO,
   REQUEST_GET_PLAN_BY_TELECOM,
   REQUEST_GET_TELECOM,
   REQUEST_MODIFY_PHONE_INFO,
   REQUEST_REMOVE_PHONE_INFO,
+  successGetPhoneHist,
   successGetPhoneInfo,
   successGetPhones,
   successGetPlanByTelecom,
@@ -49,7 +53,11 @@ function* getPhonesProcess(action: ReturnType<typeof requestGetPhones>) {
 
     yield put(successGetPhones(data));
 
-    Toast.success('가져오기 완료😊');
+    if (data.cnt < 1) {
+      Toast.warning('데이터가 없습니다🙄');
+    } else {
+      Toast.success('가져오기 완료😊');
+    }
 
     return;
   }
@@ -181,6 +189,38 @@ function* removePhoneInfoProcess(
   Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
+function* getPhoneHistProcess(action: ReturnType<typeof requestGetPhoneHist>) {
+  const { id, page, page_count } = action.payload;
+
+  Toast.notification('잠시만 기다려주세요..🙄');
+
+  const response: ResponseSuccessData | ResponseFailureData = yield call(
+    ZMSPhone.getPhoneHist,
+    id,
+    page,
+    page_count,
+  );
+
+  if (response.status === API_FETCH.SUCCESS) {
+    const { data } = response as ResponseSuccessData;
+
+    yield put(successGetPhoneHist(data));
+
+    if (data.cnt < 1) {
+      Toast.warning('데이터가 없습니다🙄');
+    } else {
+      Toast.success('가져오기 완료😊');
+    }
+
+    return;
+  }
+
+  const { error_msg } = response as ResponseFailureData;
+  yield put(failureGetPhoneHist(error_msg));
+
+  Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
+}
+
 function* watchGetPhones() {
   yield takeLatest(REQUEST_GET_PHONES, getPhonesProcess);
 }
@@ -205,6 +245,10 @@ function* watchRemovePhoneInfo() {
   yield takeLatest(REQUEST_REMOVE_PHONE_INFO, removePhoneInfoProcess);
 }
 
+function* watchGetPhoneHist() {
+  yield takeLatest(REQUEST_GET_PHONE_HIST, getPhoneHistProcess);
+}
+
 function* phoneSaga() {
   yield all([
     fork(watchGetPhones),
@@ -213,6 +257,7 @@ function* phoneSaga() {
     fork(watchGetTelecom),
     fork(watchModifyPhoneInfo),
     fork(watchRemovePhoneInfo),
+    fork(watchGetPhoneHist),
   ]);
 }
 

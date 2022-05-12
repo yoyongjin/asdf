@@ -1,5 +1,5 @@
 import { IAutoMessageItem, IMaxMessageItem } from 'types/message';
-import { IPhoneItem } from 'types/phone';
+import { IPhoneHistItem, IPhoneItem } from 'types/phone';
 import {
   IAutoMessageStatisticsItem,
   ICustomCallStatisticeByConsultantItem,
@@ -541,6 +541,48 @@ class TableRow {
     row.push(`${tmr_name ?? ''}`); // 상담원명
     row.push(`${tmr_cd ?? ''}`); // 상담원 코드
     row.push(updated_at); // 변경 일시
+
+    return row;
+  }
+
+  static getRowPhoneHistory(contents: IPhoneHistItem) {
+    const row: Array<string> = [];
+
+    const {
+      branch_name,
+      name,
+      number,
+      plan,
+      team_name,
+      telecom,
+      tmr_cd,
+      tmr_name,
+      updated_at,
+      used,
+    } = contents;
+
+    row.push(Utils.formatPhoneNumber(number)); // 전화번호
+    row.push(`${telecom ?? ''}`); // 통신사
+    row.push(`${plan ?? ''}`); // 요금제
+
+    let open = '';
+    if (used === USED_PHONE_STATUS.OPEN) {
+      open = '개통';
+    } else if (used === USED_PHONE_STATUS.PAUSE) {
+      open = '일시정지';
+    } else if (used === USED_PHONE_STATUS.TERMINATION) {
+      open = '해지';
+    } else {
+      open = '알수없음';
+    }
+    row.push(open); // 개통상태
+
+    row.push(`${branch_name ?? ''}`); // 센터명
+    row.push(`${team_name ?? ''}`); // 팀명
+    row.push(`${tmr_name ?? ''}`); // 상담원명
+    row.push(`${tmr_cd ?? ''}`); // 상담원 코드
+    row.push(updated_at); // 변경 일시
+    row.push(name); // 변경자
 
     return row;
   }

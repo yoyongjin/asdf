@@ -7,6 +7,7 @@ import { IMenuItem } from 'components/molecules/MenuList';
 import { TOnClickModifyAutoMessagePopup } from 'components/organisms/MessageView';
 import {
   THandlePhoneInfoPopup,
+  THandlePhoneView,
   THandleRemovePhoneInfo,
 } from 'components/organisms/PhoneView';
 import useInputForm, { TonChangeInput } from 'hooks/useInputForm';
@@ -89,6 +90,11 @@ function TableProperty({
               (data.onClick as THandlePhoneInfoPopup)(_originItem);
             } else if (key === 11) {
               (data.onClick as THandleRemovePhoneInfo)(_originItem.id);
+            } else {
+              (data.onClick as THandlePhoneView)(
+                _originItem.id,
+                _originItem.number,
+              );
             }
           }
         }
@@ -360,7 +366,8 @@ interface IButtonItem {
     | TModifySmsCount
     | TRemoveAutoMessage
     | TOnClickModifyAutoMessagePopup
-    | THandlePhoneInfoPopup;
+    | THandlePhoneInfoPopup
+    | THandlePhoneView;
   text?: string;
 }
 

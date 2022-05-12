@@ -47,6 +47,7 @@ export default {
         sync_phone_info: '/api/cron/sync-phone-info',
         modify_phone_info: '/api/phone',
         remove_phone_info: '/api/phone',
+        get_phone_hist: '/api/phone/hist',
       },
     },
   },

@@ -27,6 +27,9 @@ function usePage() {
   const maxMessageStatistics = useSelector(
     (state: RootState) => state.statistics.messageStatisticsAllCount,
   );
+  const maxPhoneHist = useSelector(
+    (state: RootState) => state.phone.phoneHistAllCount,
+  );
   const [page, setPage] = useState<number>(1);
 
   const onChangeCurrentPage = useCallback(
@@ -80,6 +83,7 @@ function usePage() {
     onChangeCurrentPage,
     maxMessageStatistics,
     maxCallStatisticsByTeam,
+    maxPhoneHist,
   };
 }
 

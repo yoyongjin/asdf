@@ -3,11 +3,13 @@ import { createAction } from 'typesafe-actions';
 import {
   IPhoneInfoItem,
   IRequestGetAllPhoneInfo,
+  IRequestGetPhoneHist,
   IRequestGetPhoneInfoParams,
   IRequestGetPlanParams,
   IRequestModifyPhoneInfo,
   IRequestRemovePhoneInfo,
   IResponseGetAllPhoneInfo,
+  IResponseGetPhoneHist,
   ITelecomItem,
   ITelecomPlnaItem,
 } from 'types/phone';
@@ -95,8 +97,29 @@ export const failureRemovePhoneInfo = createAction(
   FAILURE_REMOVE_PHONE_INFO,
 )<string>();
 
+// 휴대폰에 대한 이력 가져오기
+export const REQUEST_GET_PHONE_HIST = 'REQUEST_GET_PHONE_HIST';
+export const SUCCESS_GET_PHONE_HIST = 'SUCCESS_GET_PHONE_HIST';
+export const FAILURE_GET_PHONE_HIST = 'FAILURE_GET_PHONE_HIST';
+
+// 휴대폰에 대한 이력 가져오기 Action
+export const requestGetPhoneHist = createAction(
+  REQUEST_GET_PHONE_HIST,
+)<IRequestGetPhoneHist>();
+export const successGetPhoneHist = createAction(
+  SUCCESS_GET_PHONE_HIST,
+)<IResponseGetPhoneHist>();
+export const failureGetPhoneHist = createAction(
+  FAILURE_GET_PHONE_HIST,
+)<string>();
+
 // 아래는 내부적으로 사용될 Actions
 
 // phone info 초기화하기
 export const SET_INITIALIZE_PHONE_INFO = 'SET_INITIALIZE_PHONE_INFO';
 export const setInitializePhoneInfo = createAction(SET_INITIALIZE_PHONE_INFO)();
+
+export const SET_INITIALIZE_PHONE_HISTORY = 'SET_INITIALIZE_PHONE_HISTORY';
+export const setInitializePhoneHistory = createAction(
+  SET_INITIALIZE_PHONE_HISTORY,
+)();

@@ -49,6 +49,45 @@ class Phone {
     }
   }
 
+  static async getPhoneHist(id: number, page: number, limit: number) {
+    const params = {
+      id,
+      page,
+      page_count: limit,
+    };
+
+    try {
+      const token = Main.getAccessToken();
+
+      const { data } = await APIManager.get(
+        url.zms.api.path.get_phone_hist,
+        params,
+        {
+          token,
+        },
+      );
+
+      Logger.log('Get Phone Hist Data', JSON.stringify(data));
+
+      return data;
+    } catch (error) {
+      if (error instanceof Error) {
+        const isSuccess = APIManager.isError(error);
+
+        if (isSuccess) {
+          const info = APIManager.error(error);
+          Logger.log(JSON.stringify(info));
+
+          return info;
+        }
+
+        throw error;
+      }
+
+      return false;
+    }
+  }
+
   static async getPhoneInfo(number: string) {
     const params = {
       number,

@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { MdKeyboardArrowLeft } from 'react-icons/md';
 import styled from 'styled-components';
 
 import { Modal } from 'components/atoms';
@@ -13,7 +14,10 @@ import usePhone from 'hooks/usePhone';
 import useVisible from 'hooks/useVisible';
 import { IPhoneItem } from 'types/phone';
 import { Colors } from 'utils/color';
-import { tableTitlePhoneManagement } from 'utils/table/title';
+import {
+  tableTitlePhoneHistory,
+  tableTitlePhoneManagement,
+} from 'utils/table/title';
 import TableRow from 'utils/table/row';
 import useFetch from 'hooks/useFetch';
 import constants from 'utils/constants';
@@ -54,19 +58,34 @@ function PhoneView() {
   const [selectedPhoneInfo, setSelectedPhoneInfo] = useState<IPhoneItem | null>(
     null,
   );
+  const [selectedNumber, setSelectedNumber] = useState<string>('');
   const { loginInfo } = useAuth();
   const { excelDownloadStatus } = useExcel();
   const { form, onChangeCheckBox, onChangeSelect } = useInputForm({
     match: false, // 할당여부
     limit: 15, // 페이징 개수
   });
-  const { phones, getPhones, removePhoneInfo } = usePhone();
+  const {
+    phones,
+    phoneHistory,
+    getPhones,
+    removePhoneInfo,
+    getPhoneHistory,
+    handleInitializePhoneHistory,
+  } = usePhone();
   const {
     maxPhones,
     page,
     onChangeCurrentPage,
     onClickNextPage,
     onClickPrevPage,
+  } = usePage();
+  const {
+    maxPhoneHist,
+    page: phoneHistPage,
+    onClickNextPage: onClickNextPagePhoneHist,
+    onClickPrevPage: onClickPrevPagePhoneHist,
+    onChangeCurrentPage: onChangeCurrentPagePhoneHist,
   } = usePage();
   const { modifyPhoneInfoStatus, removePhoneInfoStatus } = useFetch();
 
@@ -95,6 +114,19 @@ function PhoneView() {
       removePhoneInfo(id);
     },
     [loginInfo.admin_id, removePhoneInfo],
+  );
+
+  const handleInitPhoneView = useCallback(() => {
+    setSelectedNumber('');
+    handleInitializePhoneHistory();
+  }, [handleInitializePhoneHistory]);
+
+  const handlePhoneView = useCallback(
+    (id: number, number: string) => {
+      setSelectedNumber(number);
+      getPhoneHistory(id, page, form.limit);
+    },
+    [form.limit, getPhoneHistory, page],
   );
 
   /**
@@ -155,7 +187,7 @@ function PhoneView() {
       const historyData = {
         data: {
           text: '내역',
-          // onClick: onClickModifyAutoMessagePopup,
+          onClick: handlePhoneView,
         },
         styles: {
           backgroundColor: Colors.white,
@@ -222,7 +254,7 @@ function PhoneView() {
 
       return userInfoItems;
     });
-  }, [handlePhoneInfoPopup, handleRemovePhoneInfo, phones]);
+  }, [handlePhoneView, handlePhoneInfoPopup, handleRemovePhoneInfo, phones]);
 
   /**
    * @description 사용자 관리 테이 내용 정보들
@@ -237,6 +269,47 @@ function PhoneView() {
       type: 'phone-info',
     };
   }, [phones, tablePropertyPhoneInfo]);
+
+  /**
+   * @description 휴대폰 내역 테이블 상세 내용 정보들
+   */
+  const tablePropertyPhoneHistory = useMemo(() => {
+    return phoneHistory.map((values) => {
+      const row = TableRow.getRowPhoneHistory(values);
+
+      const userInfoItems: Array<ITableProperty> = row.map((value, index) => {
+        return {
+          data: {
+            text: value,
+          },
+          styles: {
+            fontFamily: 'Malgun Gothic',
+            fontSize: 12,
+          },
+          type: 'text',
+          propertyStyles: {
+            paddingLeft: 10,
+          },
+        };
+      });
+
+      return userInfoItems;
+    });
+  }, [phoneHistory]);
+
+  /**
+   * @description 휴대폰 내역 테이 내용 정보들
+   */
+  const tableContentPhoneHistory = useMemo(() => {
+    return {
+      data: tablePropertyPhoneHistory,
+      originData: phoneHistory,
+      styles: {
+        rowHeight: 50,
+      },
+      type: 'phone-history',
+    };
+  }, [phoneHistory, tablePropertyPhoneHistory]);
 
   /**
    * @description 타이틀에 들어갈 버튼 정보들
@@ -311,6 +384,21 @@ function PhoneView() {
   }, [form.limit, onChangeSelect]);
 
   /**
+   * @description 타이틀에 들어갈 icon 정보들
+   */
+  const titleIconData = useMemo(() => {
+    const iconConfig1 = {
+      type: 'icon',
+      data: {
+        icon: MdKeyboardArrowLeft,
+        onClick: handleInitPhoneView,
+      },
+    };
+
+    return [iconConfig1];
+  }, [handleInitPhoneView]);
+
+  /**
    * @description 타이틀에 들어갈 text + checkbox 정보들
    */
   const titleTextCheckBoxData = useMemo(() => {
@@ -358,8 +446,21 @@ function PhoneView() {
       },
     };
 
-    return [textConfig1, textConfig2];
-  }, []);
+    const textConfig3 = {
+      type: 'text',
+      data: {
+        text: `${selectedNumber} 법인폰 변경 내역`,
+      },
+      styles: {
+        fontColor: Colors.navy2,
+        fontFamily: 'Malgun Gothic',
+        fontSize: 18,
+        fontWeight: 800,
+      },
+    };
+
+    return [textConfig1, textConfig2, textConfig3];
+  }, [selectedNumber]);
 
   /**
    * @description 타이틀 왼쪽 요소 가져오기
@@ -371,16 +472,22 @@ function PhoneView() {
       } else if (type === 2) {
         const renderData = [];
 
-        const [textConfig1] = titleTextData;
+        const [textConfig1, textConfig2, textConfig3] = titleTextData;
 
-        renderData.push(textConfig1);
+        if (!selectedNumber) {
+          // 선택된 전화번호가 없을 경우
+          renderData.push(textConfig1);
+        } else {
+          renderData.push(...titleIconData);
+          renderData.push(textConfig3);
+        }
 
         return {
           renderConfig: renderData,
         };
       }
     },
-    [titleTextData],
+    [selectedNumber, titleIconData, titleTextData],
   );
 
   /**
@@ -405,34 +512,37 @@ function PhoneView() {
 
         const [textConfig1, textCofngi2] = titleTextData;
 
-        renderData.push(textCofngi2);
-        renderData.push(...titleSelectData);
-        renderData.push(...titleTextCheckBoxData);
-        renderData.push(...titleSearchBarData);
+        if (!selectedNumber) {
+          renderData.push(textCofngi2);
+          renderData.push(...titleSelectData);
+          renderData.push(...titleTextCheckBoxData);
+          renderData.push(...titleSearchBarData);
 
-        for (let i = 0; i < renderData.length; i++) {
-          const defaultRenderStyle = {
-            paddingRight: 0,
+          for (let i = 0; i < renderData.length; i++) {
+            const defaultRenderStyle = {
+              paddingRight: 0,
+            };
+
+            if (i === 0) {
+              defaultRenderStyle.paddingRight = 10;
+            }
+
+            if (i === 1 || i === 2) {
+              defaultRenderStyle.paddingRight = 18;
+            }
+
+            renderStyle.push(defaultRenderStyle);
+          }
+
+          return {
+            renderConfig: renderData,
+            renderStyle,
           };
-
-          if (i === 0) {
-            defaultRenderStyle.paddingRight = 10;
-          }
-
-          if (i === 1 || i === 2) {
-            defaultRenderStyle.paddingRight = 18;
-          }
-
-          renderStyle.push(defaultRenderStyle);
         }
-
-        return {
-          renderConfig: renderData,
-          renderStyle,
-        };
       }
     },
     [
+      selectedNumber,
       titleButtonData,
       titleSearchBarData,
       titleSelectData,
@@ -491,8 +601,24 @@ function PhoneView() {
       return;
     }
 
+    if (selectedNumber) {
+      onChangeCurrentPagePhoneHist(phoneHistPage, maxPhoneHist, form.limit);
+
+      return;
+    }
+
     onChangeCurrentPage(page, maxPhones, form.limit);
-  }, [maxPhones, form.limit, onChangeCurrentPage, page, loginInfo.id]);
+  }, [
+    maxPhones,
+    form.limit,
+    onChangeCurrentPage,
+    page,
+    loginInfo.id,
+    selectedNumber,
+    onChangeCurrentPagePhoneHist,
+    phoneHistPage,
+    maxPhoneHist,
+  ]);
 
   return (
     <>
@@ -512,23 +638,43 @@ function PhoneView() {
         </StyledTitle>
         <StyledContent>
           <div>
-            <Table
-              borderItem={tableHeadBorderStyle}
-              contents={tableContentPhoneInfo}
-              headColor={Colors.white}
-              headHeight={33.5}
-              titles={tableTitlePhoneManagement}
-            />
+            {selectedNumber ? (
+              <Table
+                borderItem={tableHeadBorderStyle}
+                contents={tableContentPhoneHistory}
+                headColor={Colors.white}
+                headHeight={33.5}
+                titles={tableTitlePhoneHistory}
+              />
+            ) : (
+              <Table
+                borderItem={tableHeadBorderStyle}
+                contents={tableContentPhoneInfo}
+                headColor={Colors.white}
+                headHeight={33.5}
+                titles={tableTitlePhoneManagement}
+              />
+            )}
           </div>
         </StyledContent>
         <StyledFooter>
-          <TablePagination
-            count={maxPhones}
-            divide={form.limit}
-            curPage={page}
-            onClickNextPage={onClickNextPage}
-            onClickPrevPage={onClickPrevPage}
-          />
+          {selectedNumber ? (
+            <TablePagination
+              count={maxPhoneHist}
+              divide={form.limit}
+              curPage={phoneHistPage}
+              onClickNextPage={onClickNextPagePhoneHist}
+              onClickPrevPage={onClickPrevPagePhoneHist}
+            />
+          ) : (
+            <TablePagination
+              count={maxPhones}
+              divide={form.limit}
+              curPage={page}
+              onClickNextPage={onClickNextPage}
+              onClickPrevPage={onClickPrevPage}
+            />
+          )}
         </StyledFooter>
       </StyledWrapper>
       <Modal
@@ -556,5 +702,6 @@ PhoneView.defaultProps = {};
 
 export type THandlePhoneInfoPopup = (phoneInfo: IPhoneItem) => void;
 export type THandleRemovePhoneInfo = (id: number) => void;
+export type THandlePhoneView = (id: number, number: string) => void;
 
 export default PhoneView;

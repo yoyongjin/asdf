@@ -11,7 +11,9 @@ export interface IPhoneState {
   plans: Array<ITelecomPlnaItem>; // 요금제
   info: IPhoneInfoItem; // phone 정보
   phones: Array<IPhoneItem>;
+  phoneHist: Array<IPhoneHistItem>;
   phonesAllCount: number;
+  phoneHistAllCount: number;
 }
 
 export interface IRequestType {
@@ -19,6 +21,7 @@ export interface IRequestType {
   getPlanByTelecom: common.FetchType;
   getPhoneInfo: common.FetchType;
   getPhones: common.FetchType;
+  getPhoneHist: common.FetchType;
   modifyPhoneInfo: common.FetchType;
   removePhoneInfo: common.FetchType;
 }
@@ -53,6 +56,10 @@ export interface IPhoneItem {
   used: number; // 개통 상태
 }
 
+export interface IPhoneHistItem extends IPhoneItem {
+  name: string; // 변경자
+}
+
 export interface IRequestGetPlanParams {
   telecom: string;
 }
@@ -80,7 +87,18 @@ export interface IRequestRemovePhoneInfo {
   id: number;
 }
 
+export interface IRequestGetPhoneHist {
+  id: number; // 법인폰 ID
+  page: number; // 페이지
+  page_count: number; // 개수
+}
+
 export interface IResponseGetAllPhoneInfo {
   cnt: number;
   list: Array<IPhoneItem>;
+}
+
+export interface IResponseGetPhoneHist {
+  cnt: number;
+  list: Array<IPhoneHistItem>;
 }
