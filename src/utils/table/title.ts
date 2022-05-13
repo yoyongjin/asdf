@@ -838,7 +838,7 @@ export const tableTitlePhoneManagement = [...new Array(12)].map((v, i) => {
 /**
  * @description 휴대폰 내역 테이블 제목
  */
-export const tableTitlePhoneHistory = [...new Array(12)].map((v, i) => {
+export const tableTitlePhoneHistory = [...new Array(10)].map((v, i) => {
   const property = {
     fontFamily: 'Malgun Gothic',
     fontSize: 12,
