@@ -243,7 +243,7 @@ function useCommunicator() {
             data = {
               monitoring_state: ZIBOX_MONIT_STATUS.DISABLE,
               number: targetData.key,
-              user_id: targetData.id,
+              user_id: -1,
               zibox_ip: targetData.ip,
             };
 
