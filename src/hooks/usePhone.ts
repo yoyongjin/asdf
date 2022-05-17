@@ -72,10 +72,12 @@ function usePhone() {
       isMatch: boolean,
       page: number,
       limit: number,
-      searchText: string = '',
+      searchText: string,
+      isExcel: boolean,
     ) => {
       const payload = {
         is_match: isMatch,
+        isExcel,
         page,
         page_count: limit,
         search_text: searchText,
@@ -119,9 +121,10 @@ function usePhone() {
   );
 
   const getPhoneHistory = useCallback(
-    (id: number, page: number, limit: number) => {
+    (id: number, page: number, limit: number, isExcel: boolean) => {
       const payload = {
         id,
+        isExcel,
         page,
         page_count: limit,
       };

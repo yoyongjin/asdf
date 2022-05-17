@@ -1,4 +1,4 @@
-import { all, call, fork, takeLatest, put } from 'redux-saga/effects';
+import { all, call, fork, takeLatest, put, delay } from 'redux-saga/effects';
 
 import {
   failureGetPhoneHist,
@@ -22,6 +22,8 @@ import {
   REQUEST_GET_TELECOM,
   REQUEST_MODIFY_PHONE_INFO,
   REQUEST_REMOVE_PHONE_INFO,
+  successGetAllPhoneHist,
+  successGetAllPhones,
   successGetPhoneHist,
   successGetPhoneInfo,
   successGetPhones,
@@ -34,22 +36,38 @@ import ZMSPhone from 'lib/api/zms/phone';
 import { ResponseFailureData, ResponseSuccessData } from 'types/common';
 import { API_FETCH } from 'utils/constants';
 import Toast from 'utils/toast';
+import { setExcelDownloadStatus } from 'modules/actions/statistics';
 
 function* getPhonesProcess(action: ReturnType<typeof requestGetPhones>) {
-  const { is_match, page, page_count, search_text } = action.payload;
+  const { is_match, isExcel, page, page_count, search_text } = action.payload;
 
   Toast.notification('잠시만 기다려주세요..🙄');
+
+  if (isExcel) {
+    yield put(setExcelDownloadStatus(true));
+    yield delay(500);
+    Toast.notification('최대 2분 정도 소요됩니다..😊');
+  }
 
   const response: ResponseSuccessData | ResponseFailureData = yield call(
     ZMSPhone.getPhones,
     is_match,
     page,
     page_count,
+    isExcel,
     search_text,
   );
 
   if (response.status === API_FETCH.SUCCESS) {
     const { data } = response as ResponseSuccessData;
+
+    if (isExcel) {
+      yield put(successGetAllPhones());
+
+      Toast.notification('엑셀 만들기를 시작합니다..😊');
+
+      return;
+    }
 
     yield put(successGetPhones(data));
 
@@ -190,19 +208,34 @@ function* removePhoneInfoProcess(
 }
 
 function* getPhoneHistProcess(action: ReturnType<typeof requestGetPhoneHist>) {
-  const { id, page, page_count } = action.payload;
+  const { id, isExcel, page, page_count } = action.payload;
 
   Toast.notification('잠시만 기다려주세요..🙄');
+
+  if (isExcel) {
+    yield put(setExcelDownloadStatus(true));
+    yield delay(500);
+    Toast.notification('최대 2분 정도 소요됩니다..😊');
+  }
 
   const response: ResponseSuccessData | ResponseFailureData = yield call(
     ZMSPhone.getPhoneHist,
     id,
     page,
     page_count,
+    isExcel,
   );
 
   if (response.status === API_FETCH.SUCCESS) {
     const { data } = response as ResponseSuccessData;
+
+    if (isExcel) {
+      yield put(successGetAllPhoneHist());
+
+      Toast.notification('엑셀 만들기를 시작합니다..😊');
+
+      return;
+    }
 
     yield put(successGetPhoneHist(data));
 

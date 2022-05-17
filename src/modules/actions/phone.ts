@@ -60,6 +60,7 @@ export const failureGetPhoneInfo = createAction(
 // 전체 휴대폰에 대한 정보 가져오기
 export const REQUEST_GET_PHONES = 'REQUEST_GET_PHONES';
 export const SUCCESS_GET_PHONES = 'SUCCESS_GET_PHONES';
+export const SUCCESS_GET_ALL_PHONES = 'SUCCESS_GET_ALL_PHONES';
 export const FAILURE_GET_PHONES = 'FAILURE_GET_PHONES';
 
 // 전체 휴대폰에 대한 정보 가져오기 Action
@@ -67,6 +68,7 @@ export const requestGetPhones =
   createAction(REQUEST_GET_PHONES)<IRequestGetAllPhoneInfo>();
 export const successGetPhones =
   createAction(SUCCESS_GET_PHONES)<IResponseGetAllPhoneInfo>();
+export const successGetAllPhones = createAction(SUCCESS_GET_ALL_PHONES)();
 export const failureGetPhones = createAction(FAILURE_GET_PHONES)<string>();
 
 // 휴대폰에 대한 정보 변경하기
@@ -100,6 +102,7 @@ export const failureRemovePhoneInfo = createAction(
 // 휴대폰에 대한 이력 가져오기
 export const REQUEST_GET_PHONE_HIST = 'REQUEST_GET_PHONE_HIST';
 export const SUCCESS_GET_PHONE_HIST = 'SUCCESS_GET_PHONE_HIST';
+export const SUCCESS_GET_ALL_PHONE_HIST = 'SUCCESS_GET_ALL_PHONE_HIST';
 export const FAILURE_GET_PHONE_HIST = 'FAILURE_GET_PHONE_HIST';
 
 // 휴대폰에 대한 이력 가져오기 Action
@@ -109,6 +112,9 @@ export const requestGetPhoneHist = createAction(
 export const successGetPhoneHist = createAction(
   SUCCESS_GET_PHONE_HIST,
 )<IResponseGetPhoneHist>();
+export const successGetAllPhoneHist = createAction(
+  SUCCESS_GET_ALL_PHONE_HIST,
+)();
 export const failureGetPhoneHist = createAction(
   FAILURE_GET_PHONE_HIST,
 )<string>();

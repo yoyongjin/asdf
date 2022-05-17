@@ -200,6 +200,12 @@ const userReducer = createReducer<IPhoneState, TPhoneAction>(initialState, {
       draft.request.getTelecom.error = '';
     });
   },
+  [types.SUCCESS_GET_ALL_PHONES]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.request.getPhones.fetch = false;
+      draft.request.getPhones.error = '';
+    });
+  },
   [types.SUCCESS_GET_PHONES]: (state, action) => {
     // 전체 휴대전화 정보 가져오기 성공
     return produce(state, (draft) => {
@@ -222,6 +228,13 @@ const userReducer = createReducer<IPhoneState, TPhoneAction>(initialState, {
     return produce(state, (draft) => {
       draft.request.removePhoneInfo.fetch = false;
       draft.request.removePhoneInfo.error = '';
+    });
+  },
+
+  [types.SUCCESS_GET_ALL_PHONE_HIST]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.request.getPhoneHist.fetch = false;
+      draft.request.getPhoneHist.error = '';
     });
   },
   [types.SUCCESS_GET_PHONE_HIST]: (state, action) => {

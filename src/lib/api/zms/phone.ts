@@ -8,10 +8,12 @@ class Phone {
     isMatch: boolean,
     page: number,
     limit: number,
+    isExcel: boolean,
     searchText: string = '',
   ) {
     const params = {
       is_match: isMatch,
+      isExcel,
       page,
       page_count: limit,
       search_text: searchText,
@@ -49,9 +51,15 @@ class Phone {
     }
   }
 
-  static async getPhoneHist(id: number, page: number, limit: number) {
+  static async getPhoneHist(
+    id: number,
+    page: number,
+    limit: number,
+    isExcel: boolean,
+  ) {
     const params = {
       id,
+      isExcel,
       page,
       page_count: limit,
     };

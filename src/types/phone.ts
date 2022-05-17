@@ -70,6 +70,7 @@ export interface IRequestGetPhoneInfoParams {
 
 export interface IRequestGetAllPhoneInfo {
   is_match: boolean; // 미할당 여부
+  isExcel: boolean; // 엑셀 여부
   page: number; // 페이지 수
   page_count: number; // limit
   search_text: string; // 검색어
@@ -89,6 +90,7 @@ export interface IRequestRemovePhoneInfo {
 
 export interface IRequestGetPhoneHist {
   id: number; // 법인폰 ID
+  isExcel: boolean; // 엑셀 여부
   page: number; // 페이지
   page_count: number; // 개수
 }

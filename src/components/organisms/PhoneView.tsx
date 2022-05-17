@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { MdKeyboardArrowLeft } from 'react-icons/md';
 import styled from 'styled-components';
@@ -58,7 +59,10 @@ function PhoneView() {
   const [selectedPhoneInfo, setSelectedPhoneInfo] = useState<IPhoneItem | null>(
     null,
   );
-  const [selectedNumber, setSelectedNumber] = useState<string>('');
+  const [selectedItem, setSelectedItem] = useState<{
+    id: number;
+    number: string;
+  } | null>();
   const { loginInfo } = useAuth();
   const { excelDownloadStatus } = useExcel();
   const { form, onChangeCheckBox, onChangeSelect } = useInputForm({
@@ -117,14 +121,19 @@ function PhoneView() {
   );
 
   const handleInitPhoneView = useCallback(() => {
-    setSelectedNumber('');
+    setSelectedItem(null);
     handleInitializePhoneHistory();
   }, [handleInitializePhoneHistory]);
 
-  const handlePhoneView = useCallback(
-    (id: number, number: string) => {
-      setSelectedNumber(number);
-      getPhoneHistory(id, page, form.limit);
+  const handlePhoneHistoryView = useCallback(
+    (id: number, number: string, isExcel = false) => {
+      if (!isExcel) {
+        setSelectedItem({
+          id,
+          number,
+        });
+      }
+      getPhoneHistory(id, page, form.limit, isExcel);
     },
     [form.limit, getPhoneHistory, page],
   );
@@ -187,7 +196,7 @@ function PhoneView() {
       const historyData = {
         data: {
           text: '내역',
-          onClick: handlePhoneView,
+          onClick: handlePhoneHistoryView,
         },
         styles: {
           backgroundColor: Colors.white,
@@ -254,7 +263,12 @@ function PhoneView() {
 
       return userInfoItems;
     });
-  }, [handlePhoneView, handlePhoneInfoPopup, handleRemovePhoneInfo, phones]);
+  }, [
+    handlePhoneHistoryView,
+    handlePhoneInfoPopup,
+    handleRemovePhoneInfo,
+    phones,
+  ]);
 
   /**
    * @description 사용자 관리 테이 내용 정보들
@@ -317,6 +331,19 @@ function PhoneView() {
   const titleButtonData = useMemo(() => {
     let onClickExcel: any;
 
+    if (selectedItem) {
+      onClickExcel = _.debounce(
+        () =>
+          handlePhoneHistoryView(selectedItem.id, selectedItem.number, true),
+        1000,
+      );
+    } else {
+      onClickExcel = _.debounce(
+        () => getPhones(form.match, page, form.limit, searchText, true),
+        1000,
+      );
+    }
+
     const buttonConfig1 = {
       type: 'button',
       data: {
@@ -339,7 +366,16 @@ function PhoneView() {
     };
 
     return [buttonConfig1];
-  }, [excelDownloadStatus]);
+  }, [
+    form.limit,
+    form.match,
+    getPhones,
+    handlePhoneHistoryView,
+    page,
+    excelDownloadStatus,
+    searchText,
+    selectedItem,
+  ]);
 
   /**
    * @description 타이틀에 들어갈 search bar 정보들
@@ -449,7 +485,7 @@ function PhoneView() {
     const textConfig3 = {
       type: 'text',
       data: {
-        text: `${selectedNumber} 법인폰 변경 내역`,
+        text: `${selectedItem && selectedItem.number} 법인폰 변경 내역`,
       },
       styles: {
         fontColor: Colors.navy2,
@@ -460,7 +496,7 @@ function PhoneView() {
     };
 
     return [textConfig1, textConfig2, textConfig3];
-  }, [selectedNumber]);
+  }, [selectedItem]);
 
   /**
    * @description 타이틀 왼쪽 요소 가져오기
@@ -474,7 +510,7 @@ function PhoneView() {
 
         const [textConfig1, textConfig2, textConfig3] = titleTextData;
 
-        if (!selectedNumber) {
+        if (!selectedItem) {
           // 선택된 전화번호가 없을 경우
           renderData.push(textConfig1);
         } else {
@@ -487,7 +523,7 @@ function PhoneView() {
         };
       }
     },
-    [selectedNumber, titleIconData, titleTextData],
+    [selectedItem, titleIconData, titleTextData],
   );
 
   /**
@@ -512,7 +548,7 @@ function PhoneView() {
 
         const [textConfig1, textCofngi2] = titleTextData;
 
-        if (!selectedNumber) {
+        if (!selectedItem) {
           renderData.push(textCofngi2);
           renderData.push(...titleSelectData);
           renderData.push(...titleTextCheckBoxData);
@@ -542,7 +578,7 @@ function PhoneView() {
       }
     },
     [
-      selectedNumber,
+      selectedItem,
       titleButtonData,
       titleSearchBarData,
       titleSelectData,
@@ -579,7 +615,7 @@ function PhoneView() {
     }
 
     if (!modifyPhoneInfoStatus && !removePhoneInfoStatus) {
-      getPhones(form.match, page, form.limit, searchText);
+      getPhones(form.match, page, form.limit, searchText, false);
     }
   }, [
     form.limit,
@@ -601,7 +637,7 @@ function PhoneView() {
       return;
     }
 
-    if (selectedNumber) {
+    if (selectedItem) {
       onChangeCurrentPagePhoneHist(phoneHistPage, maxPhoneHist, form.limit);
 
       return;
@@ -614,7 +650,7 @@ function PhoneView() {
     onChangeCurrentPage,
     page,
     loginInfo.id,
-    selectedNumber,
+    selectedItem,
     onChangeCurrentPagePhoneHist,
     phoneHistPage,
     maxPhoneHist,
@@ -638,7 +674,7 @@ function PhoneView() {
         </StyledTitle>
         <StyledContent>
           <div>
-            {selectedNumber ? (
+            {selectedItem ? (
               <Table
                 borderItem={tableHeadBorderStyle}
                 contents={tableContentPhoneHistory}
@@ -658,7 +694,7 @@ function PhoneView() {
           </div>
         </StyledContent>
         <StyledFooter>
-          {selectedNumber ? (
+          {selectedItem ? (
             <TablePagination
               count={maxPhoneHist}
               divide={form.limit}
