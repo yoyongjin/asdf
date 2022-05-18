@@ -84,6 +84,8 @@ function* syncKSVCProcess(action: ReturnType<typeof requestSyncKSVC>) {
 
   const { error_msg } = response as ResponseFailureData;
   yield put(failureSyncKSVC(error_msg));
+
+  Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
 function* syncIPProcess(action: ReturnType<typeof requestSyncIP>) {

@@ -24,6 +24,18 @@ function useFetch() {
   const removePhoneInfoStatus = useSelector(
     (state: RootState) => state.phone.request.removePhoneInfo.fetch,
   ); // 휴대폰 정보 삭제 API 상태
+  const syncBatchUserStatus = useSelector(
+    (state: RootState) => state.batch.request.syncBatchUser.fetch,
+  ); // 유저 배치 API 상태
+  const syncIPStatus = useSelector(
+    (state: RootState) => state.batch.request.syncIP.fetch,
+  ); // IP 배치 API 상태
+  const syncKSVCStatus = useSelector(
+    (state: RootState) => state.batch.request.syncKSVC.fetch,
+  ); // KSVC 배치 API 상태
+  const syncPhoneInfoStatus = useSelector(
+    (state: RootState) => state.batch.request.syncPhoneInfo.fetch,
+  ); // 휴대폰 정보 배치 API 상태
 
   return {
     addAutoMessageStatus,
@@ -32,6 +44,10 @@ function useFetch() {
     removeUserStatus,
     modifyPhoneInfoStatus,
     removePhoneInfoStatus,
+    syncBatchUserStatus,
+    syncIPStatus,
+    syncKSVCStatus,
+    syncPhoneInfoStatus,
   };
 }
 

@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import { Button, Text } from 'components/atoms';
 import useBatch from 'hooks/useBatch';
+import useFetch from 'hooks/useFetch';
 import { Colors } from 'utils/color';
 
 const buttonData = [
@@ -69,24 +70,43 @@ function BatchItem() {
     handleSyncKSVC,
     handleSyncPhoneInfo,
   } = useBatch();
+  const {
+    syncBatchUserStatus,
+    syncIPStatus,
+    syncKSVCStatus,
+    syncPhoneInfoStatus,
+  } = useFetch();
 
   return (
     <div>
       {buttonData.map((values) => {
         let onClick: any;
+        let text = '';
 
         if (values.id === 1) {
           // 조직, 인사 수동 배치
-          onClick = _.debounce(() => handleSyncBranchAndUser(), 1000);
+          onClick = syncBatchUserStatus
+            ? () => null
+            : _.debounce(() => handleSyncBranchAndUser(), 1000);
+          text = syncBatchUserStatus ? '처리중...' : values.value;
         } else if (values.id === 2) {
           // KSVC 수동 배치
-          onClick = _.debounce(() => handleSyncKSVC(), 1000);
+          onClick = syncKSVCStatus
+            ? () => null
+            : _.debounce(() => handleSyncKSVC(), 1000);
+          text = syncKSVCStatus ? '처리중...' : values.value;
         } else if (values.id === 3) {
           // IP 수동 배치
-          onClick = _.debounce(() => handleSyncIP(), 1000);
+          onClick = syncIPStatus
+            ? () => null
+            : _.debounce(() => handleSyncIP(), 1000);
+          text = syncIPStatus ? '처리중...' : values.value;
         } else if (values.id === 4) {
           // phone info 수동 배치
-          onClick = _.debounce(() => handleSyncPhoneInfo(), 1000);
+          onClick = syncPhoneInfoStatus
+            ? () => null
+            : _.debounce(() => handleSyncPhoneInfo(), 1000);
+          text = syncPhoneInfoStatus ? '처리중...' : values.value;
         }
 
         return (
@@ -104,7 +124,7 @@ function BatchItem() {
                 fontSize={values.fontSize}
                 fontWeight={values.fontWeight}
               >
-                {values.value}
+                {text}
               </Text>
             </Button>
           </StyledButtonWrapper>
