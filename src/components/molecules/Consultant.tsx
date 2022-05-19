@@ -3,7 +3,7 @@ import React, { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { Button, Image, Text } from 'components/atoms';
-import { changeTappingData, changeTappingStatus } from 'hooks/useMonitoring';
+import { changeTappingData } from 'hooks/useMonitoring';
 import { requestTapping, startTapping, stopTapping } from 'hooks/useZibox';
 import { LoginData, TappingTarget } from 'types/auth';
 import { UserData } from 'types/user';
@@ -64,7 +64,6 @@ function Consultant({
   loginData,
   setSeletedConsultantData,
   requestTapping,
-  changeTappingStatus,
   tappingTarget,
 }: ConsultantProps) {
   useEffect(() => {
@@ -493,7 +492,6 @@ interface ConsultantProps {
   tappingStatus: number;
   consultInfo: UserData;
   loginData: LoginData;
-  changeTappingStatus: changeTappingStatus;
   tappingTarget: TappingTarget;
   setSeletedConsultantData: SetSeletedConsultantData;
 }

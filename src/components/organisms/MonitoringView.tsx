@@ -60,12 +60,7 @@ function Monitoring({ location }: MonitoringProps) {
       left: 1.5,
       right: 1.5,
     });
-  const {
-    tappingStatus,
-    changeTappingData,
-    changeTappingStatus,
-    tappingTarget,
-  } = useMonitoring();
+  const { tappingStatus, changeTappingData, tappingTarget } = useMonitoring();
   const { consultantInfo, getUsers, onClickModifyUser } = useUser();
   const { visible, onClickVisible } = useVisible();
   const { requestTapping, startTapping, stopTapping, setVolume } = useZibox();
@@ -249,7 +244,6 @@ function Monitoring({ location }: MonitoringProps) {
             requestTapping={requestTapping}
             startTapping={startTapping}
             stopTapping={stopTapping}
-            changeTappingStatus={changeTappingStatus}
             tappingTarget={tappingTarget}
           />
         </StyledConsultant>
@@ -265,7 +259,6 @@ function Monitoring({ location }: MonitoringProps) {
       requestTapping,
       startTapping,
       stopTapping,
-      changeTappingStatus,
       tappingTarget,
     ],
   );
