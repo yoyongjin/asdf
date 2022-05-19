@@ -126,7 +126,9 @@ function Consultant({
       // 감청 중인 경우
       changeTappingData(
         2,
-        consultInfo.zibox_ip!,
+        constants.TRANSPORT === ZIBOX_TRANSPORT.OCX
+          ? consultInfo.pc_ip!
+          : consultInfo.zibox_ip!,
         consultInfo.id,
         consultInfo.number!,
       );
@@ -139,7 +141,9 @@ function Consultant({
       // 감청을 요청한 경우
       changeTappingData(
         1,
-        consultInfo.zibox_ip!,
+        constants.TRANSPORT === ZIBOX_TRANSPORT.OCX
+          ? consultInfo.pc_ip!
+          : consultInfo.zibox_ip!,
         consultInfo.id,
         consultInfo.number!,
       );
@@ -154,6 +158,7 @@ function Consultant({
     changeTappingData,
     consultInfo.id,
     consultInfo.number,
+    consultInfo.pc_ip,
     consultInfo.zibox,
     consultInfo.zibox_ip,
     loginData.id,
