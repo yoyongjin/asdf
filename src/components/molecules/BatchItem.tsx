@@ -65,17 +65,13 @@ const StyledButtonWrapper = styled.div`
 
 function BatchItem() {
   const {
+    ksvcProcessStatus,
     handleSyncBranchAndUser,
     handleSyncIP,
     handleSyncKSVC,
     handleSyncPhoneInfo,
   } = useBatch();
-  const {
-    syncBatchUserStatus,
-    syncIPStatus,
-    syncKSVCStatus,
-    syncPhoneInfoStatus,
-  } = useFetch();
+  const { syncBatchUserStatus, syncIPStatus, syncPhoneInfoStatus } = useFetch();
 
   return (
     <div>
@@ -91,10 +87,10 @@ function BatchItem() {
           text = syncBatchUserStatus ? '처리중...' : values.value;
         } else if (values.id === 2) {
           // KSVC 수동 배치
-          onClick = syncKSVCStatus
+          onClick = ksvcProcessStatus
             ? () => null
             : _.debounce(() => handleSyncKSVC(), 1000);
-          text = syncKSVCStatus ? '처리중...' : values.value;
+          text = ksvcProcessStatus ? '처리중...' : values.value;
         } else if (values.id === 3) {
           // IP 수동 배치
           onClick = syncIPStatus

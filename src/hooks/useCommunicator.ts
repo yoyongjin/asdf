@@ -48,6 +48,7 @@ import { setExcelDownloadStatus } from 'modules/actions/statistics';
 import Toast from 'utils/toast';
 import ZMSMain from 'lib/api/zms/main';
 import { useHistory } from 'react-router-dom';
+import { setKSVCProcessStatus } from 'modules/actions/batch';
 
 function useCommunicator() {
   const dispatch = useDispatch();
@@ -203,6 +204,12 @@ function useCommunicator() {
               window.location.reload();
             }, 2000);
           }
+          break;
+        }
+        case 'ksvc': {
+          dispatch(setKSVCProcessStatus(false));
+
+          Toast.success('KSVC 처리 완료😊');
           break;
         }
         default:

@@ -23,6 +23,7 @@ const initialState: IBatchState = {
       error: '',
     },
   },
+  ksvc_process_status: false,
 };
 
 const userReducer = createReducer<IBatchState, TBatchAction>(initialState, {
@@ -104,6 +105,12 @@ const userReducer = createReducer<IBatchState, TBatchAction>(initialState, {
     return produce(state, (draft) => {
       draft.request.syncPhoneInfo.fetch = false;
       draft.request.syncPhoneInfo.error = '';
+    });
+  },
+  [types.SET_KSVC_PROCESS_STATUS]: (state, action) => {
+    // KSVC 처리 상태
+    return produce(state, (draft) => {
+      draft.ksvc_process_status = action.payload;
     });
   },
 });
