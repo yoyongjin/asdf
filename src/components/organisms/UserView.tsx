@@ -470,7 +470,8 @@ function UserView({ location }: UserViewProps) {
             break;
           }
           case 1: {
-            item.isVisible = loginInfo.admin_id >= constants.ADMIN.MODIFY_USER;
+            item.isVisible =
+              loginInfo.admin_id >= constants.ADMIN.RESET_USER_PASSWORD_ADMIN;
             item.onClick = handleResetPassword;
 
             break;

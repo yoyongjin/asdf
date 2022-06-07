@@ -246,5 +246,12 @@ export default {
       Number(process.env.REACT_APP_SHOW_BATCH_ADMIN) <= USER_TYPE.SUPER_ADMIN
         ? Number(process.env.REACT_APP_SHOW_BATCH_ADMIN)
         : USER_TYPE.SUPER_ADMIN,
+    RESET_USER_PASSWORD_ADMIN:
+      Number(process.env.REACT_APP_RESET_USER_PASSWORD_ADMIN) >=
+        USER_TYPE.CONSULTANT &&
+      Number(process.env.REACT_APP_RESET_USER_PASSWORD_ADMIN) <=
+        USER_TYPE.SUPER_ADMIN
+        ? Number(process.env.REACT_APP_RESET_USER_PASSWORD_ADMIN)
+        : USER_TYPE.SUPER_ADMIN,
   },
 };
