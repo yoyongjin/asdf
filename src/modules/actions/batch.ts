@@ -43,8 +43,3 @@ export const successSyncPhoneInfo = createAction(SUCCESS_SYNC_PHONE_INFO)();
 export const failureSyncPhoneInfo = createAction(
   FAILURE_SYNC_PHONE_INFO,
 )<string>();
-
-export const SET_KSVC_PROCESS_STATUS = 'SET_KSVC_PROCESS_STATUS';
-export const setKSVCProcessStatus = createAction(
-  SET_KSVC_PROCESS_STATUS,
-)<boolean>();

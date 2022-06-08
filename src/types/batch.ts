@@ -7,7 +7,6 @@ export type TBatchAction = ActionType<typeof actions>;
 
 export interface IBatchState {
   request: IRequest;
-  ksvc_process_status: boolean;
 }
 
 export interface IRequest {

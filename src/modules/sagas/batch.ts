@@ -18,7 +18,6 @@ import {
   REQUEST_SYNC_IP,
   REQUEST_SYNC_KSVC,
   REQUEST_SYNC_PHONE_INFO,
-  setKSVCProcessStatus,
   successSyncBranchUser,
   successSyncIP,
   successSyncKSVC,
@@ -61,8 +60,6 @@ function* syncBranchUserProcess(
 function* syncKSVCProcess(action: ReturnType<typeof requestSyncKSVC>) {
   Toast.notification('잠시만 기다려주세요..🙄');
 
-  yield put(setKSVCProcessStatus(true));
-
   const response: ResponseSuccessData | ResponseFailureData = yield call(
     ZMSBatch.syncKSVC,
   );
@@ -73,13 +70,12 @@ function* syncKSVCProcess(action: ReturnType<typeof requestSyncKSVC>) {
     if (data) {
       yield put(successSyncKSVC());
 
-      Toast.notification('KSVC 내부 처리를 시작합니다..');
+      Toast.success('처리 완료😊');
 
       return;
     }
 
     yield put(failureSyncKSVC(''));
-    yield put(setKSVCProcessStatus(false));
 
     Toast.error('처리에 실패했어요..😭');
 
@@ -88,7 +84,6 @@ function* syncKSVCProcess(action: ReturnType<typeof requestSyncKSVC>) {
 
   const { error_msg } = response as ResponseFailureData;
   yield put(failureSyncKSVC(error_msg));
-  yield put(setKSVCProcessStatus(false));
 
   Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
