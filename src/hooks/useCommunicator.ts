@@ -62,21 +62,12 @@ function useCommunicator() {
   );
 
   const setChangedStatus = useCallback(
-    (
-      loginId: number,
-      branchId: number,
-      teamId: number,
-      adminId: number,
-      type: string,
-      data: any,
-    ) => {
+    (loginId: number, type: string, data: any) => {
       Logger.log('onChangeStatusEventHandler', { type, data });
       let parseData: ConsultantAllStatusByNumber = {};
-      let payload: ChangeUser;
-      let userInfo: UserData;
 
       switch (type) {
-        case 'all':
+        case 'all': {
           // 전체 유저의 상태 전달
           for (const key in data) {
             const allStatus: ConsultantAllStatus = JSON.parse(data[key]);
@@ -87,86 +78,52 @@ function useCommunicator() {
           }
 
           dispatch(setUserStatus(parseData));
+
           break;
-        case 'call':
+        }
+        case 'call': {
           // 콜 변경 시 상태 전달
           const callStatus = JSON.parse(data) as CallStatus;
 
           dispatch(changeCallStatus(callStatus));
+
           break;
+        }
         case 'zibox':
-        case 'monitoring':
+        case 'monitoring': {
           // 지박스 상태 전달
           const ziboxStatus = JSON.parse(data) as ZiboxStatus;
 
           dispatch(changeZiboxStatus(ziboxStatus));
+
           break;
-        case 'consultant':
+        }
+        case 'consultant': {
           // 상담원 상태 전달
           const consultantStatus = JSON.parse(data) as ConsultantStatus;
 
           dispatch(changeConsultantStatus(consultantStatus));
+
           break;
-        case 'phone':
-          // 상담원 상태 전달
+        }
+        case 'phone': {
+          // pc-phone 연결 상태 전달
           const phoneStatus = JSON.parse(data) as PhoneStatus;
 
           dispatch(changePhoneStatus(phoneStatus));
+
           break;
-        case 'reset':
+        }
+        case 'reset': {
+          // 초기화
           const allStatus = JSON.parse(data) as ConsultantAllStatus;
+
           dispatch(changeAllResetStatus(allStatus));
+
           break;
-        case 'signup':
-          // 회원 추가 시 회원 정보 전달
-          userInfo = JSON.parse(data);
-
-          if (
-            adminId === USER_TYPE.BRANCH_ADMIN &&
-            branchId !== userInfo.branch_id
-          ) {
-            // 같은 센터의 사용자가 아닌 경우
-            break;
-          }
-
-          if (
-            adminId === USER_TYPE.TEAM_ADMIN &&
-            (branchId !== userInfo.branch_id || teamId !== userInfo.team_id)
-          ) {
-            // 같은 센터의 같은 팀의 사용자가 아닌 경우
-            break;
-          }
-
-          payload = {
-            userInfo,
-          };
-          dispatch(addUser(payload));
-          break;
-        case 'update':
-          userInfo = JSON.parse(data);
-
-          if (
-            adminId === USER_TYPE.BRANCH_ADMIN &&
-            branchId !== userInfo.branch_id
-          ) {
-            // 같은 센터의 사용자가 아닌 경우
-            break;
-          }
-
-          if (
-            adminId === USER_TYPE.TEAM_ADMIN &&
-            (branchId !== userInfo.branch_id || teamId !== userInfo.team_id)
-          ) {
-            // 같은 센터의 같은 팀의 사용자가 아닌 경우
-            break;
-          }
-
-          payload = {
-            userInfo,
-          };
-          dispatch(modifyUser(payload));
-          break;
-        case 'excel':
+        }
+        case 'excel': {
+          // 엑셀 다운로드
           const { status, fileName } = data.result;
 
           if (data.user_id !== loginId) {
@@ -190,6 +147,7 @@ function useCommunicator() {
           }
 
           break;
+        }
         case 'login': {
           // 로그인 시 이미 로그인된 유저 강제 로그아웃
           if (data.user_id === loginId) {
@@ -373,7 +331,7 @@ function useCommunicator() {
         }
       });
     }
-  }, []);
+  }, [dispatch]);
 
   const registerEventHandler = useCallback(() => {
     const socket = Communicator.getInstance().getSocketInstance();

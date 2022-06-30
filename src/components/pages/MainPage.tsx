@@ -47,23 +47,10 @@ function MainPage({ location }: MainPageProps) {
   useEffect(() => {
     if (loginInfo.id) {
       SocketEventHandler.changeStatusEvent = (type: string, data: any) => {
-        setChangedStatus(
-          loginInfo.id,
-          loginInfo.branch_id,
-          loginInfo.team_id,
-          loginInfo.admin_id,
-          type,
-          data,
-        );
+        setChangedStatus(loginInfo.id, type, data);
       };
     }
-  }, [
-    loginInfo.admin_id,
-    loginInfo.branch_id,
-    loginInfo.id,
-    loginInfo.team_id,
-    setChangedStatus,
-  ]);
+  }, [loginInfo.id, setChangedStatus]);
 
   useEffect(() => {
     if (loginInfo.id) {
