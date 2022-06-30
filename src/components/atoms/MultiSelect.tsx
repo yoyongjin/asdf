@@ -14,6 +14,7 @@ import { Colors } from 'utils/color';
 import constants from 'utils/constants';
 
 const StyledMultiSelect = styled(Select)<IStyledMultiSelect>`
+  background-color: ${(props) => props.backgroundColor};
   border-radius: 0px;
   :hover {
     border-color: ${Colors.blue3} !important;
@@ -45,6 +46,7 @@ const StyledItem = styled.div`
 `;
 
 function MultiSelect({
+  backgroundColor,
   borderRadius,
   clearButton,
   isDisabled,
@@ -160,6 +162,7 @@ function MultiSelect({
 
   return (
     <StyledMultiSelect
+      backgroundColor={backgroundColor}
       borderRadius={borderRadius}
       clearable={clearButton}
       contentRenderer={({ state }) => contentRenderer(state)}
@@ -182,6 +185,7 @@ function MultiSelect({
 }
 
 interface IStyledMultiSelect {
+  backgroundColor: string;
   borderRadius: number;
 }
 
@@ -203,6 +207,7 @@ interface IMultiSelect extends IStyledMultiSelect {
 }
 
 MultiSelect.defaultProps = {
+  backgroundColor: Colors.white,
   borderRadius: 0,
   clearButton: true,
   height: 2.8,
