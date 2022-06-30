@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 
-function useToggle() {
-  const [isToggle, setToggle] = useState<boolean>(false);
+function useToggle(init = false) {
+  const [isToggle, setToggle] = useState<boolean>(init);
 
   const onClickToggle = useCallback((isChecked?: boolean) => {
     setToggle((currentToggle) => {
