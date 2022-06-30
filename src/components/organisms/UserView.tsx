@@ -457,7 +457,7 @@ function UserView({ location }: UserViewProps) {
           type: 'text',
           propertyStyles: {
             backgroundColor,
-            textAlign: 'center',
+            justifyContent: 'center',
           },
         };
       });
@@ -507,7 +507,7 @@ function UserView({ location }: UserViewProps) {
         type: 'option',
         propertyStyles: {
           backgroundColor,
-          textAlign: 'right',
+          justifyContent: 'flex-end',
         },
       };
 
@@ -655,12 +655,10 @@ function UserView({ location }: UserViewProps) {
           />
         </StyledTitle>
         <StyledContent>
-          <div>
-            <Table
-              contents={tableContentUserInfo}
-              titles={tableTitleUserManagement}
-            />
-          </div>
+          <Table
+            contents={tableContentUserInfo}
+            titles={tableTitleUserManagement}
+          />
         </StyledContent>
         <StyledFooter>
           <TablePagination

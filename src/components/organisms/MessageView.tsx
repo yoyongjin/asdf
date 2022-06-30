@@ -50,7 +50,6 @@ const StyledTitle = styled.div`
 
 const StyledContent = styled.div`
   height: calc(100% - 8.5rem - 100px);
-  overflow-x: auto;
 `;
 
 const StyledFooter = styled.div`
@@ -328,7 +327,7 @@ function MessageView() {
         },
         type: 'button',
         propertyStyles: {
-          textAlign: 'right',
+          justifyContent: 'flex-end',
           paddingRight: 10,
         },
       };
@@ -739,27 +738,25 @@ function MessageView() {
           />
         </StyledTitle>
         <StyledContent>
-          <div>
-            {selectedTabIndex === 0 ? (
-              // 자동 문자
-              <Table
-                borderItem={tableHeadBorderStyle}
-                contents={getTableContent()}
-                headColor={Colors.white}
-                headHeight={33.5}
-                titles={tableTitleSettingAutoMessage}
-              />
-            ) : (
-              // 발송 수량 설정
-              <Table
-                borderItem={tableHeadBorderStyle}
-                contents={getTableContent()}
-                headColor={Colors.white}
-                headHeight={33.5}
-                titles={tableTitleSettingMessageCount}
-              />
-            )}
-          </div>
+          {selectedTabIndex === 0 ? (
+            // 자동 문자
+            <Table
+              borderItem={tableHeadBorderStyle}
+              contents={getTableContent()}
+              headColor={Colors.white}
+              headHeight={33.5}
+              titles={tableTitleSettingAutoMessage}
+            />
+          ) : (
+            // 발송 수량 설정
+            <Table
+              borderItem={tableHeadBorderStyle}
+              contents={getTableContent()}
+              headColor={Colors.white}
+              headHeight={33.5}
+              titles={tableTitleSettingMessageCount}
+            />
+          )}
         </StyledContent>
         <StyledFooter>
           {selectedTabIndex === 0 ? (

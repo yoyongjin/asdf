@@ -1,21 +1,17 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import { ScrollSyncPane } from 'react-scroll-sync';
 import styled, { css } from 'styled-components';
 
-import { TableTitle, TableContent } from 'components/molecules';
 import { ITableTitleData } from 'components/molecules/TableTitle';
 import { Colors } from 'utils/color';
 import { ITableContentData } from 'components/molecules/TableContent';
+import { TableBody, TableHeader } from 'components/molecules';
 
-const StyledWrapper = styled.table`
-  border-collapse: collapse;
-  height: 100%;
-  table-layout: fixed;
-  width: 100%;
-`;
-
-const StyledHead = styled.thead<IStyledHeadProps>`
+const StyledHead = styled.div<IStyledHeadProps>`
   background-color: ${(props) => props.backgroundColor};
+  display: grid;
   height: ${(props) => props.height}px;
+  overflow: auto;
 
   ${(props) => {
     // border bottom
@@ -118,37 +114,69 @@ ${(props) => {
   }}
 `;
 
-const StyledBody = styled.tbody`
+const StyledBody = styled.div`
   height: calc(100% - 30px);
-  text-align: center;
+  overflow: auto;
+  width: 100%;
 `;
 
 function Table({
   borderItem,
   contents,
-  dependencyTitles,
   headColor,
   headHeight,
+  isVirtual,
   titles,
 }: ITableProps) {
+  const gridTemplate = useMemo(() => {
+    const filteredTitles = titles.filter((titleData) => !titleData.isNotShow);
+    const filteredTitlesFinalIndex = filteredTitles.length - 1;
+
+    let sum = 0;
+
+    return filteredTitles
+      .map((titleData, index) => {
+        if (!titleData.width) {
+          // 맨 마지막
+          if (filteredTitlesFinalIndex === index) {
+            return `calc(100% - ${sum}${
+              titleData.isWidthPercent ? '%' : 'px'
+            })`;
+          }
+
+          return '';
+        }
+
+        sum += titleData.width;
+
+        if (titleData.isWidthPercent) {
+          return `${titleData.width}%`;
+        }
+
+        return `${titleData.width}px`;
+      })
+      .join(' ');
+  }, [titles]);
+
   return (
-    <StyledWrapper>
-      <StyledHead
-        borderItem={borderItem}
-        backgroundColor={headColor}
-        height={headHeight}
-      >
-        <TableTitle titles={titles} />
-        {dependencyTitles?.map((titles, index) => {
-          return (
-            <TableTitle key={`Table-TableTitle-${index}`} titles={titles} />
-          );
-        })}
-      </StyledHead>
+    <>
+      <ScrollSyncPane group="one">
+        <StyledHead
+          borderItem={borderItem}
+          backgroundColor={headColor}
+          height={headHeight}
+        >
+          <TableHeader titles={titles} widthTemplate={gridTemplate} />
+        </StyledHead>
+      </ScrollSyncPane>
       <StyledBody>
-        <TableContent contents={contents} />
+        <TableBody
+          contents={contents}
+          isVirtual={isVirtual}
+          widthTemplate={gridTemplate}
+        />
       </StyledBody>
-    </StyledWrapper>
+    </>
   );
 }
 
@@ -170,6 +198,8 @@ interface IStyledHeadProps {
   borderItem?: IStyledCustomBorder;
   backgroundColor: string;
   height: number;
+  widthTemplate?: string;
+  widthSum?: number;
 }
 
 interface ITableProps {
@@ -179,11 +209,13 @@ interface ITableProps {
   headColor: string;
   headHeight: number;
   titles: Array<ITableTitleData>;
+  isVirtual: boolean;
 }
 
 Table.defaultProps = {
   headColor: Colors.gray4,
   headHeight: 30,
+  isVirtual: false,
 };
 
 export default React.memo(Table);

@@ -438,8 +438,10 @@ class TableRow {
       fullDays = `[${fullDays}]`;
     }
 
+    const cuttingText = Utils.cutMaxText(content);
+
     row.push(
-      `${fullDate} ${fullTime} ${fullDays}${constants.PARSING_KEY}${content}`,
+      `${fullDate} ${fullTime} ${fullDays}${constants.PARSING_KEY}${cuttingText}`,
     ); // 발송 조건, 문자 내용
     row.push(use_yn); // 사용, 미사용
 

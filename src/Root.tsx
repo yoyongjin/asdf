@@ -1,6 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
+import { ScrollSync } from 'react-scroll-sync';
 import { ThemeProvider } from 'styled-components';
 
 import App from 'App';
@@ -18,10 +19,12 @@ function Root() {
       <ThemeProvider theme={defaultTheme}>
         <GlobalStyle />
         <GlobalFonts />
-        <Provider store={store!}>
-          <App />
-          <Toast />
-        </Provider>
+        <ScrollSync>
+          <Provider store={store!}>
+            <App />
+            <Toast />
+          </Provider>
+        </ScrollSync>
       </ThemeProvider>
     </Router>
   );

@@ -19,9 +19,8 @@ import { Colors } from 'utils/color';
 import Utils from 'utils/new_utils';
 import {
   tableTitleAutoMessageStatistics,
-  tableTitleCallStatisticsByConsultant,
-  tableTitleCallStatisticsByTeam,
-  tableTitleDependencyCallStatistics,
+  tableTitleDependencyCallStatisticsByConsultant,
+  tableTitleDependencyCallStatisticsByTeam,
   tableTitleMessageStatistics,
 } from 'utils/table/title';
 import TableRow from 'utils/table/row';
@@ -104,7 +103,6 @@ const StyledTitle = styled.div`
 
 const StyledContent = styled.div`
   height: calc(100% - 8.5rem - 100px);
-  overflow: auto;
 `;
 
 const StyledFooter = styled.div`
@@ -1109,7 +1107,7 @@ function StatisticsV2View() {
             },
             type: 'text',
             propertyStyles: {
-              textAlign: 'center',
+              justifyContent: 'center',
             },
           };
         },
@@ -1200,7 +1198,7 @@ function StatisticsV2View() {
             type: 'text',
             propertyStyles: {
               backgroundColor,
-              textAlign: 'center',
+              justifyContent: 'center',
             },
           };
         },
@@ -1249,7 +1247,7 @@ function StatisticsV2View() {
             type: 'text',
             propertyStyles: {
               backgroundColor,
-              textAlign: 'center',
+              justifyContent: 'center',
             },
           };
         },
@@ -1568,47 +1566,43 @@ function StatisticsV2View() {
           />
         </StyledTitle>
         <StyledContent>
-          <div>
-            {selectedTabIndex === 0 ? (
-              // 상담원별 통화 통계
-              <Table
-                borderItem={borderItem}
-                contents={tableContentCallStatisticsByConsultant}
-                dependencyTitles={tableTitleDependencyCallStatistics}
-                headColor={Colors.white}
-                headHeight={52}
-                titles={tableTitleCallStatisticsByConsultant}
-              />
-            ) : selectedTabIndex === 1 ? (
-              // 팀별 통화 통계
-              <Table
-                borderItem={borderItem}
-                contents={tableContentCallStatisticsByTeam}
-                dependencyTitles={tableTitleDependencyCallStatistics}
-                headColor={Colors.white}
-                headHeight={52}
-                titles={tableTitleCallStatisticsByTeam}
-              />
-            ) : selectedTabIndex === 2 ? (
-              // 문자 통계
-              <Table
-                borderItem={borderItem}
-                contents={tableContentMessageStatistics}
-                headColor={Colors.white}
-                headHeight={52}
-                titles={tableTitleMessageStatistics}
-              />
-            ) : (
-              // 자동 문자 통계
-              <Table
-                borderItem={borderItem}
-                contents={tableContentAutoMessageStatistics}
-                headColor={Colors.white}
-                headHeight={33}
-                titles={tableTitleAutoMessageStatistics}
-              />
-            )}
-          </div>
+          {selectedTabIndex === 0 ? (
+            // 상담원별 통화 통계
+            <Table
+              borderItem={borderItem}
+              contents={tableContentCallStatisticsByConsultant}
+              headColor={Colors.white}
+              headHeight={52}
+              titles={tableTitleDependencyCallStatisticsByConsultant}
+            />
+          ) : selectedTabIndex === 1 ? (
+            // 팀별 통화 통계
+            <Table
+              borderItem={borderItem}
+              contents={tableContentCallStatisticsByTeam}
+              headColor={Colors.white}
+              headHeight={52}
+              titles={tableTitleDependencyCallStatisticsByTeam}
+            />
+          ) : selectedTabIndex === 2 ? (
+            // 문자 통계
+            <Table
+              borderItem={borderItem}
+              contents={tableContentMessageStatistics}
+              headColor={Colors.white}
+              headHeight={52}
+              titles={tableTitleMessageStatistics}
+            />
+          ) : (
+            // 자동 문자 통계
+            <Table
+              borderItem={borderItem}
+              contents={tableContentAutoMessageStatistics}
+              headColor={Colors.white}
+              headHeight={33}
+              titles={tableTitleAutoMessageStatistics}
+            />
+          )}
         </StyledContent>
         <StyledFooter>
           {selectedTabIndex === 0 ? (

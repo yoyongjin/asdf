@@ -218,6 +218,12 @@ class Utils {
   ) {
     return origintText.replace(changedWord, replaceWord);
   }
+
+  static cutMaxText(text: string, max = 100) {
+    let ellipsis = '';
+    if (text.length > max) ellipsis = ' ...';
+    return text.substring(0, max) + ellipsis;
+  }
 }
 
 export default Utils;

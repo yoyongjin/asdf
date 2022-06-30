@@ -25,9 +25,12 @@ import { IPhoneItem } from 'types/phone';
 import constants, { ANSWER_VALUE } from 'utils/constants';
 import Utils from 'utils/new_utils';
 
-const StyledWrapper = styled.td<IStyledWrapper>`
+const StyledWrapper = styled.div<IStyledWrapper>`
+  align-content: center;
   background-color: ${(props) => props.backgroundColor};
-  text-align: ${(props) => props.textAlign};
+  display: grid;
+  height: 100%;
+  justify-content: ${(props) => props.justifyContent};
   padding-left: ${(props) => props.paddingLeft}px;
   padding-right: ${(props) => props.paddingRight}px;
 `;
@@ -35,6 +38,7 @@ const StyledWrapper = styled.td<IStyledWrapper>`
 // text 요소가 여러 줄 일 경우
 const StyledTextWrapper = styled.div`
   padding-bottom: 4px;
+  justify-self: flex-start;
 `;
 
 const StyledMenuWrapper = styled.div`
@@ -313,7 +317,9 @@ function TableProperty({
             key={`styled-table-property-wrapper-${index}`}
             paddingLeft={values.propertyStyles?.paddingLeft || 0}
             paddingRight={values.propertyStyles?.paddingRight || 0}
-            textAlign={values.propertyStyles?.textAlign || 'left'}
+            justifyContent={
+              values.propertyStyles?.justifyContent || 'flex-start'
+            }
           >
             {RenderView(values, index)}
           </StyledWrapper>
@@ -412,7 +418,7 @@ interface ITdStyle {
   backgroundColor?: string;
   paddingLeft?: number;
   paddingRight?: number;
-  textAlign?: string;
+  justifyContent?: string;
 }
 
 export interface IProperty {

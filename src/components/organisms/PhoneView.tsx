@@ -36,7 +36,6 @@ const StyledTitle = styled.div`
 
 const StyledContent = styled.div`
   height: calc(100% - 8.5rem - 100px);
-  overflow-x: auto;
 `;
 
 const StyledFooter = styled.div`
@@ -673,25 +672,23 @@ function PhoneView() {
           />
         </StyledTitle>
         <StyledContent>
-          <div>
-            {selectedItem ? (
-              <Table
-                borderItem={tableHeadBorderStyle}
-                contents={tableContentPhoneHistory}
-                headColor={Colors.white}
-                headHeight={33.5}
-                titles={tableTitlePhoneHistory}
-              />
-            ) : (
-              <Table
-                borderItem={tableHeadBorderStyle}
-                contents={tableContentPhoneInfo}
-                headColor={Colors.white}
-                headHeight={33.5}
-                titles={tableTitlePhoneManagement}
-              />
-            )}
-          </div>
+          {selectedItem ? (
+            <Table
+              borderItem={tableHeadBorderStyle}
+              contents={tableContentPhoneHistory}
+              headColor={Colors.white}
+              headHeight={33.5}
+              titles={tableTitlePhoneHistory}
+            />
+          ) : (
+            <Table
+              borderItem={tableHeadBorderStyle}
+              contents={tableContentPhoneInfo}
+              headColor={Colors.white}
+              headHeight={33.5}
+              titles={tableTitlePhoneManagement}
+            />
+          )}
         </StyledContent>
         <StyledFooter>
           {selectedItem ? (

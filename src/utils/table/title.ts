@@ -10,11 +10,12 @@ export const tableTitleUserManagement = [...new Array(10)].map((v, i) => {
     fontSize: 13,
     isNotShow: false,
     isWidthPercent: true,
+    justifyContent: 'center',
     title: '',
     width: 0,
   };
 
-  const addWidth = constants.ZIBOX_VERSION === ZIBOX_VERSION.ZIBOX ? 0 : 5;
+  const addWidth = constants.ZIBOX_VERSION === ZIBOX_VERSION.ZIBOX ? 0 : 2;
 
   switch (i) {
     case 0: {
@@ -31,7 +32,7 @@ export const tableTitleUserManagement = [...new Array(10)].map((v, i) => {
     }
     case 2: {
       property.title = '권한';
-      property.width = 7 + addWidth;
+      property.width = 5 + addWidth;
 
       break;
     }
@@ -49,7 +50,7 @@ export const tableTitleUserManagement = [...new Array(10)].map((v, i) => {
     }
     case 5: {
       property.title = '전화번호.';
-      property.width = 15 + addWidth;
+      property.width = 10 + addWidth;
 
       break;
     }
@@ -75,7 +76,7 @@ export const tableTitleUserManagement = [...new Array(10)].map((v, i) => {
     }
     case 9: {
       property.title = '';
-      property.width = 5 + addWidth;
+      property.width = 0;
 
       break;
     }
@@ -94,9 +95,12 @@ export const tableTitleDependencyAllCallStatistics = [...new Array(11)].map(
       borderColor: Colors.gray14,
       borderStyle: 'solid',
       borderWidth: 1,
+      colSpan: 1,
       fontFamily: 'Malgun Gothic',
       fontSize: 11,
+      justifyContent: 'center',
       letterSpacing: -0.55,
+      rowSpan: 1,
       title: '',
       width: 47,
     };
@@ -182,9 +186,12 @@ export const tableTitleDependencyOutcomingCallStatistics = [
     borderColor: Colors.gray14,
     borderStyle: 'solid',
     borderWidth: 1,
+    colSpan: 1,
     fontFamily: 'Malgun Gothic',
     fontSize: 11,
+    justifyContent: 'center',
     letterSpacing: -0.55,
+    rowSpan: 1,
     title: '',
     width: 47,
   };
@@ -269,9 +276,12 @@ export const tableTitleDependencyIncomingCallStatistics = [
     borderColor: Colors.gray14,
     borderStyle: 'solid',
     borderWidth: 1,
+    colSpan: 1,
     fontFamily: 'Malgun Gothic',
     fontSize: 11,
+    justifyContent: 'center',
     letterSpacing: -0.55,
+    rowSpan: 1,
     title: '',
     width: 47,
   };
@@ -346,17 +356,6 @@ export const tableTitleDependencyIncomingCallStatistics = [
 });
 
 /**
- * @description 통화 통계의 상세 테이블 제목 병합 (전체/발신/수신)
- */
-export const tableTitleDependencyCallStatistics = [
-  [
-    ...tableTitleDependencyAllCallStatistics,
-    ...tableTitleDependencyOutcomingCallStatistics,
-    ...tableTitleDependencyIncomingCallStatistics,
-  ],
-];
-
-/**
  * @description 상담원별 통화 통계 테이블 제목
  */
 export const tableTitleCallStatisticsByConsultant = [...new Array(8)].map(
@@ -369,10 +368,11 @@ export const tableTitleCallStatisticsByConsultant = [...new Array(8)].map(
       colSpan: 1,
       fontFamily: 'Malgun Gothic',
       fontSize: 12,
+      justifyContent: 'center',
       letterSpacing: -0.6,
       rowSpan: 1,
       title: '',
-      width: 727,
+      width: 0,
     };
 
     switch (i) {
@@ -439,6 +439,16 @@ export const tableTitleCallStatisticsByConsultant = [...new Array(8)].map(
 );
 
 /**
+ * @description 상담원별 통화 통계의 상세 테이블 제목 병합 (전체/발신/수신)
+ */
+export const tableTitleDependencyCallStatisticsByConsultant = [
+  ...tableTitleCallStatisticsByConsultant,
+  ...tableTitleDependencyAllCallStatistics,
+  ...tableTitleDependencyOutcomingCallStatistics,
+  ...tableTitleDependencyIncomingCallStatistics,
+];
+
+/**
  * @description 팀별 통화 통계 테이블 제목
  */
 export const tableTitleCallStatisticsByTeam = [...new Array(6)].map((v, i) => {
@@ -450,10 +460,11 @@ export const tableTitleCallStatisticsByTeam = [...new Array(6)].map((v, i) => {
     colSpan: 1,
     fontFamily: 'Malgun Gothic',
     fontSize: 12,
+    justifyContent: 'center',
     letterSpacing: -0.6,
     rowSpan: 1,
     title: '',
-    width: 727,
+    width: 0,
   };
 
   switch (i) {
@@ -505,6 +516,16 @@ export const tableTitleCallStatisticsByTeam = [...new Array(6)].map((v, i) => {
 });
 
 /**
+ * @description 팀별 통화 통계의 상세 테이블 제목 병합 (전체/발신/수신)
+ */
+export const tableTitleDependencyCallStatisticsByTeam = [
+  ...tableTitleCallStatisticsByTeam,
+  ...tableTitleDependencyAllCallStatistics,
+  ...tableTitleDependencyOutcomingCallStatistics,
+  ...tableTitleDependencyIncomingCallStatistics,
+];
+
+/**
  * @description 문자 통계 테이블 제목
  */
 export const tableTitleMessageStatistics = [...new Array(13)].map((v, i) => {
@@ -512,34 +533,33 @@ export const tableTitleMessageStatistics = [...new Array(13)].map((v, i) => {
     fontFamily: 'Malgun Gothic',
     fontSize: 12,
     isWidthPercent: true,
+    justifyContent: 'center',
     letterSpacing: -0.6,
-    textAlign: 'center',
     title: '',
-    width: 5,
+    width: 7,
   };
 
   switch (i) {
     case 0: {
       property.title = '일자';
-      property.width = 10;
 
       break;
     }
     case 1: {
       property.title = '센터';
-      property.width = 15;
+      property.width = 10;
 
       break;
     }
     case 2: {
       property.title = '팀';
-      property.width = 15;
+      property.width = 10;
 
       break;
     }
     case 3: {
       property.title = 'TMR 코드';
-      property.width = 15;
+      property.width = 10;
 
       break;
     }
@@ -602,7 +622,6 @@ export const tableTitleAutoMessageStatistics = [...new Array(8)].map((v, i) => {
     isWidthPercent: true,
     letterSpacing: -0.6,
     paddingLeft: 10,
-    textAlign: 'left',
     title: '',
     width: 5,
   };
@@ -669,7 +688,6 @@ export const tableTitleSettingAutoMessage = [...new Array(6)].map((v, i) => {
     isWidthPercent: true,
     letterSpacing: -0.6,
     paddingLeft: 10,
-    textAlign: 'left',
     title: '',
     width: 15,
   };
@@ -700,7 +718,7 @@ export const tableTitleSettingAutoMessage = [...new Array(6)].map((v, i) => {
     case 4: {
       property.isWidthPercent = false;
       property.title = '삭제 / 수정';
-      property.width = 70;
+      property.width = 80;
 
       break;
     }
@@ -724,7 +742,6 @@ export const tableTitleSettingMessageCount = [...new Array(4)].map((v, i) => {
     isWidthPercent: true,
     letterSpacing: -0.6,
     paddingLeft: 10,
-    textAlign: 'left',
     title: '',
     width: 15,
   };
@@ -743,7 +760,6 @@ export const tableTitleSettingMessageCount = [...new Array(4)].map((v, i) => {
     }
     case 2: {
       property.title = '월 최대 발송수량';
-      property.width = 45;
 
       break;
     }
@@ -767,7 +783,6 @@ export const tableTitlePhoneManagement = [...new Array(12)].map((v, i) => {
     isWidthPercent: true,
     letterSpacing: -0.6,
     paddingLeft: 10,
-    textAlign: 'left',
     title: '',
     width: 5,
   };
@@ -826,8 +841,12 @@ export const tableTitlePhoneManagement = [...new Array(12)].map((v, i) => {
       break;
     }
     case 9:
-    case 10:
+    case 10: {
+      break;
+    }
     case 11: {
+      property.width = 0;
+
       break;
     }
   }
@@ -845,7 +864,6 @@ export const tableTitlePhoneHistory = [...new Array(10)].map((v, i) => {
     isWidthPercent: true,
     letterSpacing: -0.6,
     paddingLeft: 10,
-    textAlign: 'left',
     title: '',
     width: 5,
   };

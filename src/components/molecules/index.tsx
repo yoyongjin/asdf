@@ -13,6 +13,8 @@ import SearchBar from './SearchBar';
 import StatisticsProperty from './StatisticsProperty';
 import StatisticsTotal from './StatisticsTotal';
 import ZiboxData from './ZiboxData';
+import TableBody from './TableBody';
+import TableHeader from './TableHeader';
 import TableContent from './TableContent';
 import TableTitle from './TableTitle';
 import TablePagination from './TablePagination';
@@ -62,4 +64,6 @@ export {
   UserData,
   UserLog,
   ZiboxData,
+  TableBody,
+  TableHeader,
 };
