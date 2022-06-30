@@ -158,7 +158,7 @@ class Statistics {
     try {
       const params = {
         ids,
-        include_leaver: breakUp,
+        include_leaver: true,
         start_date: startDate,
         end_date: endDate,
         start_time: startTime,
