@@ -51,6 +51,8 @@ const StyledMenuWrapper = styled.div`
 function TableProperty({
   contents,
   contentType,
+  listLength,
+  orderId,
   originItem,
 }: ITablePropertyProps) {
   const { isHover, onMouseIn, onMouseOut } = useHover();
@@ -141,14 +143,24 @@ function TableProperty({
 
   const OptionView = useCallback(
     (data: IOptionItem) => {
-      const count = data.menu.filter((values) => values.isVisible).length;
+      const filteredMenuData = data.menu.filter((values) => values.isVisible);
+      let count = filteredMenuData.length;
+
+      if (orderId === 0 || count === 1) {
+        // 리스트 맨 앞
+        count = 0;
+      }
+
+      if (orderId === listLength - 1) {
+        count += 2;
+      }
 
       return (
         <div onMouseEnter={onMouseIn} onMouseLeave={onMouseOut}>
           {isHover && (
             <StyledMenuWrapper>
               <MenuList
-                menu={data.menu}
+                menu={filteredMenuData}
                 visibleCount={count}
                 type={contentType}
                 data={originItem}
@@ -166,7 +178,15 @@ function TableProperty({
         </div>
       );
     },
-    [contentType, isHover, onMouseIn, onMouseOut, originItem],
+    [
+      contentType,
+      isHover,
+      listLength,
+      onMouseIn,
+      onMouseOut,
+      orderId,
+      originItem,
+    ],
   );
 
   const InputView = (
@@ -437,6 +457,8 @@ export interface IProperty {
 interface ITablePropertyProps {
   contents: Array<IProperty>;
   contentType: string; // 컴포넌트 재사용 시 데이터 구분하기 위해
+  listLength: number; // 전체 데이터 길이
+  orderId: number; // 순서
   originItem: IMaxMessageItem | IAutoMessageItem | IPhoneItem; // 원본 데이터
 }
 

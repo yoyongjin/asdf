@@ -34,6 +34,8 @@ function TableBody({ widthTemplate, contents, isVirtual }: ITableBody) {
                 <TableProperty
                   contents={data}
                   contentType={contents.type}
+                  listLength={contents.data.length}
+                  orderId={index}
                   originItem={contents.originData![index]}
                 />
               </StyledWrapper>
@@ -72,6 +74,8 @@ function TableBody({ widthTemplate, contents, isVirtual }: ITableBody) {
                     <TableProperty
                       contents={data[index]}
                       contentType={contents.type}
+                      listLength={contents.data.length}
+                      orderId={index}
                       originItem={contents.originData![index]}
                     />
                   </StyledWrapper>

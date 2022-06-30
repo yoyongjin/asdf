@@ -37,6 +37,8 @@ function TableContent({ contents }: ITableContentProps) {
             <TableProperty
               contents={data}
               contentType={contents.type}
+              listLength={contents.data.length}
+              orderId={i}
               originItem={contents.originData![i]}
             />
           </StyledWrapper>

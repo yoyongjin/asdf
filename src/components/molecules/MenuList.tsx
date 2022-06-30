@@ -12,8 +12,8 @@ const StyledWrapper = styled.ul<IStyledWrapper>`
   list-style-type: none;
   position: absolute;
   right: 40px;
-  top: -${(props) => props.visibleCount * 20}px;
-  width: 100%;
+  top: -${(props) => props.visibleCount * 15}px;
+  width: 100px;
 `;
 
 const StyledMenu = styled.li`
@@ -43,10 +43,6 @@ function MenuList({
   return (
     <StyledWrapper visibleCount={visibleCount}>
       {menu.map((item, index) => {
-        if (!item.isVisible) {
-          return null;
-        }
-
         let onClick: (() => void) | undefined;
 
         if (type === 'user-info') {

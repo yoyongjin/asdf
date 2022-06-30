@@ -465,6 +465,7 @@ function UserView({ location }: UserViewProps) {
       const customUserInfoOptionMenu = userInfoOptionMenu.map((item, index) => {
         switch (index) {
           case 0: {
+            item.isVisible = true;
             item.onClick = handleUserInfoPopup;
 
             break;
