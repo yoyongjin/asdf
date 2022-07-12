@@ -15,7 +15,7 @@ import defaultLogoV2 from 'images/zms/sub-gnb-logo-v2.png';
 import SocketEventHandler from 'lib/socketEventHandler';
 
 function MainPage({ location }: MainPageProps) {
-  const { loginInfo, onCheckLogin, onClickLogout } = useAuth();
+  const { loginInfo, onCheckLogin, onClickLogout, monitoringView } = useAuth();
   const {
     beforeUnloadEvent,
     setChangedStatus,
@@ -24,12 +24,12 @@ function MainPage({ location }: MainPageProps) {
   } = useCommunicator();
 
   const backgroundColor = useMemo(() => {
-    if (location.pathname === '/main') {
+    if (location.pathname === '/main' && monitoringView === 'card') {
       return Colors.white1;
     }
 
     return '';
-  }, [location.pathname]);
+  }, [location.pathname, monitoringView]);
 
   useEffect(() => {
     SocketEventHandler.connectEvent = (

@@ -24,6 +24,7 @@ export const FAILURE_CHANGE_PASSWORD = 'FAILURE_CHANGE_PASSWORD';
 export const SET_SOCKET_STATUS = 'SET_SOCKET_STATUS';
 export const SET_SERVER_TIME = 'SET_SERVER_TIME';
 export const SET_TAPPING_DATA = 'SET_TAPPING_DATA';
+export const SET_MONITORING_VIEW = 'SET_MONITORING_VIEW';
 
 // 액션 생성 함수
 export const requestLogin = createAction(REQUEST_LOGIN)<RequestLogin>();
@@ -45,6 +46,7 @@ export const failureChangePassword = createAction(
 export const setSocketStatus = createAction(SET_SOCKET_STATUS)<number>();
 export const setServerTime = createAction(SET_SERVER_TIME)<number>();
 export const setTappingData = createAction(SET_TAPPING_DATA)<TappingData>();
+export const setMonitoringView = createAction(SET_MONITORING_VIEW)<string>();
 
 // 삭제 예정
 export const SET_INIT_SOCKET = 'SET_INIT_SOCKET';

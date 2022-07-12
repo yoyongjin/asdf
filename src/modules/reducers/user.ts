@@ -18,6 +18,10 @@ const initialState: UserState = {
       fetch: false,
       error: '',
     },
+    getConsultant: {
+      fetch: false,
+      error: '',
+    },
     addUser: {
       fetch: false,
       error: '',
@@ -74,6 +78,32 @@ const userReducer = createReducer<UserState, UserAction>(initialState, {
     });
   },
   [types.FAILURE_GET_USERS]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.request.getUser.fetch = false;
+      draft.request.getUser.error = action.payload;
+    });
+  },
+  [types.REQUEST_GET_CONSULTANT]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.request.getUser.fetch = true;
+      draft.request.getUser.error = '';
+    });
+  },
+  [types.SUCCESS_GET_CONSULTANT]: (state, action) => {
+    const { users } = action.payload;
+
+    const consultants = users.filter((user) => {
+      return user.admin_id === USER_TYPE.CONSULTANT;
+    });
+
+    return produce(state, (draft) => {
+      draft.request.getUser.fetch = false;
+      draft.request.getUser.error = '';
+
+      draft.consultant = consultants;
+    });
+  },
+  [types.FAILURE_GET_CONSULTANT]: (state, action) => {
     return produce(state, (draft) => {
       draft.request.getUser.fetch = false;
       draft.request.getUser.error = action.payload;

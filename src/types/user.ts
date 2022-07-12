@@ -18,6 +18,7 @@ export interface UserState {
 export interface RequestType {
   getPluralConsultant: common.FetchType;
   getUser: common.FetchType;
+  getConsultant: common.FetchType;
   addUser: common.FetchType;
   modifyUser: common.FetchType;
   removeUser: common.FetchType;
@@ -181,6 +182,11 @@ export interface SuccessGetUsers {
   url: string;
 }
 
+export interface ISuccessGetConsultant {
+  users: Array<UserData>;
+  max_count: number;
+}
+
 export interface ConsultantAllStatusByNumberV2 {
   [number: string]: ConsultantAllStatus_V2;
 }
@@ -199,6 +205,12 @@ export interface RequestGetUsers {
   search?: string;
   url: string;
   include_leaver: boolean; // 해촉 여부
+}
+
+export interface IRequestGetConsultant {
+  ids: string;
+  page: number;
+  limit: number;
 }
 
 export interface RequestAddUser {

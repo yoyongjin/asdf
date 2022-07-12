@@ -139,6 +139,18 @@ export enum USED_PHONE_STATUS {
   DISPOSE = 3, // 폐기
 }
 
+export enum CONSULTANT_TEXT_STATUS {
+  LOGOUT = '로그아웃',
+  WAIT = '대기중',
+  INCOMMING = '수신중',
+  OFFHOOK = '발신중',
+  AFTER = '후처리',
+  REST = '휴식',
+  AWAY = '이석',
+  DISCONNECT = '미연결',
+  CALL = '통화중',
+}
+
 export enum ANSWER_VALUE {
   YES = 'Y',
   NO = 'N',

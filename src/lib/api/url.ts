@@ -9,6 +9,7 @@ export default {
         auto_login: '/api/auth/auto-login',
         logout: '/api/auth/logout',
         get_users: '/api/auth',
+        get_consultant: '/api/auth/consultant',
         get_organization: '/api/branch',
         get_branches: '/api/branch/all',
         get_temas: '/api/team/all',

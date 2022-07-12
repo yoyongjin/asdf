@@ -13,6 +13,7 @@ export interface AuthState {
   serverTime: number;
   localTime: number;
   tappingTarget: TappingTarget;
+  monitoringView: string;
 }
 
 export interface TappingTarget {

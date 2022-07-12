@@ -19,6 +19,8 @@ import {
   RequestZiBoxVolume,
   IRequestGetPluralConsultant,
   IConsultantItem,
+  IRequestGetConsultant,
+  ISuccessGetConsultant,
 } from 'types/user';
 
 // 유저 정보 가져오기
@@ -26,6 +28,11 @@ export const REQUEST_GET_USERS = 'REQUEST_GET_USERS';
 export const SUCCESS_GET_USERS = 'SUCCESS_GET_USERS';
 export const SUCCESS_GET_FILTER_USERS = 'SUCCESS_GET_FILTER_USERS';
 export const FAILURE_GET_USERS = 'FAILURE_GET_USERS';
+
+// 상담원 정보 가져오기
+export const REQUEST_GET_CONSULTANT = 'REQUEST_GET_CONSULTANT';
+export const SUCCESS_GET_CONSULTANT = 'SUCCESS_GET_CONSULTANT';
+export const FAILURE_GET_CONSULTANT = 'FAILURE_GET_CONSULTANT';
 
 // 유저 정보 추가하기
 export const REQUEST_ADD_USER = 'REQUEST_ADD_USER';
@@ -89,6 +96,18 @@ export const successGetFilterUsers = createAction(
   SUCCESS_GET_FILTER_USERS,
 )<SuccessGetUsers>();
 export const failureGetUsers = createAction(FAILURE_GET_USERS)<string>();
+
+// action
+// 상담원 정보 가져오기
+export const requestGetConsultant = createAction(
+  REQUEST_GET_CONSULTANT,
+)<IRequestGetConsultant>();
+export const successGetConsultant = createAction(
+  SUCCESS_GET_CONSULTANT,
+)<ISuccessGetConsultant>();
+export const failureGetConsultant = createAction(
+  FAILURE_GET_CONSULTANT,
+)<string>();
 
 // 유저 정보 추가하기
 export const requestAddUser = createAction(REQUEST_ADD_USER)<RequestAddUser>();

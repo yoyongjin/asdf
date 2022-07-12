@@ -931,3 +931,64 @@ export const tableTitlePhoneHistory = [...new Array(10)].map((v, i) => {
 
   return property;
 });
+
+/**
+ * @description 모니터링 테이블 제목
+ */
+export const tableTitleMonitoring = [...new Array(7)].map((v, i) => {
+  const property = {
+    fontFamily: 'Malgun Gothic',
+    fontSize: 12,
+    letterSpacing: -0.6,
+    paddingLeft: 0,
+    title: '',
+    width: 0,
+  };
+
+  switch (i) {
+    case 0: {
+      property.title = '센터';
+      property.paddingLeft = 10;
+      property.width = 150;
+
+      break;
+    }
+    case 1: {
+      property.title = '팀';
+      property.width = 140;
+
+      break;
+    }
+    case 2: {
+      property.title = 'TMR 코드';
+      property.width = 130;
+
+      break;
+    }
+    case 3: {
+      property.title = 'TMR 명';
+      property.width = 90;
+
+      break;
+    }
+    case 4: {
+      property.title = '상태';
+      property.width = 80;
+
+      break;
+    }
+    case 5: {
+      property.title = '통화 시간';
+      property.width = 110;
+
+      break;
+    }
+    case 6: {
+      property.title = '감청';
+
+      break;
+    }
+  }
+
+  return property;
+});

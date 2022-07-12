@@ -11,6 +11,7 @@ import {
   changeUsersCount,
   requestGetPluralConsultant,
   setInitPluralConsultant,
+  requestGetConsultant,
 } from 'modules/actions/user';
 import { RootState } from 'modules/reducers';
 import constants from 'utils/constants';
@@ -42,6 +43,19 @@ function useUser() {
   const setInitializePluralConsultant = useCallback(() => {
     dispatch(setInitPluralConsultant());
   }, [dispatch]);
+
+  const getConsultants = useCallback(
+    (ids, limit, page) => {
+      const payload = {
+        ids,
+        limit,
+        page,
+      };
+
+      dispatch(requestGetConsultant(payload));
+    },
+    [dispatch],
+  );
 
   const getUsers = useCallback(
     (
@@ -183,6 +197,7 @@ function useUser() {
     handleResetPassword,
     onChangeUserCount,
     setInitializePluralConsultant,
+    getConsultants,
   };
 }
 

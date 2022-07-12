@@ -6,6 +6,7 @@ import {
   requestCheckLogin,
   requestLogout,
   requestChangePassword,
+  setMonitoringView,
 } from 'modules/actions/auth';
 import { RootState } from 'modules/reducers';
 import Toast from 'utils/toast';
@@ -15,8 +16,18 @@ function useAuth() {
     (state: RootState) => state.auth.socketConnectionStatus,
   );
   const loginInfo = useSelector((state: RootState) => state.auth.loginInfo); // 로그인 정보
+  const monitoringView = useSelector(
+    (state: RootState) => state.auth.monitoringView,
+  );
 
   const dispatch = useDispatch();
+
+  const handleMonitoringView = useCallback(
+    (type: string) => {
+      dispatch(setMonitoringView(type));
+    },
+    [dispatch],
+  );
 
   const onClickLogin = useCallback(
     (id: string, password: string) => {
@@ -98,6 +109,8 @@ function useAuth() {
     onCheckLogin,
     onClickLogin,
     onClickLogout,
+    handleMonitoringView,
+    monitoringView,
   };
 }
 

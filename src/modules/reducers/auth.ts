@@ -5,6 +5,12 @@ import { createReducer } from 'typesafe-actions';
 import * as actions from 'modules/actions/auth';
 import { AuthAction, AuthState } from 'types/auth';
 
+const monitoringViewValue = localStorage.getItem('monitoringView') ?? '';
+
+const monitoringView = ['card', 'list'].includes(monitoringViewValue)
+  ? monitoringViewValue
+  : 'card';
+
 // 상태
 const initialState: AuthState = {
   request: {
@@ -47,6 +53,7 @@ const initialState: AuthState = {
   socketConnectionStatus: 0,
   localTime: 0,
   serverTime: 0,
+  monitoringView,
 };
 
 // 리듀서
@@ -159,6 +166,11 @@ const authReducer = createReducer<AuthState, AuthAction>(initialState, {
       const timestamp = action.payload;
       draft.serverTime = timestamp;
       draft.localTime = new Date().getTime();
+    });
+  },
+  [actions.SET_MONITORING_VIEW]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.monitoringView = action.payload;
     });
   },
 });

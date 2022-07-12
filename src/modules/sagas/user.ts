@@ -29,12 +29,54 @@ import {
   successGetPluralConsultant,
   failureGetPluralConsultant,
   REQUEST_GET_PLURAL_CONSULTANT,
+  requestGetConsultant,
+  successGetConsultant,
+  failureGetConsultant,
+  REQUEST_GET_CONSULTANT,
 } from 'modules/actions/user';
 import ZMSUser from 'lib/api/zms/user';
 import { ResponseFailureData, ResponseSuccessData } from 'types/common';
 import { API_FETCH } from 'utils/constants';
 import Communicator from 'lib/communicator';
 import Toast from 'utils/toast';
+
+function* getConsultantProcess(
+  action: ReturnType<typeof requestGetConsultant>,
+) {
+  const { ids, limit, page } = action.payload;
+
+  Toast.notification('잠시만 기다려주세요..🙄');
+  yield delay(500);
+  const response: ResponseSuccessData | ResponseFailureData = yield call(
+    ZMSUser.getConsultant,
+    ids,
+    limit,
+    page,
+  );
+
+  if (response.status === API_FETCH.SUCCESS) {
+    const { data } = response as ResponseSuccessData;
+    const { users, max_count } = data;
+
+    const payload = {
+      users,
+      max_count,
+    };
+
+    yield put(successGetConsultant(payload));
+
+    Toast.success('가져오기 완료😊');
+
+    Communicator.getInstance().emitMessage('state', '');
+
+    return;
+  }
+
+  const { error_msg } = response as ResponseFailureData;
+  yield put(failureGetConsultant(error_msg));
+
+  Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
+}
 
 function* getUsersProcess(action: ReturnType<typeof requestGetUsers>) {
   const { branch_id, team_id, limit, page, search, url, include_leaver } =
@@ -284,6 +326,10 @@ function* getPluralConsultantProcess(
   Toast.error(`요청에 실패했어요..😭\n(${error_msg})`);
 }
 
+function* watchGetConsultant() {
+  yield takeLatest(REQUEST_GET_CONSULTANT, getConsultantProcess);
+}
+
 function* watchGetUsers() {
   yield takeLatest(REQUEST_GET_USERS, getUsersProcess);
 }
@@ -314,6 +360,7 @@ function* watchGetPluralConsultant() {
 
 function* userSaga() {
   yield all([
+    fork(watchGetConsultant),
     fork(watchGetUsers),
     fork(watchAddUser),
     fork(watchModifyUser),

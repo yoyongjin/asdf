@@ -106,36 +106,26 @@ function TableProperty({
         }
       };
 
-      if (data.text) {
-        return (
-          <Button
-            bgColor={styles?.backgroundColor}
-            borderColor={styles?.borderColor}
-            borderRadius={styles?.borderRadius}
-            borderStyle={styles?.borderStyle}
-            borderWidth={styles?.borderWidth}
-            height={styles?.height}
-            onClick={onClickButton}
-            width={styles?.width}
-          >
-            <Text
-              fontColor={styles?.fontColor}
-              fontSize={styles?.fontSize}
-              fontWeight={styles?.fontWeight}
-            >
-              {data.text}
-            </Text>
-          </Button>
-        );
-      }
-
       return (
         <Button
-          image={data.image}
+          bgColor={styles?.backgroundColor}
+          borderColor={styles?.borderColor}
+          borderRadius={styles?.borderRadius}
+          borderStyle={styles?.borderStyle}
+          borderWidth={styles?.borderWidth}
           height={styles?.height}
+          image={data.image}
           onClick={onClickButton}
           width={styles?.width}
-        />
+        >
+          <Text
+            fontColor={styles?.fontColor}
+            fontSize={styles?.fontSize}
+            fontWeight={styles?.fontWeight}
+          >
+            {data.text ?? ''}
+          </Text>
+        </Button>
       );
     },
     [contentType, inputRef, originItem],
@@ -188,6 +178,17 @@ function TableProperty({
       originItem,
     ],
   );
+
+  const ImageView = useCallback((data: IImageItem) => {
+    return (
+      <Image
+        src={data.src}
+        alt={data.alt}
+        width={data.width}
+        height={data.height}
+      />
+    );
+  }, []);
 
   const InputView = (
     key: number,
@@ -312,6 +313,10 @@ function TableProperty({
         const inputStyles = styles as IInputItemStyle;
         return InputView(tablePropertyKey, inputData, inputStyles);
       }
+      case 'image': {
+        const imageData = data as IImageItem;
+        return ImageView(imageData);
+      }
       case 'option': {
         const optionData = data as IOptionItem;
         return OptionView(optionData);
@@ -401,6 +406,13 @@ interface IOptionItem {
   image?: string;
   hoverImage?: string;
   menu: Array<IMenuItem>;
+}
+
+interface IImageItem {
+  alt: string;
+  src: string;
+  width: number;
+  height: number;
 }
 
 // input 요소 정보

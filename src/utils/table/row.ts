@@ -12,6 +12,7 @@ import constants, {
   USER_TYPE,
   ZIBOX_VERSION,
 } from 'utils/constants';
+import MonitoringFormat from 'utils/format/monitoring';
 import Utils from 'utils/new_utils';
 
 class TableRow {
@@ -585,6 +586,70 @@ class TableRow {
     row.push(`${tmr_cd ?? ''}`); // 상담원 코드
     row.push(updated_at); // 변경 일시
     row.push(name); // 변경자
+
+    return row;
+  }
+
+  static getRowMonitoring(
+    contents: UserData,
+    tappingStatus: number,
+    userId: number,
+    isRealMonitUser: boolean,
+  ) {
+    const row: Array<{ type: string; data: any }> = [];
+
+    const {
+      branch_name,
+      call,
+      calling_time,
+      consultant,
+      name,
+      team_name,
+      user_name,
+      phone,
+      zibox,
+    } = contents;
+
+    row.push({ type: 'text', data: branch_name ?? '' }); // 센터명
+    row.push({ type: 'text', data: team_name ?? '' }); // 팀명
+    row.push({ type: 'text', data: user_name ?? '' }); // 상담원 코드
+    row.push({ type: 'text', data: name ?? '' }); // 상담원명
+
+    let { color, text } = MonitoringFormat.getConsultantStatus(
+      call?.status,
+      consultant?.status,
+      phone?.connection,
+    );
+    row.push({ type: 'text', data: `${text}${constants.PARSING_KEY}${color}` });
+
+    const time = calling_time
+      ? Utils.getHourMinSecBySecond(calling_time)
+      : '00:00:00';
+    row.push({ type: 'text', data: time }); // 시간
+
+    const {
+      image,
+      text: textValue,
+      type,
+    }: {
+      image: string;
+      text: string;
+      type: string;
+    } = MonitoringFormat.getMonitStatus(
+      zibox?.monitoring,
+      zibox?.monit_user,
+      tappingStatus,
+      call?.status,
+      userId,
+      isRealMonitUser,
+    );
+    row.push({
+      type,
+      data: {
+        image,
+        text: textValue,
+      },
+    });
 
     return row;
   }
