@@ -23,6 +23,7 @@ import constants, {
   SOCKET_CONNECTION,
   USER_TYPE,
   ZIBOX_TRANSPORT,
+  CONSULTANT_TEXT_STATUS,
 } from 'utils/constants';
 import useMultiSelect from 'hooks/useMultiSelect';
 import { Colors } from 'utils/color';
