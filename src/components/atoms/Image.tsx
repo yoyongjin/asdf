@@ -49,6 +49,8 @@ interface ImageProps extends StyledImageProps {
   readonly alt?: string;
   readonly src: string;
   readonly onClick?: () => void;
+  onMouseEnter?: React.MouseEventHandler<HTMLImageElement>;
+  onMouseLeave?: React.MouseEventHandler<HTMLImageElement>;
 }
 
 Image.defaultProps = {

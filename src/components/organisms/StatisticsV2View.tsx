@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import React, { useMemo, useCallback, useEffect } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import { TablePagination, TitleV2 } from 'components/molecules';
 import { IProperty as ITableProperty } from 'components/molecules/TableProperty';
@@ -19,12 +19,15 @@ import { Colors } from 'utils/color';
 import Utils from 'utils/new_utils';
 import {
   tableTitleAutoMessageStatistics,
+  tableTitleCallStatisticsByConsultant,
+  tableTitleCallStatisticsByTeam,
+  tableTitleDependencyCallStatistics,
   tableTitleDependencyCallStatisticsByConsultant,
   tableTitleDependencyCallStatisticsByTeam,
   tableTitleMessageStatistics,
 } from 'utils/table/title';
 import TableRow from 'utils/table/row';
-import { USER_TYPE } from 'utils/constants';
+import constants, { USER_TYPE, ZIBOX_TRANSPORT } from 'utils/constants';
 import Toast from 'utils/toast';
 
 const tabTitle = [
@@ -103,6 +106,14 @@ const StyledTitle = styled.div`
 
 const StyledContent = styled.div`
   height: calc(100% - 8.5rem - 100px);
+
+  ${(props) => {
+    if (constants.IS_IE_BROWSER) {
+      return css`
+        overflow: auto;
+      `;
+    }
+  }}
 `;
 
 const StyledFooter = styled.div`
@@ -1108,6 +1119,7 @@ function StatisticsV2View() {
             type: 'text',
             propertyStyles: {
               justifyContent: 'center',
+              textAlign: 'center',
             },
           };
         },
@@ -1199,6 +1211,7 @@ function StatisticsV2View() {
             propertyStyles: {
               backgroundColor,
               justifyContent: 'center',
+              textAlign: 'center',
             },
           };
         },
@@ -1248,6 +1261,7 @@ function StatisticsV2View() {
             propertyStyles: {
               backgroundColor,
               justifyContent: 'center',
+              textAlign: 'center',
             },
           };
         },
@@ -1571,18 +1585,38 @@ function StatisticsV2View() {
             <Table
               borderItem={borderItem}
               contents={tableContentCallStatisticsByConsultant}
+              dependencyTitles={
+                constants.IS_IE_BROWSER
+                  ? tableTitleDependencyCallStatistics
+                  : undefined
+              }
               headColor={Colors.white}
               headHeight={52}
-              titles={tableTitleDependencyCallStatisticsByConsultant}
+              titles={
+                constants.IS_IE_BROWSER
+                  ? tableTitleCallStatisticsByConsultant
+                  : tableTitleDependencyCallStatisticsByConsultant
+              }
+              type={constants.IS_IE_BROWSER ? 'table' : 'grid'}
             />
           ) : selectedTabIndex === 1 ? (
             // 팀별 통화 통계
             <Table
               borderItem={borderItem}
               contents={tableContentCallStatisticsByTeam}
+              dependencyTitles={
+                constants.IS_IE_BROWSER
+                  ? tableTitleDependencyCallStatistics
+                  : undefined
+              }
               headColor={Colors.white}
               headHeight={52}
-              titles={tableTitleDependencyCallStatisticsByTeam}
+              titles={
+                constants.IS_IE_BROWSER
+                  ? tableTitleCallStatisticsByTeam
+                  : tableTitleDependencyCallStatisticsByTeam
+              }
+              type={constants.IS_IE_BROWSER ? 'table' : 'grid'}
             />
           ) : selectedTabIndex === 2 ? (
             // 문자 통계
@@ -1592,6 +1626,7 @@ function StatisticsV2View() {
               headColor={Colors.white}
               headHeight={52}
               titles={tableTitleMessageStatistics}
+              type={constants.IS_IE_BROWSER ? 'table' : 'grid'}
             />
           ) : (
             // 자동 문자 통계
@@ -1601,6 +1636,7 @@ function StatisticsV2View() {
               headColor={Colors.white}
               headHeight={33}
               titles={tableTitleAutoMessageStatistics}
+              type={constants.IS_IE_BROWSER ? 'table' : 'grid'}
             />
           )}
         </StyledContent>

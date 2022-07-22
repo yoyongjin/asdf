@@ -231,3 +231,7 @@ export const SET_INIT_PLURAL_CONSULTANT = 'SET_INIT_PLURAL_CONSULTANT';
 export const setInitPluralConsultant = createAction(
   SET_INIT_PLURAL_CONSULTANT,
 )();
+
+export const SET_INIT_CONSULTANT = 'SET_INIT_CONSULTANT';
+
+export const setInitConsultant = createAction(SET_INIT_CONSULTANT)();

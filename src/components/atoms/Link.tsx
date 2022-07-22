@@ -8,7 +8,7 @@ const StyledLink = styled(RouterLink)({
 
 function Link({ path, onClick, children }: LinkProps) {
   return (
-    <StyledLink to={path} onClick={onClick}>
+    <StyledLink to={path} replace onClick={onClick}>
       {children}
     </StyledLink>
   );

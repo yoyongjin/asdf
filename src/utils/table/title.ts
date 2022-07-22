@@ -372,7 +372,7 @@ export const tableTitleCallStatisticsByConsultant = [...new Array(8)].map(
       letterSpacing: -0.6,
       rowSpan: 1,
       title: '',
-      width: 0,
+      width: constants.IS_IE_BROWSER ? 727 : 0,
     };
 
     switch (i) {
@@ -464,7 +464,7 @@ export const tableTitleCallStatisticsByTeam = [...new Array(6)].map((v, i) => {
     letterSpacing: -0.6,
     rowSpan: 1,
     title: '',
-    width: 0,
+    width: constants.IS_IE_BROWSER ? 727 : 0,
   };
 
   switch (i) {
@@ -523,6 +523,17 @@ export const tableTitleDependencyCallStatisticsByTeam = [
   ...tableTitleDependencyAllCallStatistics,
   ...tableTitleDependencyOutcomingCallStatistics,
   ...tableTitleDependencyIncomingCallStatistics,
+];
+
+/**
+ * @description 통화 통계의 상세 테이블 제목 병합 (전체/발신/수신)
+ */
+export const tableTitleDependencyCallStatistics = [
+  [
+    ...tableTitleDependencyAllCallStatistics,
+    ...tableTitleDependencyOutcomingCallStatistics,
+    ...tableTitleDependencyIncomingCallStatistics,
+  ],
 ];
 
 /**
@@ -689,6 +700,7 @@ export const tableTitleSettingAutoMessage = [...new Array(6)].map((v, i) => {
     letterSpacing: -0.6,
     paddingLeft: 10,
     title: '',
+    textAlign: 'left',
     width: 15,
   };
 
@@ -743,6 +755,7 @@ export const tableTitleSettingMessageCount = [...new Array(4)].map((v, i) => {
     letterSpacing: -0.6,
     paddingLeft: 10,
     title: '',
+    textAlign: 'left',
     width: 15,
   };
 
@@ -784,6 +797,7 @@ export const tableTitlePhoneManagement = [...new Array(12)].map((v, i) => {
     letterSpacing: -0.6,
     paddingLeft: 10,
     title: '',
+    textAlign: 'left',
     width: 5,
   };
 
@@ -865,6 +879,7 @@ export const tableTitlePhoneHistory = [...new Array(10)].map((v, i) => {
     letterSpacing: -0.6,
     paddingLeft: 10,
     title: '',
+    textAlign: 'left',
     width: 5,
   };
 
@@ -942,6 +957,7 @@ export const tableTitleMonitoring = [...new Array(7)].map((v, i) => {
     letterSpacing: -0.6,
     paddingLeft: 0,
     title: '',
+    textAlign: 'left',
     width: 0,
   };
 

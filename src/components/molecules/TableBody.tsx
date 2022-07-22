@@ -15,7 +15,7 @@ const StyledWrapper = styled.div<IStyledWrapper>`
   height: ${(props) => props.height}px;
 `;
 
-function TableBody({ widthTemplate, contents, isVirtual }: ITableBody) {
+function TableBody({ widthTemplate, contents, isVirtual, type }: ITableBody) {
   const DefaultListView = useCallback(() => {
     return (
       <ScrollSyncPane group="one">
@@ -37,6 +37,7 @@ function TableBody({ widthTemplate, contents, isVirtual }: ITableBody) {
                   listLength={contents.data.length}
                   orderId={index}
                   originItem={contents.originData![index]}
+                  type={type}
                 />
               </StyledWrapper>
             );
@@ -49,6 +50,7 @@ function TableBody({ widthTemplate, contents, isVirtual }: ITableBody) {
     contents.originData,
     contents.styles,
     contents.type,
+    type,
     widthTemplate,
   ]);
 
@@ -77,6 +79,7 @@ function TableBody({ widthTemplate, contents, isVirtual }: ITableBody) {
                       listLength={contents.data.length}
                       orderId={index}
                       originItem={contents.originData![index]}
+                      type={type}
                     />
                   </StyledWrapper>
                 );
@@ -91,6 +94,7 @@ function TableBody({ widthTemplate, contents, isVirtual }: ITableBody) {
     contents.originData,
     contents.styles,
     contents.type,
+    type,
     widthTemplate,
   ]);
 
@@ -125,6 +129,7 @@ interface ITableBody {
   contents: ITableBodyData;
   isVirtual: boolean;
   widthTemplate: string;
+  type: 'grid' | 'table';
 }
 
 export default TableBody;

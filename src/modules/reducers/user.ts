@@ -466,6 +466,11 @@ const userReducer = createReducer<UserState, UserAction>(initialState, {
       draft.plural_consultant = [];
     });
   },
+  [types.SET_INIT_CONSULTANT]: (state, action) => {
+    return produce(state, (draft) => {
+      draft.consultant = [];
+    });
+  },
   /**
    * @deprecated
    */

@@ -5,7 +5,6 @@ import { Text } from 'components/atoms';
 import { Colors } from 'utils/color';
 
 const StyledWrapper = styled.tr`
-  height: 100%;
   width: 100%;
 `;
 
@@ -14,13 +13,14 @@ const StyledTitle = styled.th<IStyledTitle>`
   border-width: ${(props) => props.borderWidth}px;
   border-style: ${(props) => props.borderStyle};
   border-color: ${(props) => props.borderColor};
+  padding: 0px;
   padding-left: ${(props) => props.paddingLeft}px;
   text-align: ${(props) => props.textAlign};
   vertical-align: middle;
-  width: ${(props) => props.width}${(props) => (props.isWidthPercent ? '%' : 'px')};
+  width: ${(props) => props.widthValue};
 `;
 
-function TableTitle({ titles }: ITableTitleProps) {
+function TableTitle({ titles, tableWidth }: ITableTitleProps) {
   return (
     <StyledWrapper>
       {titles.map((titleData, i) => {
@@ -41,6 +41,7 @@ function TableTitle({ titles }: ITableTitleProps) {
             rowSpan={titleData.rowSpan}
             textAlign={titleData.textAlign}
             width={titleData.width}
+            widthValue={tableWidth[i]}
           >
             <Text
               fontColor={titleData.fontColor || Colors.navy2}
@@ -67,6 +68,7 @@ interface IStyledTitle {
   paddingLeft?: number;
   isWidthPercent?: boolean; // width 고정/비고정 여부
   width: number;
+  widthValue?: string;
 }
 
 export interface ITableTitleData extends IStyledTitle {
@@ -83,6 +85,7 @@ export interface ITableTitleData extends IStyledTitle {
 
 interface ITableTitleProps {
   titles: Array<ITableTitleData>;
+  tableWidth: Array<string>;
 }
 
 TableTitle.defaultProps = {};

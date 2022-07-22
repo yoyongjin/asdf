@@ -1,3 +1,5 @@
+import Utils from './new_utils';
+
 export const apiServer = process.env.REACT_APP_API_SERVER;
 export const celeringServer = process.env.REACT_APP_CELERING_SERVER;
 
@@ -188,6 +190,7 @@ export default {
   },
   DEFAULT_ID: -1,
   PARSING_KEY: 'YxAdwk22Fx',
+  IS_IE_BROWSER: Utils.checkBrowser() === 'ie' ? true : false,
   ADMIN: {
     ADD_USER:
       Number(process.env.REACT_APP_ADD_USER_ADMIN) >= USER_TYPE.CONSULTANT &&

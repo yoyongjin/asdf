@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { MdKeyboardArrowLeft } from 'react-icons/md';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import { Modal } from 'components/atoms';
 import { PhoneInfoPopup, TablePagination, TitleV2 } from 'components/molecules';
@@ -36,6 +36,14 @@ const StyledTitle = styled.div`
 
 const StyledContent = styled.div`
   height: calc(100% - 8.5rem - 100px);
+
+  ${(props) => {
+    if (constants.IS_IE_BROWSER) {
+      return css`
+        overflow-x: auto;
+      `;
+    }
+  }}
 `;
 
 const StyledFooter = styled.div`
@@ -679,6 +687,7 @@ function PhoneView() {
               headColor={Colors.white}
               headHeight={33.5}
               titles={tableTitlePhoneHistory}
+              type={constants.IS_IE_BROWSER ? 'table' : 'grid'}
             />
           ) : (
             <Table
@@ -687,6 +696,7 @@ function PhoneView() {
               headColor={Colors.white}
               headHeight={33.5}
               titles={tableTitlePhoneManagement}
+              type={constants.IS_IE_BROWSER ? 'table' : 'grid'}
             />
           )}
         </StyledContent>

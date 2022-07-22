@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { RouteComponentProps } from 'react-router-dom';
 
 import { Modal } from 'components/atoms';
@@ -40,6 +40,14 @@ const StyledContent = styled.div`
   height: calc(100% - 6rem - 120px);
   overflow-x: auto;
   padding-top: 20px;
+
+  ${(props) => {
+    if (constants.IS_IE_BROWSER) {
+      return css`
+        overflow-x: auto;
+      `;
+    }
+  }}
 `;
 
 const StyledFooter = styled.div`
@@ -458,6 +466,7 @@ function UserView({ location }: UserViewProps) {
           propertyStyles: {
             backgroundColor,
             justifyContent: 'center',
+            textAlign: 'center',
           },
         };
       });
@@ -509,6 +518,7 @@ function UserView({ location }: UserViewProps) {
         propertyStyles: {
           backgroundColor,
           justifyContent: 'flex-end',
+          textAlign: 'right',
         },
       };
 
@@ -659,6 +669,7 @@ function UserView({ location }: UserViewProps) {
           <Table
             contents={tableContentUserInfo}
             titles={tableTitleUserManagement}
+            type={constants.IS_IE_BROWSER ? 'table' : 'grid'}
           />
         </StyledContent>
         <StyledFooter>

@@ -1,5 +1,11 @@
 import _ from 'lodash';
-import React, { useState, useEffect, Fragment, useMemo } from 'react';
+import React, {
+  useState,
+  useEffect,
+  Fragment,
+  useMemo,
+  useCallback,
+} from 'react';
 import styled, { css } from 'styled-components';
 import { Location } from 'history';
 
@@ -7,6 +13,8 @@ import { Link, Text } from 'components/atoms';
 import { StyledCommonBothWhiteSpace } from 'styles/common';
 import { Colors } from 'utils/color';
 import constants, { AUTO_MESSAGE_VERSION, USER_TYPE } from 'utils/constants';
+import useMonitoring from 'hooks/useMonitoring';
+import Toast from 'utils/toast';
 
 const StyledWrapper = styled.div`
   height: 100%;
@@ -80,6 +88,7 @@ const LINK_DATA = [
 
 function LinkSelector({ location, permission }: ILinkSelector) {
   const [visible, setVisible] = useState<number>(0);
+  const { tappingTarget } = useMonitoring();
 
   useEffect(() => {
     const [monitoring, organization, user, statistics, message, phone, batch] =
@@ -121,6 +130,13 @@ function LinkSelector({ location, permission }: ILinkSelector) {
     return [monitoring, organization, user, statistics, message, phone, batch];
   }, [permission]);
 
+  const checkTapping = useCallback(() => {
+    if (tappingTarget.id !== -1) {
+      // 감청 중이기 때문에 페이지를 이동하면 안 됨
+      Toast.warning('감청을 종료해주세요.');
+    }
+  }, [tappingTarget.id]);
+
   return (
     <StyledWrapper>
       {permission !== USER_TYPE.CONSULTANT &&
@@ -134,7 +150,10 @@ function LinkSelector({ location, permission }: ILinkSelector) {
             <Fragment key={`LinkSelector-${data.path}`}>
               <StyledCommonBothWhiteSpace pixel={data.pixel} />
               <StyledLink type={index} visible={visible}>
-                <Link path={data.path}>
+                <Link
+                  path={tappingTarget.id !== -1 ? '/main' : data.path}
+                  onClick={checkTapping}
+                >
                   <Text fontColor={Colors.white} fontSize={16} fontWeight={700}>
                     {data.name}
                   </Text>

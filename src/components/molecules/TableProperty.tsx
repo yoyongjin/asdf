@@ -24,8 +24,26 @@ import { IAutoMessageItem, IMaxMessageItem } from 'types/message';
 import { IPhoneItem } from 'types/phone';
 import constants, { ANSWER_VALUE } from 'utils/constants';
 import Utils from 'utils/new_utils';
+import { UserData as UserDataV2 } from 'types/user';
+import { THandleTapping } from 'components/organisms/MonitoringView';
 
-const StyledWrapper = styled.div<IStyledWrapper>`
+const StyledTableWrapper = styled.td<IStyledWrapper>`
+  background-color: ${(props) => props.backgroundColor};
+  height: ${(props) => {
+    if (props.rowHeight) {
+      return `${props.rowHeight}px`;
+    }
+
+    return '100%';
+  }};
+  padding-left: ${(props) => props.paddingLeft}px;
+  padding-right: ${(props) => props.paddingRight}px;
+  text-align: ${(props) => props.textAlign};
+  vertical-align: middle;
+  width: ${(props) => props.widthValue};
+`;
+
+const StyledGridWrapper = styled.div<IStyledWrapper>`
   align-content: center;
   background-color: ${(props) => props.backgroundColor};
   display: grid;
@@ -54,6 +72,9 @@ function TableProperty({
   listLength,
   orderId,
   originItem,
+  rowHeight,
+  type,
+  tableWidth,
 }: ITablePropertyProps) {
   const { isHover, onMouseIn, onMouseOut } = useHover();
   const { form, onChangeInput } = useInputForm<DynamicJSON>({});
@@ -102,6 +123,10 @@ function TableProperty({
                 _originItem.number,
               );
             }
+          } else if (contentType === 'monitoring') {
+            const _originItem = originItem as UserDataV2;
+
+            (data.onClick as THandleTapping)(_originItem);
           }
         }
       };
@@ -146,7 +171,7 @@ function TableProperty({
       }
 
       return (
-        <div onMouseEnter={onMouseIn} onMouseLeave={onMouseOut}>
+        <div onMouseLeave={onMouseOut}>
           {isHover && (
             <StyledMenuWrapper>
               <MenuList
@@ -163,6 +188,7 @@ function TableProperty({
               width={40}
               height={40}
               hoverImg={data.hoverImage}
+              onMouseEnter={onMouseIn}
             />
           )}
         </div>
@@ -336,8 +362,23 @@ function TableProperty({
   return (
     <>
       {contents.map((values, index) => {
+        if (type === 'table') {
+          return (
+            <StyledTableWrapper
+              backgroundColor={values.propertyStyles?.backgroundColor}
+              key={`styled-table-property-wrapper-${index}`}
+              paddingLeft={values.propertyStyles?.paddingLeft || 0}
+              paddingRight={values.propertyStyles?.paddingRight || 0}
+              textAlign={values.propertyStyles?.textAlign || 'left'}
+              rowHeight={rowHeight}
+              widthValue={tableWidth && tableWidth[index]}
+            >
+              {RenderView(values, index)}
+            </StyledTableWrapper>
+          );
+        }
         return (
-          <StyledWrapper
+          <StyledGridWrapper
             backgroundColor={values.propertyStyles?.backgroundColor}
             key={`styled-table-property-wrapper-${index}`}
             paddingLeft={values.propertyStyles?.paddingLeft || 0}
@@ -347,14 +388,16 @@ function TableProperty({
             }
           >
             {RenderView(values, index)}
-          </StyledWrapper>
+          </StyledGridWrapper>
         );
       })}
     </>
   );
 }
 
-interface IStyledWrapper extends ITdStyle {}
+interface IStyledWrapper extends ITdStyle {
+  rowHeight?: number;
+}
 
 // text style
 interface ITextItemStyle {
@@ -398,7 +441,8 @@ interface IButtonItem {
     | TRemoveAutoMessage
     | TOnClickModifyAutoMessagePopup
     | THandlePhoneInfoPopup
-    | THandlePhoneView;
+    | THandlePhoneView
+    | THandleTapping;
   text?: string;
 }
 
@@ -451,6 +495,8 @@ interface ITdStyle {
   paddingLeft?: number;
   paddingRight?: number;
   justifyContent?: string;
+  textAlign?: string;
+  widthValue?: string;
 }
 
 export interface IProperty {
@@ -471,7 +517,10 @@ interface ITablePropertyProps {
   contentType: string; // 컴포넌트 재사용 시 데이터 구분하기 위해
   listLength: number; // 전체 데이터 길이
   orderId: number; // 순서
-  originItem: IMaxMessageItem | IAutoMessageItem | IPhoneItem; // 원본 데이터
+  originItem: IMaxMessageItem | IAutoMessageItem | IPhoneItem | UserDataV2; // 원본 데이터
+  rowHeight?: number;
+  type: 'grid' | 'table';
+  tableWidth?: Array<string>;
 }
 
 TableProperty.defaultProps = {};

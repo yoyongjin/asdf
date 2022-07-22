@@ -10,6 +10,9 @@ import loadingIcon from 'images/loading.gif';
 import startTappingIcon from 'images/zms/bt-mnt-listen-nor.png';
 import tappingIcon from 'images/zms/bt-mnt-listen-ing.png';
 import stopTappingIcon from 'images/zms/bt-mnt-listen-fin-nor.png';
+import monitoringIcon from 'images/icon-mnt-red@2x.png';
+import waitingIcon from 'images/icon-mnt-grey@2x.png';
+import callingIcon from 'images/icon-mnt-blue@2x.png';
 
 class Monitoring {
   static getMonitStatus(
@@ -32,51 +35,55 @@ class Monitoring {
       };
     }
 
-    // 통화 중인 상태
-    if (callStatus === CALL_STATUS_V2.CONNECT) {
-      if (tappingStatus === 0) {
-        // 내가 감청 중이 아닐 경우
-        if (monitStatus === ZIBOX_MONIT_STATUS.ENABLE) {
-          // 다른 관리자가 감청 중인 경우
-          return {
-            image: tappingIcon,
-            text: '',
-            type: 'button',
-          };
-        }
+    if (callStatus !== CALL_STATUS_V2.CONNECT) {
+      // 통화 중인 상태가 아닌 경우
+      return {
+        image: '',
+        text: '',
+        type: '',
+      };
+    }
 
-        // 다른 관리자도 감청 중이 아닌 경우
+    if (tappingStatus === 0) {
+      // 내가 감청 중이 아닐 경우
+      if (monitStatus === ZIBOX_MONIT_STATUS.ENABLE) {
+        // 다른 관리자가 감청 중인 경우
         return {
-          image: startTappingIcon,
-          text: '감청',
+          image: tappingIcon,
+          text: '',
           type: 'button',
         };
-      } else if (tappingStatus === 2) {
-        // 내가 감청을 하고 있는 경우
-        if (monitStatus === ZIBOX_MONIT_STATUS.ENABLE) {
-          // 내가 감청 중인 상담원일 경우
-          if (monitUserId === userId) {
-            return {
-              image: stopTappingIcon,
-              text: '감청 종료',
-              type: 'button',
-            };
-          }
-
-          // 다른 관리자가 감청중인 상담원일 경우
-          return {
-            image: tappingIcon,
-            text: '',
-            type: 'button',
-          };
-        }
       }
+
+      // 다른 관리자도 감청 중이 아닌 경우
+      return {
+        image: startTappingIcon,
+        text: '감청',
+        type: 'button',
+      };
+    } else if (tappingStatus === 2) {
+      // 내가 감청을 하고 있는 경우
+      if (monitStatus === ZIBOX_MONIT_STATUS.ENABLE && monitUserId === userId) {
+        // 내가 감청 중인 상담원일 경우
+        return {
+          image: stopTappingIcon,
+          text: '감청 종료',
+          type: 'button',
+        };
+      }
+
+      // 다른 관리자가 감청중인 상담원일 경우
+      return {
+        image: tappingIcon,
+        text: '',
+        type: 'button',
+      };
     }
 
     return {
       image: '',
       text: '',
-      type: 'button',
+      type: '',
     };
   }
 
@@ -145,6 +152,38 @@ class Monitoring {
     }
 
     return value;
+  }
+
+  static getConsultantImageStatus(callStatus?: number, monitStatus?: number) {
+    if (
+      callStatus === CALL_STATUS_V2.OFFHOOK ||
+      callStatus === CALL_STATUS_V2.INCOMMING ||
+      callStatus === CALL_STATUS_V2.CONNECT
+    ) {
+      // 통화 중인 상태
+
+      if (monitStatus === ZIBOX_MONIT_STATUS.ENABLE) {
+        // 감청 중인 상태
+
+        return {
+          image: monitoringIcon,
+          text: 'Monitoring Status',
+          type: 'image',
+        };
+      }
+
+      return {
+        image: callingIcon,
+        text: 'Calling Status',
+        type: 'image',
+      };
+    }
+
+    return {
+      image: waitingIcon,
+      text: 'Waiting Status',
+      type: 'image',
+    };
   }
 }
 

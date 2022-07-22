@@ -20,10 +20,11 @@ import useAuth from 'hooks/useAuth';
 import useVisible from 'hooks/useVisible';
 import useZibox from 'hooks/useZibox';
 import constants, {
-  SOCKET_CONNECTION,
   USER_TYPE,
   ZIBOX_TRANSPORT,
   CONSULTANT_TEXT_STATUS,
+  ZIBOX_MONIT_STATUS,
+  CALL_STATUS_V2,
 } from 'utils/constants';
 import useMultiSelect from 'hooks/useMultiSelect';
 import { Colors } from 'utils/color';
@@ -31,6 +32,8 @@ import useToggle from 'hooks/useToggle';
 import { tableTitleMonitoring } from 'utils/table/title';
 import TableRow from 'utils/table/row';
 import MonitoringFormat from 'utils/format/monitoring';
+import Utils from 'utils/new_utils';
+import Toast from 'utils/toast';
 
 const AREA_MAGIN = 27; //상담사 박스 영역 마진
 const BOX_MAGIN = 5; //상담사 박스 마진
@@ -71,16 +74,15 @@ function Monitoring({ location }: MonitoringProps) {
     pluralTeam,
     setInitializePluralTeam,
   } = useOrganization();
-  const { form, onChangeCheckBox, setSpecificValue, onChangeInput } =
-    useInputForm({
-      call: false, // 통화중
-      wait: false, // 대기중
-      logout: false, // 로그아웃
-      page: 1,
-      limit: 10000,
-      left: 1.5,
-      right: 1.5,
-    });
+  const { form, onChangeCheckBox, onChangeInput } = useInputForm({
+    call: false, // 통화중
+    wait: false, // 대기중
+    logout: false, // 로그아웃
+    page: 1,
+    limit: 10000,
+    left: 1.5,
+    right: 1.5,
+  });
   const { tappingStatus, changeTappingData, tappingTarget } = useMonitoring();
   const {
     consultantInfo,
@@ -89,6 +91,7 @@ function Monitoring({ location }: MonitoringProps) {
     pluralConsultant,
     setInitializePluralConsultant,
     getConsultants,
+    setInitializeConsultatns,
   } = useUser();
   const { visible, onClickVisible } = useVisible();
   const { requestTapping, startTapping, stopTapping, setVolume } = useZibox();
@@ -200,6 +203,82 @@ function Monitoring({ location }: MonitoringProps) {
     });
   }, [consultantInfo, form.call, form.logout, form.wait]);
 
+  const handleTapping = useCallback(
+    (consultInfo: UserDataV2) => {
+      const monitStatus =
+        consultInfo.zibox?.monit_user === -1 ? '시작' : '종료';
+      Toast.notification(`감청을 ${monitStatus}합니다.`);
+
+      requestTapping(
+        consultInfo.number!,
+        loginInfo.id,
+        consultInfo.zibox?.monit_user === -1 ? 1 : 0,
+        constants.TRANSPORT === ZIBOX_TRANSPORT.OCX
+          ? consultInfo.pc_ip!
+          : consultInfo.zibox_ip!,
+      );
+
+      changeTappingData(
+        1,
+        constants.TRANSPORT === ZIBOX_TRANSPORT.OCX
+          ? consultInfo.pc_ip!
+          : consultInfo.zibox_ip!,
+        consultInfo.id,
+        consultInfo.number!,
+      );
+
+      const mode = constants.TRANSPORT;
+
+      if (consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.ENABLE) {
+        if (consultInfo.zibox.monit_user !== loginInfo.id) {
+          // 내가 감청을 하는 대상이 아닌 경우
+          return;
+        }
+
+        // 감청 대상인 경우
+        // 연결 끊기
+        if (mode !== ZIBOX_TRANSPORT.SERVER) {
+          stopTapping();
+        }
+        return;
+      }
+
+      if (mode === ZIBOX_TRANSPORT.MQTT) {
+        const options = {
+          ip: consultInfo.zibox_ip!,
+          mic_vol: consultInfo.zibox_mic!,
+          spk_vol: consultInfo.zibox_spk!,
+          target_id: loginInfo.id!,
+          key: consultInfo.number!,
+        };
+
+        startTapping(options);
+      } else if (mode === ZIBOX_TRANSPORT.OCX) {
+        const options = {
+          ip: consultInfo.pc_ip!,
+          target_id: loginInfo.id!,
+          key: consultInfo.number!,
+        };
+
+        startTapping(options);
+      } else if (mode === ZIBOX_TRANSPORT.PACKET) {
+        const options = {
+          key: consultInfo.number!,
+          ip: consultInfo.zibox?.zibox_ip!,
+        };
+
+        startTapping(options);
+      }
+    },
+    [
+      changeTappingData,
+      loginInfo.id,
+      requestTapping,
+      startTapping,
+      stopTapping,
+    ],
+  );
+
   const consultantView = useCallback(
     (consultant: UserDataV2, style: React.CSSProperties) => {
       return (
@@ -210,26 +289,20 @@ function Monitoring({ location }: MonitoringProps) {
           <Consultant
             key={`${loginInfo.admin_id}-consultant-${consultant.id}`}
             consultInfo={consultant}
+            handleTapping={handleTapping}
             loginData={loginInfo}
             setSeletedConsultantData={setSeletedConsultantData}
-            changeTappingData={changeTappingData}
             tappingStatus={tappingStatus}
-            requestTapping={requestTapping}
-            startTapping={startTapping}
-            stopTapping={stopTapping}
             tappingTarget={tappingTarget}
           />
         </StyledConsultant>
       );
     },
     [
+      handleTapping,
       loginInfo,
       setSeletedConsultantData,
-      changeTappingData,
       tappingStatus,
-      requestTapping,
-      startTapping,
-      stopTapping,
       tappingTarget,
     ],
   );
@@ -352,13 +425,52 @@ function Monitoring({ location }: MonitoringProps) {
     handleMonitoringView('card');
   }, [handleMonitoringView, isToggle]);
 
+  const isValidateStatistics = useCallback((ids: string) => {
+    if (ids.length < 1) {
+      // 선택된 상담원이 없을 경우
+      return {
+        status: false,
+        message: '상담원을 선택해주세요.',
+      };
+    }
+
+    return {
+      status: true,
+      message: '',
+    };
+  }, []);
+
   const onClickGetUsers = useCallback(() => {
     const ids = pluralConsultantSelectedOption
       .map((consultant) => consultant.value)
       .join(','); // 상담원 여러명 선택
 
+    const { status, message } = isValidateStatistics(ids);
+
+    if (!status) {
+      Toast.warning(`${message}🙄`);
+
+      return;
+    }
+
     getConsultants(ids, form.limit, form.page);
-  }, [form.limit, form.page, getConsultants, pluralConsultantSelectedOption]);
+  }, [
+    form.limit,
+    form.page,
+    getConsultants,
+    isValidateStatistics,
+    pluralConsultantSelectedOption,
+  ]);
+
+  const handleGetUsers = useCallback(() => {
+    if (tappingTarget.id !== -1) {
+      // 감청 중이기 때문에 조회하면 안 됨
+      Toast.warning('감청을 종료해주세요.');
+      return;
+    }
+
+    onClickGetUsers();
+  }, [onClickGetUsers, tappingTarget.id]);
 
   /**
    * @description 타이틀에 들어갈 버튼 정보들
@@ -368,7 +480,7 @@ function Monitoring({ location }: MonitoringProps) {
       type: 'button',
       data: {
         text: '조회',
-        onClick: () => onClickGetUsers(),
+        onClick: handleGetUsers,
       },
       styles: {
         backgroundColor: Colors.blue4,
@@ -382,7 +494,7 @@ function Monitoring({ location }: MonitoringProps) {
     };
 
     return [buttonConfig1];
-  }, [onClickGetUsers]);
+  }, [handleGetUsers]);
 
   /**
    * @description 타이틀에 들어갈 text + checkbox 정보들
@@ -672,11 +784,13 @@ function Monitoring({ location }: MonitoringProps) {
             data: {
               image,
               text,
+              onClick: text ? handleTapping : undefined,
             },
             styles: {
               backgroundColor: 'inherit',
               height: 2.6,
               width: 7.5,
+              fontColor: 'white',
             },
             type: 'button',
           };
@@ -696,6 +810,15 @@ function Monitoring({ location }: MonitoringProps) {
           };
         }
 
+        if (type === '') {
+          return {
+            data: {
+              text: '',
+            },
+            type: 'text',
+          };
+        }
+
         const [text, color] = (data as string).split(constants.PARSING_KEY);
 
         return {
@@ -703,7 +826,7 @@ function Monitoring({ location }: MonitoringProps) {
             text,
           },
           styles: {
-            fontColor: color ?? 'inherit`',
+            fontColor: color ?? 'inherit',
             fontFamily: 'Malgun Gothic',
             fontSize: 12,
             fontWeight: color ? 700 : 400,
@@ -718,7 +841,141 @@ function Monitoring({ location }: MonitoringProps) {
 
       return monitoringItems;
     });
-  }, [filteredConsultantInfo, loginInfo.id, tappingStatus, tappingTarget.id]);
+  }, [
+    filteredConsultantInfo,
+    handleTapping,
+    loginInfo.id,
+    tappingStatus,
+    tappingTarget.id,
+  ]);
+
+  /**
+   * @description 로그인한 유저가 상담원 권한일 경우 html title을 통화시간으로 보여주기
+   */
+  useEffect(() => {
+    if (loginInfo.admin_id === USER_TYPE.CONSULTANT) {
+      const [consultInfo] = filteredConsultantInfo.filter(
+        (consultant) => consultant.id === loginInfo.id,
+      );
+
+      if (_.isEmpty(consultInfo)) return;
+
+      if (consultInfo.call?.status === CALL_STATUS_V2.CONNECT) {
+        document.title = consultInfo.calling_time
+          ? Utils.getHourMinSecBySecond(consultInfo.calling_time)
+          : '00:00:00';
+      } else {
+        document.title = '00:00:00';
+      }
+    }
+  }, [filteredConsultantInfo, loginInfo.admin_id, loginInfo.id]);
+
+  useEffect(() => {
+    filteredConsultantInfo.map((consultInfo) => {
+      if (
+        consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.ENABLE &&
+        consultInfo.zibox?.monit_user === loginInfo.id &&
+        tappingStatus !== 2
+      ) {
+        // 감청 중인 경우
+        changeTappingData(
+          2,
+          constants.TRANSPORT === ZIBOX_TRANSPORT.OCX
+            ? consultInfo.pc_ip!
+            : consultInfo.zibox_ip!,
+          consultInfo.id,
+          consultInfo.number!,
+        );
+      } else if (
+        consultInfo.id === tappingTarget.id &&
+        consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.DISABLE &&
+        tappingStatus !== 1
+      ) {
+        // 감청이 끝난 경우
+        changeTappingData(0, '', -1, '');
+      }
+
+      if (
+        consultInfo.call?.status === CALL_STATUS_V2.IDLE &&
+        consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.ENABLE &&
+        consultInfo.zibox?.monit_user === loginInfo.id
+      ) {
+        // 감청하고 있는 상담원이 통화 종료 했을 때 감청 종료 명령 날려주는 부분
+        const mode = constants.TRANSPORT;
+
+        if (mode === ZIBOX_TRANSPORT.SERVER) {
+          requestTapping(
+            consultInfo.number!,
+            loginInfo.id,
+            consultInfo.zibox?.monit_user === -1 ? 1 : 0,
+            consultInfo.zibox_ip!,
+          );
+        } else {
+          stopTapping();
+        }
+      }
+    });
+  }, [
+    changeTappingData,
+    filteredConsultantInfo,
+    loginInfo.id,
+    requestTapping,
+    stopTapping,
+    tappingStatus,
+    tappingTarget.id,
+  ]);
+
+  /**
+   * @description 리스트 초기화
+   */
+  useEffect(() => {
+    return () => {
+      setInitializeConsultatns();
+    };
+  }, [setInitializeConsultatns]);
+
+  useEffect(() => {
+    if (loginInfo.admin_id < USER_TYPE.ADMIN) {
+      // 일반 관리자 하위 권한일 경우
+      const selectedBranchs = pluralBranchOption.filter((item) => {
+        return item.value === loginInfo.branch_id;
+      });
+
+      handlePluralBranchSelectedOption(selectedBranchs);
+    }
+  }, [
+    handlePluralBranchSelectedOption,
+    loginInfo.admin_id,
+    loginInfo.branch_id,
+    pluralBranchOption,
+  ]);
+
+  useEffect(() => {
+    if (_.isEmpty(pluralBranchSelectedOption)) {
+      // 비어있으면 할 필요 없음
+      return;
+    }
+
+    if (_.isEmpty(pluralTeamOption)) {
+      // 팀이 비어있으면 할 필요 없음
+      return;
+    }
+
+    if (loginInfo.admin_id === USER_TYPE.TEAM_ADMIN) {
+      // 팀 관리자일 경우
+      const selectedteams = pluralTeamOption.filter((item) => {
+        return item.value === loginInfo.team_id;
+      });
+
+      handlePluralTeamSelectedOption(selectedteams);
+    }
+  }, [
+    handlePluralTeamSelectedOption,
+    loginInfo.admin_id,
+    loginInfo.team_id,
+    pluralBranchSelectedOption,
+    pluralTeamOption,
+  ]);
 
   /**
    * @description 모니터링 테이블 내용 정보들
@@ -814,6 +1071,7 @@ function Monitoring({ location }: MonitoringProps) {
                 headHeight={33.5}
                 isVirtual
                 titles={tableTitleMonitoring}
+                type={constants.IS_IE_BROWSER ? 'table' : 'grid'}
               />
             </StyledConsultantArea>
           )}
@@ -838,5 +1096,6 @@ function Monitoring({ location }: MonitoringProps) {
 interface MonitoringProps extends RouteComponentProps {}
 
 export type SetSeletedConsultantData = (consultantData: UserDataV2) => void;
+export type THandleTapping = (info: UserDataV2) => void;
 
 export default Monitoring;
