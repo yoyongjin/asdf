@@ -345,6 +345,18 @@ function Table({
     type,
   ]);
 
+  const headHeightValue = useMemo(() => {
+    let rowSpan = 1;
+
+    titles?.forEach((title) => {
+      if (title.rowSpan && rowSpan < title.rowSpan) {
+        rowSpan = title.rowSpan;
+      }
+    });
+
+    return headHeight / rowSpan;
+  }, [headHeight, titles]);
+
   const DefaultTableView = useCallback(() => {
     return (
       <StyledWrapper isVirtual={isVirtual}>
@@ -353,7 +365,11 @@ function Table({
           backgroundColor={headColor}
           headHeight={headHeight}
         >
-          <TableTitle titles={titles} tableWidth={getTableWidths(titles)} />
+          <TableTitle
+            titles={titles}
+            tableWidth={getTableWidths(titles)}
+            headHeight={headHeightValue}
+          />
           {dependencyTitles?.map((titles, index) => {
             const tableWidth = getTableWidths(titles);
 
@@ -362,6 +378,7 @@ function Table({
                 key={`Table-TableTitle-${index}`}
                 titles={titles}
                 tableWidth={tableWidth}
+                headHeight={headHeightValue}
               />
             );
           })}
@@ -383,6 +400,7 @@ function Table({
     getTableWidths,
     headColor,
     headHeight,
+    headHeightValue,
     isVirtual,
     titles,
     type,

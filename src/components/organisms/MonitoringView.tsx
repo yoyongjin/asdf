@@ -791,6 +791,8 @@ function Monitoring({ location }: MonitoringProps) {
               height: 2.6,
               width: 7.5,
               fontColor: 'white',
+              fontSize: 13,
+              fontWeight: 800,
             },
             type: 'button',
           };

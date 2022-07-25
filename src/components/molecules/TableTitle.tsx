@@ -1,11 +1,19 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import { Text } from 'components/atoms';
 import { Colors } from 'utils/color';
 
-const StyledWrapper = styled.tr`
+const StyledWrapper = styled.tr<IStyledWrapper>`
   width: 100%;
+
+  ${(props) => {
+    if (props.headHeight) {
+      return css<IStyledWrapper>`
+        height: ${(props) => props.headHeight}px;
+      `;
+    }
+  }}
 `;
 
 const StyledTitle = styled.th<IStyledTitle>`
@@ -20,9 +28,9 @@ const StyledTitle = styled.th<IStyledTitle>`
   width: ${(props) => props.widthValue};
 `;
 
-function TableTitle({ titles, tableWidth }: ITableTitleProps) {
+function TableTitle({ headHeight, titles, tableWidth }: ITableTitleProps) {
   return (
-    <StyledWrapper>
+    <StyledWrapper headHeight={headHeight}>
       {titles.map((titleData, i) => {
         if (titleData.isNotShow) {
           return null;
@@ -59,6 +67,9 @@ function TableTitle({ titles, tableWidth }: ITableTitleProps) {
   );
 }
 
+interface IStyledWrapper {
+  headHeight?: number;
+}
 interface IStyledTitle {
   backgroundColor?: string;
   borderColor?: string;
@@ -83,7 +94,7 @@ export interface ITableTitleData extends IStyledTitle {
   title: string; // 화면에 보여질 텍스트
 }
 
-interface ITableTitleProps {
+interface ITableTitleProps extends IStyledWrapper {
   titles: Array<ITableTitleData>;
   tableWidth: Array<string>;
 }
