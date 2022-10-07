@@ -110,6 +110,7 @@ function Monitoring({ location }: MonitoringProps) {
   const { isToggle, onClickToggle } = useToggle(
     localStorage.getItem('monitoringView') === 'list',
   );
+  const [isFirst, setIsFirst] = useState(false); // 최초 요청인지 여부
 
   const volumeData = useMemo(() => {
     if (loginInfo.admin_id === USER_TYPE.CONSULTANT) {
@@ -944,7 +945,11 @@ function Monitoring({ location }: MonitoringProps) {
       });
 
       handlePluralBranchSelectedOption(selectedBranchs);
+
+      return;
     }
+
+    handlePluralBranchSelectedOption(pluralBranchOption);
   }, [
     handlePluralBranchSelectedOption,
     loginInfo.admin_id,
@@ -970,13 +975,49 @@ function Monitoring({ location }: MonitoringProps) {
       });
 
       handlePluralTeamSelectedOption(selectedteams);
+
+      return;
     }
+
+    handlePluralTeamSelectedOption(pluralTeamOption);
   }, [
     handlePluralTeamSelectedOption,
     loginInfo.admin_id,
     loginInfo.team_id,
     pluralBranchSelectedOption,
     pluralTeamOption,
+  ]);
+
+  useEffect(() => {
+    if (_.isEmpty(pluralBranchSelectedOption)) {
+      // 비어있으면 할 필요 없음
+      return;
+    }
+
+    if (_.isEmpty(pluralTeamOption)) {
+      // 팀이 비어있으면 할 필요 없음
+      return;
+    }
+
+    handlePluralConsultantSelectedOption(pluralConsultantOption);
+  }, [
+    handlePluralConsultantSelectedOption,
+    pluralBranchSelectedOption,
+    pluralConsultantOption,
+    pluralTeamOption,
+  ]);
+
+  useEffect(() => {
+    if (!isFirst && pluralConsultantSelectedOption.length > 0) {
+      handleGetUsers();
+
+      setIsFirst(true);
+    }
+  }, [
+    handleGetUsers,
+    isFirst,
+    pluralConsultantSelectedOption.length,
+    setIsFirst,
   ]);
 
   /**
