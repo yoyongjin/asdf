@@ -76,7 +76,12 @@ function MenuList({
               // 유저 삭제
               onClick = () => {
                 const click = item.onClick as THandleRemoveUser;
-                click(_data.id);
+
+                const isOk = window.confirm('삭제하실건가요?');
+
+                if (isOk) {
+                  click(_data.id);
+                }
               };
 
               break;

@@ -116,7 +116,11 @@ function TableProperty({
             if (key === 10) {
               (data.onClick as THandlePhoneInfoPopup)(_originItem);
             } else if (key === 11) {
-              (data.onClick as THandleRemovePhoneInfo)(_originItem.id);
+              const isOk = window.confirm('삭제하실건가요?');
+
+              if (isOk) {
+                (data.onClick as THandleRemovePhoneInfo)(_originItem.id);
+              }
             } else {
               (data.onClick as THandlePhoneView)(
                 _originItem.id,
