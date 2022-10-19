@@ -1,13 +1,8 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import useInterval from 'hooks/useInterval';
-import { setCalculatedCallTime } from 'modules/actions/user';
 import { RootState } from 'modules/reducers';
 import { setTappingData } from 'modules/actions/auth';
-
-let server_time = 0;
-let local_time = 0;
 
 function useMonitoring() {
   const tappingStatus = useSelector(
@@ -16,8 +11,6 @@ function useMonitoring() {
   const tappingTarget = useSelector(
     (state: RootState) => state.auth.tappingTarget,
   );
-  const serverTime = useSelector((state: RootState) => state.auth.serverTime);
-  const localTime = useSelector((state: RootState) => state.auth.localTime);
 
   const dispatch = useDispatch();
 
@@ -33,19 +26,6 @@ function useMonitoring() {
     },
     [dispatch],
   );
-
-  useEffect(() => {
-    server_time = serverTime;
-    local_time = localTime;
-  }, [serverTime, localTime]);
-
-  useInterval(() => {
-    const payload = {
-      server_time,
-      local_time,
-    };
-    dispatch(setCalculatedCallTime(payload));
-  }, 1000);
 
   return {
     tappingStatus,

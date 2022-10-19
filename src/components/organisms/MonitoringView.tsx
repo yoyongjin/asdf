@@ -34,6 +34,7 @@ import TableRow from 'utils/table/row';
 import MonitoringFormat from 'utils/format/monitoring';
 import Utils from 'utils/new_utils';
 import Toast from 'utils/toast';
+import useCalculateCallTime from 'hooks/useCalculateCallTime';
 
 const AREA_MAGIN = 27; //상담사 박스 영역 마진
 const BOX_MAGIN = 5; //상담사 박스 마진
@@ -111,6 +112,7 @@ function Monitoring({ location }: MonitoringProps) {
     localStorage.getItem('monitoringView') === 'list',
   );
   const [isFirst, setIsFirst] = useState(false); // 최초 요청인지 여부
+  useCalculateCallTime();
 
   const volumeData = useMemo(() => {
     if (loginInfo.admin_id === USER_TYPE.CONSULTANT) {
@@ -338,6 +340,14 @@ function Monitoring({ location }: MonitoringProps) {
     window.addEventListener('resize', handleWindowResize);
     return () => {
       window.removeEventListener('resize', handleWindowResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener('change-link', (event) => {});
+
+    return () => {
+      window.removeEventListener('change-link', handleWindowResize);
     };
   }, []);
 
