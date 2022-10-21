@@ -26,6 +26,7 @@ import constants, { ANSWER_VALUE } from 'utils/constants';
 import Utils from 'utils/new_utils';
 import { UserData as UserDataV2 } from 'types/user';
 import { THandleTapping } from 'components/organisms/MonitoringView';
+import _ from 'lodash';
 
 const StyledTableWrapper = styled.td<IStyledWrapper>`
   background-color: ${(props) => props.backgroundColor};
@@ -130,7 +131,10 @@ function TableProperty({
           } else if (contentType === 'monitoring') {
             const _originItem = originItem as UserDataV2;
 
-            (data.onClick as THandleTapping)(_originItem);
+            _.debounce(
+              (e) => (data.onClick as THandleTapping)(_originItem),
+              100,
+            );
           }
         }
       };

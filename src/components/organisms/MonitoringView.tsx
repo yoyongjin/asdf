@@ -241,7 +241,9 @@ function Monitoring({ location }: MonitoringProps) {
         // 감청 대상인 경우
         // 연결 끊기
         if (mode !== ZIBOX_TRANSPORT.SERVER) {
-          stopTapping();
+          setTimeout(() => {
+            stopTapping();
+          }, 2000);
         }
         return;
       }

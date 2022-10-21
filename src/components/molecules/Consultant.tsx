@@ -11,6 +11,7 @@ import Utils from 'utils/new_utils';
 import loadingIcon from 'images/loading.gif';
 import { SetSeletedConsultantData } from 'components/organisms/MonitoringView';
 import MonitoringFormat from 'utils/format/monitoring';
+import _ from 'lodash';
 
 const StyledWrapper = styled.div`
   /* Display */
@@ -83,7 +84,11 @@ function Consultant({
           bgColor="inherit"
           image={image}
           borderRadius={0.81}
-          onClick={text ? (e) => handleTapping(consultInfo) : undefined}
+          onClick={
+            text
+              ? _.debounce((e) => handleTapping(consultInfo), 100)
+              : undefined
+          }
         >
           <Text fontColor={Colors.white} fontSize={13} fontWeight={800}>
             {text}
