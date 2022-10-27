@@ -307,6 +307,16 @@ function StatisticsV2View() {
               message: '날짜는 7일 이상 선택할 수 없습니다.',
             };
           }
+        } else {
+          // 월별 조회 조건인 경우
+          if (
+            Utils.getDiffOfMonth(new Date(startDate), new Date(endDate)) > 3
+          ) {
+            return {
+              status: false,
+              message: '3개월 이상 선택할 수 없습니다.',
+            };
+          }
         }
       } else {
         // 그 외 통계인 경우

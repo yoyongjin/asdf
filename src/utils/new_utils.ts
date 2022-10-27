@@ -36,6 +36,14 @@ class Utils {
     return result;
   }
 
+  static getDiffOfMonth(date1: Date, date2: Date) {
+    let months = (date2.getFullYear() - date1.getFullYear()) * 12;
+    months -= date1.getMonth();
+    months += date2.getMonth();
+
+    return months <= 0 ? 1 : months + 1;
+  }
+
   static getMaxPage = (count: number, divide: number) => {
     let maxPage = count / divide;
     if (maxPage === 0) {
