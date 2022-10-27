@@ -170,7 +170,7 @@ class Statistics {
         isTeam: true,
       };
 
-      const { data } = await APIManager.get(
+      const { data } = await APIManager.post(
         url.zms.api.path.get_call_statistics_by_consultant,
         params,
         {
