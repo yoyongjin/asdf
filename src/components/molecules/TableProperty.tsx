@@ -131,10 +131,7 @@ function TableProperty({
           } else if (contentType === 'monitoring') {
             const _originItem = originItem as UserDataV2;
 
-            _.debounce(
-              (e) => (data.onClick as THandleTapping)(_originItem),
-              100,
-            );
+            (data.onClick as THandleTapping)(_originItem);
           }
         }
       };
