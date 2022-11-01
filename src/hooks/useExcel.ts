@@ -22,7 +22,8 @@ function useExcel() {
    * @description 소켓으로 이벤트를 받지 못할 경우를 처리하기 위한 로직
    */
   useEffect(() => {
-    if (excelDownloadStatus) {
+    if (excelDownloadStatus && !excelDownloadTimeout) {
+      // 엑셀 다운로드 중인 상태 && timer 미작동인 경우
       excelDownloadTimeout = setTimeout(() => {
         Toast.warning('다운로드에 실패했어요..😭');
 
