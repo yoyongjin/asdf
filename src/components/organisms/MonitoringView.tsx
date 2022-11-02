@@ -1038,13 +1038,13 @@ function Monitoring({ location }: MonitoringProps) {
   const tableContentMonitoring = useMemo(() => {
     return {
       data: tablePropertyMonitoring,
-      originData: consultantInfo,
+      originData: filteredConsultantInfo,
       styles: {
         rowHeight: 50,
       },
       type: 'monitoring',
     };
-  }, [consultantInfo, tablePropertyMonitoring]);
+  }, [filteredConsultantInfo, tablePropertyMonitoring]);
 
   return (
     <>
