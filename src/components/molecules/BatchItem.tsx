@@ -17,7 +17,7 @@ const buttonData = [
     fontWeight: 800,
     id: 1,
     height: 5,
-    value: '법인폰 일광 등록 배치',
+    value: '법인폰 일괄 등록 배치',
     width: 20,
   },
   {
