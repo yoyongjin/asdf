@@ -63,21 +63,24 @@ class Monitoring {
       };
     } else if (tappingStatus === 2) {
       // 내가 감청을 하고 있는 경우
-      if (monitStatus === ZIBOX_MONIT_STATUS.ENABLE && monitUserId === userId) {
-        // 내가 감청 중인 상담원일 경우
+      if (monitStatus === ZIBOX_MONIT_STATUS.ENABLE) {
+        // 감청 대상자인 경우
+        if (monitUserId === userId) {
+          // 내가 감청 중인 상담원일 경우
+          return {
+            image: stopTappingIcon,
+            text: '감청 종료',
+            type: 'button',
+          };
+        }
+
+        // 다른 관리자가 감청중인 상담원일 경우
         return {
-          image: stopTappingIcon,
-          text: '감청 종료',
+          image: tappingIcon,
+          text: '',
           type: 'button',
         };
       }
-
-      // 다른 관리자가 감청중인 상담원일 경우
-      return {
-        image: tappingIcon,
-        text: '',
-        type: 'button',
-      };
     }
 
     return {
