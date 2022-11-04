@@ -106,7 +106,11 @@ function TableProperty({
 
             if (key === 4) {
               // 5번째 요소(삭제)
-              (data.onClick as TRemoveAutoMessage)(_originItem.id);
+              const isOk = window.confirm('삭제하실건가요?');
+
+              if (isOk) {
+                (data.onClick as TRemoveAutoMessage)(_originItem.id);
+              }
             } else if (key === 5) {
               // 6번째 요소(수정)
               (data.onClick as TOnClickModifyAutoMessagePopup)(_originItem);
