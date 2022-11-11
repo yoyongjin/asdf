@@ -886,53 +886,60 @@ function Monitoring({ location }: MonitoringProps) {
   }, [filteredConsultantInfo, loginInfo.admin_id, loginInfo.id]);
 
   useEffect(() => {
-    filteredConsultantInfo.map((consultInfo) => {
-      if (
-        consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.ENABLE &&
-        consultInfo.zibox?.monit_user === loginInfo.id &&
-        tappingStatus !== 2
-      ) {
-        // 감청 중인 경우
-        changeTappingData(
-          2,
-          constants.TRANSPORT === ZIBOX_TRANSPORT.OCX
-            ? consultInfo.pc_ip!
-            : consultInfo.zibox_ip!,
-          consultInfo.id,
+    const index = consultantInfo.findIndex(
+      (consultInfo1) => consultInfo1.id === tappingTarget.id,
+    );
+
+    if (index < 0) return;
+
+    const consultInfo = consultantInfo[index];
+
+    if (
+      consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.ENABLE &&
+      consultInfo.zibox?.monit_user === loginInfo.id &&
+      tappingStatus !== 2
+    ) {
+      // 감청 중인 경우
+      changeTappingData(
+        2,
+        constants.TRANSPORT === ZIBOX_TRANSPORT.OCX
+          ? consultInfo.pc_ip!
+          : consultInfo.zibox_ip!,
+        consultInfo.id,
+        consultInfo.number!,
+      );
+    } else if (
+      consultInfo.id === tappingTarget.id &&
+      consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.DISABLE &&
+      tappingStatus !== 1
+    ) {
+      // 감청이 끝난 경우
+      changeTappingData(0, '', -1, '');
+    }
+
+    if (
+      consultInfo.call?.status === CALL_STATUS_V2.IDLE &&
+      consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.ENABLE &&
+      consultInfo.zibox?.monit_user === loginInfo.id
+    ) {
+      // 감청하고 있는 상담원이 통화 종료 했을 때 감청 종료 명령 날려주는 부분
+      const mode = constants.TRANSPORT;
+
+      if (mode === ZIBOX_TRANSPORT.SERVER) {
+        requestTapping(
           consultInfo.number!,
+          loginInfo.id,
+          consultInfo.zibox?.monit_user === -1 ? 1 : 0,
+          consultInfo.zibox_ip!,
         );
-      } else if (
-        consultInfo.id === tappingTarget.id &&
-        consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.DISABLE &&
-        tappingStatus !== 1
-      ) {
-        // 감청이 끝난 경우
-        changeTappingData(0, '', -1, '');
+      } else {
+        Toast.notification(`감청을 종료합니다.`);
+        stopTapping();
       }
-
-      if (
-        consultInfo.call?.status === CALL_STATUS_V2.IDLE &&
-        consultInfo.zibox?.monitoring === ZIBOX_MONIT_STATUS.ENABLE &&
-        consultInfo.zibox?.monit_user === loginInfo.id
-      ) {
-        // 감청하고 있는 상담원이 통화 종료 했을 때 감청 종료 명령 날려주는 부분
-        const mode = constants.TRANSPORT;
-
-        if (mode === ZIBOX_TRANSPORT.SERVER) {
-          requestTapping(
-            consultInfo.number!,
-            loginInfo.id,
-            consultInfo.zibox?.monit_user === -1 ? 1 : 0,
-            consultInfo.zibox_ip!,
-          );
-        } else {
-          stopTapping();
-        }
-      }
-    });
+    }
   }, [
     changeTappingData,
-    filteredConsultantInfo,
+    consultantInfo,
     loginInfo.id,
     requestTapping,
     stopTapping,
@@ -961,7 +968,7 @@ function Monitoring({ location }: MonitoringProps) {
       return;
     }
 
-    handlePluralBranchSelectedOption(pluralBranchOption);
+      handlePluralBranchSelectedOption(pluralBranchOption);
   }, [
     handlePluralBranchSelectedOption,
     loginInfo.admin_id,
@@ -991,7 +998,7 @@ function Monitoring({ location }: MonitoringProps) {
       return;
     }
 
-    handlePluralTeamSelectedOption(pluralTeamOption);
+      handlePluralTeamSelectedOption(pluralTeamOption);
   }, [
     handlePluralTeamSelectedOption,
     loginInfo.admin_id,
@@ -1011,7 +1018,7 @@ function Monitoring({ location }: MonitoringProps) {
       return;
     }
 
-    handlePluralConsultantSelectedOption(pluralConsultantOption);
+      handlePluralConsultantSelectedOption(pluralConsultantOption);
   }, [
     handlePluralConsultantSelectedOption,
     pluralBranchSelectedOption,
