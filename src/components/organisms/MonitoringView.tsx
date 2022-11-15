@@ -968,9 +968,12 @@ function Monitoring({ location }: MonitoringProps) {
       return;
     }
 
+    if (!isFirst) {
       handlePluralBranchSelectedOption(pluralBranchOption);
+    }
   }, [
     handlePluralBranchSelectedOption,
+    isFirst,
     loginInfo.admin_id,
     loginInfo.branch_id,
     pluralBranchOption,
@@ -998,9 +1001,12 @@ function Monitoring({ location }: MonitoringProps) {
       return;
     }
 
+    if (!isFirst) {
       handlePluralTeamSelectedOption(pluralTeamOption);
+    }
   }, [
     handlePluralTeamSelectedOption,
+    isFirst,
     loginInfo.admin_id,
     loginInfo.team_id,
     pluralBranchSelectedOption,
@@ -1018,9 +1024,12 @@ function Monitoring({ location }: MonitoringProps) {
       return;
     }
 
+    if (!isFirst) {
       handlePluralConsultantSelectedOption(pluralConsultantOption);
+    }
   }, [
     handlePluralConsultantSelectedOption,
+    isFirst,
     pluralBranchSelectedOption,
     pluralConsultantOption,
     pluralTeamOption,
