@@ -4,7 +4,6 @@ import MonitorOCX from 'lib/monitorOCX';
 import MQTT from 'lib/mqtt';
 import Player from 'lib/player';
 import Socket from 'lib/socket';
-import SocketOCX from 'lib/socketOCX';
 import {
   MQTTConnectOption,
   OCXTappingOption,
@@ -15,7 +14,7 @@ import constants, { ZIBOX_TRANSPORT } from 'utils/constants';
 class Communicator {
   private static instance: Communicator;
   private static controller: MQTT | Player | MonitorOCX;
-  private static socket: Socket | SocketOCX;
+  private static socket: Socket;
 
   contructor() {
     if (Communicator.instance) return Communicator.instance;
@@ -37,10 +36,6 @@ class Communicator {
    */
   async create() {
     Communicator.controller.create();
-
-    if (Communicator.socket instanceof SocketOCX) {
-      Communicator.socket.create();
-    }
   }
 
   /**
@@ -141,18 +136,16 @@ class Communicator {
    * @description 모드 확인
    */
   private static checkMode() {
+    Communicator.socket = new Socket();
+
     if (constants.TRANSPORT === ZIBOX_TRANSPORT.MQTT) {
       Communicator.controller = new MQTT();
-      Communicator.socket = new Socket();
     } else if (constants.TRANSPORT === ZIBOX_TRANSPORT.OCX) {
       Communicator.controller = new MonitorOCX();
-      Communicator.socket = new SocketOCX();
     } else if (constants.TRANSPORT === ZIBOX_TRANSPORT.PACKET) {
       Communicator.controller = new Player();
-      Communicator.socket = new Socket();
     } else if (constants.TRANSPORT === ZIBOX_TRANSPORT.SERVER) {
       Communicator.controller = new Player();
-      Communicator.socket = new Socket();
     }
   }
 }
