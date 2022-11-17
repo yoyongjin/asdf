@@ -11,7 +11,6 @@ export interface UserState {
   consultant: Array<UserData>;
   numberOfUsers: number;
   userCount: number;
-  realTimeStatus: ConsultantAllStatusByNumberV2;
   plural_consultant: Array<IConsultantItem>;
 }
 

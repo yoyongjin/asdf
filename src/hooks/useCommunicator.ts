@@ -10,44 +10,30 @@ import {
   setSocketStatus,
   setTappingData,
 } from 'modules/actions/auth';
-import {
-  addUser,
-  setUserStatus,
-  modifyUser,
-  changeCallStatus,
-  changeZiboxStatus,
-  changeConsultantStatus,
-  changeAllResetStatus,
-  changePhoneStatus,
-  requestZiboxVolume,
-} from 'modules/actions/user';
+import { requestZiboxVolume } from 'modules/actions/user';
 import { ResponseType } from 'types/common';
 import {
-  ConsultantAllStatusByNumber,
   ConsultantAllStatus,
-  ChangeUser,
   CallStatus,
   ZiboxStatus,
   ConsultantStatus,
   PhoneStatus,
-  UserData,
 } from 'types/user';
 import constants, {
   ZIBOX_MONIT_STATUS,
   SOCKET_EVENT_TYPE,
-  USER_TYPE,
   RESPONSE_STATUS_V2,
   API_FETCH,
   ROUTER_TYPE,
 } from 'utils/constants';
 import Logger from 'utils/log';
-import SocketOCX from 'lib/socketOCX';
 import MonitorOcx from 'lib/monitorOCX';
 import _ from 'lodash';
 import { setExcelDownloadStatus } from 'modules/actions/statistics';
 import Toast from 'utils/toast';
 import ZMSMain from 'lib/api/zms/main';
 import { useHistory } from 'react-router-dom';
+import Status from 'utils/status';
 
 function useCommunicator() {
   const dispatch = useDispatch();
@@ -63,29 +49,19 @@ function useCommunicator() {
 
   const setChangedStatus = useCallback(
     (loginId: number, type: string, data: any) => {
-      Logger.log('onChangeStatusEventHandler', { type, data });
-      let parseData: ConsultantAllStatusByNumber = {};
+      Logger.log('onChangeStatusEventHandler', JSON.stringify({ type, data }));
 
       switch (type) {
         case 'all': {
           // 전체 유저의 상태 전달
-          for (const key in data) {
-            const allStatus: ConsultantAllStatus = JSON.parse(data[key]);
-            parseData = {
-              ...parseData,
-              [key]: allStatus,
-            };
-          }
-
-          dispatch(setUserStatus(parseData));
+          new Status().setAllStatus(data);
 
           break;
         }
         case 'call': {
           // 콜 변경 시 상태 전달
           const callStatus = JSON.parse(data) as CallStatus;
-
-          dispatch(changeCallStatus(callStatus));
+          new Status().setCallStatus(callStatus);
 
           break;
         }
@@ -93,32 +69,28 @@ function useCommunicator() {
         case 'monitoring': {
           // 지박스 상태 전달
           const ziboxStatus = JSON.parse(data) as ZiboxStatus;
-
-          dispatch(changeZiboxStatus(ziboxStatus));
+          new Status().setZiboxStatus(ziboxStatus);
 
           break;
         }
         case 'consultant': {
           // 상담원 상태 전달
           const consultantStatus = JSON.parse(data) as ConsultantStatus;
-
-          dispatch(changeConsultantStatus(consultantStatus));
+          new Status().setConsultantStatus(consultantStatus);
 
           break;
         }
         case 'phone': {
           // pc-phone 연결 상태 전달
           const phoneStatus = JSON.parse(data) as PhoneStatus;
-
-          dispatch(changePhoneStatus(phoneStatus));
+          new Status().setPhoneStatus(phoneStatus);
 
           break;
         }
         case 'reset': {
           // 초기화
           const allStatus = JSON.parse(data) as ConsultantAllStatus;
-
-          dispatch(changeAllResetStatus(allStatus));
+          new Status().setResetStatus(allStatus);
 
           break;
         }

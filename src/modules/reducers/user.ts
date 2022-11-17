@@ -7,6 +7,7 @@ import Logger from 'utils/log';
 import { USER_TYPE } from 'utils/constants';
 import Utils from 'utils/new_utils';
 import { UserAction, UserState } from 'types/user';
+import Status from 'utils/status';
 
 const initialState: UserState = {
   request: {
@@ -47,7 +48,6 @@ const initialState: UserState = {
   consultant: [],
   numberOfUsers: 0,
   userCount: 0,
-  realTimeStatus: {},
   plural_consultant: [],
 };
 
@@ -199,97 +199,6 @@ const userReducer = createReducer<UserState, UserAction>(initialState, {
       draft.request.modifyZiBoxVolume.error = action.payload;
     });
   },
-  [types.SET_USER_STATUS]: (state, action) => {
-    // 모든 상태 전달
-    Logger.log('SET_USER_STATUS', action.payload);
-
-    return produce(state, (draft) => {
-      draft.realTimeStatus = action.payload;
-    });
-  },
-  [types.CHANGE_CALL_STATUS]: (state, action) => {
-    // 통화 상태 변경 시
-    const callStatus = _.cloneDeep(action.payload);
-    Logger.log('CHANGE_CALL_STATUS', callStatus);
-
-    return produce(state, (draft) => {
-      if (draft.realTimeStatus[callStatus.number!]) {
-        draft.realTimeStatus[callStatus.number!].call = callStatus;
-      } else {
-        draft.realTimeStatus[callStatus.number!] = {
-          call: callStatus,
-        };
-      }
-    });
-  },
-  [types.CHANGE_ZIBOX_STATUS]: (state, action) => {
-    // 지박스 상태 변경 시
-    const ziboxStatus = _.cloneDeep(action.payload);
-    Logger.log('CHANGE_ZIBOX_STATUS', ziboxStatus);
-
-    return produce(state, (draft) => {
-      if (draft.realTimeStatus[ziboxStatus.number!]) {
-        draft.realTimeStatus[ziboxStatus.number!].zibox = ziboxStatus;
-      } else {
-        draft.realTimeStatus[ziboxStatus.number!] = {
-          zibox: ziboxStatus,
-        };
-      }
-    });
-  },
-  [types.CHANGE_CONSULTANT_STATUS]: (state, action) => {
-    // 상담원 상태 변경 시
-    const consultantStatus = _.cloneDeep(action.payload);
-    Logger.log('CHANGE_CONSULTANT_STATUS', consultantStatus);
-
-    return produce(state, (draft) => {
-      if (draft.realTimeStatus[consultantStatus.number!]) {
-        draft.realTimeStatus[consultantStatus.number!].consultant =
-          consultantStatus;
-      } else {
-        draft.realTimeStatus[consultantStatus.number!] = {
-          consultant: consultantStatus,
-        };
-      }
-    });
-  },
-  [types.CHANGE_PHONE_STATUS]: (state, action) => {
-    // 휴대폰 상태 변경 시
-    const phoneStatus = _.cloneDeep(action.payload);
-    Logger.log('CHANGE_PHONE_STATUS', phoneStatus);
-
-    return produce(state, (draft) => {
-      if (draft.realTimeStatus[phoneStatus.number!]) {
-        draft.realTimeStatus[phoneStatus.number!].phone = phoneStatus;
-      } else {
-        draft.realTimeStatus[phoneStatus.number!] = {
-          phone: phoneStatus,
-        };
-      }
-    });
-  },
-  [types.CHANGE_ALL_RESET_STATUS]: (state, action) => {
-    // 모든 상태 초기화
-    const resetStatus = _.cloneDeep(action.payload);
-    Logger.log('CHANGE_ALL_RESET_STATUS', resetStatus);
-
-    return produce(state, (draft) => {
-      if (draft.realTimeStatus[resetStatus.number]) {
-        draft.realTimeStatus[resetStatus.number].call = resetStatus.call;
-        draft.realTimeStatus[resetStatus.number].consultant =
-          resetStatus.consultant;
-        draft.realTimeStatus[resetStatus.number].phone = resetStatus.phone;
-        draft.realTimeStatus[resetStatus.number].zibox = resetStatus.zibox;
-      } else {
-        draft.realTimeStatus[resetStatus.number] = {
-          call: resetStatus.call,
-          consultant: resetStatus.consultant,
-          phone: resetStatus.phone,
-          zibox: resetStatus.zibox,
-        };
-      }
-    });
-  },
   [types.ADD_USER]: (state, action) => {
     Logger.log('ADD_USER', action.payload);
 
@@ -341,7 +250,7 @@ const userReducer = createReducer<UserState, UserAction>(initialState, {
   },
   [types.SET_CALCULATED_CALL_TIME]: (state, action) => {
     const { local_time, server_time } = action.payload;
-    const realTimeStatus = _.cloneDeep(state.realTimeStatus);
+    const realTimeStatus = new Status().getAllStatus();
 
     return produce(state, (draft) => {
       draft.consultant = state.consultant.map((consultant, i) => {
