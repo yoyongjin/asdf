@@ -85,9 +85,7 @@ function Consultant({
           image={image}
           borderRadius={0.81}
           onClick={
-            text
-              ? _.debounce((e) => handleTapping(consultInfo), 100)
-              : undefined
+            text ? _.debounce((e) => handleTapping(consultInfo), 0) : undefined
           }
         >
           <Text fontColor={Colors.white} fontSize={13} fontWeight={800}>
