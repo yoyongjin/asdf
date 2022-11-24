@@ -58,6 +58,7 @@ class Statistics {
   /**
    * @description 상담원별 통화 통계 가져오기
    * @param ids 상담원 id 여러개
+   * @param teamIds 팀 id 여러개
    * @param breakUp 해촉 여부
    * @param startDate 시작 날짜
    * @param endDate 끝 날짜
@@ -70,6 +71,7 @@ class Statistics {
    */
   static async getCallStatisticsByConsultant(
     ids: string,
+    teamIds: string,
     breakUp: boolean,
     startDate: string,
     endDate: string,
@@ -85,6 +87,7 @@ class Statistics {
     try {
       const params = {
         ids,
+        team_ids: teamIds,
         include_leaver: breakUp,
         start_date: startDate,
         end_date: endDate,
@@ -158,6 +161,7 @@ class Statistics {
     try {
       const params = {
         ids,
+        team_ids: ids,
         include_leaver: true,
         start_date: startDate,
         end_date: endDate,
@@ -201,6 +205,7 @@ class Statistics {
   /**
    * @description 상담원별 통화 통계 가져오기
    * @param ids 상담원 id 여러개
+   * @param teamIds 팀 id 여러개
    * @param breakUp 해촉 여부
    * @param startDate 시작 날짜
    * @param endDate 끝 날짜
@@ -210,6 +215,7 @@ class Statistics {
    */
   static async getAutoMessageStatistics(
     ids: string,
+    teamIds: string,
     breakUp: boolean,
     startDate: string,
     endDate: string,
@@ -222,6 +228,7 @@ class Statistics {
     try {
       const params = {
         ids,
+        team_ids: teamIds,
         include_leaver: breakUp,
         start_date: startDate,
         end_date: endDate,
@@ -261,6 +268,7 @@ class Statistics {
   /**
    * @description 문자 통계 가져오기
    * @param ids 상담원 id 여러개
+   * @param teamIds 팀 id 여러개
    * @param breakUp 해촉 여부
    * @param startDate 시작 날짜
    * @param endDate 끝 날짜
@@ -270,6 +278,7 @@ class Statistics {
    */
   static async getMessageStatistics(
     ids: string,
+    teamIds: string,
     breakUp: boolean,
     startDate: string,
     endDate: string,
@@ -282,6 +291,7 @@ class Statistics {
     try {
       const params = {
         ids,
+        team_ids: teamIds,
         include_leaver: breakUp,
         start_date: startDate,
         end_date: endDate,

@@ -71,6 +71,7 @@ function* getCallStatisticsByConsultantProcess(
     search_type,
     start_date,
     start_time,
+    team_ids,
   } = action.payload;
 
   Toast.notification('잠시만 기다려주세요..🙄');
@@ -84,6 +85,7 @@ function* getCallStatisticsByConsultantProcess(
   const response: ResponseSuccessData | ResponseFailureData = yield call(
     ZMSStatistics.getCallStatisticsByConsultant,
     ids,
+    team_ids,
     include_leaver,
     start_date,
     end_date,
@@ -206,6 +208,7 @@ function* getAutoMessageStatisticsProcess(
     page,
     page_count,
     start_date,
+    team_ids,
   } = action.payload;
 
   Toast.notification('잠시만 기다려주세요.🙄');
@@ -219,6 +222,7 @@ function* getAutoMessageStatisticsProcess(
   const response: ResponseSuccessData | ResponseFailureData = yield call(
     ZMSStatistics.getAutoMessageStatistics,
     ids,
+    team_ids,
     include_leaver,
     start_date,
     end_date,
@@ -280,6 +284,7 @@ function* getMessageStatisticsProcess(
     page,
     page_count,
     start_date,
+    team_ids,
   } = action.payload;
 
   Toast.notification('잠시만 기다려주세요..🙄');
@@ -293,6 +298,7 @@ function* getMessageStatisticsProcess(
   const response: ResponseSuccessData | ResponseFailureData = yield call(
     ZMSStatistics.getMessageStatistics,
     ids,
+    team_ids,
     include_leaver,
     start_date,
     end_date,

@@ -352,6 +352,7 @@ function StatisticsV2View() {
 
   const getTitleParams = useMemo(() => {
     let ids = '';
+    let teamIds = '';
 
     if (selectedTabIndex === 1) {
       ids = pluralTeamSelectedOption.map((team) => team.value).join(','); // 팀 여러개 선택
@@ -359,6 +360,7 @@ function StatisticsV2View() {
       ids = pluralConsultantSelectedOption
         .map((consultant) => consultant.value)
         .join(','); // 상담원 여러명 선택
+      teamIds = pluralTeamSelectedOption.map((team) => team.value).join(',');
     }
 
     const breakUp = form.break_up;
@@ -382,6 +384,7 @@ function StatisticsV2View() {
 
     return {
       ids,
+      teamIds,
       breakUp,
       startDate,
       endDate,
@@ -409,6 +412,7 @@ function StatisticsV2View() {
     (isAlert = true, isExcel = false) => {
       const {
         ids,
+        teamIds,
         breakUp,
         startDate,
         endDate,
@@ -436,6 +440,7 @@ function StatisticsV2View() {
 
       handleGetCallStatisticsByConsultant(
         ids,
+        teamIds,
         breakUp,
         startDate,
         endDate,
@@ -507,7 +512,8 @@ function StatisticsV2View() {
 
   const getAutoMessageStatistice = useCallback(
     (isAlert = true, isExcel = false) => {
-      const { ids, breakUp, startDate, endDate, limit } = getTitleParams;
+      const { ids, teamIds, breakUp, startDate, endDate, limit } =
+        getTitleParams;
 
       const { status, message } = isValidateStatistics(ids, startDate, endDate);
 
@@ -521,6 +527,7 @@ function StatisticsV2View() {
 
       handleGetAutoMessageStatistics(
         ids,
+        teamIds,
         breakUp,
         startDate,
         endDate,
@@ -539,7 +546,8 @@ function StatisticsV2View() {
 
   const getMessageStatistice = useCallback(
     (isAlert = true, isExcel = false) => {
-      const { ids, breakUp, startDate, endDate, limit } = getTitleParams;
+      const { ids, teamIds, breakUp, startDate, endDate, limit } =
+        getTitleParams;
 
       const { status, message } = isValidateStatistics(ids, startDate, endDate);
 
@@ -553,6 +561,7 @@ function StatisticsV2View() {
 
       handleGetMessageStatistics(
         ids,
+        teamIds,
         breakUp,
         startDate,
         endDate,

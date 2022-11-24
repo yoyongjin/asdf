@@ -188,6 +188,7 @@ export interface IRequestGetCallStatisticsByConsultant {
   start_date: string; // 시작 날짜 ex) 2022-04-11
   start_time: string; // 시작 시간 ex) 00:00
   search_type: number; // 검색 조건
+  team_ids: string; // 팀 id 복수개 ex) 1,2,3
   page: number; // 페이지
   page_count: number; // 페이지당 노출 개수
 }
@@ -235,6 +236,7 @@ export interface IRequestGetAutoMessageStatistics {
   include_leaver: boolean; // 해촉 여부 ex) 1
   isExcel: boolean; // 엑셀 여부(전체 데이터)
   start_date: string; // 시작 날짜 ex) 2022-04-11
+  team_ids: string; // 팀 id 복수개 ex) 1,2,3
   page: number; // 페이지
   page_count: number; // 페이지당 노출 개수
 }
@@ -251,6 +253,7 @@ export interface IRequestGetMessageStatistics {
   include_leaver: boolean; // 해촉 여부 ex) 1
   isExcel: boolean; // 엑셀 여부(전체 데이터)
   start_date: string; // 시작 날짜 ex) 2022-04-11
+  team_ids: string; // 팀 id 복수개 ex) 1,2,3
   page: number; // 페이지
   page_count: number; // 페이지당 노출 개수
 }

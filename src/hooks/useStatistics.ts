@@ -58,6 +58,7 @@ function useStatistics() {
   const handleGetCallStatisticsByConsultant = useCallback(
     (
       ids: string,
+      teamIds: string,
       breakUp: boolean,
       startDate: string,
       endDate: string,
@@ -70,6 +71,7 @@ function useStatistics() {
     ) => {
       const payload = {
         ids,
+        team_ids: teamIds,
         include_leaver: breakUp,
         start_date: startDate,
         end_date: endDate,
@@ -136,6 +138,7 @@ function useStatistics() {
   const handleGetAutoMessageStatistics = useCallback(
     (
       ids: string,
+      teamIds: string,
       breakUp: boolean,
       startDate: string,
       endDate: string,
@@ -145,6 +148,7 @@ function useStatistics() {
     ) => {
       const payload = {
         ids,
+        team_ids: teamIds,
         include_leaver: breakUp,
         isExcel,
         start_date: startDate,
@@ -161,6 +165,7 @@ function useStatistics() {
   const handleGetMessageStatistics = useCallback(
     (
       ids: string,
+      teamIds: string,
       breakUp: boolean,
       startDate: string,
       endDate: string,
@@ -170,6 +175,7 @@ function useStatistics() {
     ) => {
       const payload = {
         ids,
+        team_ids: teamIds,
         include_leaver: breakUp,
         start_date: startDate,
         end_date: endDate,
